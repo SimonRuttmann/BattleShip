@@ -1,6 +1,6 @@
 package Model.Util.UtilDataType;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class ShotResponse {
     private boolean gameLost;
@@ -8,7 +8,7 @@ public class ShotResponse {
     private boolean shipDestroyed;
 
     private boolean gameWin;
-    private Point[] impossiblePositions;
+    private ArrayList<Point> impossiblePositions;
 
     //Constructor, when our Playground got hit
     public ShotResponse(boolean gameLost, boolean hit, boolean shipDestroyed) {
@@ -18,7 +18,7 @@ public class ShotResponse {
     }
 
     //Constructor, when we hit the enemy´s Playground
-    public ShotResponse(boolean gameWin, Point[] impossiblePositions) {
+    public ShotResponse(boolean gameWin, ArrayList<Point> impossiblePositions) {
         this.gameWin = gameWin;
         this.impossiblePositions = impossiblePositions;
     }
@@ -27,7 +27,7 @@ public class ShotResponse {
         return gameWin;
     }
 
-    public Point[] getImpossiblePositions() {
+    public ArrayList<Point> getImpossiblePositions() {
         return impossiblePositions;
     }
 

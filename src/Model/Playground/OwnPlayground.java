@@ -26,18 +26,24 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
             IShip hitShip = hitShipPart.getOwner();
             hitShip.sethitPoints( hitShip.gethitPoints() -1 );
 
+            //Mark shipPart as destroyed
+            hitShipPart.setPart("Destroyed");
+
             //Ship sunken
             if ( hitShip.gethitPoints() <= 0){
                 IShip.getShipList().remove(hitShip);
 
                 //Game won
                 if ( IShip.getShipList().size() == 0){
+                    this.gameLost = true;
                     return new ShotResponse (true,true,true);
                 }
 
                 //Game still running
                 return new ShotResponse(false, true, true);
+
             }
+            //Ship still alive
             else{
                 return new ShotResponse( false, true,false);
             }
@@ -60,11 +66,13 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
     //This methods build us our playground at the beginning
     @Override
     public void buildPlayground() {
+        this.shipsplaced = IShip.getAmount();
+
+        //For every Ship in the ShipList insert the affiliated ship parts and fill the left fields with water
 
         for ( IShip Element : IShip.getShipList()) {
-            //Für jedes Schiff in ShipList
 
-            //Pointarray mit anfangs und endpunkt
+            //Position returns two Points, Start and End
             Point[] shipposition = Element.getPosition();
             int xStart = shipposition[0].getX();
             int yStart = shipposition[0].getY();
@@ -72,13 +80,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
             int xEnd = shipposition[1].getX();
             int yEnd = shipposition[1].getY();
 
-            //TODO Problematik ist, das man somit keine Schiffe mit eigenem Design einfügen kann
-
-            //Size = 2 3 4 5
-
-
-
-            //Insert Shipparts
+            //Insert Ship parts
             //Ship vertical
             if (xStart == xEnd) {
                 Field[xStart][yStart] = new ShipPart("start vertical", Element);

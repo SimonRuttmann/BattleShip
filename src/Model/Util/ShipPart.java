@@ -4,7 +4,7 @@ import Model.Ship.IShip;
 
 public class ShipPart implements IDrawable{
 
-    private final String part;
+    private String part;
     private final IShip owner;
 
     public ShipPart(String part, IShip owner) {
@@ -12,8 +12,13 @@ public class ShipPart implements IDrawable{
         this.owner = owner;
     }
 
+
     public IShip getOwner() {
         return owner;
+    }
+
+    public void setPart(String part) {
+        this.part = part;
     }
 
     @Override
@@ -25,7 +30,8 @@ public class ShipPart implements IDrawable{
             case "end horizontal"    : System.out.print(">");break;
             case "middle vertical"   : System.out.print("||");break;
             case "middle horizontal" : System.out.print("=");break;
-            default: System.out.println("Position not found");
+            case "destroyed"         : System.out.print("H");
+            default: System.out.println("Alignment not found");
         }
     }
 

@@ -20,7 +20,6 @@ public class ShipPart implements IDrawable{
     public void setPart(String part) {
         this.part = part;
     }
-
     @Override
     public void draw() {
         switch (part){

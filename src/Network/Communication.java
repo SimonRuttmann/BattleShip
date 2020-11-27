@@ -6,13 +6,12 @@ import java.io.*;
 
 public abstract class Communication implements ICommunication{
     private boolean connected = false;
-    private boolean ourTurn;
 
-    private String sendCMD;
-    private final Object sendFlag = new Object();
+    //private String sendCMD
+    //private final Object sendFlag = new Object();
 
-    private String getCMD;
-    private final Object getFlag = new Object();
+    //private String getCMD;
+    //private final Object getFlag = new Object();
 
 
 
@@ -22,27 +21,55 @@ public abstract class Communication implements ICommunication{
 
     @Override
     public void sendCMD(CMD command, String parameter) {
-        this.sendCMD = command.toString() + " " + parameter;
+        String sendCMD = command.toString() + " " + parameter;
 
-            //Gibt CommThread frei -> schreibt Befehl
+        if (!connected) return;
+        try {
+            outputWriter.write(sendCMD);
+            outputWriter.flush();
+            // flush sorgt dafür, dass der Writer garantiert alle Zeichen
+            // in den unterliegenden Ausgabestrom schreibt.
+        } catch (IOException e) {
+            System.out.println("Error while writing!" + sendCMD);
+            e.printStackTrace();
+        }
+/*            //Gibt CommThread frei -> schreibt Befehl
             sendFlag.notify();
-
+*/
     }
 
     @Override
     public String[] getCMD() {
-        //TODO
+        if (!connected) return null;
+        try {
+            String cmd = inputReader.readLine();
+
+            if(validDataReceived(cmd)){
+                return cmd.split(" ");
+            }
+            return null;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Could not read next Command!");
+            return null;
+        }
+
+
+    /*
         //Gibt CommThread frei -> Liest Befehl
         // -> Befehl wird von CommThread in getCMD gespeichert, bis dahin darf der MainThread noch nicht die ReturnZeile ausführen -> er wird deshalb erstmal angehalten und vom CommThread wieder erweckt
         //Problematik: ComThread is so schnell, dass er Main bereits erweckt, bevor dieser schläft
         try {
             getFlag.notify();
-            wait(); //TODO Dieses Wait kann erst nach dem Notify des CommThreads augeführt werden //UMGEHUNG!?
+            wait(); // Dieses Wait kann erst nach dem Notify des CommThreads augeführt werden //UMGEHUNG!?
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return this.getCMD.split(" ");
+
+   */
     }
 
     private BufferedReader inputReader;
@@ -50,10 +77,6 @@ public abstract class Communication implements ICommunication{
 
     public void setConnected(boolean connected) {
         this.connected = connected;
-    }
-
-    public void setOurTurn(boolean ourTurn) {
-        this.ourTurn = ourTurn;
     }
 
     public void setInputReader(BufferedReader inputReader) {
@@ -64,7 +87,8 @@ public abstract class Communication implements ICommunication{
         this.outputWriter = outputWriter;
     }
 
-    //Thread CommThread starten
+/*
+  / //Thread CommThread starten
     @Override
     public void startListening() {
         Thread CommThread = new Thread(new Runnable() {
@@ -134,6 +158,8 @@ public abstract class Communication implements ICommunication{
         });
         CommThread.start();
     }
+*/
+
 
     private boolean validDataReceived(String receivedDate){
         try{
@@ -221,8 +247,16 @@ public abstract class Communication implements ICommunication{
         }
 
     }
-    //in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-    //out = new OutputStreamWriter(s.getOutputStream());
 
+    public void closeReaderWriter(){
+
+        try {
+            this.inputReader.close();
+            this.outputWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Reader and Writer cant be closed!");
+        }
+    }
 
 }

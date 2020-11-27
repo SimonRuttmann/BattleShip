@@ -13,5 +13,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Schiffe versenken");
         primaryStage.show();
+
     }
 }

@@ -7,7 +7,7 @@ public interface IPlayground {
     void buildPlayground();
 
 
-    //You can only draw the Playground if the Playground is builded
+    //You can only draw the Playground if the Playground is built
     void drawPlayground();
 
     //Sets all Fields in Drawable Field [][] to null

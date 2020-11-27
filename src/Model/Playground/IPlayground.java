@@ -12,7 +12,7 @@ public interface IPlayground {
 
     //Sets all Fields in Drawable Field [][] to null
     //Sets the Amount of Ships placed in the Playground to 0
-    //After the Playground is reset it needs to be instantiated and build again
+    //After the Playground is reset it needs to be instantiated and build again.
     void resetAll();
 
 }

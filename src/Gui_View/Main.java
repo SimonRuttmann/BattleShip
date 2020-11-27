@@ -8,7 +8,7 @@ import javafx.scene.Parent;
 
 public class Main extends Application {
 
-    static Stage primaryStage;
+    public static Stage primaryStage;
     int width = 600;
     int height = 400;
 

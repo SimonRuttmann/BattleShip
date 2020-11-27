@@ -90,9 +90,4 @@ public class Server extends Communication implements IServer{
             return false;
         }
     }
-
-
-
-
-
 }

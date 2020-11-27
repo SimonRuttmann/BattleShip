@@ -1,5 +1,7 @@
-package Gui_View;
+package Controller;
 
+import Gui_View.HelpMethods;
+import Gui_View.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,7 +10,7 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 
-public class LoadGameController {
+public class LoadGame {
 
     @FXML private Button deleteGames;
     @FXML private Button loadGame;
@@ -25,7 +27,7 @@ public class LoadGameController {
             HelpMethods.closeProgrammSaveGame();
         });
 
-        Parent game = FXMLLoader.load(getClass().getResource("game.fxml"));
+        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/game.fxml"));
         Main.primaryStage.setScene(new Scene(game));
         Main.primaryStage.show();
     }

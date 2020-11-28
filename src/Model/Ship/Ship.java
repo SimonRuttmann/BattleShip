@@ -20,7 +20,7 @@ public class Ship implements IShip {
         this.size = size;
         this.hitPoints = size;
         ShipList.add(this);
-        amount = amount+1;
+        amount = ShipList.size();
     }
 
 

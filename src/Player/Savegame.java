@@ -3,9 +3,8 @@ package Player;
 import Model.Playground.IEnemyPlayground;
 import Model.Playground.IOwnPlayground;
 
-import java.io.Serializable;
 
-public class Savegame implements Serializable {
+public class Savegame{
     private Long id;
 
     private final IOwnPlayground ownPlayground;
@@ -25,4 +24,7 @@ public class Savegame implements Serializable {
         this.enemyIPlayer = enemyIPlayer;
         this.id = id;
     }
+
 }
+
+

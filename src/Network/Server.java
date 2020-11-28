@@ -21,6 +21,20 @@ public class Server extends Communication implements IServer{
     }
 
     @Override
+    public void closeConnection(){
+        if (server != null) {
+            try {
+                server.close();
+                this.setConnected(false);
+                this.closeReaderWriter();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Serversocket konnte nicht geschlossen werden");
+            }
+        }
+    }
+
+    @Override
     public String[] getAllIPAddress() {
      try {
           String localHost = InetAddress.getLocalHost().getHostName();
@@ -68,7 +82,7 @@ public class Server extends Communication implements IServer{
 
             this.setOutputWriter(new BufferedWriter (new OutputStreamWriter(server_connected.getOutputStream())));
 
-            this.setOurTurn(true);
+
             this.setConnected(true);
             return true;
         } catch (IOException e) {
@@ -76,9 +90,4 @@ public class Server extends Communication implements IServer{
             return false;
         }
     }
-
-
-
-
-
 }

@@ -13,7 +13,7 @@ public class Client extends Communication {
 
             client = new Socket(ipAddress, 50000);
             client.setSoTimeout(600000); //1min keine Antwort vom Client -> beendet sich selber
-
+            this.setConnected(true);
             // Ein- und Ausgabestrom des Sockets ermitteln
             // und als BufferedReader bzw. Writer verpacken
             // (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
@@ -26,6 +26,21 @@ public class Client extends Communication {
         }
 
 
+    }
+
+    @Override
+    public void closeConnection(){
+        if (client != null){
+            try {
+                client.close();
+                this.setConnected(false);
+                this.closeReaderWriter();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Client konnte nicht geschlossen werden");
+            }
+        }
     }
 }
 

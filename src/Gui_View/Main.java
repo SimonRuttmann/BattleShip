@@ -35,5 +35,6 @@ public class Main extends Application {
         primaryStage.setMinWidth(width);
         primaryStage.setMinHeight(height);
         primaryStage.show();
+
     }
 }

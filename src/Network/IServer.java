@@ -1,6 +1,6 @@
 package Network;
 
-public interface IServer {
+public interface IServer extends ICommunication{
     /**
      * Gets an Array of IP Addresses
      * @return String Array of IP Addresses
@@ -16,7 +16,8 @@ public interface IServer {
 
     /**
      * Server accepts attempting connections and creates Reader and Writers
-     * @return State of Connection
+     * @return State of Connection, returns true if the server connected and false if an timeout occured
      */
     boolean startSeverConnection();
+    //TODO TIMEOUT implementieren
 }

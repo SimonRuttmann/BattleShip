@@ -15,13 +15,13 @@ public class Start {
     @FXML public Button letKIplay;
 
     public void playSelf() throws IOException {
-        Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/placeShips.fxml"));
+        Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
         Main.primaryStage.setScene(new Scene(placeShips));
         Main.primaryStage.show();
     }
 
     public void playKI() throws IOException {
-        Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/placeShips.fxml"));
+        Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
         Main.primaryStage.setScene(new Scene(placeShips));
         Main.primaryStage.show();
     }

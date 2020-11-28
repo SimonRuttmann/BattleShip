@@ -1,3 +1,5 @@
+// todo add stylesheets to classes
+
 package Gui_View;
 
 import javafx.geometry.Rectangle2D;
@@ -16,19 +18,16 @@ public class HelpMethods {
 
     // do you really want to exit the Game?
     public static void closeProgramm() {
-        System.out.println("a");
-        CancelGame.exit(); // todo call align center
+        CancelGame.exit();
     }
 
     // do you really want to exit the Game - special for in-game: with saving
     public static void closeProgrammSaveGame() {
-        System.out.println("b");
-        CancelGame.save(); // todo call align center
+        CancelGame.save();
     }
 
     // win or lose - new game or exit
     public static void winOrlose(boolean win) {
-        System.out.println("c");
-        WinLose.display(win); // todo call align centerZ
+        WinLose.display(win);
     }
 }

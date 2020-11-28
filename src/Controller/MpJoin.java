@@ -14,7 +14,7 @@ public class MpJoin {
     @FXML private Button connectButton;
 
     public void connect() throws IOException {
-        Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/start.fxml"));
+        Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/start.fxml"));
         Main.primaryStage.setScene(new Scene(start));
         Main.primaryStage.show();
     }

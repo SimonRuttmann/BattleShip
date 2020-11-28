@@ -1,3 +1,5 @@
+// todo set min Height: so, dass Festerrahmen egal welches BS berücksichtigt wird??
+
 package Gui_View;
 
 import javafx.application.Application;
@@ -26,10 +28,12 @@ public class Main extends Application {
             HelpMethods.closeProgramm();
         });
 
-        Parent root = FXMLLoader.load(getClass().getResource("hello.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/chooseSpMp.fxml"));
         primaryStage.setTitle("Schiffe versenken");
         primaryStage.setScene(new Scene(root, width, height));
         HelpMethods.alignStageCenter(primaryStage, width, height);
+        primaryStage.setMinWidth(width);
+        primaryStage.setMinHeight(height);
         primaryStage.show();
 
     }

@@ -39,8 +39,10 @@ public class CancelGame {
         exitBox.getChildren().addAll(label, yesNo);
         exitBox.setAlignment(Pos.CENTER);
 
-        exit.setScene(new Scene(exitBox, width, height));
+        Scene scene = new Scene(exitBox, width, height);
+        exit.setScene(scene);
         HelpMethods.alignStageCenter(exit, width, height);
+        exit.setResizable(false);
         exit.showAndWait();
     }
 
@@ -67,7 +69,7 @@ public class CancelGame {
 
         // Scene 2 - successfully saved
         Label successfull = new Label("Speichern erfolgreich!"); // todo: wir gehen aktuell davon aus, das Speichern immer erfolgreich
-        Button endGame = new Button("Spiel beenden");
+        Button endGame = new Button("Spiel beenden"); // todo: eventuell rückkehr ins startmenü
         endGame.setOnAction(e -> {
             save.close();
             Main.primaryStage.close();
@@ -80,6 +82,7 @@ public class CancelGame {
 
         save.setScene(choose);
         HelpMethods.alignStageCenter(save, width, height);
+        save.setResizable(false);
         save.showAndWait();
     }
 }

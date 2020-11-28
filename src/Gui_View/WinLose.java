@@ -55,6 +55,7 @@ public class WinLose {
             winLose.setScene(lose);
         }
         HelpMethods.alignStageCenter(winLose, width, height);
+        winLose.setResizable(false);
         winLose.showAndWait();
     }
 }

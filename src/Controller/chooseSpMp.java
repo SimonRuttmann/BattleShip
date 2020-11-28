@@ -3,15 +3,13 @@ package Controller;
 import Gui_View.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
-import javafx.event.ActionEvent;
+
 import java.io.IOException;
 
-public class Hello {
+public class chooseSpMp {
 
     // views
     @FXML private Button singleplayerButton;
@@ -21,14 +19,14 @@ public class Hello {
 
     public void startSingleplayer() throws IOException{
         // change Scene
-        Parent newOrLoadParent = FXMLLoader.load(getClass().getResource("/Gui_View/newOrLoad.fxml"));
+        Parent newOrLoadParent = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
         Main.primaryStage.setScene(new Scene(newOrLoadParent));
         Main.primaryStage.show();
     }
 
     public void startMultiplayer() throws IOException{
         // change Scene
-        Parent mpSelect = FXMLLoader.load(getClass().getResource("/Gui_View/mpSelect.fxml"));
+        Parent mpSelect = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpSelect.fxml"));
         Main.primaryStage.setScene(new Scene(mpSelect));
         Main.primaryStage.show();
     }

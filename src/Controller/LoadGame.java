@@ -12,12 +12,19 @@ import java.io.IOException;
 
 public class LoadGame {
 
+    @FXML private Button backButton;
     @FXML private Button deleteGames;
     @FXML private Button loadGame;
 
     public void delete() {
 
         // delete ausgewählte datein todo robin link skype
+    }
+
+    public void backToLastScene() throws IOException{
+        Parent newOrLoad = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
+        Main.primaryStage.setScene(new Scene(newOrLoad));
+        Main.primaryStage.show();
     }
 
     public void load() throws IOException{
@@ -27,7 +34,7 @@ public class LoadGame {
             HelpMethods.closeProgrammSaveGame();
         });
 
-        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/game.fxml"));
+        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/game.fxml"));
         Main.primaryStage.setScene(new Scene(game));
         Main.primaryStage.show();
     }

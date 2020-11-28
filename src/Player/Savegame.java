@@ -11,15 +11,17 @@ public class Savegame implements Serializable {
     private final IOwnPlayground ownPlayground;
     private final IEnemyPlayground enemyPlayground;   // -> Drawable[][]-> Jedes Feld DrawableObject
 
-    public final boolean  yourTurn;   //Wer ist an der Reihe
+    public final boolean multiplayer; // true = Multiplayer, false = Singleplayer
+    public final boolean yourTurn;   // Wer ist an der Reihe
 
     private final Player ownIPlayer;     // KI oder Selbst
     private final Player enemyIPlayer;   // KI oder Anderer
 
 
-    public Savegame (IOwnPlayground ownPlayground, IEnemyPlayground enemyPlayground, boolean yourTurn, Player ownIPlayer, Player enemyIPlayer, Long id){
+    public Savegame (IOwnPlayground ownPlayground, IEnemyPlayground enemyPlayground,boolean multiplayer, boolean yourTurn, Player ownIPlayer, Player enemyIPlayer, Long id){
         this.ownPlayground = ownPlayground;
         this.enemyPlayground = enemyPlayground;
+        this.multiplayer = multiplayer;
         this.yourTurn = yourTurn;
         this.ownIPlayer = ownIPlayer;
         this.enemyIPlayer = enemyIPlayer;

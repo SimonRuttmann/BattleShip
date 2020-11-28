@@ -20,7 +20,7 @@ public class PlaceShips {
             e.consume();
             Gui_View.HelpMethods.closeProgrammSaveGame();
         });
-        Parent game = FXMLLoader.load(getClass().getResource("game.fxml"));
+        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/game.fxml"));
         Main.primaryStage.setScene(new Scene(game));
         Main.primaryStage.show();
     }

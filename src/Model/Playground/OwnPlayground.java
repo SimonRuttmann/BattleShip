@@ -6,6 +6,7 @@ import Model.Util.ShotWater;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Model.Util.Water;
+import javafx.scene.control.Label;
 
 public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
@@ -13,9 +14,47 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         super(playgroundsize);
     }
 
+    /**
+     * Connects all Fields with an Label
+     * Sets all Fields non clickable
+     * @param labelArray an array of objects containing labels
+     */
+    @Override
+    public void setLabels(Object[] labelArray) {
+        int i = 0;
+        for ( int x = 1; x <= this.playgroundsize; x++)
+        {
+            for ( int y = 1; y <= this.playgroundsize; y++)
+            {
+                if ( Field[x][y] == null){
+                    System.out.println("Error, Field is uninitialized");
+                    return;
+                }
+                else{
+                    Label label = (Label)labelArray[i];
+                    Field[x][y].setLabel(label);
+                    Field[x][y].setLabelNonClickable();
+                    i++;
+                }
 
-    //This is the shoot method, when we get hit
+            }
+        }
+    }
 
+
+
+
+
+    /**
+     * Use this method when the enemy shoots at our playground
+     * Manages all necessary actions, when and shot occurs on our playground
+     *
+     * @param pos_shot The position, where the enemy wants to hit our playground
+     * @return  Returns an ShotResponseObject containing three booleans:
+     * gameLost:        True if the game is over, because we lost all our ships
+     * hit:             True one of our ships got hit
+     * shipDestroyed:   True, if on of our ships got hit and got destroyed
+     */
     public ShotResponse shoot(Point pos_shot) {
 
         //Hit
@@ -28,6 +67,9 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
             //Mark shipPart as destroyed
             hitShipPart.setPart("Destroyed");
+            hitShipPart.setShot(true);
+            hitShipPart.setLabelNonClickable();
+            hitShipPart.draw();
 
             //Ship sunken
             if ( hitShip.gethitPoints() <= 0){
@@ -48,22 +90,28 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
                 return new ShotResponse( false, true,false);
             }
 
-            //ShotResponse response = new ShotResponse();
         }
 
         //Water
         if (Field[pos_shot.getX()][pos_shot.getY()] instanceof Water){
             ShotResponse response = new ShotResponse(false,false,false);
-            //Set ShotWater
-            Field[pos_shot.getX()][pos_shot.getY()] = new ShotWater();
 
+            //Set ShotWater
+            Label label = Field[pos_shot.getX()][pos_shot.getY()].getLabel();
+            Field[pos_shot.getX()][pos_shot.getY()] = new ShotWater();
+            Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
+            Field[pos_shot.getX()][pos_shot.getY()].draw();
             return response;
         }
         return null;
     }
 
 
-    //This methods build us our playground at the beginning
+
+    /**
+     * Restriction: You can only build the Playground if all Ships are created and the placement of the ships are valid
+     * Creates the Playground, sets all ships-parts on the Field (if it is the own Field) and fills the rest of the fields with water
+     */
     @Override
     public void buildPlayground() {
         this.shipsplaced = IShip.getAmount();
@@ -100,6 +148,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
         }
 
+            //Fills the Rest with Water
             for ( int x = 1; x <= this.playgroundsize; x++)
             {
                 for ( int y = 1; y <= this.playgroundsize; y++)
@@ -116,6 +165,21 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
             }
 
 
+    }
+
+
+    /**
+     * Checks if the ship represented by these two points is valid
+     * if the ship placement is valid the method creates the ship and adds it to the shipList itself
+     *
+     * @param StartPoint The start point of the ship, which needs to be checked
+     * @param EndPoint  The end point of the ship, which needs to be checked
+     * @return True if the placement is valid. In any other case false
+     */
+    @Override
+    public boolean isShipPlacementValid(Point StartPoint, Point EndPoint) {
+        //Wenn ein schiff konstruiert wird und später nicht plazierbar ist, MUSS es wieder aus der Schiffsliste (automatisch beim konstruieren hinzugefügt) entfernt werden!
+        return false;
     }
 
 }

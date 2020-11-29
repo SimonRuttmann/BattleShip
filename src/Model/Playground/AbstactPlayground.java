@@ -2,6 +2,7 @@ package Model.Playground;
 
 import Model.Ship.IShip;
 import Model.Util.IDrawable;
+import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public abstract class AbstactPlayground implements IPlayground{
         this.playgroundsize = playgroundsize;
         Field = new IDrawable[playgroundsize][playgroundsize];
     }
+
 
     @Override
     public void drawPlayground(){
@@ -44,5 +46,10 @@ public abstract class AbstactPlayground implements IPlayground{
             }
     }
 
-   public abstract void buildPlayground();
+
+    @Override
+    public abstract void setLabels(Object[] labelArray);
+
+    @Override
+    public abstract void buildPlayground();
 }

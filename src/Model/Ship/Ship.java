@@ -9,18 +9,34 @@ public class Ship implements IShip {
     private int hitPoints;
     private final Point posStart;
     private final Point posEnd;
-    private final int size;
+    private int size;
 
     private static final ArrayList<IShip> ShipList = new ArrayList<>();
     private static int amount  = 0;
 
-    public Ship ( Point posStart, Point posEnd, int size){
+    public Ship ( Point posStart, Point posEnd){
         this.posStart = posStart;
         this.posEnd = posEnd;
-        this.size = size;
-        this.hitPoints = size;
+        getSizeOfShip (posStart, posEnd);
+        this.hitPoints = this.size;
         ShipList.add(this);
         amount = ShipList.size();
+    }
+
+    /**
+     * Calculates the size of the ship
+     * @param posStart the start position of the ship
+     * @param posEnd the end position of the ship
+     */
+    private void getSizeOfShip(Point posStart, Point posEnd){
+        //Vertical placed
+        if (posStart.getX() == posEnd.getX()){
+            this.size = posEnd.getY() - posStart.getY() +1;
+        }
+        //Horizontal placed
+        else{
+            this.size = posEnd.getX() - posStart.getX() +1;
+        }
     }
 
 

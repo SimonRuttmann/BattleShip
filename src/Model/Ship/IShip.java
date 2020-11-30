@@ -49,6 +49,12 @@ public interface IShip {
          return Ship.getShipList();
      }
 
+    /**
+     * Calculates all points, where this ship is represented
+     * @return Point Array with all coordiantes of the ship
+     */
+    Point[] getCoordinates();
+
 
 
 }

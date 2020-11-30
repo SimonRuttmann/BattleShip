@@ -262,7 +262,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
     private void setImpossibleFieldToWater ( int x, int y, ArrayList<Point> impossiblePositions){
 
         //Field is outside the Playground
-        if ( x < 1 || x > this.playgroundsize || y < 1 || y > this.playgroundsize) return;
+        if ( x < 0 || x >= this.playgroundsize || y < 0 || y >= this.playgroundsize) return;
 
         //If the Field is instanceof Water change it to ShotWater and set the Label non Clickable
         if( Field[x][y] instanceof Water){

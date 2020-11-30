@@ -39,6 +39,26 @@ public class Ship implements IShip {
         }
     }
 
+    /**
+     * Calculates all points, where this ship is represented
+     * @return Point Array with all coordiantes of the ship
+     */
+    @Override
+    public Point[] getCoordinates(){
+        Point[] coordinates = new Point[this.size];
+        //vertical placed
+        if ( this.posStart.getX() == this.posEnd.getX()){
+            for ( int i = 0; i < this.size; i++){
+                coordinates[i] = new Point(posStart.getX(), posStart.getY() + i);
+            }
+        }
+        else{
+            for ( int i = 0; i < this.size; i++){
+                coordinates[i] = new Point(posStart.getY(), posStart.getX() + i);
+            }
+        }
+        return coordinates;
+    }
 
     public static int getAmount(){
         return amount;

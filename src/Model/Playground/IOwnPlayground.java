@@ -1,5 +1,6 @@
 package Model.Playground;
 
+import Model.Ship.Ship;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 
@@ -20,10 +21,19 @@ public interface IOwnPlayground extends IPlayground{
      * Checks if the ship represented by these two points is valid
      * if the ship placement is valid the method creates the ship and adds it to the shipList itself
      *
-     * @param StartPoint The start point of the ship, which needs to be checked
-     * @param EndPoint  The end point of the ship, which needs to be checked
+     * @param startPoint The start point of the ship, which needs to be checked
+     * @param endPoint  The end point of the ship, which needs to be checked
      * @return True if the placement is valid. In any other case false
      */
-    boolean isShipPlacementValid(Point StartPoint, Point EndPoint);
+    boolean isShipPlacementValid(Point startPoint, Point endPoint);
+
+    /**
+     * Use this method, when the player wants to switch the position of his ship on the selection
+     * @param shipToMove The current ship the player wants to move to another position
+     * @param newStartPoint The startPosition, where the player wants to move the ship
+     * @param newEndpoint The endPosition, where the player wants to move the ship
+     * @return true, if the ship movement was correct, false if the movement is not allowed
+     */
+    boolean moveShip(Ship shipToMove, Point newStartPoint, Point newEndpoint);
 
 }

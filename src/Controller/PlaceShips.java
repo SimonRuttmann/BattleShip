@@ -25,4 +25,16 @@ public class PlaceShips {
         Main.primaryStage.show();
     }
 
+    //TODO Prio
+    //TODO Gridpane von Game für eigenes Spielfeld kopieren
+    // zurest buildPlayground
+    // Dann Connect Labels mit Playground ( Playground ist bereits konstruiert über cache zugreifbar)
+    // DRAG AN DROP Event ->
+    // FÜR JEDES SCHIFF: danach isPlacementValid() und wenn valid, dann wird das schiff direkt im Feld plaziert mit dem Labelwechseln @RobinRöcker
+    // bei false:
+    // Fehlermeldung: Das Schiff kann dort nicht plaziert werden
+    // Button ready -> Spielfeld
+
+
+
 }

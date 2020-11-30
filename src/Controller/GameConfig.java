@@ -30,10 +30,26 @@ public class GameConfig {
         Main.primaryStage.show();
     }
 
+
+
+
+    //TODO start game darf nur gedrückt werden wenn gültige parameter übergeben worden sind
     public void startGame() throws IOException {
         Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/start.fxml"));
         Main.primaryStage.setScene(new Scene(start));
         Main.primaryStage.show();
     }
+
+
+    //METHODE ->alle eingaben als parameter
+    //TODO Buttons auslesen
+    // erstellen player mit name
+    // erstellen playground mit size
+    // fügen wir das playground zu dem cache
+    // Alle weiteren parameter dem Cache hinzufügen
+    //
+    //
+    //-> Danach start -> setScene(newScene(...))
+
 
 }

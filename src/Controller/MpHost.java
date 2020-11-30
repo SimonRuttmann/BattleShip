@@ -2,6 +2,7 @@ package Controller;
 
 import Gui_View.Main;
 import Network.*;
+import Player.ActiveGameState;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -42,8 +43,15 @@ public class MpHost implements Initializable {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Main.primaryStage.setScene(new Scene(newOrLoad));
-                    Main.primaryStage.show();
+                    ActiveGameState.setServer(server);
+
+                    if ( newOrLoad == null) {
+                        System.out.println("Error at loading Scene newOrLoad");
+                    }
+                    else {
+                        Main.primaryStage.setScene(new Scene(newOrLoad));
+                        Main.primaryStage.show();
+                    }
                 }
                 else
                     System.out.println("didn't work");//todo fehler

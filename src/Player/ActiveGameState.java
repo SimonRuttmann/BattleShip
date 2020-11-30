@@ -9,12 +9,12 @@ import Network.*;
 public class ActiveGameState {
 
     //Network
-    private static Server server;
+    private static IServer server;
     private static Client client;
 
     //Playground
-    private static EnemyPlayground enemyPlayground;
-    private static OwnPlayground ownPlayground;
+    private static IEnemyPlayground enemyPlayground;
+    private static IOwnPlayground ownPlayground;
 
     private static Player ownPlayer;     // KI oder Selbst
     private static Player enemyPlayer;   // KI oder Anderer
@@ -26,15 +26,74 @@ public class ActiveGameState {
     private static boolean isWon;
     private static boolean isLost;
 
+    private static int amountOfShips;
+    private static int amountShipSize2;
+    private static int amountShipSize3;
+    private static int amountShipSize4;
+    private static int amountShipSize5;
+
+    private static boolean selfOrKi; //self = true; ki = false;
+
+    public static boolean isSelfOrKi() {
+        return selfOrKi;
+    }
+
+    /**
+     * Sets the variable, which one will play the game
+     * @param selfOrKi self = true, ki = false;
+     */
+    public static void setSelfOrKi(boolean selfOrKi) {
+        ActiveGameState.selfOrKi = selfOrKi;
+    }
 
 
-    //Getter and Setter
 
-    public static Server getServer() {
+    public static int getAmountOfShips() {
+        return amountOfShips;
+    }
+
+    public static void setAmountOfShips(int amountOfShips) {
+        ActiveGameState.amountOfShips = amountOfShips;
+    }
+
+    public static int getAmountShipSize2() {
+        return amountShipSize2;
+    }
+
+    public static void setAmountShipSize2(int amountShipSize2) {
+        ActiveGameState.amountShipSize2 = amountShipSize2;
+    }
+
+    public static int getAmountShipSize3() {
+        return amountShipSize3;
+    }
+
+    public static void setAmountShipSize3(int amountShipSize3) {
+        ActiveGameState.amountShipSize3 = amountShipSize3;
+    }
+
+    public static int getAmountShipSize4() {
+        return amountShipSize4;
+    }
+
+    public static void setAmountShipSize4(int amountShipSize4) {
+        ActiveGameState.amountShipSize4 = amountShipSize4;
+    }
+
+    public static int getAmountShipSize5() {
+        return amountShipSize5;
+    }
+
+    public static void setAmountShipSize5(int amountShipSize5) {
+        ActiveGameState.amountShipSize5 = amountShipSize5;
+    }
+//Getter and Setter
+
+    public static IServer getServer() {
         return server;
     }
 
-    public static void setServer(Server server) {
+    public static void setServer(IServer server) {
         ActiveGameState.server = server;
     }
 
@@ -46,19 +105,19 @@ public class ActiveGameState {
         ActiveGameState.client = client;
     }
 
-    public static EnemyPlayground getEnemyPlayground() {
+    public static IEnemyPlayground getEnemyPlayground() {
         return enemyPlayground;
     }
 
-    public static void setEnemyPlayground(EnemyPlayground enemyPlayground) {
+    public static void setEnemyPlayground(IEnemyPlayground enemyPlayground) {
         ActiveGameState.enemyPlayground = enemyPlayground;
     }
 
-    public static OwnPlayground getOwnPlayground() {
+    public static IOwnPlayground getOwnPlayground() {
         return ownPlayground;
     }
 
-    public static void setOwnPlayground(OwnPlayground ownPlayground) {
+    public static void setOwnPlayground(IOwnPlayground ownPlayground) {
         ActiveGameState.ownPlayground = ownPlayground;
     }
 

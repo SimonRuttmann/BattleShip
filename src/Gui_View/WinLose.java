@@ -44,6 +44,7 @@ public class WinLose {
             layout1.getChildren().addAll(winner, startAgain, end);
             layout1.setAlignment(Pos.CENTER);
             win = new Scene(layout1, width, height);
+            win.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
             winLose.setScene(win);
         } else {
             // Scene 2 - lose
@@ -52,6 +53,7 @@ public class WinLose {
             layout2.getChildren().addAll(loser, startAgain, end);
             layout2.setAlignment(Pos.CENTER);
             lose = new Scene(layout2, width, height);
+            lose.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
             winLose.setScene(lose);
         }
         HelpMethods.alignStageCenter(winLose, width, height);

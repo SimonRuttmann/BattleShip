@@ -9,7 +9,8 @@ import Model.Util.Water;
 
 import java.util.ArrayList;
 
-public class EnemyPlayground extends AbstactPlayground implements IEnemyPlayground {
+// todo -> make not abstract again, but now needed due to get game running
+abstract public class EnemyPlayground extends AbstactPlayground implements IEnemyPlayground {
     private int counterShipDestroyed = 0;
 
     public EnemyPlayground(int playgroundsize) {

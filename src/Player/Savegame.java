@@ -16,8 +16,19 @@ public class Savegame{
     private final Player ownIPlayer;     // KI oder Selbst
     private final Player enemyIPlayer;   // KI oder Anderer
 
+    // empty constructor for creating empty object -> load, will be overwritten
+    public Savegame() {
+        this.ownPlayground = null;
+        this.enemyPlayground = null;
+        this.multiplayer = false;
+        this.yourTurn = false;
+        this.ownIPlayer = null;
+        this.enemyIPlayer = null;
+        this.id = 0L;
+    }
 
-    public Savegame (IOwnPlayground ownPlayground, IEnemyPlayground enemyPlayground,boolean multiplayer, boolean yourTurn, Player ownIPlayer, Player enemyIPlayer, Long id){
+    // parameterized constructor - creating "real" object
+    public Savegame (IOwnPlayground ownPlayground, IEnemyPlayground enemyPlayground, boolean multiplayer, boolean yourTurn, Player ownIPlayer, Player enemyIPlayer, Long id){
         this.ownPlayground = ownPlayground;
         this.enemyPlayground = enemyPlayground;
         this.multiplayer = multiplayer;

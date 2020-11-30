@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 
-public class chooseSpMp {
+public class MainMenu {
 
     // views
     @FXML private Button singleplayerButton;

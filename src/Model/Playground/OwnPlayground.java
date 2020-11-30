@@ -6,8 +6,8 @@ import Model.Util.ShotWater;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Model.Util.Water;
-
-public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
+//todo make not abstract again
+public abstract class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
     public OwnPlayground(int playgroundsize) {
         super(playgroundsize);

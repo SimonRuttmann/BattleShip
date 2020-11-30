@@ -7,27 +7,29 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class SafeAndLoad implements ISafeAndLoad {
+public class SaveAndLoad {
 
-    @Override
-    public void safe(Savegame o, int temp){
+    public static boolean save(Savegame o, String temp){
         try{
             Gson gson = new Gson(); // create Gson instance
-            Writer writer = Files.newBufferedWriter(Paths.get(temp+".json")); //create writer
+            // temp = chosen name of file: e.g. temp = "test" -> output Paths.get: .savedGames/test.json
+            Writer writer = Files.newBufferedWriter(Paths.get(".savedGames/"+temp+".json")); //create writer
 
             gson.toJson(o, writer);
 
             writer.close();
+            return true;
         } catch (Exception ex){
-            System.out.println(ex);
+            System.out.println("Saving failed");
+            return false;
         }
     }
 
-    @Override
-    public Savegame load(Savegame e, int temp){
+    public static Savegame load(Savegame e, String temp){
         try {
             Gson gson = new Gson(); // create Gson instance
-            Reader reader = Files.newBufferedReader(Paths.get(temp+".json")); //create a reader
+            // temp = the complete path to the file that is intend to be loaded: e.g. temp = ".savedGames/test.json"
+            Reader reader = Files.newBufferedReader(Paths.get(temp)); //create a reader
             e = gson.fromJson(reader, Savegame.class); // write File content to Savegame-Object e
             reader.close();
         } catch (Exception ex){

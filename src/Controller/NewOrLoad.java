@@ -25,7 +25,7 @@ public class NewOrLoad implements Initializable {
     }
 
     public void backToLastScene() throws IOException{
-        Parent hello = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/chooseSpMp.fxml"));
+        Parent hello = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
         Main.primaryStage.setScene(new Scene(hello));
         Main.primaryStage.show();
     }

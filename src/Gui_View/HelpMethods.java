@@ -2,9 +2,14 @@
 
 package Gui_View;
 
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class HelpMethods {
 
@@ -30,4 +35,16 @@ public class HelpMethods {
     public static void winOrlose(boolean win) {
         WinLose.display(win);
     }
+
+    // todo: evtl better, does work but really slow
+    /*public void backToMainMenu() {
+        Parent mainMenu = null;
+        try {
+            mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Main.primaryStage.setScene(new Scene(mainMenu));
+        Main.primaryStage.show();
+    }*/
 }

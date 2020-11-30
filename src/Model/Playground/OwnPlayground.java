@@ -6,9 +6,6 @@ import Model.Util.ShotWater;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Model.Util.Water;
-import javafx.scene.control.Label;
-
-public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
     public OwnPlayground(int playgroundsize) {
         super(playgroundsize);

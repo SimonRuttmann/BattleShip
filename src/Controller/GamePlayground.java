@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Playground.IEnemyPlayground;
 import Model.Util.UtilDataType.Point;
+import Player.ActiveGameState;
 import Player.Savegame;
 import Controller.Handler.GameShootEnemy;
 import javafx.fxml.FXML;
@@ -17,7 +18,7 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Handler;
 
-public class Game implements Initializable {
+public class GamePlayground implements Initializable {
 
     @FXML
     private Button cancleGame;
@@ -26,20 +27,17 @@ public class Game implements Initializable {
     @FXML
     private GridPane enemyField;
 
-    // todo: Feld zusammenhängend machenn + Window size so, dass ganzes Feld passt aber nicht kleiner
+    // todo: Feld zusammenhängend machen + Window size so, dass ganzes Feld passt aber nicht kleiner
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //ownField.addRow(1); // todo add rows abhänging von Spielfeldgroesse
-        // 2D Feld für Labels:
+        // 2D fields for Labels:
+        int gamesize = ActiveGameState.playgroundSize;
         ownField.setHgap(1);
         ownField.setVgap(1);
         enemyField.setHgap(1);
         enemyField.setVgap(1);
 
-        int gamesize = 15;
-        //ArrayList<ArrayList<Integer>> ownFieldList = new ArrayList<>(gamesize);
-        // todo 2d array or arraylist??
-
+        // own Playground
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
                 Label label = new Label();
@@ -53,8 +51,7 @@ public class Game implements Initializable {
             }
         }
 
-        //enemyField.addRow(1); // todo add rows abhänging von Spielfeldgroesse
-        // 2D Feld für Labels:
+        // enemy Playground
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
                 Label label= new Label();
@@ -80,13 +77,10 @@ public class Game implements Initializable {
         Label a = (Label)enemyFieldArray[30];
         a.setStyle("-fx-background-color: red");
         a.setDisable(true);*/
-
-
     }
 
+    // when Button cancleGame is pressed - save or no saving?
     public void cancleGameMethod() {
         Gui_View.HelpMethods.closeProgrammSaveGame();
     }
-
-
 }

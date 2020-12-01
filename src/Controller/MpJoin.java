@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 
-import javax.xml.soap.Text;
 import java.io.IOException;
 
 public class MpJoin {
@@ -33,7 +32,7 @@ public class MpJoin {
         connectButton.setVisible(false);
         System.out.println("connectButton pressed");
         //todo das erste wenn connected
-        Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/start.fxml"));
+        Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/chooseSelfOrKi.fxml"));
         Main.primaryStage.setScene(new Scene(start));
         Main.primaryStage.show();
     }

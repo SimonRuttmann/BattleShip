@@ -17,7 +17,6 @@ import javafx.util.Callback;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class LoadGame implements Initializable {
@@ -85,7 +84,7 @@ public class LoadGame implements Initializable {
                             HelpMethods.closeProgrammSaveGame();
                         });
                         // Change scene to game Playground
-                        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/game.fxml"));
+                        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                         Main.primaryStage.setScene(new Scene(game));
                         Main.primaryStage.show();
                     } catch (IOException ioException) {

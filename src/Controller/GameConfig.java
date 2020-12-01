@@ -1,6 +1,7 @@
 package Controller;
 
 import Gui_View.Main;
+import Player.ActiveGameState;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,11 +32,13 @@ public class GameConfig {
     }
 
 
-
-
     //TODO start game darf nur gedrückt werden wenn gültige parameter übergeben worden sind
     public void startGame() throws IOException {
-        Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/start.fxml"));
+        // read in all parameters
+        //ActiveGameState.playgroundSize =
+
+
+        Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/chooseSelfOrKi.fxml"));
         Main.primaryStage.setScene(new Scene(start));
         Main.primaryStage.show();
     }
@@ -47,9 +50,4 @@ public class GameConfig {
     // erstellen playground mit size
     // fügen wir das playground zu dem cache
     // Alle weiteren parameter dem Cache hinzufügen
-    //
-    //
-    //-> Danach start -> setScene(newScene(...))
-
-
 }

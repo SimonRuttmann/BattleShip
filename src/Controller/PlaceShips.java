@@ -1,6 +1,5 @@
 package Controller;
 
-import Gui_View.HelpMethods;
 import Gui_View.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +19,7 @@ public class PlaceShips {
             e.consume();
             Gui_View.HelpMethods.closeProgrammSaveGame();
         });
-        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/game.fxml"));
+        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
         Main.primaryStage.setScene(new Scene(game));
         Main.primaryStage.show();
     }

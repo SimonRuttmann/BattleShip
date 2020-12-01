@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 
-public class MainMenu {
+public class MainMenu {    //todo: ordentliche Namen für Scenes - alle verweise überprüfen - duplikate entfernen
 
     // views
     @FXML private Button singleplayerButton;

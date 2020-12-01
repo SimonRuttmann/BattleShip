@@ -14,7 +14,7 @@ public class ActiveGameState {
     private static IServer server;
     private static Client client;
 
-    // Playground
+    // Game Configuration
     private static int playgroundSize;   // between 5x5 - 30x30
     private static int amountOfShips;
     private static int amountShipSize2;
@@ -22,6 +22,7 @@ public class ActiveGameState {
     private static int amountShipSize4;
     private static int amountShipSize5;
 
+    // Game Variables
     private static IEnemyPlayground enemyPlayground;
     private static IOwnPlayground ownPlayground;
 
@@ -29,7 +30,6 @@ public class ActiveGameState {
     private static Player ownPlayer;     // KI oder Selbst //todo -> what is Player, evtl. redunant with selfOrKi
     private static Player enemyPlayer;   // KI oder Anderer
 
-    // Game Variables
     private static boolean yourTurn;
     private static boolean multiplayer;
 
@@ -37,7 +37,7 @@ public class ActiveGameState {
     private static boolean isLost;
 
 
-
+    // ----------------------------------------
     // Getter and Setter Methods
 
     // Network
@@ -48,7 +48,7 @@ public class ActiveGameState {
     public static void setClient(Client client) { ActiveGameState.client = client; }
 
 
-    // Playground
+    // Game Configuration
     public static int getPlaygroundSize() { return playgroundSize; }
     public static void setPlaygroundSize(int playgroundSize) {
         assert ((playgroundSize >= 5) && (playgroundSize <= 30)) : "playgroundSize must be between " +
@@ -91,6 +91,8 @@ public class ActiveGameState {
         ActiveGameState.amountShipSize5 = amountShipSize5;
     }
 
+
+    // Game Variables
     public static IEnemyPlayground getEnemyPlayground() { return enemyPlayground; }
     public static void setEnemyPlayground(IEnemyPlayground enemyPlayground) {
         ActiveGameState.enemyPlayground = enemyPlayground;
@@ -122,9 +124,6 @@ public class ActiveGameState {
     public static void setEnemyPlayer(Player enemyPlayer) {
         ActiveGameState.enemyPlayer = enemyPlayer;
     }
-
-
-    // Game Variables
 
     public static boolean isYourTurn() {
         return yourTurn;

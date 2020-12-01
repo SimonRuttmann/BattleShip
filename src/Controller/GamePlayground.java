@@ -31,7 +31,7 @@ public class GamePlayground implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // 2D fields for Labels:
-        int gamesize = ActiveGameState.playgroundSize;
+        int gamesize = ActiveGameState.getPlaygroundSize();
         ownField.setHgap(1);
         ownField.setVgap(1);
         enemyField.setHgap(1);

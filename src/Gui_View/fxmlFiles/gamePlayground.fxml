@@ -29,7 +29,7 @@
                            <children>
                               <HBox alignment="CENTER">
                                  <children>
-                                    <Label alignment="CENTER" prefWidth="140.0" text="eigenes Spielfeld" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="ownFieldLabel" alignment="CENTER" text="eigenes Spielfeld" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER" fillHeight="false">
@@ -61,7 +61,7 @@
                            <children>
                               <HBox alignment="CENTER">
                                  <children>
-                                    <Label alignment="CENTER" prefWidth="140.0" text="gegnerisches Spielfeld" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="enemyFieldLabel" alignment="CENTER" text="gegnerisches Spielfeld" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER" fillHeight="false">

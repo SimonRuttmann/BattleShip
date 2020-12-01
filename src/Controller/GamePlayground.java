@@ -26,10 +26,20 @@ public class GamePlayground implements Initializable {
     private GridPane ownField;
     @FXML
     private GridPane enemyField;
+    @FXML
+    private Label ownFieldLabel;
+    @FXML
+    private Label enemyFieldLabel;
 
     // todo: Feld zusammenhängend machen + Window size so, dass ganzes Feld passt aber nicht kleiner
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // set Labels to Player Names
+        ownFieldLabel.setText(ActiveGameState.getOwnPlayerName() + "'s Spielfeld");
+        // todo evtl für Gegner - bekommen wir einen Namen?????
+
+        // todo: Scene builder -> langer Name + kleines Feld: Felder not in Mitte -- verbessern
+
         // 2D fields for Labels:
         int gamesize = ActiveGameState.getPlaygroundSize();
         ownField.setHgap(1);

@@ -23,9 +23,9 @@ public class ChooseSelfOrKi {
     }
 
     public void playKi() throws IOException {
-        Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+        Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
         ActiveGameState.setSelfOrKi(false);
-        Main.primaryStage.setScene(new Scene(placeShips));
+        Main.primaryStage.setScene(new Scene(gamePlayground));
         Main.primaryStage.show();
     }
 }

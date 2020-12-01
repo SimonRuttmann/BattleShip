@@ -1,15 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PlaceShips">
+
+<VBox prefHeight="400.0" prefWidth="600.0" stylesheets="@../Stylesheets/DefaultTheme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PlaceShips">
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <AnchorPane prefHeight="50.0" />
+      <VBox VBox.vgrow="ALWAYS">
          <children>
-            <Button fx:id="readyButton" mnemonicParsing="false" onAction="#startGame" text="Bereit" />
+            <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+               <children>
+                  <AnchorPane HBox.hgrow="ALWAYS">
+                     <children>
+                        <VBox alignment="CENTER" layoutY="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+                           <children>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label fx:id="ownFieldLabel" alignment="CENTER" text="eigenes Spielfeld" HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" fillHeight="false">
+                                 <children>
+                                    <GridPane fx:id="ownField" alignment="CENTER">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                       <cursor>
+                                          <Cursor fx:constant="DEFAULT" />
+                                       </cursor>
+                                    </GridPane>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+                  <Separator orientation="VERTICAL" />
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="randomPlacement" mnemonicParsing="false" text="Zufällig platzieren" />
+                        <HBox>
+                           <children>
+                              <VBox>
+                                 <children>
+                                    <Label text="2erSchiff" />
+                                    <Label text="3erSchiff" />
+                                    <Label text="4erSchiff" />
+                                    <Label text="5erSchiff" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="x/x platziert" />
+                                    <Label text="x/x platziert" />
+                                    <Label text="x/x platziert" />
+                                    <Label text="x/x platziert" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <Button fx:id="readyButton" mnemonicParsing="false" onAction="#startGame" text="Bereit" />
+                     </children>
+                  </VBox>
+               </children>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </HBox>
          </children>
       </VBox>
+      <AnchorPane prefHeight="50.0" style="-fx-background-color: lightgreen;" />
    </children>
-</HBox>
+</VBox>

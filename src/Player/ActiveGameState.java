@@ -15,6 +15,7 @@ public class ActiveGameState {
     private static Client client;
 
     // Game Configuration
+    private static String ownPlayerName;
     private static int playgroundSize;   // between 5x5 - 30x30
     private static int amountOfShips;
     private static int amountShipSize2;
@@ -49,6 +50,11 @@ public class ActiveGameState {
 
 
     // Game Configuration
+    public static String getOwnPlayerName() { return ownPlayerName; }
+    public static void setOwnPlayerName(String ownPlayerName) {
+        ActiveGameState.ownPlayerName = ownPlayerName;
+    }
+
     public static int getPlaygroundSize() { return playgroundSize; }
     public static void setPlaygroundSize(int playgroundSize) {
         assert ((playgroundSize >= 5) && (playgroundSize <= 30)) : "playgroundSize must be between " +

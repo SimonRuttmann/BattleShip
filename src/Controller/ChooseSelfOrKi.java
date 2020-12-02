@@ -10,10 +10,10 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 
-public class Start {
+public class ChooseSelfOrKi {
 
     @FXML public Button playBySelf;
-    @FXML public Button letKIplay;
+    @FXML public Button letKiPlay;
 
     public void playSelf() throws IOException {
         Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
@@ -22,12 +22,10 @@ public class Start {
         Main.primaryStage.show();
     }
 
-    public void playKI() throws IOException {
-        Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+    public void playKi() throws IOException {
+        Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
         ActiveGameState.setSelfOrKi(false);
-        Main.primaryStage.setScene(new Scene(placeShips));
+        Main.primaryStage.setScene(new Scene(gamePlayground));
         Main.primaryStage.show();
     }
-
-
 }

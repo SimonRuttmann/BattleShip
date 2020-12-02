@@ -1,6 +1,7 @@
 package Controller;
 
 import Gui_View.Main;
+import Player.ActiveGameState;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,7 +10,7 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 
-public class MainMenu {
+public class MainMenu {    //todo: ordentliche Namen für Scenes - alle verweise überprüfen - duplikate entfernen
 
     // views
     @FXML private Button singleplayerButton;
@@ -18,6 +19,7 @@ public class MainMenu {
 
 
     public void startSingleplayer() throws IOException{
+        ActiveGameState.setMultiplayer(false);
         // change Scene
         Parent newOrLoadParent = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
         Main.primaryStage.setScene(new Scene(newOrLoadParent));
@@ -25,6 +27,7 @@ public class MainMenu {
     }
 
     public void startMultiplayer() throws IOException{
+        ActiveGameState.setMultiplayer(true);
         // change Scene
         Parent mpSelect = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpSelect.fxml"));
         Main.primaryStage.setScene(new Scene(mpSelect));

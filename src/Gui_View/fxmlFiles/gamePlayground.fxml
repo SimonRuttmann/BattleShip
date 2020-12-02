@@ -12,9 +12,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="600.0" stylesheets="@../Stylesheets/DefaultTheme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PlaceShips">
+<VBox prefHeight="400.0" prefWidth="600.0" stylesheets="@../Stylesheets/DefaultTheme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GamePlayground">
    <children>
-      <AnchorPane prefHeight="50.0" />
+      <AnchorPane prefHeight="50.0">
+         <children>
+            <Button fx:id="cancleGame" mnemonicParsing="false" onAction="#cancleGameMethod" text="Spiel abbrechen" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+         </children>
+      </AnchorPane>
       <VBox VBox.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
@@ -31,12 +35,12 @@
                               <HBox alignment="CENTER" fillHeight="false">
                                  <children>
                                     <GridPane fx:id="ownField" alignment="CENTER">
-                                       <columnConstraints>
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" />
-                                       </columnConstraints>
-                                       <rowConstraints>
-                                          <RowConstraints minHeight="30.0" vgrow="SOMETIMES" />
-                                       </rowConstraints>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
                                        <padding>
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </padding>
@@ -50,36 +54,38 @@
                         </VBox>
                      </children>
                   </AnchorPane>
-                  <Separator orientation="VERTICAL">
-                     <padding>
-                        <Insets left="5.0" right="5.0" />
-                     </padding></Separator>
-                  <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                  <Separator orientation="VERTICAL" />
+                  <AnchorPane HBox.hgrow="ALWAYS">
                      <children>
-                        <Button fx:id="randomPlacement" mnemonicParsing="false" text="Zufällig platzieren" />
-                        <HBox>
+                        <VBox alignment="CENTER" layoutY="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                            <children>
-                              <VBox>
+                              <HBox alignment="CENTER">
                                  <children>
-                                    <Label text="2erSchiff" />
-                                    <Label text="3erSchiff" />
-                                    <Label text="4erSchiff" />
-                                    <Label text="5erSchiff" />
+                                    <Label fx:id="enemyFieldLabel" alignment="CENTER" text="gegnerisches Spielfeld" HBox.hgrow="ALWAYS" />
                                  </children>
-                              </VBox>
-                              <VBox>
+                              </HBox>
+                              <HBox alignment="CENTER" fillHeight="false">
                                  <children>
-                                    <Label text="x/x platziert" fx:id="xOfx2Ships" />
-                                    <Label text="x/x platziert" fx:id="xOfx3Ships" />
-                                    <Label text="x/x platziert" fx:id="xOfx4Ships" />
-                                    <Label text="x/x platziert" fx:id="xOfx5Ships" />
+                                    <GridPane fx:id="enemyField" alignment="CENTER">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                       <cursor>
+                                          <Cursor fx:constant="CROSSHAIR" />
+                                       </cursor>
+                                    </GridPane>
                                  </children>
-                              </VBox>
+                              </HBox>
                            </children>
-                        </HBox>
-                        <Button fx:id="readyButton" mnemonicParsing="false" onAction="#startGame" text="Bereit" />
+                        </VBox>
                      </children>
-                  </VBox>
+                  </AnchorPane>
                </children>
                <cursor>
                   <Cursor fx:constant="DEFAULT" />

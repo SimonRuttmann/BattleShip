@@ -1,3 +1,5 @@
+// todo: important -> use -ea to enable assertions when testing project code - assertions where used
+
 // todo set min Height: so, dass Festerrahmen egal welches BS berücksichtigt wird??
 
 package Gui_View;

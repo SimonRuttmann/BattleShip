@@ -11,7 +11,7 @@ import javafx.scene.control.Label;
 import java.util.ArrayList;
 
 // todo -> make not abstract again, but now needed due to get game running
-abstract public class EnemyPlayground extends AbstactPlayground implements IEnemyPlayground {
+public class EnemyPlayground extends AbstactPlayground implements IEnemyPlayground {
     private int counterShipDestroyed = 0;
 
     public EnemyPlayground(int playgroundsize) {
@@ -77,15 +77,38 @@ abstract public class EnemyPlayground extends AbstactPlayground implements IEnem
      * If the ship is sunken, the ShotResponse contains an Point-Array of impossible positions and the information if the game is won
      * In any other case the return value can be ignored
      *
+     *
      * @param pos_shot The position where the player is shooting the enemy playground
-     * @param shipHit If a ship on enemy playground is hit, this variable is set to true
-     * @param shipSunken If a ship on enemy playground is sunken, this variable is set to true
+     * @param answer The answer from the connection partner
+     *               0: shipHit false, shipSunken false
+     *               1: shipHit true, shipSunken false
+     *               2: shipHit true, shipSunken true
+     * shipHit If a ship on enemy playground is hit, this variable is set to true
+     * shipSunken If a ship on enemy playground is sunken, this variable is set to true
+     *
      * @return An object of type ShotResponse, the object contains all information
      *
      *
      */
     @Override
-    public ShotResponse shoot(Point pos_shot, boolean shipHit, boolean shipSunken) {
+    public ShotResponse shoot(Point pos_shot, int answer) {
+        //Kein Treffer!
+        boolean shipHit = false;
+        boolean shipSunken = false;
+
+
+        //Schiff getroffen
+        if ( answer == 1){
+            shipHit = true;
+            shipSunken = false;
+        }
+
+        //Schiff versenkt!
+        if ( answer == 2){
+            shipHit = true;
+            shipSunken = true;
+        }
+
         //Ship hit and sunken
         if (shipSunken) {
             counterShipDestroyed++;
@@ -226,6 +249,31 @@ abstract public class EnemyPlayground extends AbstactPlayground implements IEnem
 
     }
 
+    @Override
+    public void setAllLabelsNonClickable() {
+        for ( int x = 0; x < this.playgroundsize; x++)
+        {
+            for ( int y = 0; y < this.playgroundsize; y++)
+            {
+                Field[x][y].getLabel().setDisable(false);
+            }
+        }
+    }
+
+    @Override
+    public void setAllWaterFieldsClickable() {
+        for ( int x = 0; x < this.playgroundsize; x++)
+        {
+            for ( int y = 0; y < this.playgroundsize; y++)
+            {
+                if ( Field[x][y] instanceof Water)
+                {
+                    Field[x][y].getLabel().setDisable(true);
+                }
+
+            }
+        }
+    }
 
 
     /**

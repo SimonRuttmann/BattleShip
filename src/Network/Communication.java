@@ -248,7 +248,7 @@ public abstract class Communication implements ICommunication{
 
     }
 
-    public void closeReaderWriter(){
+    protected void closeReaderWriter(){
 
         try {
             this.inputReader.close();

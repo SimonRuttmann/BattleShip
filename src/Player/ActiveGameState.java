@@ -9,6 +9,8 @@ import Network.*;
 public class ActiveGameState {
 
     //Network
+    private static boolean amIServer;
+
     private static IServer server;
     private static Client client;
 
@@ -32,7 +34,19 @@ public class ActiveGameState {
     private static int amountShipSize4;
     private static int amountShipSize5;
 
+
     private static boolean selfOrKi; //self = true; ki = false;
+
+
+
+    public static boolean isAmIServer() {
+        return amIServer;
+    }
+
+    public static void setAmIServer(boolean amIServer) {
+        ActiveGameState.amIServer = amIServer;
+    }
+
 
     public static boolean isSelfOrKi() {
         return selfOrKi;

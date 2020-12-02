@@ -10,7 +10,8 @@ import Network.*;
 
 public class ActiveGameState {
 
-    // Network
+    //Network
+    private static boolean amIServer;
     private static IServer server;
     private static Client client;
 
@@ -37,10 +38,19 @@ public class ActiveGameState {
     private static boolean isLost;
 
 
+
     // ----------------------------------------
     // Getter and Setter Methods
 
     // Network
+    public static boolean isAmIServer() {
+        return amIServer;
+    }
+
+    public static void setAmIServer(boolean amIServer) {
+        ActiveGameState.amIServer = amIServer;
+    }
+
     public static IServer getServer() { return server; }
     public static void setServer(IServer server) { ActiveGameState.server = server; }
 

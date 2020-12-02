@@ -31,6 +31,9 @@ public class HelpMethods {
         CancelGame.save();
     }
 
+    // connection lost
+    public static void connectionLost() {ConnectionLost.display(); }
+
     // win or lose - new game or exit
     public static void winOrlose(boolean win) {
         WinLose.display(win);

@@ -37,8 +37,13 @@ public class GamePlayground implements Initializable {
         // set Labels to Player Names
         ownFieldLabel.setText(ActiveGameState.getOwnPlayerName() + "'s Spielfeld");
         // todo evtl für Gegner - bekommen wir einen Namen?????
+        if(ActiveGameState.isMultiplayer())
+            System.out.println("gegenername");/// name from gegner todo
+        else
+            System.out.println("bot name");// name für ki überlegen todo
 
         // todo: Scene builder -> langer Name + kleines Feld: Felder not in Mitte -- verbessern
+        // todo -> oder eben kein name- einfach eigenes feld gegnerisches feld, name nur fürs abspeichern
 
         // 2D fields for Labels:
         int gamesize = ActiveGameState.getPlaygroundSize();

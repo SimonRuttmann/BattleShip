@@ -24,6 +24,14 @@ public class PlaceShips implements Initializable {
     @FXML
     private Button randomPlacement;
     @FXML
+    private Label xOfx2Ships;
+    @FXML
+    private Label xOfx3Ships;
+    @FXML
+    private Label xOfx4Ships;
+    @FXML
+    private Label xOfx5Ships;
+    @FXML
     private Button readyButton;
 
     @Override
@@ -48,10 +56,24 @@ public class PlaceShips implements Initializable {
                 ownField.getChildren().addAll(label);
             }
         }
+
+        // set initial Labels - x/x ships placed //todo - 0/ -> variable
+        xOfx2Ships.setText("(0/" +ActiveGameState.getAmountShipSize2()+ " platziert)");
+        xOfx3Ships.setText("(0/" +ActiveGameState.getAmountShipSize3()+ " platziert)");
+        xOfx4Ships.setText("(0/" +ActiveGameState.getAmountShipSize4()+ " platziert)");
+        xOfx5Ships.setText("(0/" +ActiveGameState.getAmountShipSize5()+ " platziert)");
+
+        // method for placing ships - thread? drag&drop
+    }
+
+    public void newRandomPlacement () {
+        //todo -> call random place function
+        //todo -> update Gui after that
+        System.out.println("Ships placed randomly");
     }
 
     public void startGame() throws IOException {
-        //todo: only clickable when ships are placed in a valid way
+        //todo: only clickable when all ships are placed in a valid way
 
         // Versehentliches Schließen des Spiels verhindern + Speicheraufforderung
         Main.primaryStage.setOnCloseRequest(e -> {
@@ -73,5 +95,6 @@ public class PlaceShips implements Initializable {
     // Button ready -> Spielfeld
 
 
+    //todo reset label
 
 }

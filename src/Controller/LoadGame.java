@@ -2,6 +2,7 @@ package Controller;
 
 import Gui_View.HelpMethods;
 import Gui_View.Main;
+import Player.ActiveGameState;
 import Player.SaveAndLoad;
 import Player.Savegame;
 import javafx.collections.FXCollections;
@@ -30,9 +31,14 @@ public class LoadGame implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         // create observable list of the Game Files
         ObservableList<File> observableList = FXCollections.observableArrayList();
-        // dir is the folder that contains our saved game files
-        File dir = new File(".savedGames");
-        File[] savedGames = dir.listFiles(); //todo - list only files that are gamefiles -> .json
+        // dir is the folder that contains our saved game files - different for singleplayer and multiplayer
+        File dir;
+        if(ActiveGameState.isMultiplayer())
+            dir = new File(".savedGames"); //todo mit simon: dateiendung -> besser .svsingle .svmulti ?? und laden only multiplayer with ip????
+        else
+            dir = new File(".savedGames"); // todo: dann statt über ordner über filename schauen???
+
+        File[] savedGames = dir.listFiles((directory, filename) -> filename.endsWith(".json"));
         // add files to observable List and furthermore to gameList
         observableList.clear();
         observableList.addAll(savedGames);

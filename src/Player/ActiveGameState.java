@@ -15,6 +15,7 @@ public class ActiveGameState {
     private static Client client;
 
     // Game Configuration
+    private static boolean multiplayer;  // true = multiplayer, false = singleplayer
     private static String ownPlayerName;
     private static int playgroundSize;   // between 5x5 - 30x30
     private static int amountOfShips;
@@ -32,8 +33,6 @@ public class ActiveGameState {
     private static Player enemyPlayer;   // KI oder Anderer
 
     private static boolean yourTurn;
-    private static boolean multiplayer;
-
     private static boolean isWon;
     private static boolean isLost;
 
@@ -50,6 +49,13 @@ public class ActiveGameState {
 
 
     // Game Configuration
+    public static boolean isMultiplayer() {
+        return multiplayer;
+    }
+    public static void setMultiplayer(boolean multiplayer) {
+        ActiveGameState.multiplayer = multiplayer;
+    }
+
     public static String getOwnPlayerName() { return ownPlayerName; }
     public static void setOwnPlayerName(String ownPlayerName) {
         ActiveGameState.ownPlayerName = ownPlayerName;
@@ -136,13 +142,6 @@ public class ActiveGameState {
     }
     public static void setYourTurn(boolean yourTurn) {
         ActiveGameState.yourTurn = yourTurn;
-    }
-
-    public static boolean isMultiplayer() {
-        return multiplayer;
-    }
-    public static void setMultiplayer(boolean multiplayer) {
-        ActiveGameState.multiplayer = multiplayer;
     }
 
     public static boolean isIsWon() {

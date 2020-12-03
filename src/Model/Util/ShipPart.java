@@ -9,6 +9,7 @@ public class ShipPart implements IDrawable{
     private String part;
     private IShip owner = null;
     private boolean shot;
+    private boolean validShipPlacementMarker = true;
 
     //ShipsParts in our Field have an associated Ship
     public ShipPart(String part, IShip owner) {
@@ -39,6 +40,16 @@ public class ShipPart implements IDrawable{
     @Override
     public void setLabelNonClickable() {
         this.label.setDisable(false);
+    }
+
+    @Override
+    public void setValidShipPlacementMarker( boolean valid) {
+        this.validShipPlacementMarker = valid;
+    }
+
+    @Override
+    public boolean getValidShipPlacementMarker() {
+        return this.validShipPlacementMarker;
     }
 
     public IShip getOwner() {

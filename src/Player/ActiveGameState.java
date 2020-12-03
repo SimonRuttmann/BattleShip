@@ -72,9 +72,12 @@ public class ActiveGameState {
     }
 
     public static int getPlaygroundSize() { return playgroundSize; }
+
+    /**
+     * The size must be between 5 and 30
+     * @param playgroundSize the size of the playground
+     */
     public static void setPlaygroundSize(int playgroundSize) {
-        assert ((playgroundSize >= 5) && (playgroundSize <= 30)) : "playgroundSize must be between " +
-                "5 and 30, but is:" + playgroundSize;
         ActiveGameState.playgroundSize = playgroundSize;
     }
 

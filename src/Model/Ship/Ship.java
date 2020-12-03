@@ -14,6 +14,8 @@ public class Ship implements IShip {
     private static final ArrayList<IShip> ShipList = new ArrayList<>();
     private static int amount  = 0;
 
+    private ArrayList<Point> placementMarkers;
+
     public Ship ( Point posStart, Point posEnd){
         this.posStart = posStart;
         this.posEnd = posEnd;
@@ -21,6 +23,24 @@ public class Ship implements IShip {
         this.hitPoints = this.size;
         ShipList.add(this);
         amount = ShipList.size();
+    }
+
+    /**
+     *
+     * @return An Array of Points representing the Fields which got marked as not placeable
+     */
+    @Override
+    public ArrayList<Point> getPlacementMarkers() {
+        return placementMarkers;
+    }
+
+    /**
+     *
+     * @param placementMarkers An Array of Points representing the Fields which got marked as not placeable
+     */
+    @Override
+    public void setPlacementMarkers(ArrayList<Point> placementMarkers) {
+        this.placementMarkers = placementMarkers;
     }
 
     /**

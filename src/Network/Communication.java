@@ -42,8 +42,27 @@ public abstract class Communication implements ICommunication{
     public String[] getCMD() {
         if (!connected) return null;
         try {
+           /* lock = true;
+            Thread timeout = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {//TODO
+                        for (int i = 0; i < 1000; i++){
+                            i = i++;
+                            wait(1000);
+                        }
+                        lock = false;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+            */// -> Thread inputReader.readLine();
+
             String cmd = inputReader.readLine();
 
+            //timout.join() inputReaderThread.join();
+            // -> Wer zuerst joint -> Befehl oder Befehl"Timout"
             if(validDataReceived(cmd)){
                 return cmd.split(" ");
             }
@@ -248,7 +267,7 @@ public abstract class Communication implements ICommunication{
 
     }
 
-    public void closeReaderWriter(){
+    protected void closeReaderWriter(){
 
         try {
             this.inputReader.close();

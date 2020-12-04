@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="15.0" stylesheets="@../Stylesheets/DefaultTheme.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainMenu">
+   <children>
+      <Label text="Schiffe versenken">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
+      <Button fx:id="singleplayerButton" mnemonicParsing="false" onAction="#startSingleplayer" prefHeight="40.0" prefWidth="150.0" text="Singleplayer" />
+      <Button fx:id="mulitplayerButton" mnemonicParsing="false" onAction="#startMultiplayer" prefHeight="40.0" prefWidth="150.0" text="Multiplayer" />
+      <Button id="bold-blue-button" fx:id="endButton" mnemonicParsing="false" onAction="#endGame" prefHeight="40.0" prefWidth="150.0" text="Beenden" />
+   </children>
+</VBox>

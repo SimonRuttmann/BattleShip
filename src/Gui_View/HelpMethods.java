@@ -1,8 +1,15 @@
+// todo add stylesheets to classes
+
 package Gui_View;
 
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class HelpMethods {
 
@@ -16,19 +23,31 @@ public class HelpMethods {
 
     // do you really want to exit the Game?
     public static void closeProgramm() {
-        System.out.println("a");
-        CancelGame.exit(); // todo call align center
+        CancelGame.exit();
     }
 
     // do you really want to exit the Game - special for in-game: with saving
     public static void closeProgrammSaveGame() {
-        System.out.println("b");
-        CancelGame.save(); // todo call align center
+        CancelGame.save();
     }
+
+    // connection lost
+    public static void connectionLost() {ConnectionLost.display(); }
 
     // win or lose - new game or exit
     public static void winOrlose(boolean win) {
-        System.out.println("c");
-        WinLose.display(win); // todo call align centerZ
+        WinLose.display(win);
     }
+
+    // todo: evtl better, does work but really slow
+    /*public void backToMainMenu() {
+        Parent mainMenu = null;
+        try {
+            mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Main.primaryStage.setScene(new Scene(mainMenu));
+        Main.primaryStage.show();
+    }*/
 }

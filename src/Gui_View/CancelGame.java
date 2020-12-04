@@ -2,6 +2,10 @@
 
 package Gui_View;
 
+import Player.SaveAndLoad;
+import Player.Savegame;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,6 +14,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class CancelGame {
 
@@ -39,8 +47,11 @@ public class CancelGame {
         exitBox.getChildren().addAll(label, yesNo);
         exitBox.setAlignment(Pos.CENTER);
 
-        exit.setScene(new Scene(exitBox, width, height));
+        Scene scene = new Scene(exitBox, width, height);
+        exit.setScene(scene);
+        scene.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
         HelpMethods.alignStageCenter(exit, width, height);
+        exit.setResizable(false);
         exit.showAndWait();
     }
 
@@ -51,8 +62,15 @@ public class CancelGame {
         // Scene 1 - save or don't save
         Button saveGame = new Button("Spiel speichern");
         saveGame.setOnAction(e -> {
-            save.setScene(success);
-        }); // todo save - hier dafür sorgen, dass gespeichert wird -> mit Robin
+            //todo get current Gamestats into Savegame Object -> gamemode in Dateiname - Multiplayer vs Singeplayer
+            Savegame toSave = new Savegame();
+            String time = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+            String temp = "Spiel am: " + time; // todo besserer Name
+            if(SaveAndLoad.save(toSave, temp))
+                save.setScene(success);
+            //else
+            //    save.setScene(failure);//todo create scene failure
+        });
         Button noSave = new Button("Beenden ohne Speichern");
         noSave.setOnAction(e -> {
             save.close();
@@ -63,23 +81,32 @@ public class CancelGame {
         layout1.getChildren().addAll(saveGame, noSave);
         layout1.setAlignment(Pos.CENTER);
         choose = new Scene(layout1, width, height);
+        choose.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
 
 
         // Scene 2 - successfully saved
         Label successfull = new Label("Speichern erfolgreich!"); // todo: wir gehen aktuell davon aus, das Speichern immer erfolgreich
-        Button endGame = new Button("Spiel beenden");
+        Button endGame = new Button("Spiel beenden"); // todo: eventuell rückkehr ins startmenü: not so easy
         endGame.setOnAction(e -> {
             save.close();
             Main.primaryStage.close();
         });
+        /* todo evlt
+        Button backToMainManu = new Button("Zurück ins Hauptmenü");
+        backToMainManu.setOnAction(e -> {
+            HelpMethods backto = new HelpMethods();
+            backto.backToMainMenu();
+        });*/
 
         VBox layout2 = new VBox(15);
         layout2.getChildren().addAll(successfull, endGame);
         layout2.setAlignment(Pos.CENTER);
         success = new Scene(layout2, width, height);
+        success.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
 
         save.setScene(choose);
         HelpMethods.alignStageCenter(save, width, height);
+        save.setResizable(false);
         save.showAndWait();
     }
 }

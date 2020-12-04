@@ -19,4 +19,10 @@ public interface IShip {
          return Ship.getShipList();
      }
 
+    void setPosStart();
+    void setPosEnd();
+
+    public Point getPosStart();
+
+    public Point getPosEnd();
 }

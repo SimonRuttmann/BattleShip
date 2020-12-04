@@ -7,6 +7,10 @@ import java.util.ArrayList;
 
 
 public abstract class AbstactPlayground implements IPlayground{
+
+
+
+
     protected int playgroundsize;
     protected IDrawable[][] Field;
     protected int shipsplaced;
@@ -44,5 +48,8 @@ public abstract class AbstactPlayground implements IPlayground{
             }
     }
 
+    public int getPlaygroundsize() {
+        return playgroundsize;
+    }
    public abstract void buildPlayground();
 }

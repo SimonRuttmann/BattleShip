@@ -10,12 +10,12 @@ import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 
-// todo -> make not abstract again, but now needed due to get game running
+
 public class EnemyPlayground extends AbstactPlayground implements IEnemyPlayground {
     private int counterShipDestroyed = 0;
 
-    public EnemyPlayground(int playgroundsize) {
-        super(playgroundsize);
+    public EnemyPlayground() {
+        super();
     }
 
     /**
@@ -50,7 +50,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
      */
     @Override
     public void buildPlayground() {
-        this.shipsplaced = IShip.getAmount();
+        //this.shipsplaced = IShip.getAmount();
 
         for (int x = 1; x <= this.playgroundsize; x++) {
             for (int y = 1; y <= this.playgroundsize; y++) {

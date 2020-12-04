@@ -30,24 +30,24 @@ public interface IShip {
      * @return The size of the ship
      */
     int getSize();
-
+/*
     /**
      * Every ship constructed is saved in an Ship-List
      * Returns the size of the Ship-List
      * @return The amount of ships in the Ship-List
      */
-    static int getAmount() {
-        return Ship.getAmount();
-    }
+//    static int getAmount() {
+//        return Ship.getAmount();
+//    }
 
-
+/*
     /**
      * All constructed ships, which are valid are added in the ship-List
      * @return A ArrayList of placed ships
      */
-    static ArrayList<IShip> getShipList(){
-         return Ship.getShipList();
-     }
+//    static ArrayList<IShip> getShipList(){
+//         return Ship.getShipList();
+//     }
 
     /**
      * Calculates all points, where this ship is represented

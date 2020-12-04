@@ -57,4 +57,15 @@ public interface IShip {
 
 
 
+    /**
+     *
+     * @return An Array of Points representing the Fields which got marked as not placeable
+     */
+     ArrayList<Point> getPlacementMarkers();
+
+    /**
+     *
+     * @param placementMarkers An Array of Points representing the Fields which got marked as not placeable
+     */
+    void setPlacementMarkers(ArrayList<Point> placementMarkers);
 }

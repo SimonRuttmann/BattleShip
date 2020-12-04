@@ -4,6 +4,7 @@ import javafx.scene.control.Label;
 
 public class ShotWater implements IDrawable {
     private Label label;
+    private boolean validShipPlacementMarker = true;
 
     public ShotWater() {
     }
@@ -29,5 +30,15 @@ public class ShotWater implements IDrawable {
     @Override
     public void setLabelNonClickable() {
         this.label.setDisable(false);
+    }
+
+    @Override
+    public void setValidShipPlacementMarker(boolean valid) {
+        this.validShipPlacementMarker = valid;
+    }
+
+    @Override
+    public boolean getValidShipPlacementMarker() {
+        return this.validShipPlacementMarker;
     }
 }

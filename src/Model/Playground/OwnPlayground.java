@@ -9,6 +9,9 @@ import Model.Util.UtilDataType.ShotResponse;
 import Model.Util.Water;
 import javafx.scene.control.Label;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
     public OwnPlayground(int playgroundsize) {
         super(playgroundsize);
@@ -174,33 +177,88 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
      *
      * @param startPoint The start point of the ship, which needs to be checked
      * @param endPoint  The end point of the ship, which needs to be checked
-     * @return True if the placement is valid. In any other case false
+     * @return The ship if the placement is valid. In any other case null
      */
     @Override
-    public boolean isShipPlacementValid(Point startPoint, Point endPoint) {
+    public IShip isShipPlacementValid(Point startPoint, Point endPoint) {
         int startX = startPoint.getX();
         int startY = startPoint.getY();
 
         int endX = endPoint.getX();
         int endY = endPoint.getY();
 
-        int size = this.playgroundsize;
-
         //Checks if any coordinates are out of the field
         if ( startX < 0 || startY < 0 || endX < 0 || endY < 0
                 || startX >= this.playgroundsize|| startY >= this.playgroundsize ||
                 endX >= this.playgroundsize || endY >= this.playgroundsize)
-                return false;
+                return null;
 
+        IShip ship = new Ship(startPoint, endPoint);
+        Point[] coordinates = ship.getCoordinates();
 
-        for ( int x = 0; x < size; x++){
-            for ( int y = 0; y < size; y++){
-
+        //Checks if the placement is valid
+        for (Point point : coordinates ){
+            int x = point.getX();
+            int y = point.getY();
+            if (!Field[x][y].getValidShipPlacementMarker()){
+                IShip.getShipList().remove(ship);
+                return null;
             }
         }
-        //Wenn ein schiff konstruiert wird und später nicht plazierbar ist, MUSS es wieder aus der Schiffsliste (automatisch beim konstruieren hinzugefügt) entfernt werden!
-        return false;
+
+        //If the placement was valid then the fields surrounding the ship have to be marked
+        //An ArrayList containing these points are saved for this ship
+        ship.setPlacementMarkers(setPlacementMarkerToSurroundingFields(coordinates));
+
+        return ship;
     }
+
+
+    /**
+     * Help-Method for the isShipPlacement-Method
+     * @param coordinatesToMark The coordinates, which surroundings have to be marked
+     * @return An ArrayList of all marked positions
+     */
+    private ArrayList<Point> setPlacementMarkerToSurroundingFields(Point[] coordinatesToMark) {
+        ArrayList<Point> MarkedPositions = new ArrayList<>();
+        //For every Point where the Ship will be placed
+        for (Point point : coordinatesToMark) {
+
+            //Get all the surrounding Fields of the point and switch them to marked
+            int x = point.getX();
+            int y = point.getY();
+
+            for ( int i = x-1; i <= x+1; i++  ){
+                for ( int j = y-1; j <= y+1; j++){
+                    setPlacementMarkerToField (i, j, MarkedPositions);
+                }
+            }
+
+        }
+        return MarkedPositions;
+    }
+
+
+    /**
+     * Help-Method for the setPlacementMarkerToSurroundingFields
+     * @param x the x coordinate which has to be marked
+     * @param y the y coordinate which has to be marked
+     * @param MarkedPositions The ArrayList where the marked positions get added
+     */
+    private void setPlacementMarkerToField ( int x, int y, ArrayList<Point> MarkedPositions){
+
+        //Field is outside the Playground
+        if ( x < 0 || x >= this.playgroundsize || y < 0 || y >= this.playgroundsize) return;
+
+        //Set the placementMarker of the Field to true
+        if( Field[x][y] != null){
+            Field[x][y].setValidShipPlacementMarker(false);
+            MarkedPositions.add(new Point(x,y));
+        }
+    }
+
+
+
 
     /**
      * Use this method, when the player wants to switch the position of his ship on the selection
@@ -211,7 +269,108 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
      */
     @Override
     public boolean moveShip(Ship shipToMove, Point newStartPoint, Point newEndpoint) {
-        return false;
+
+        /*
+        1. Set the fields, where the ship was to water, the Water Fields got by default an valid placement-marker
+        2. Get all surrounding coordinates and mark them as valid if there is no ship next to
+        3. Check if the new placement is valid
+            a) False -> Revert all actions                      -> return false
+            b) True  -> The movement of the ship was correct    -> return true
+         */
+
+
+        //Get the coordinates of the ship
+        Point[] coordinatesOfShip = shipToMove.getCoordinates();
+
+        //Save the ShipParts in a cache, it's necessary if the shipPlacement wasn't valid and we have to revert the action
+        ArrayList<ShipPart> cache = new ArrayList<>();
+
+        //1
+        for ( Point point : coordinatesOfShip ){
+            //Set the Fields to Water, the Water Fields got by default an valid placement-marker
+            cache.add((ShipPart)Field[point.getX()][point.getY()]);
+
+            Label label = Field[point.getX()][point.getY()].getLabel();
+            Field[point.getX()][point.getY()] = new Water();
+            Field[point.getX()][point.getY()].setLabel(label);
+        }
+
+        //2
+        ArrayList<Point> changedCoordinates = checkSurroundingsOfMarkedPositions(coordinatesOfShip);
+
+        //3
+        IShip placedShip = isShipPlacementValid(newStartPoint,newEndpoint);
+        //new Placement is not valid
+
+        if (placedShip == null){
+        // a)
+            //replace the shipParts
+            for ( Point point : coordinatesOfShip ){
+                Field[point.getX()][point.getY()] = cache.get(0);
+            }
+            //remark the fields
+            for (Point point : changedCoordinates){
+                Field[point.getX()][point.getY()].setValidShipPlacementMarker(false);
+            }
+            return false;
+        }
+        else{
+        // b)
+            return true;
+        }
+
     }
 
+    /**
+     * Calculates the surrounding Coordinates of a Point
+     * This method calls foreach surrounding coordinate the checkIfNextToShip method
+     * @param coordinates The coordinates of the ship
+     * @return ArrayList of Points with changed coordinates
+     */
+    private ArrayList<Point> checkSurroundingsOfMarkedPositions(Point[] coordinates){
+        ArrayList<Point> changedCoordinates = new ArrayList<>();
+
+        for (Point point : coordinates) {
+
+            //Get all the surrounding Fields
+            int x = point.getX();
+            int y = point.getY();
+
+            ArrayList<Point> surroundingCoordinates = new ArrayList<>();
+            for ( int i = x-1; i <= x+1; i++  ){
+                for ( int j = y-1; j <= y+1; j++){
+                    surroundingCoordinates.add(new Point(x, y));
+                }
+            }
+            checkIfNextToShip(surroundingCoordinates, changedCoordinates);
+        }
+        return changedCoordinates;
+    }
+
+    /**
+     * When a surroundingCoordinates is not next to a ship is sets the ValidPlacementMarker to true
+     * @param surroundingCoordinates The surrounding Coordinates which have to be checked if a ship is next to
+     */
+    private void checkIfNextToShip(ArrayList<Point> surroundingCoordinates, ArrayList<Point> changedCoordinates){
+        //Foreach point the in the surroundingCoordinates list, check if a ship is NextTo
+        for ( Point point : surroundingCoordinates){
+
+            int x = point.getX();
+            int y = point.getY();
+            boolean isShipNext = false;
+
+            for ( int i = x-1; i <= x+1; i++  ){
+                for ( int j = y-1; j <= y+1; j++){
+                    // Point is outside the playground
+                    if ( x < 0 || x > this.playgroundsize || y < 0 || y < this.playgroundsize) continue;
+                    if ( Field[x][y] instanceof ShipPart){
+                        isShipNext = true;
+                        break;
+                    }
+                }
+            }
+            changedCoordinates.add(new Point(x,y));
+            Field[x][y].setValidShipPlacementMarker(!isShipNext);
+        }
+    }
 }

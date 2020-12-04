@@ -10,10 +10,45 @@ import Network.*;
 
 public class ActiveGameState {
 
+
+    // Modes
+    /**
+     *
+     * Es gibt folgende Modi:
+     *
+     * 1 Spieler      vs anderen Spieler/KI wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld             wie bisher
+     *
+     * 2 Spieler      vs eigene KI          wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     *                                     -> Die KI hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     *
+     * 3 eigene KI    vs eigene KI          Die KI 1 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     *                                      Die KI 2 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     */
+    private static int modes;
+
+    private static boolean OwnPlayerKi; //<- Das ist die KI, welche bei Modus 2 und 3 benötigt wird
+    private static IOwnPlayground ownPlayerIOwnPlayground;
+    private static IEnemyPlayground ownPlayerIEnemyPlayground;
+
+    // You only use the enemy player in singleplayer, where the enemy is always a KI
+    private static IOwnPlayground enemyPlayerOwnPlayground;
+    private static IEnemyPlayground enemyPlayerEnemyPlayground;
+
+
     //Network
     private static boolean amIServer;
     private static IServer server;
     private static Client client;
+
+    public static boolean isRunning() {
+        return running;
+    }
+
+    public static void setRunning(boolean running) {
+        ActiveGameState.running = running;
+    }
+
+    private static boolean running;
 
     // Game Configuration
     private static boolean multiplayer;  // true = multiplayer, false = singleplayer
@@ -26,12 +61,12 @@ public class ActiveGameState {
     private static int amountShipSize5;
 
     // Game Variables
-    private static IEnemyPlayground enemyPlayground;
-    private static IOwnPlayground ownPlayground;
+// -> Gestrichen -> neuer Zugriff über ActiveGameState.getOwnPlayer.get[Own][Enemy]Playground
+//    private static IEnemyPlayground enemyPlayground;
+//    private static IOwnPlayground ownPlayground;
 
     private static boolean selfOrKi; //self = true; ki = false;
-    private static Player ownPlayer;     // KI oder Selbst //todo -> what is Player, evtl. redunant with selfOrKi
-    private static Player enemyPlayer;   // KI oder Anderer
+
 
     private static boolean yourTurn;
     private static boolean isWon;
@@ -118,15 +153,6 @@ public class ActiveGameState {
 
 
     // Game Variables
-    public static IEnemyPlayground getEnemyPlayground() { return enemyPlayground; }
-    public static void setEnemyPlayground(IEnemyPlayground enemyPlayground) {
-        ActiveGameState.enemyPlayground = enemyPlayground;
-    }
-
-    public static IOwnPlayground getOwnPlayground() { return ownPlayground; }
-    public static void setOwnPlayground(IOwnPlayground ownPlayground) {
-        ActiveGameState.ownPlayground = ownPlayground;
-    }
 
     public static boolean getSelfOrKi() { return selfOrKi; }
     /**Sets the variable, which one will play the game
@@ -136,19 +162,6 @@ public class ActiveGameState {
         ActiveGameState.selfOrKi = selfOrKi;
     }
 
-    public static Player getOwnPlayer() {
-        return ownPlayer;
-    }
-    public static void setOwnPlayer(Player ownPlayer) {
-        ActiveGameState.ownPlayer = ownPlayer;
-    }
-
-    public static Player getEnemyPlayer() {
-        return enemyPlayer;
-    }
-    public static void setEnemyPlayer(Player enemyPlayer) {
-        ActiveGameState.enemyPlayer = enemyPlayer;
-    }
 
     public static boolean isYourTurn() {
         return yourTurn;
@@ -170,4 +183,58 @@ public class ActiveGameState {
     public static void setIsLost(boolean isLost) {
         ActiveGameState.isLost = isLost;
     }
+
+
+    public static int getModes() {
+        return modes;
+    }
+
+    public static void setModes(int modes) {
+        ActiveGameState.modes = modes;
+    }
+
+    public static boolean isOwnPlayerKi() {
+        return OwnPlayerKi;
+    }
+
+    public static void setOwnPlayerKi(boolean ownPlayerKi) {
+        OwnPlayerKi = ownPlayerKi;
+    }
+
+    public static IOwnPlayground getOwnPlayerIOwnPlayground() {
+        return ownPlayerIOwnPlayground;
+    }
+
+    public static void setOwnPlayerIOwnPlayground(IOwnPlayground ownPlayerIOwnPlayground) {
+        ActiveGameState.ownPlayerIOwnPlayground = ownPlayerIOwnPlayground;
+    }
+
+    public static IEnemyPlayground getOwnPlayerIEnemyPlayground() {
+        return ownPlayerIEnemyPlayground;
+    }
+
+    public static void setOwnPlayerIEnemyPlayground(IEnemyPlayground ownPlayerIEnemyPlayground) {
+        ActiveGameState.ownPlayerIEnemyPlayground = ownPlayerIEnemyPlayground;
+    }
+
+    public static IOwnPlayground getEnemyPlayerOwnPlayground() {
+        return enemyPlayerOwnPlayground;
+    }
+
+    public static void setEnemyPlayerOwnPlayground(IOwnPlayground enemyPlayerOwnPlayground) {
+        ActiveGameState.enemyPlayerOwnPlayground = enemyPlayerOwnPlayground;
+    }
+
+    public static IEnemyPlayground getEnemyPlayerEnemyPlayground() {
+        return enemyPlayerEnemyPlayground;
+    }
+
+    public static void setEnemyPlayerEnemyPlayground(IEnemyPlayground enemyPlayerEnemyPlayground) {
+        ActiveGameState.enemyPlayerEnemyPlayground = enemyPlayerEnemyPlayground;
+    }
+
+    public static boolean isSelfOrKi() {
+        return selfOrKi;
+    }
+
 }

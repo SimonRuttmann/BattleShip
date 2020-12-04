@@ -1,5 +1,6 @@
 package Model.Ship;
 
+import Model.Playground.OwnPlayground;
 import Model.Util.UtilDataType.Point;
 
 import java.util.ArrayList;
@@ -11,18 +12,19 @@ public class Ship implements IShip {
     private final Point posEnd;
     private int size;
 
-    private static final ArrayList<IShip> ShipList = new ArrayList<>();
-    private static int amount  = 0;
+    //private static final ArrayList<IShip> ShipList = new ArrayList<>();
+    //private static int amount  = 0;
 
     private ArrayList<Point> placementMarkers;
 
-    public Ship ( Point posStart, Point posEnd){
+    public Ship ( Point posStart, Point posEnd, OwnPlayground ownPlayground){
         this.posStart = posStart;
         this.posEnd = posEnd;
         getSizeOfShip (posStart, posEnd);
         this.hitPoints = this.size;
-        ShipList.add(this);
-        amount = ShipList.size();
+        ownPlayground.getShipListOfThisPlayground().add(this);
+        //ShipList.add(this);
+        //amount = ShipList.size();
     }
 
     /**
@@ -80,9 +82,9 @@ public class Ship implements IShip {
         return coordinates;
     }
 
-    public static int getAmount(){
-        return amount;
-    }
+    //public static int getAmount(){
+    //    return amount;
+    //}
 
     @Override
     public int gethitPoints() {
@@ -100,9 +102,9 @@ public class Ship implements IShip {
     }
 
     //Is called by IShip
-    public static ArrayList<IShip> getShipList() {
-        return ShipList;
-    }
+    //public static ArrayList<IShip> getShipList() {
+    //    return ShipList;
+    //}
 
     @Override
     public Point[] getPosition(){

@@ -21,7 +21,13 @@ public abstract class Communication implements ICommunication{
 
     @Override
     public void sendCMD(CMD command, String parameter) {
-        String sendCMD = command.toString() + " " + parameter;
+        String sendCMD;
+        if (!parameter.isEmpty()) {
+            sendCMD = command.toString() + " " + parameter;
+        }
+        else{
+            sendCMD = command.toString();
+        }
 
         if (!connected) return;
         try {

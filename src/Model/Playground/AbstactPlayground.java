@@ -2,6 +2,7 @@ package Model.Playground;
 
 import Model.Ship.IShip;
 import Model.Util.IDrawable;
+import Player.ActiveGameState;
 import javafx.scene.control.Label;
 
 import java.util.ArrayList;
@@ -14,9 +15,10 @@ public abstract class AbstactPlayground implements IPlayground{
     protected boolean gameWon;
     protected boolean gameLost;
 
-    public AbstactPlayground (int playgroundsize){
-        this.playgroundsize = playgroundsize;
+    public AbstactPlayground (){
+        this.playgroundsize = ActiveGameState.getPlaygroundSize();
         Field = new IDrawable[playgroundsize][playgroundsize];
+        this.shipsplaced = ActiveGameState.getAmountOfShips();
     }
 
 

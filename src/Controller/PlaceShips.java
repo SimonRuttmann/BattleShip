@@ -22,7 +22,6 @@ import javafx.scene.layout.Region;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class PlaceShips implements Initializable {
 
@@ -47,6 +46,8 @@ public class PlaceShips implements Initializable {
     @FXML
     private Label xOfx5Ships;
     @FXML
+    private Button rotate90;
+    @FXML
     private Button randomPlacement;
     @FXML
     private Button resetPlacement;
@@ -57,20 +58,22 @@ public class PlaceShips implements Initializable {
     String red = "-fx-background-color: #ffa1a1";
     String blue = "-fx-background-color: lightblue";
     String indicateValidPlacement = red;
+    boolean horizontal = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButton.png"))));
         System.out.println("window size: " + Main.primaryStage.getHeight());
         //todo public scale - for fields -> pref size -> better way 2:3 for programm fix -> use SceneSizeChangeListener to scale properly all the time - no strange things happening
         int scale = 30;
         // Ships
-        twoShip.setPrefSize(2*scale, scale);
+        twoShip.setPrefSize(2 * scale, scale);
         twoShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));
-        threeShip.setPrefSize(3*scale, scale);
+        threeShip.setPrefSize(3 * scale, scale);
         threeShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png"))));
-        fourShip.setPrefSize(4*scale, scale);
+        fourShip.setPrefSize(4 * scale, scale);
         fourShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png"))));
-        fiveShip.setPrefSize(5*scale, scale);
+        fiveShip.setPrefSize(5 * scale, scale);
         fiveShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));
 
 
@@ -100,47 +103,73 @@ public class PlaceShips implements Initializable {
                 int finalH = h;
                 int finalV = v;
                 label.setOnDragOver(event -> {
+                    // set label color to green or red depending on outcome of valid placement
                     if (event.getGestureSource() == twoShip) {
                         System.out.println("two - x: " + finalH + " v: " + finalV);
-                        if(true/*todo valid placement*/) {
+                        if (true/*todo valid placement - with horizontal*/) {
                             event.acceptTransferModes(TransferMode.ANY); //todo - is this needed????
                             indicateValidPlacement = green;
-                        }
+                        } else
+                            indicateValidPlacement = red;
                         label.setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
+                        if (horizontal)
+                            (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
+                        else
+                            (getNodeByRowColumnIndex(finalV + 1, finalH, ownField)).setStyle(indicateValidPlacement);
                     }
                     if (event.getGestureSource() == threeShip) {
                         System.out.println("three - x: " + finalH + " v: " + finalV);
-                        if(true/*todo valid placement*/) {
+                        if (true/*todo valid placement*/) {
                             event.acceptTransferModes(TransferMode.ANY); //todo - is this needed????
                             indicateValidPlacement = green;
-                        }
+                        } else
+                            indicateValidPlacement = red;
                         label.setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH - 1, ownField)).setStyle(indicateValidPlacement);
+                        if (horizontal) {
+                            (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV, finalH - 1, ownField)).setStyle(indicateValidPlacement);
+                        } else {
+                            (getNodeByRowColumnIndex(finalV + 1, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV - 1, finalH, ownField)).setStyle(indicateValidPlacement);
+                        }
                     }
                     if (event.getGestureSource() == fourShip) {
                         System.out.println("four - x: " + finalH + " v: " + finalV);
-                        if(true/*todo valid placement*/) {
+                        if (true/*todo valid placement*/) {
                             event.acceptTransferModes(TransferMode.ANY); //todo - is this needed????
                             indicateValidPlacement = green;
-                        }
+                        } else
+                            indicateValidPlacement = red;
                         label.setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH - 1, ownField)).setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH + 2, ownField)).setStyle(indicateValidPlacement);
+                        if (horizontal) {
+                            (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV, finalH - 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV, finalH + 2, ownField)).setStyle(indicateValidPlacement);
+                        } else {
+                            (getNodeByRowColumnIndex(finalV + 1, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV - 1, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV + 2, finalH, ownField)).setStyle(indicateValidPlacement);
+                        }
                     }
                     if (event.getGestureSource() == fiveShip) {
                         System.out.println("five - x: " + finalH + " v: " + finalV);
-                        if(true/*todo valid placement*/) {
+                        if (true/*todo valid placement*/) {
                             event.acceptTransferModes(TransferMode.ANY); //todo - is this needed????
                             indicateValidPlacement = green;
-                        }
+                        } else
+                            indicateValidPlacement = red;
                         label.setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH - 1, ownField)).setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH + 2, ownField)).setStyle(indicateValidPlacement);
-                        (getNodeByRowColumnIndex(finalV, finalH - 2, ownField)).setStyle(indicateValidPlacement);
+                        if (horizontal) {
+                            (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV, finalH - 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV, finalH + 2, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV, finalH - 2, ownField)).setStyle(indicateValidPlacement);
+                        } else {
+                            (getNodeByRowColumnIndex(finalV + 1, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV - 1, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV + 2, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalV - 2, finalH, ownField)).setStyle(indicateValidPlacement);
+                        }
                     }
                     event.consume();
                 });
@@ -148,13 +177,13 @@ public class PlaceShips implements Initializable {
                 // remove visual feedback when moving on
                 label.setOnDragExited(event -> {
                     ObservableList<Node> children = ownField.getChildren();
-                    for (Node labelx: children) {
+                    for (Node labelx : children) {
                         labelx.setStyle("-fx-background-color: lightblue");
                     }
                 });
 
                 label.setOnDragDropped(event -> {
-                    // todo make ship placed
+                    // todo make ship placed -> counter erhöhen
                     System.out.println("Ship placed!");
                     // is always true - valid placement already called in OnDragOver
                     event.setDropCompleted(true);
@@ -168,10 +197,10 @@ public class PlaceShips implements Initializable {
         }
 
         // set initial Labels - x/x ships placed //todo - 0/ -> variable
-        xOfx2Ships.setText("(0/" +ActiveGameState.getAmountShipSize2()+ " platziert)");
-        xOfx3Ships.setText("(0/" +ActiveGameState.getAmountShipSize3()+ " platziert)");
-        xOfx4Ships.setText("(0/" +ActiveGameState.getAmountShipSize4()+ " platziert)");
-        xOfx5Ships.setText("(0/" +ActiveGameState.getAmountShipSize5()+ " platziert)");
+        xOfx2Ships.setText("(" + ActiveGameState.getAmountShipSize2placed() + "/" + ActiveGameState.getAmountShipSize2() + " platziert)");
+        xOfx3Ships.setText("(" + ActiveGameState.getAmountShipSize3placed() + "/" + ActiveGameState.getAmountShipSize3() + " platziert)");
+        xOfx4Ships.setText("(" + ActiveGameState.getAmountShipSize4placed() + "/" + ActiveGameState.getAmountShipSize4() + " platziert)");
+        xOfx5Ships.setText("(" + ActiveGameState.getAmountShipSize5placed() + "/" + ActiveGameState.getAmountShipSize5() + " platziert)");
 
 
         // Drag&Drop Ships -> Placement
@@ -180,7 +209,10 @@ public class PlaceShips implements Initializable {
             ClipboardContent content = new ClipboardContent();
             content.putString(""); //todo
             db.setContent(content);
-            db.setDragView(new Image("/Gui_View/images/2erSchiff.png"), 10, 0);
+            if (horizontal)
+                db.setDragView(new Image("/Gui_View/images/2erSchiff.png"), 10, 0);
+            else
+                db.setDragView(new Image("/Gui_View/images/2erSchiffVertical.png"), 0, -10);
             event.consume();
         });
         threeShip.setOnDragDetected(event -> {
@@ -188,7 +220,10 @@ public class PlaceShips implements Initializable {
             ClipboardContent content = new ClipboardContent();
             content.putString("");//todo put right content beiing dropped - ship
             db.setContent(content);
-            db.setDragView(new Image("/Gui_View/images/3erSchiff.png"));
+            if (horizontal)
+                db.setDragView(new Image("/Gui_View/images/3erSchiff.png"));
+            else
+                db.setDragView(new Image("/Gui_View/images/3erSchiffVertical.png"));
             event.consume();
         });
         fourShip.setOnDragDetected(event -> {
@@ -196,7 +231,10 @@ public class PlaceShips implements Initializable {
             ClipboardContent content = new ClipboardContent();
             content.putString(""); //todo
             db.setContent(content);
-            db.setDragView(new Image("/Gui_View/images/4erSchiff.png"), 10 ,0);
+            if (horizontal)
+                db.setDragView(new Image("/Gui_View/images/4erSchiff.png"), 10, 0);
+            else
+                db.setDragView(new Image("/Gui_View/images/4erSchiffVertical.png"), 0, -10);
             event.consume();
         });
         fiveShip.setOnDragDetected(event -> {
@@ -204,36 +242,69 @@ public class PlaceShips implements Initializable {
             ClipboardContent content = new ClipboardContent();
             content.putString(""); //todo
             db.setContent(content);
-            db.setDragView(new Image("/Gui_View/images/5erSchiff.png"));
+            if (horizontal)
+                db.setDragView(new Image("/Gui_View/images/5erSchiff.png"));
+            else
+                db.setDragView(new Image("/Gui_View/images/5erSchiffVertical.png"));
             event.consume();
+            ActiveGameState.setAmountShipSize5placed(ActiveGameState.getAmountShipSize5placed() + 1);
         });
 
+        // disable Dropping when all Ships of each kind are placed
+        if (ActiveGameState.getAmountShipSize2() <= ActiveGameState.getAmountShipSize2placed())
+            twoShip.setDisable(true);
+        if (ActiveGameState.getAmountShipSize3() <= ActiveGameState.getAmountShipSize3placed())
+            threeShip.setDisable(true);
+        if (ActiveGameState.getAmountShipSize4() <= ActiveGameState.getAmountShipSize4placed())
+            fourShip.setDisable(true);
+        if (ActiveGameState.getAmountShipSize5() <= ActiveGameState.getAmountShipSize5placed())
+            fiveShip.setDisable(true);
+
         twoShip.setOnDragDone(event -> {
-            System.out.println("Drag done!");
-            // todo disable dropping when all ships placed
-            event.consume();
-        });
+                System.out.println("Drag done!");
+                event.consume();
+            });
         threeShip.setOnDragDone(event -> {
             System.out.println("Drag done!");
-            // todo disable dropping when all ships placed
             event.consume();
         });
         fourShip.setOnDragDone(event -> {
             System.out.println("Drag done!");
-            // todo disable dropping when all ships placed
             event.consume();
         });
         fiveShip.setOnDragDone(event -> {
             System.out.println("Drag done!");
-            // todo disable dropping when all ships placed
             event.consume();
         });
     }
 
-    public void newRandomPlacement () {
+    public void rotateShip90() {
+        horizontal = !horizontal;
+    }
+
+    public void newRandomPlacement() {
         //todo -> call random place function
         //todo -> update Gui after that
+
+        // todo set counter of placed ships to max - in place ships or here?
+
+        // disable Dropping for all Labels cause all ships are placed
+        twoShip.setDisable(true);
+        threeShip.setDisable(true);
+        fourShip.setDisable(true);
+        fiveShip.setDisable(true);
         System.out.println("Ships placed randomly");
+    }
+
+    public void resetPlacement() {
+        // todo remove ships
+        // todo reset counter of placed ships - in remove ships or here??
+
+        // enable Dropping for all Labels cause all ships are unplaced
+        twoShip.setDisable(false);
+        threeShip.setDisable(false);
+        fourShip.setDisable(false);
+        fiveShip.setDisable(false);
     }
 
     public void startGame() throws IOException {
@@ -261,12 +332,12 @@ public class PlaceShips implements Initializable {
 
     //todo reset label
 
-    public Node getNodeByRowColumnIndex (final int row, final int column, GridPane gridPane) {
+    public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         Node result = null;
         ObservableList<Node> childrens = gridPane.getChildren();
 
         for (Node node : childrens) {
-            if(gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
                 result = node;
                 break;
             }

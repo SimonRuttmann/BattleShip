@@ -78,9 +78,11 @@
                               </VBox>
                            </children>
                         </HBox>
+                        <Pane prefHeight="5.0" />
+                        <Button fx:id="rotate90" maxHeight="20.0" maxWidth="20.0" mnemonicParsing="false" onAction="#rotateShip90" prefHeight="20.0" prefWidth="20.0" />
                         <Pane prefHeight="10.0" />
-                        <Button fx:id="randomPlacement" mnemonicParsing="false" prefWidth="135.0" text="Zufällig platzieren" />
-                        <Button fx:id="resetPlacement" mnemonicParsing="false" prefWidth="135.0" text="Zurücksetzen" />
+                        <Button fx:id="randomPlacement" mnemonicParsing="false" onAction="#newRandomPlacement" prefWidth="135.0" text="Zufällig platzieren" />
+                        <Button fx:id="resetPlacement" mnemonicParsing="false" onAction="#resetPlacement" prefWidth="135.0" text="Zurücksetzen" />
                         <Button fx:id="readyButton" mnemonicParsing="false" onAction="#startGame" prefWidth="135.0" text="Bereit" />
                      </children>
                   </VBox>

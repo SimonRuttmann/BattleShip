@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -54,19 +55,19 @@
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding></Separator>
-                  <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                  <VBox alignment="CENTER" spacing="5.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button fx:id="randomPlacement" mnemonicParsing="false" text="Zufällig platzieren" />
-                        <HBox>
+                        <HBox alignment="CENTER">
                            <children>
-                              <VBox>
+                              <VBox alignment="CENTER_RIGHT">
                                  <children>
-                                    <Label text="2erSchiff" />
-                                    <Label text="3erSchiff" />
-                                    <Label text="4erSchiff" />
-                                    <Label text="5erSchiff" />
+                                    <Label fx:id="twoShip" prefHeight="30.0" prefWidth="60.0" />
+                                    <Label fx:id="threeShip" prefHeight="30.0" prefWidth="90.0" />
+                                    <Label fx:id="fourShip" prefHeight="30.0" prefWidth="120.0" />
+                                    <Label fx:id="fiveShip" prefHeight="30.0" prefWidth="150.0" />
                                  </children>
                               </VBox>
+                              <Pane prefWidth="5.0" />
                               <VBox>
                                  <children>
                                     <Label text="x/x platziert" fx:id="xOfx2Ships" />
@@ -77,7 +78,10 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <Button fx:id="readyButton" mnemonicParsing="false" onAction="#startGame" text="Bereit" />
+                        <Pane prefHeight="10.0" />
+                        <Button fx:id="randomPlacement" mnemonicParsing="false" prefWidth="135.0" text="Zufällig platzieren" />
+                        <Button fx:id="resetPlacement" mnemonicParsing="false" prefWidth="135.0" text="Zurücksetzen" />
+                        <Button fx:id="readyButton" mnemonicParsing="false" onAction="#startGame" prefWidth="135.0" text="Bereit" />
                      </children>
                   </VBox>
                </children>

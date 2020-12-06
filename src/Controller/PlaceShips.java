@@ -235,9 +235,8 @@ public class PlaceShips implements Initializable {
                         }
                     }
 
-                    //TODO To Yannick This shouldn`t be necessary? -> Event is consumed when the handle method is executed?
+                    // event should not be dispatched to any further event listeners
                     event.consume();
-
                 });
 
 

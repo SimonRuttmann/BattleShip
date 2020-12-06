@@ -73,12 +73,23 @@ public class ShipPart implements IDrawable{
             case "destroyed"         : System.out.print("H");
             default: System.out.println("Alignment not found");
 
-        }
+        } //todo hit&sunk
         if ( shot ){
             this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipHit.png"))));
         }
         else{
-            this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/ship.png"))));
+            // for test: draw ships "right"
+            switch (part) {
+                case "start vertical"    : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png"))));break;
+                case "start horizontal"  : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartHorizontal.png"))));break;
+                case "end vertical"      : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipEndVertical.png"))));break;
+                case "end horizontal"    : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipEndHorizontal.png"))));break;
+                case "middle vertical"   : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipMiddleVertical.png"))));break;
+                case "middle horizontal" : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipMiddleHorizontal.png"))));break;
+                default: System.out.println("Alignment not found");
+            }
+            // default way
+            //this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/ship.png"))));
         }
     }
 

@@ -83,15 +83,18 @@ public class GamePlayground implements Initializable {
 
         /* the elements of a grid-pane can be returned as an array of Objects - cast Objetct to Label, than it is possible
            to change the properties of the Label, e.g. the color
-           ! important: Objects of grid pane are stored "vertically"
+           ! important: Objects of grid pane are stored "vertically"*/
+
+        // connect Labels to Playground
+        Object[] ownFieldArray = new Object[gamesize*gamesize];
+        ownFieldArray = ownField.getChildren().toArray();
+        ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
+        ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
 
         Object[] enemyFieldArray = new Object[gamesize*gamesize];
         enemyFieldArray = enemyField.getChildren().toArray();
-        System.out.println(enemyFieldArray[0].toString());
-
-        Label a = (Label)enemyFieldArray[30];
-        a.setStyle("-fx-background-color: red");
-        a.setDisable(true);*/
+        ActiveGameState.getOwnPlayerIEnemyPlayground().setLabels(enemyFieldArray);
+        ActiveGameState.getOwnPlayerIEnemyPlayground().drawPlayground();
     }
 
     // when Button cancleGame is pressed - save or no saving?

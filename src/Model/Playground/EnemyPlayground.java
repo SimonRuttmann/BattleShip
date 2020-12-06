@@ -25,9 +25,9 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
     @Override
     public void setLabels(Object[] labelArray) {
         int i = 0;
-        for ( int x = 1; x <= this.playgroundsize; x++)
+        for ( int x = 0; x < this.playgroundsize; x++)
         {
-            for ( int y = 1; y <= this.playgroundsize; y++)
+            for ( int y = 0; y < this.playgroundsize; y++)
             {
                 if ( Field[x][y] == null){
                     System.out.println("Error, Field is uninitialized");
@@ -52,9 +52,8 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
     public void buildPlayground() {
         //this.shipsplaced = IShip.getAmount();
 
-        for (int x = 1; x <= this.playgroundsize; x++) {
-            for (int y = 1; y <= this.playgroundsize; y++) {
-                System.out.print("Hello");
+        for (int x = 0; x < this.playgroundsize; x++) {
+            for (int y = 0; y < this.playgroundsize; y++) {
 
 
                 //Field is empty

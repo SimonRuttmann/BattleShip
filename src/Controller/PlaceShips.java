@@ -1,6 +1,9 @@
 package Controller;
 
 import Gui_View.Main;
+import Model.Playground.EnemyPlayground;
+import Model.Playground.OwnPlayground;
+import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -64,6 +67,21 @@ public class PlaceShips implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        // create playgrounds
+        ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
+        ActiveGameState.setOwnPlayerIEnemyPlayground(new EnemyPlayground());
+        if (!ActiveGameState.isMultiplayer()) {
+            ActiveGameState.setEnemyPlayerOwnPlayground(new OwnPlayground());
+            ActiveGameState.setEnemyPlayerEnemyPlayground(new EnemyPlayground());
+        }
+
+        // build playgrounds
+        ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
+        ActiveGameState.getOwnPlayerIEnemyPlayground().buildPlayground();
+        if (!ActiveGameState.isMultiplayer()) {
+            ActiveGameState.getEnemyPlayerOwnPlayground().buildPlayground();
+            ActiveGameState.getEnemyPlayerEnemyPlayground().buildPlayground();
+        }
 
         //Sets the Image for the rotate 90 Degree button
         rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButton.png"))));
@@ -107,8 +125,8 @@ public class PlaceShips implements Initializable {
         ownField.setVgap(1);
 
         // Creates the ownPlayground as a GridPane. Creating a table of Labels, these are later connected to the game playground via the method setLabels()
-        for (int h = 0; h < gamesize; h++) {
-            for (int v = 0; v < gamesize; v++) {
+        for (int x = 0; x < gamesize; x++) {
+            for (int y = 0; y < gamesize; y++) {
 
                 //Creating the Labels
                 Label label = new Label();
@@ -118,10 +136,10 @@ public class PlaceShips implements Initializable {
                 label.setMaxSize(30, 30);
 
 
-                // finalH is the y position of the label
-                // finalV is the x position of the label
-                int finalH = h;
-                int finalV = v;
+                // finalX is the y position of the label
+                // finalY is the x position of the label
+                int finalX = x;
+                int finalY = y;
 
                 //Every label is getting a OnDragOver-Listener, when a ship is hovered over a label in the playground
                 //The created events set the labels on green when ship placement is valid and red when the ship placement is not
@@ -135,10 +153,12 @@ public class PlaceShips implements Initializable {
                     if (event.getGestureSource() == twoShip) {
 
 
-                        System.out.println("two - x: " + finalH + " v: " + finalV);
+                        System.out.println("two - x: " + finalX + " y: " + finalY);
                         //When the ship placement is allowed, the String indicateValidPlacement is set to the string green, which contains a -fx css color-scheme
                         //if the ship placement is not allowed the String is set to the string red, containing another -fx css color-scheme
-                        if (true/*todo valid placement - with horizontal*/) {
+                        if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY), new Point(finalX + 1, finalY))) ||
+                                (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY), new Point(finalX, finalY + 1)))) {
+                            /* label does only accept ship if placement is valid -> when not valid, ship is not placeable, shiplabel gets dropped back to start position */
                             event.acceptTransferModes(TransferMode.ANY); //todo - is this needed????
                             indicateValidPlacement = green;
                         } else
@@ -147,65 +167,71 @@ public class PlaceShips implements Initializable {
 
                         // Set the style of the labels for all labels, where the ship is hovered over
                         if (horizontal)
-                            (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
                         else
-                            (getNodeByRowColumnIndex(finalV + 1, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
                     }
 
                     if (event.getGestureSource() == threeShip) {
-                        System.out.println("three - x: " + finalH + " v: " + finalV);
-                        if (true/*todo valid placement*/) {
+                        System.out.println("three - x: " + finalX + " y: " + finalY);
+                        if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 1, finalY))) ||
+                                (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 1)))) {
+                            /* label does only accept ship if placement is valid -> when not valid, ship is not placeable, shiplabel gets dropped back to start position */
                             event.acceptTransferModes(TransferMode.ANY); //todo - is this needed????
                             indicateValidPlacement = green;
                         } else
                             indicateValidPlacement = red;
                         label.setStyle(indicateValidPlacement);
                         if (horizontal) {
-                            (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV, finalH - 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX - 1, ownField)).setStyle(indicateValidPlacement);
                         } else {
-                            (getNodeByRowColumnIndex(finalV + 1, finalH, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV - 1, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY - 1, finalX, ownField)).setStyle(indicateValidPlacement);
                         }
                     }
 
                     if (event.getGestureSource() == fourShip) {
-                        System.out.println("four - x: " + finalH + " v: " + finalV);
-                        if (true/*todo valid placement*/) {
+                        System.out.println("four - x: " + finalX + " y: " + finalY);
+                        if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 2, finalY))) ||
+                                (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 2)))) {
+                            /* label does only accept ship if placement is valid -> when not valid, ship is not placeable, shiplabel gets dropped back to start position */
                             event.acceptTransferModes(TransferMode.ANY); //todo - is this needed????
                             indicateValidPlacement = green;
                         } else
                             indicateValidPlacement = red;
                         label.setStyle(indicateValidPlacement);
                         if (horizontal) {
-                            (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV, finalH - 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV, finalH + 2, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX - 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX + 2, ownField)).setStyle(indicateValidPlacement);
                         } else {
-                            (getNodeByRowColumnIndex(finalV + 1, finalH, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV - 1, finalH, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV + 2, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY - 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY + 2, finalX, ownField)).setStyle(indicateValidPlacement);
                         }
                     }
 
                     if (event.getGestureSource() == fiveShip) {
-                        System.out.println("five - x: " + finalH + " v: " + finalV);
-                        if (true/*todo valid placement*/) {
+                        System.out.println("five - x: " + finalX + " y: " + finalY);
+                        if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 2, finalY), new Point(finalX + 2, finalY))) ||
+                                (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 2), new Point(finalX, finalY + 2)))) {
+                            /* label does only accept ship if placement is valid -> when not valid, ship is not placeable, shiplabel gets dropped back to start position */
                             event.acceptTransferModes(TransferMode.ANY); //todo - is this needed????
                             indicateValidPlacement = green;
                         } else
                             indicateValidPlacement = red;
                         label.setStyle(indicateValidPlacement);
                         if (horizontal) {
-                            (getNodeByRowColumnIndex(finalV, finalH + 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV, finalH - 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV, finalH + 2, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV, finalH - 2, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX - 1, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX + 2, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY, finalX - 2, ownField)).setStyle(indicateValidPlacement);
                         } else {
-                            (getNodeByRowColumnIndex(finalV + 1, finalH, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV - 1, finalH, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV + 2, finalH, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalV - 2, finalH, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY - 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY + 2, finalX, ownField)).setStyle(indicateValidPlacement);
+                            (getNodeByRowColumnIndex(finalY - 2, finalX, ownField)).setStyle(indicateValidPlacement);
                         }
                     }
 
@@ -214,17 +240,13 @@ public class PlaceShips implements Initializable {
 
                 });
 
+
                 //TODO DIE LÖSUNG FÜR ALL UNSERE PROBLEME
                 // Group a = new Group();
-               // a.getChildren().add(Hintergrundelemente (Labels));
-               // a.getChildren().add(Vordergrundelemente (Schiffe));
+                // a.getChildren().add(Hintergrundelemente (Labels));
+                // a.getChildren().add(Vordergrundelemente (Schiffe));
 
-
-
-                //TODO To Yannick Nicht gut, wenn das Schiff platziert wurde sollen doch nicht ALLE Felder auf lightblue gesetzt werden...
-                //TODO Es sollte eig. garkein Label .setStyle aufrufen, da diese intern gesetzt werden.. Jediglich der "Grüne" Hover muss verschwinden, dafür gibt es bestimmt eine andere methode als setStyle()...
-
-                // remove visual feedback when moving on
+                // remove visual feedback when moving on //todo make red correct -> manchmal zu wenig felder rot markiert im verlgeich zur schiffsgroesse
                 label.setOnDragExited(event -> {
                     ObservableList<Node> children = ownField.getChildren();
                     for (Node labelx : children) {
@@ -234,21 +256,57 @@ public class PlaceShips implements Initializable {
 
 
                 label.setOnDragDropped(event -> {
-                    // todo make ship placed -> counter erhöhen
+                    System.out.println("Dropped successfully");
+                    if (event.getGestureSource() == twoShip) {
+                        if (horizontal)
+                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
+                        else
+                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY + 1));
+                        //todo counter erhoehen
+                    }
+
+                    if (event.getGestureSource() == threeShip) {
+                        if (horizontal)
+                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 1, finalY), new Point(finalX + 1, finalY));
+                        else
+                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 1), new Point(finalX, finalY + 1));
+                        //todo counter erhoehen
+                    }
+
+                    if (event.getGestureSource() == fourShip) {
+                        if (horizontal)
+                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 1, finalY), new Point(finalX + 2, finalY));
+                        else
+                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 1), new Point(finalX, finalY + 2));
+                        //todo counter erhoehen
+                    }
+
+                    if (event.getGestureSource() == fiveShip) {
+                        if (horizontal)
+                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 2, finalY), new Point(finalX + 2, finalY));
+                        else
+                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 2), new Point(finalX, finalY + 2));
+                        //todo counter erhoehen
+                    }
+
+
                     System.out.println("Ship placed!");
                     // is always true - valid placement already called in OnDragOver
-                    //TODO To Yannick, Gedankenfehler, OnDragOver Event wird immer ausgeführt, egal ob placement valid ist oder nicht (dabei wird ja nur die Labelfarbe verändert)
-                    //TODO To Yannick, Es muss eine Restriction eingebaut werden, bei der ein DragDropped Event nicht ausgeführt werden kann, wenn validPlacement() entsprechenden Rückgabewert gibt
                     event.setDropCompleted(true);
                     event.consume();
                 });
 
-                GridPane.setConstraints(label, h, v);
-                //todo label in array oder so speichern, um dann darauf zugreifen zu können???
-                //TODO To Yannick -> Richtig, einfach aus der anderen Szene Game kopieren um dann setLabels() aufrufen zu können, allerdings ausserhalb der for-schleife
+                GridPane.setConstraints(label, x, y);
                 ownField.getChildren().addAll(label);
             }
         }
+
+        // connect Labels to Playground
+        Object[] ownFieldArray = new Object[gamesize * gamesize];
+        ownFieldArray = ownField.getChildren().toArray();
+        ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
+        ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
+
 
         // Sets the text of the labels e.g (3 out of 7) ships of size 2 placed
         //todo - 0/ -> variable
@@ -312,8 +370,7 @@ public class PlaceShips implements Initializable {
         });
 
 
-
-        // disable Dropping when all Ships of each kind are placed //TODO To Yannick Falscher Kommentar? <- nicht das Loslassen wird unterbunden, sondern das Klicken auf die Schiffslabels, welche das DragDetected Event auslösen würden
+        // disable Dragging when all Ships of each kind are placed //TODO To Yannick Falscher Kommentar? <- nicht das Loslassen wird unterbunden, sondern das Klicken auf die Schiffslabels, welche das DragDetected Event auslösen würden
         if (ActiveGameState.getAmountShipSize2() <= ActiveGameState.getAmountShipSize2placed())
             twoShip.setDisable(true);
         if (ActiveGameState.getAmountShipSize3() <= ActiveGameState.getAmountShipSize3placed())
@@ -322,24 +379,6 @@ public class PlaceShips implements Initializable {
             fourShip.setDisable(true);
         if (ActiveGameState.getAmountShipSize5() <= ActiveGameState.getAmountShipSize5placed())
             fiveShip.setDisable(true);
-
-        //TODO To Yannick wirklich benötigt?
-        twoShip.setOnDragDone(event -> {
-                System.out.println("Drag done!");
-                event.consume();
-            });
-        threeShip.setOnDragDone(event -> {
-            System.out.println("Drag done!");
-            event.consume();
-        });
-        fourShip.setOnDragDone(event -> {
-            System.out.println("Drag done!");
-            event.consume();
-        });
-        fiveShip.setOnDragDone(event -> {
-            System.out.println("Drag done!");
-            event.consume();
-        });
     }
 
     public void rotateShip90() {

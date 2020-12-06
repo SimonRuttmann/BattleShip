@@ -37,4 +37,6 @@ public interface IEnemyPlayground extends IPlayground{
      */
     void setAllWaterFieldsClickable();
 
+
+
 }

@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -62,6 +63,7 @@ public class PlaceShips implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
 
         //Sets the Image for the rotate 90 Degree button
         rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButton.png"))));
@@ -209,7 +211,14 @@ public class PlaceShips implements Initializable {
 
                     //TODO To Yannick This shouldn`t be necessary? -> Event is consumed when the handle method is executed?
                     event.consume();
+
                 });
+
+                //TODO DIE LÖSUNG FÜR ALL UNSERE PROBLEME
+                // Group a = new Group();
+               // a.getChildren().add(Hintergrundelemente (Labels));
+               // a.getChildren().add(Vordergrundelemente (Schiffe));
+
 
 
                 //TODO To Yannick Nicht gut, wenn das Schiff platziert wurde sollen doch nicht ALLE Felder auf lightblue gesetzt werden...
@@ -400,3 +409,19 @@ public class PlaceShips implements Initializable {
         return result;
     }
 }
+
+
+/*
+Layer 0     Hintergrundbild
+Layer 1     Labels der GridPane                           ->    In Modell: bei IsValidPlacementAbgeändert(kein Schiff erstellen): Blau (Transparent) GRÜN und ROT wird von Yannick angezeigt: Rot wenn nicht plazierbar, Grün wenn plazierbar -> Nur die unterm Schiff
+Layer 2                                                   ->    Bilder der Labels er GridPane bei EnemyPlayground wenn Schiff angreifen -> Schiffsteile
+Layer 3     Labels der Schiffe (Bilder)
+
+
+Bei Ingame: Modell:     Rot wenn Schiff getroffen bzw Bild setzen / Bild kommt von Yannick
+
+                        ShotWater - Kein Bild sondern transparenter Hintergrund
+                        Wasser ->   Blau und dann schauen wies aussieht wenn disabled wird
+
+
+ */

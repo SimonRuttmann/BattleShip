@@ -158,6 +158,43 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
     }
 
+    //TODO is von isShipPlacementValid kopiert -> Hilfsmethoden auslagern
+    /**
+     *
+     * @param startPoint
+     * @param endPoint
+     * @return
+     */
+    public boolean isValidPlacement(Point startPoint, Point endPoint){
+        int startX = startPoint.getX();
+        int startY = startPoint.getY();
+
+        int endX = endPoint.getX();
+        int endY = endPoint.getY();
+
+        //Checks if any coordinates are out of the field
+        if ( startX < 0 || startY < 0 || endX < 0 || endY < 0
+                || startX >= this.playgroundsize|| startY >= this.playgroundsize ||
+                endX >= this.playgroundsize || endY >= this.playgroundsize)
+            return false;
+
+        IShip ship = new Ship(startPoint, endPoint, this);
+
+        Point[] coordinates = ship.getCoordinates();
+
+        //Checks if the placement is valid
+        for (Point point : coordinates ){
+            int x = point.getX();
+            int y = point.getY();
+            if (!Field[x][y].getValidShipPlacementMarker()){
+                //IShip.getShipList().remove(ship);
+                this.shipListOfThisPlayground.remove(ship);
+                return false;
+            }
+        }
+        this.shipListOfThisPlayground.remove(ship);
+        return true;
+    }
 
     /**
      * Checks if the ship represented by these two points is valid

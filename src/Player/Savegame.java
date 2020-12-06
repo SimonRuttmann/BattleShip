@@ -3,7 +3,7 @@ package Player;
 import Model.Playground.IEnemyPlayground;
 import Model.Playground.IOwnPlayground;
 
-
+// Hier sind alle daten drin, welche abgespeicher werden oder geladen werden
 public class Savegame{
     private Long id;
 

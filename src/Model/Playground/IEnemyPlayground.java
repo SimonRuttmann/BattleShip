@@ -3,7 +3,7 @@ package Model.Playground;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 
-public interface IEnemyPlayground {
+public interface IEnemyPlayground extends IPlayground{
     /**
      * Draws the shot-position in the playground depending on the shipHit, shipSunken parameters
      * Also marks all impossible positions as ShotWater, when a ship is sunken

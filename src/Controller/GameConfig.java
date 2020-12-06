@@ -1,6 +1,8 @@
 package Controller;
 
 import Gui_View.Main;
+import Model.Playground.EnemyPlayground;
+import Model.Playground.OwnPlayground;
 import Player.ActiveGameState;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -75,23 +77,34 @@ public class GameConfig implements Initializable {
             ActiveGameState.setOwnPlayerName("Secret Agent");
         else
             ActiveGameState.setOwnPlayerName(playerName.getText());
+
+        // save configured settings
         ActiveGameState.setPlaygroundSize(fieldSize.getValue());
         ActiveGameState.setAmountShipSize2(number2Ships.getValue());
         ActiveGameState.setAmountShipSize3(number3Ships.getValue());
         ActiveGameState.setAmountShipSize4(number4Ships.getValue());
         ActiveGameState.setAmountShipSize5(number5Ships.getValue());
 
+        // create playgrounds
+        ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
+        ActiveGameState.setOwnPlayerIEnemyPlayground(new EnemyPlayground());
+        if (!ActiveGameState.isMultiplayer()) {
+            ActiveGameState.setEnemyPlayerOwnPlayground(new OwnPlayground());
+            ActiveGameState.setEnemyPlayerEnemyPlayground(new EnemyPlayground());
+        }
+
+        // build playgrounds
+        ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
+        ActiveGameState.getOwnPlayerIEnemyPlayground().buildPlayground();
+        if (!ActiveGameState.isMultiplayer()) {
+            ActiveGameState.getEnemyPlayerOwnPlayground().buildPlayground();
+            ActiveGameState.getEnemyPlayerEnemyPlayground().buildPlayground();
+        }
+
         Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/chooseSelfOrKi.fxml"));
         Main.primaryStage.setScene(new Scene(start));
         Main.primaryStage.show();
     }
-
-    //METHODE ->alle eingaben als parameter
-    //TODO Buttons auslesen
-    // erstellen player mit name
-    // erstellen playground mit size
-    // fügen wir das playground zu dem cache
-    // Alle weiteren parameter dem Cache hinzufügen
 
 
     public void backToLastScene() throws IOException{

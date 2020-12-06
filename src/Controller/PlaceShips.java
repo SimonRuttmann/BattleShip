@@ -304,7 +304,7 @@ public class PlaceShips implements Initializable {
 
 
 
-        // disable Dropping when all Ships of each kind are placed //TODO To Yannick Falscher Kommentar? <- nicht das Loslassen wird unterbunden, sondern das Klicken auf die Schiffslabels, welche das DragDetected Event auslösen würden
+        // disable Dragging when all Ships of each kind are placed //TODO To Yannick Falscher Kommentar? <- nicht das Loslassen wird unterbunden, sondern das Klicken auf die Schiffslabels, welche das DragDetected Event auslösen würden
         if (ActiveGameState.getAmountShipSize2() <= ActiveGameState.getAmountShipSize2placed())
             twoShip.setDisable(true);
         if (ActiveGameState.getAmountShipSize3() <= ActiveGameState.getAmountShipSize3placed())

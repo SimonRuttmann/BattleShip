@@ -52,7 +52,7 @@ public abstract class Communication implements ICommunication{
             Thread timeout = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {//TODO
+                    try {//TODO simpletimelimiter
                         for (int i = 0; i < 1000; i++){
                             i = i++;
                             wait(1000);

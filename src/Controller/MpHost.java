@@ -50,7 +50,7 @@ public class MpHost implements Initializable {
                     }
                     else {
                         Main.primaryStage.setScene(new Scene(newOrLoad));
-                        Main.primaryStage.show();
+                        Main.primaryStage.show(); //todo geht nicht in diesem thread -> muss im javafx application thread erfolgen
                     }
                 }
                 else

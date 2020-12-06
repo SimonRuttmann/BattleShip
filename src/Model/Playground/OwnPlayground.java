@@ -34,9 +34,9 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
     @Override
     public void setLabels(Object[] labelArray) {
         int i = 0;
-        for ( int x = 1; x <= this.playgroundsize; x++)
+        for ( int x = 0; x < this.playgroundsize; x++)
         {
-            for ( int y = 1; y <= this.playgroundsize; y++)
+            for ( int y = 0; y < this.playgroundsize; y++)
             {
                 if ( Field[x][y] == null){
                     System.out.println("Error, Field is uninitialized");
@@ -140,11 +140,10 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         }
 
             //Fills the Rest with Water
-            for ( int x = 1; x <= this.playgroundsize; x++)
+            for ( int x = 0; x < this.playgroundsize; x++)
             {
-                for ( int y = 1; y <= this.playgroundsize; y++)
+                for ( int y = 0; y < this.playgroundsize; y++)
                 {
-                    System.out.print("Hello");
 
 
                     //Field is empty

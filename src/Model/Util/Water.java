@@ -1,6 +1,8 @@
 package Model.Util;
 
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Water implements IDrawable {
     private Label label;
@@ -11,8 +13,8 @@ public class Water implements IDrawable {
 
     @Override
     public void draw(){
-        System.out.print("*");
-        this.label.setStyle("-fx-background-aqua");
+        System.out.print("*water*");
+        this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/water.png"))));
     }
 
     @Override

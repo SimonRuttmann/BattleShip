@@ -85,21 +85,7 @@ public class GameConfig implements Initializable {
         ActiveGameState.setAmountShipSize4(number4Ships.getValue());
         ActiveGameState.setAmountShipSize5(number5Ships.getValue());
 
-        // create playgrounds
-        ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
-        ActiveGameState.setOwnPlayerIEnemyPlayground(new EnemyPlayground());
-        if (!ActiveGameState.isMultiplayer()) {
-            ActiveGameState.setEnemyPlayerOwnPlayground(new OwnPlayground());
-            ActiveGameState.setEnemyPlayerEnemyPlayground(new EnemyPlayground());
-        }
-
-        // build playgrounds
-        ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
-        ActiveGameState.getOwnPlayerIEnemyPlayground().buildPlayground();
-        if (!ActiveGameState.isMultiplayer()) {
-            ActiveGameState.getEnemyPlayerOwnPlayground().buildPlayground();
-            ActiveGameState.getEnemyPlayerEnemyPlayground().buildPlayground();
-        }
+        // todo Simon -> neuer Thread : wenn Server -> send cmd ships 222 333 44 ... to client
 
         Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/chooseSelfOrKi.fxml"));
         Main.primaryStage.setScene(new Scene(start));

@@ -2,6 +2,8 @@ package Model.Util;
 
 import Model.Ship.IShip;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class ShipPart implements IDrawable{
 
@@ -73,10 +75,10 @@ public class ShipPart implements IDrawable{
 
         }
         if ( shot ){
-            this.label.setStyle("-fx-background-darkred");
+            this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipHit.png"))));
         }
         else{
-            this.label.setStyle("-fx-background-darkgreen");
+            this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/ship.png"))));
         }
     }
 

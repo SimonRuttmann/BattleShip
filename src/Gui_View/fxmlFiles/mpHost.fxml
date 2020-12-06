@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -25,9 +26,10 @@
             <HBox alignment="CENTER">
                <children>
                   <Label text="Warten auf Client " />
+                  <Pane prefWidth="10.0" />
+                  <ProgressIndicator maxHeight="40.0" />
                </children>
             </HBox>
-            <Button fx:id="proviConn" mnemonicParsing="false" onAction="#establishConnection" text="provisorisch: Connected" />
          </children>
       </VBox>
       <Pane prefHeight="50.0" />

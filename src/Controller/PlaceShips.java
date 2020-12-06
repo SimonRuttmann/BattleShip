@@ -5,6 +5,8 @@ import Model.Playground.EnemyPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -63,6 +65,11 @@ public class PlaceShips implements Initializable {
     String blue = "-fx-background-color: lightblue";
     String indicateValidPlacement = red;
     boolean horizontal = true;
+
+    int amountShipSize2placed = 0;
+    int amountShipSize3placed = 0;//todo weg or needed???
+    int amountShipSize4placed = 0;
+    int amountShipSize5placed = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -264,7 +271,7 @@ public class PlaceShips implements Initializable {
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
                         else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY + 1));
-                        ActiveGameState.setAmountShipSize2(ActiveGameState.getAmountShipSize2() + 1);
+                        ActiveGameState.setAmountShipSize2placed(ActiveGameState.getAmountShipSize2placed() + 1);
                     }
 
                     if (event.getGestureSource() == threeShip) {
@@ -272,7 +279,7 @@ public class PlaceShips implements Initializable {
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 1, finalY), new Point(finalX + 1, finalY));
                         else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 1), new Point(finalX, finalY + 1));
-                        ActiveGameState.setAmountShipSize3(ActiveGameState.getAmountShipSize3() + 1);
+                        ActiveGameState.setAmountShipSize3placed(ActiveGameState.getAmountShipSize3placed() + 1);
                     }
 
                     if (event.getGestureSource() == fourShip) {
@@ -280,7 +287,7 @@ public class PlaceShips implements Initializable {
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 1, finalY), new Point(finalX + 2, finalY));
                         else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 1), new Point(finalX, finalY + 2));
-                        ActiveGameState.setAmountShipSize4(ActiveGameState.getAmountShipSize4() + 1);
+                        ActiveGameState.setAmountShipSize4placed(ActiveGameState.getAmountShipSize4placed() + 1);
                     }
 
                     if (event.getGestureSource() == fiveShip) {
@@ -288,7 +295,7 @@ public class PlaceShips implements Initializable {
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 2, finalY), new Point(finalX + 2, finalY));
                         else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 2), new Point(finalX, finalY + 2));
-                        ActiveGameState.setAmountShipSize5(ActiveGameState.getAmountShipSize5() + 1);
+                        ActiveGameState.setAmountShipSize5placed(ActiveGameState.getAmountShipSize5placed() + 1);
                     }
 
                     System.out.println("Ship placed!");
@@ -398,8 +405,7 @@ public class PlaceShips implements Initializable {
 
     public void newRandomPlacement() {
         //todo -> call random place function
-        //todo -> update Gui after that
-
+        //todo -> update Gui after that -> thread? .runlater nutzen für refresh
         // set counters of placed ships to max because all are added
         ActiveGameState.setAmountShipSize2placed(ActiveGameState.getAmountShipSize2());
         ActiveGameState.setAmountShipSize3placed(ActiveGameState.getAmountShipSize3());
@@ -444,12 +450,7 @@ public class PlaceShips implements Initializable {
         Main.primaryStage.show();
     }
 
-    //todo
-    // DRAG AN DROP Event ->
-    // FÜR JEDES SCHIFF: danach isPlacementValid() und wenn valid, dann wird das schiff direkt im Feld plaziert mit dem Labelwechseln @RobinRöcker
-
-
-    //todo reset label
+    //todo reset label ??? was soll das heißen @Simon
 
     // gives back the node at a a specific column index of a GridPane
     public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {

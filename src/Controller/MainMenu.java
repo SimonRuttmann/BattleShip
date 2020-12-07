@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import java.io.IOException;
 
 public class MainMenu {    //todo: ordentliche Namen für Scenes - alle verweise überprüfen - duplikate entfernen
+    //todo -> acitveGameState hier alles auf null setzten (evtl. -> wenn rückkehr aus spiel)
 
     // views
     @FXML private Button singleplayerButton;

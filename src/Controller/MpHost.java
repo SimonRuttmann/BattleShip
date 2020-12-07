@@ -1,5 +1,6 @@
 package Controller;
 
+import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Network.*;
 import Player.ActiveGameState;
@@ -52,16 +53,13 @@ public class MpHost implements Initializable {
                     });
                 } else {
                     System.out.println("Connection could not be established");
-                    Platform.runLater(() -> {
-//todo pop up -> connection failed
-                    });
+                    // Method reference -> "Lambda could be replaced with method reference" -> done that
+                    Platform.runLater(HelpMethods::connectionFailed);
                 }
 
             }
         });
         offerConnection.start();
-
-
     }
 
     public void backToLastScene() throws IOException {

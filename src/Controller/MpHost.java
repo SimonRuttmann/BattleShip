@@ -10,7 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;;
+import javafx.scene.control.Label;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,6 +25,7 @@ public class MpHost implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ActiveGameState.setAmIServer(true);
         IServer server = new Server();
         ipAddressLabel.setText("getIPAddress(): " + server.getIPAddress() + "\ngetAllIPAddress(): " + java.util.Arrays.asList(server.getAllIPAddress()).toString());
         System.out.println(server.getIPAddress());

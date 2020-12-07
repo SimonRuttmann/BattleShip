@@ -41,6 +41,7 @@ public class MpHost implements Initializable {
                 if (server.startSeverConnection()) {
                     ActiveGameState.setServer(server);
                     // platform run later -> sends task to GuiThread -> Gui does this as soon as this piece of code is reached
+                    // -> this means: when connection is established, next window will appear - if failed: pop up
                     Platform.runLater(() -> {
                         Parent a = null;
                         try {

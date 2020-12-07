@@ -17,12 +17,16 @@
       </AnchorPane>
       <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
          <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Hier sehen sie ihre IP-Adresse. " />
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Teilen sie diese dem anderen Spielpartner mit." />
+            <Pane prefHeight="20.0" />
             <HBox alignment="CENTER">
                <children>
                   <Label fx:id="hostIPshow" text="Host IP = " />
                   <Label fx:id="ipAddressLabel" text="..." />
                </children>
             </HBox>
+            <Pane prefHeight="20.0" />
             <HBox alignment="CENTER">
                <children>
                   <Label text="Warten auf Client " />

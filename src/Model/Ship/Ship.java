@@ -7,6 +7,9 @@ import java.util.ArrayList;
 
 public class Ship implements IShip {
     private int hitPoints;
+
+
+
     private final Point posStart;
     private final Point posEnd;
     private int size;
@@ -107,6 +110,15 @@ public class Ship implements IShip {
     @Override
     public Point[] getPosition(){
         return new Point[]{this.posStart, this.posEnd};
+    }
+
+    @Override
+    public Point getPosStart() {
+        return posStart;
+    }
+    @Override
+    public Point getPosEnd() {
+        return posEnd;
     }
 
 }

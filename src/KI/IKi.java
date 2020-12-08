@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface IKi {
 
-   ArrayList placeships(ArrayList<IShip> mainList);
+   ArrayList placeships();
 
     int shoot();
 }

@@ -25,6 +25,16 @@ public class ActiveGameState {
     private static int amountShipSize4;
     private static int amountShipSize5;
 
+    public static int getDifficulty() {
+        return difficulty;
+    }
+
+    public static void setDifficulty(int difficulty) {
+        ActiveGameState.difficulty = difficulty;
+    }
+
+    private static int difficulty; //wählt die Schwierigkeit aus, 0 = normal, 1 = schwer
+
     // Game Variables
     private static IEnemyPlayground enemyPlayground;
     private static IOwnPlayground ownPlayground;

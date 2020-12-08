@@ -5,7 +5,8 @@ public interface IPlayground {
 
 
     /**
-     * Restriction: You can only build the Playground if all Ships are created and the placement of the ships are valid
+     * This method builds the Playground, if there are no Ships in the ShipList, it will create an playground filled all Fields with water
+     * If there are Ships in the List it will place them as shipParts
      * Creates the Playground, sets all ships-parts on the Field (if it is the own Field) and fills the rest of the fields with water
      */
     void buildPlayground();

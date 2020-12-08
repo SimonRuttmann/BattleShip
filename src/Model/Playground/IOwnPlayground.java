@@ -37,4 +37,13 @@ public interface IOwnPlayground extends IPlayground{
      */
     boolean moveShip(Ship shipToMove, Point newStartPoint, Point newEndpoint);
 
+    //TODO
+    /**
+     *
+     * @param startPoint
+     * @param endPoint
+     * @return
+     */
+    boolean isValidPlacement(Point startPoint, Point endPoint);
+
 }

@@ -8,13 +8,22 @@ import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Model.Util.Water;
 import javafx.scene.control.Label;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
-    public OwnPlayground(int playgroundsize) {
-        super(playgroundsize);
+    public OwnPlayground() {
+        super();
+    }
+
+
+    private ArrayList<IShip> shipListOfThisPlayground = new ArrayList<>();
+
+    public void setShipListOfThisPlayground(ArrayList<IShip> shipListOfThisPlayground) {
+        this.shipListOfThisPlayground = shipListOfThisPlayground;
+    }
+
+    public ArrayList<IShip> getShipListOfThisPlayground() {
+        return shipListOfThisPlayground;
     }
 
     /**
@@ -25,9 +34,9 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
     @Override
     public void setLabels(Object[] labelArray) {
         int i = 0;
-        for ( int x = 1; x <= this.playgroundsize; x++)
+        for ( int x = 0; x < this.playgroundsize; x++)
         {
-            for ( int y = 1; y <= this.playgroundsize; y++)
+            for ( int y = 0; y < this.playgroundsize; y++)
             {
                 if ( Field[x][y] == null){
                     System.out.println("Error, Field is uninitialized");
@@ -76,10 +85,12 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
             //Ship sunken
             if ( hitShip.gethitPoints() <= 0){
-                IShip.getShipList().remove(hitShip);
+                                            //IShip.getShipList().remove(hitShip);
+                this.shipListOfThisPlayground.remove(hitShip);
 
                 //Game won
-                if ( IShip.getShipList().size() == 0){
+                                            //if ( IShip.getShipList().size() == 0){
+                if ( this.shipListOfThisPlayground.size() == 0){
                     this.gameLost = true;
                     return new ShotResponse (true,true,true);
                 }
@@ -111,52 +122,28 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
 
 
+
     /**
-     * Restriction: You can only build the Playground if all Ships are created and the placement of the ships are valid
+     * This method builds the Playground, if there are no Ships in the ShipList, it will create an playground filled all Fields with water
+     * If there are Ships in the List it will place them as shipParts
      * Creates the Playground, sets all ships-parts on the Field (if it is the own Field) and fills the rest of the fields with water
      */
     @Override
     public void buildPlayground() {
-        this.shipsplaced = IShip.getAmount();
+
 
         //For every Ship in the ShipList insert the affiliated ship parts and fill the left fields with water
 
-        for ( IShip Element : IShip.getShipList()) {
-
-            //Position returns two Points, Start and End
-            Point[] shipposition = Element.getPosition();
-            int xStart = shipposition[0].getX();
-            int yStart = shipposition[0].getY();
-
-            int xEnd = shipposition[1].getX();
-            int yEnd = shipposition[1].getY();
-
-            //Insert Ship parts
-            //Ship vertical
-            if (xStart == xEnd) {
-                Field[xStart][yStart] = new ShipPart("start vertical", Element);
-                Field[xStart][yEnd] = new ShipPart("end vertical", Element);
-                for (int i = yStart+1; i < yEnd; i++) {
-                    Field[xStart][i] = new ShipPart("middle vertical", Element);
-                }
-            }
-            //Ship horizontal
-            else {
-                Field[xStart][yStart] = new ShipPart("start horizontal", Element);
-                Field[xEnd][yStart] = new ShipPart("end horizontal", Element);
-                for (int i = xStart+1; i < xEnd; i++) {
-                    Field[i][yStart] = new ShipPart("middle horizontal", Element);
-                }
-            }
-
+                                                        //for ( IShip Element : IShip.getShipList()) {
+        for ( IShip Element : this.shipListOfThisPlayground){
+           this.addShipToPlayground(Element);
         }
 
             //Fills the Rest with Water
-            for ( int x = 1; x <= this.playgroundsize; x++)
+            for ( int x = 0; x < this.playgroundsize; x++)
             {
-                for ( int y = 1; y <= this.playgroundsize; y++)
+                for ( int y = 0; y < this.playgroundsize; y++)
                 {
-                    System.out.print("Hello");
 
 
                     //Field is empty
@@ -170,6 +157,43 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
     }
 
+    //TODO is von isShipPlacementValid kopiert -> Hilfsmethoden auslagern
+    /**
+     *
+     * @param startPoint
+     * @param endPoint
+     * @return
+     */
+    public boolean isValidPlacement(Point startPoint, Point endPoint){
+        int startX = startPoint.getX();
+        int startY = startPoint.getY();
+
+        int endX = endPoint.getX();
+        int endY = endPoint.getY();
+
+        //Checks if any coordinates are out of the field
+        if ( startX < 0 || startY < 0 || endX < 0 || endY < 0
+                || startX >= this.playgroundsize|| startY >= this.playgroundsize ||
+                endX >= this.playgroundsize || endY >= this.playgroundsize)
+            return false;
+
+        IShip ship = new Ship(startPoint, endPoint, this);
+
+        Point[] coordinates = ship.getCoordinates();
+
+        //Checks if the placement is valid
+        for (Point point : coordinates ){
+            int x = point.getX();
+            int y = point.getY();
+            if (!Field[x][y].getValidShipPlacementMarker()){
+                //IShip.getShipList().remove(ship);
+                this.shipListOfThisPlayground.remove(ship);
+                return false;
+            }
+        }
+        this.shipListOfThisPlayground.remove(ship);
+        return true;
+    }
 
     /**
      * Checks if the ship represented by these two points is valid
@@ -193,7 +217,8 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
                 endX >= this.playgroundsize || endY >= this.playgroundsize)
                 return null;
 
-        IShip ship = new Ship(startPoint, endPoint);
+        IShip ship = new Ship(startPoint, endPoint, this);
+
         Point[] coordinates = ship.getCoordinates();
 
         //Checks if the placement is valid
@@ -201,7 +226,8 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
             int x = point.getX();
             int y = point.getY();
             if (!Field[x][y].getValidShipPlacementMarker()){
-                IShip.getShipList().remove(ship);
+                                                //IShip.getShipList().remove(ship);
+                this.shipListOfThisPlayground.remove(ship);
                 return null;
             }
         }
@@ -209,6 +235,9 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         //If the placement was valid then the fields surrounding the ship have to be marked
         //An ArrayList containing these points are saved for this ship
         ship.setPlacementMarkers(setPlacementMarkerToSurroundingFields(coordinates));
+
+        //Adding the Ship to the Playground
+        this.addShipToPlayground(ship);
 
         return ship;
     }
@@ -362,7 +391,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
             for ( int i = x-1; i <= x+1; i++  ){
                 for ( int j = y-1; j <= y+1; j++){
                     // Point is outside the playground
-                    if ( x < 0 || x > this.playgroundsize || y < 0 || y < this.playgroundsize) continue;
+                    if ( x < 0 || x >= this.playgroundsize || y < 0 || y >= this.playgroundsize) continue;
                     if ( Field[x][y] instanceof ShipPart){
                         isShipNext = true;
                         break;
@@ -372,5 +401,35 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
             changedCoordinates.add(new Point(x,y));
             Field[x][y].setValidShipPlacementMarker(!isShipNext);
         }
+    }
+
+    //TODO wenn später Bilder eingefügt werden, und das Shippart das entsprechende Bild zeigen soll, muss das hier überarbeitet werden
+    private void addShipToPlayground(IShip ship){
+            //Position returns two Points, Start and End
+            Point[] shipposition = ship.getPosition();
+            int xStart = shipposition[0].getX();
+            int yStart = shipposition[0].getY();
+
+            int xEnd = shipposition[1].getX();
+            int yEnd = shipposition[1].getY();
+
+            //Insert Ship parts
+            //Ship vertical
+            if (xStart == xEnd) {
+                Field[xStart][yStart] = new ShipPart("start vertical", ship);
+                Field[xStart][yEnd] = new ShipPart("end vertical", ship);
+                for (int i = yStart+1; i < yEnd; i++) {
+                    Field[xStart][i] = new ShipPart("middle vertical", ship);
+                }
+            }
+            //Ship horizontal
+            else {
+                Field[xStart][yStart] = new ShipPart("start horizontal", ship);
+                Field[xEnd][yStart] = new ShipPart("end horizontal", ship);
+                for (int i = xStart+1; i < xEnd; i++) {
+                    Field[i][yStart] = new ShipPart("middle horizontal", ship);
+                }
+            }
+
     }
 }

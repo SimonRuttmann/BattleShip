@@ -8,8 +8,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class SaveAndLoad {
-
+//TODO Temp = Name bzw ID des Spielstandes... umbenennen
+    //TODO Es wird kein Objekt übergeben, diese intern von der ActiveGameState übertragen werden
     public static boolean save(Savegame o, String temp){
+        ///new Savegame(ActiveGameState.)
+
         try{
             Gson gson = new Gson(); // create Gson instance
             // temp = chosen name of file: e.g. temp = "test" -> output Paths.get: .savedGames/test.json

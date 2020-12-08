@@ -21,7 +21,13 @@ public abstract class Communication implements ICommunication{
 
     @Override
     public void sendCMD(CMD command, String parameter) {
-        String sendCMD = command.toString() + " " + parameter;
+        String sendCMD;
+        if (!parameter.isEmpty()) {
+            sendCMD = command.toString() + " " + parameter;
+        }
+        else{
+            sendCMD = command.toString();
+        }
 
         if (!connected) return;
         try {
@@ -46,7 +52,7 @@ public abstract class Communication implements ICommunication{
             Thread timeout = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {//TODO
+                    try {//TODO simpletimelimiter
                         for (int i = 0; i < 1000; i++){
                             i = i++;
                             wait(1000);

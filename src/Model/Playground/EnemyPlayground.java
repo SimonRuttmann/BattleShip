@@ -10,12 +10,12 @@ import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 
-// todo -> make not abstract again, but now needed due to get game running
+
 public class EnemyPlayground extends AbstactPlayground implements IEnemyPlayground {
     private int counterShipDestroyed = 0;
 
-    public EnemyPlayground(int playgroundsize) {
-        super(playgroundsize);
+    public EnemyPlayground() {
+        super();
     }
 
     /**
@@ -25,9 +25,9 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
     @Override
     public void setLabels(Object[] labelArray) {
         int i = 0;
-        for ( int x = 1; x <= this.playgroundsize; x++)
+        for ( int x = 0; x < this.playgroundsize; x++)
         {
-            for ( int y = 1; y <= this.playgroundsize; y++)
+            for ( int y = 0; y < this.playgroundsize; y++)
             {
                 if ( Field[x][y] == null){
                     System.out.println("Error, Field is uninitialized");
@@ -50,11 +50,10 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
      */
     @Override
     public void buildPlayground() {
-        this.shipsplaced = IShip.getAmount();
+        //this.shipsplaced = IShip.getAmount();
 
-        for (int x = 1; x <= this.playgroundsize; x++) {
-            for (int y = 1; y <= this.playgroundsize; y++) {
-                System.out.print("Hello");
+        for (int x = 0; x < this.playgroundsize; x++) {
+            for (int y = 0; y < this.playgroundsize; y++) {
 
 
                 //Field is empty

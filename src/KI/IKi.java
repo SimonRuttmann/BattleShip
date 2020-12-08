@@ -1,12 +1,7 @@
 package KI;
 
-import Model.Ship.IShip;
-
-import java.util.ArrayList;
+import Model.Util.UtilDataType.Point;
 
 public interface IKi {
-
-   ArrayList placeships();
-
-    int shoot();
+    Point getShot();
 }

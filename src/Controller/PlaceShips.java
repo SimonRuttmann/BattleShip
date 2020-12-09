@@ -464,6 +464,12 @@ public class PlaceShips implements Initializable {
     }
 
     public void newRandomPlacement() {
+        // todo really needed - resets all... -> probably yes, old ships should not be there anymore
+        // create new OwnPlayground - link same Labels
+        ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
+        ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
+        ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
+        ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
         //todo -> call random place function
         //todo -> update Gui after that -> thread? .runlater nutzen für refresh
         // set counters of placed ships to max because all are added

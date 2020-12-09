@@ -49,8 +49,10 @@ public class MpHost implements Initializable {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        if (a != null)
+                        if (a != null) {
                             Main.primaryStage.setScene(new Scene(a));
+                            Main.primaryStage.show();
+                        }
                     });
                 } else {
                     System.out.println("Connection could not be established");

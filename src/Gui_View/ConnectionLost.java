@@ -25,7 +25,7 @@ public class ConnectionLost {
         lost.initModality(Modality.APPLICATION_MODAL);
 
         // todo implement funktion + speicheranfrage ?
-        Label showError = new Label("Verbindung verloren :(");
+        Label showError = new Label("Verbindung verloren");
         Button backToStart = new Button("Hauptmenü");
         Button endGame = new Button("Spiel beenden");
         backToStart.setOnAction(event -> {

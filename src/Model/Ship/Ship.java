@@ -69,14 +69,15 @@ public class Ship implements IShip {
     public Point[] getCoordinates(){
         Point[] coordinates = new Point[this.size];
         //vertical placed
-        if ( this.posStart.getX() == this.posEnd.getX()){
+        if (this.posStart.getX() == this.posEnd.getX()){
             for ( int i = 0; i < this.size; i++){
                 coordinates[i] = new Point(posStart.getX(), posStart.getY() + i);
             }
         }
         else{
             for ( int i = 0; i < this.size; i++){
-                coordinates[i] = new Point(posStart.getY(), posStart.getX() + i);
+                coordinates[i] = new Point(posStart.getX()+i, posStart.getY()); //
+                //coordinates[i] = new Point(posStart.getY(), posStart.getY()+i); // falsch -> so war es bisher
             }
         }
         return coordinates;

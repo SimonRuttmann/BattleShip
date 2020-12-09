@@ -1,5 +1,7 @@
 package Model.Util;
 
+import Player.ActiveGameState;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,9 +14,19 @@ public class Water implements IDrawable {
     }
 
     @Override
-    public void draw(){
+    public void draw() {
         System.out.print("*water*");
-        this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/water.png"))));
+        // Wasser = keine Grafik
+        this.label.setGraphic(null);
+        Platform.runLater(() -> {
+            if (!validShipPlacementMarker && ActiveGameState.isSceneIsPlaceShips()) {
+                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/notValidPlacementMarker.png")));
+                // making ships resizeable -> fitting to current label size
+                image.fitWidthProperty().bind(label.widthProperty());
+                image.fitHeightProperty().bind(label.heightProperty());
+                this.label.setGraphic(image);
+            }
+        });
     }
 
     @Override

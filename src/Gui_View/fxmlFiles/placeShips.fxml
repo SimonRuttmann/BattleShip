@@ -70,10 +70,34 @@
                               <Pane prefWidth="5.0" />
                               <VBox>
                                  <children>
-                                    <Label text="x/x platziert" fx:id="xOfx2Ships" />
-                                    <Label text="x/x platziert" fx:id="xOfx3Ships" />
-                                    <Label text="x/x platziert" fx:id="xOfx4Ships" />
-                                    <Label text="x/x platziert" fx:id="xOfx5Ships" />
+                                    <HBox>
+                                       <children>
+                                          <Label fx:id="bracket2" text="(" />
+                                          <Label fx:id="twoOf" text="x" />
+                                          <Label text="/x platziert)" fx:id="xOfx2Ships" />
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <Label fx:id="bracket3" text="(" />
+                                          <Label fx:id="threeOf" text="x" />
+                                          <Label text="/x platziert)" fx:id="xOfx3Ships" />
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <Label fx:id="bracket4" text="(" />
+                                          <Label fx:id="fourOf" text="x" />
+                                          <Label text="/x platziert)" fx:id="xOfx4Ships" />
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <Label fx:id="bracket5" text="(" />
+                                          <Label fx:id="fiveOf" text="x" />
+                                          <Label text="/x platziert)" fx:id="xOfx5Ships" />
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
                            </children>

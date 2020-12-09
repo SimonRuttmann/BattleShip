@@ -59,6 +59,7 @@ public class ActiveGameState {
     private static int amountShipSize3;
     private static int amountShipSize4;
     private static int amountShipSize5;
+    private static boolean sceneIsPlaceShips;
     private static int amountShipSize2placed;
     private static int amountShipSize3placed;
     private static int amountShipSize4placed;
@@ -154,6 +155,9 @@ public class ActiveGameState {
     public static void setAmountShipSize5(int amountShipSize5) {
         ActiveGameState.amountShipSize5 = amountShipSize5;
     }
+
+    public static boolean isSceneIsPlaceShips() {return sceneIsPlaceShips;};
+    public static void setSceneIsPlaceShips(boolean sceneIsPlaceShips) {ActiveGameState.sceneIsPlaceShips = sceneIsPlaceShips;};
 
     public static int getAmountShipSize2placed() {
         return amountShipSize2placed;

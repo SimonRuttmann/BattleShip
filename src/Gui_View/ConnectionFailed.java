@@ -22,7 +22,7 @@ public class ConnectionFailed {
         Stage failed = new Stage();
         failed.initModality(Modality.APPLICATION_MODAL);
 
-        Label showError = new Label("Verbindungsaufbau fehlgeschlagen :(");
+        Label showError = new Label("Verbindungsaufbau fehlgeschlagen");
         Button backToStart = new Button("Hauptmenü");
         Button endGame = new Button("Spiel beenden");
         backToStart.setOnAction(event -> {

@@ -1,6 +1,7 @@
 package Model.Util;
 
 import Model.Ship.IShip;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,7 +12,7 @@ public class ShipPart implements IDrawable{
     private String part;
     private IShip owner = null;
     private boolean shot;
-    private boolean validShipPlacementMarker = true;
+    private boolean validShipPlacementMarker = false;
 
     //ShipsParts in our Field have an associated Ship
     public ShipPart(String part, IShip owner) {
@@ -61,6 +62,7 @@ public class ShipPart implements IDrawable{
     public void setPart(String part) {
         this.part = part;
     }
+
     @Override
     public void draw() {
         switch (part){
@@ -74,23 +76,40 @@ public class ShipPart implements IDrawable{
             default: System.out.println("Alignment not found");
 
         } //todo hit&sunk
-        if ( shot ){
-            this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipHit.png"))));
-        }
-        else{
-            // for test: draw ships "right"
-            switch (part) {
-                case "start vertical"    : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png"))));break;
-                case "start horizontal"  : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartHorizontal.png"))));break;
-                case "end vertical"      : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipEndVertical.png"))));break;
-                case "end horizontal"    : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipEndHorizontal.png"))));break;
-                case "middle vertical"   : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipMiddleVertical.png"))));break;
-                case "middle horizontal" : this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipMiddleHorizontal.png"))));break;
-                default: System.out.println("Alignment not found");
+
+        // todo test if platfrom run later works here
+        Platform.runLater( () -> {
+            if (shot) {ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shitHit.png")));
+                // making ships resizeable -> fitting to current label size
+                image.fitWidthProperty().bind(label.widthProperty());
+                image.fitHeightProperty().bind(label.heightProperty());
+                this.label.setGraphic(image);
             }
-            // default way
-            //this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/ship.png"))));
-        }
+            else {
+                // default way
+                /*ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/ship.png")));
+                // making ships resizeable -> fitting to current label size
+                image.fitWidthProperty().bind(label.widthProperty());
+                image.fitHeightProperty().bind(label.heightProperty());
+                this.label.setGraphic(image);*/
+
+                // for test: draw ships "right"
+                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png")));
+                // making ships resizeable -> fitting to current label size
+                image.fitWidthProperty().bind(label.widthProperty());
+                image.fitHeightProperty().bind(label.heightProperty());
+                switch (part) {
+                    case "start vertical"    : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png"))); this.label.setGraphic(image); break;
+                    case "start horizontal"  : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartHorizontal.png"))); this.label.setGraphic(image); break;
+                    case "end vertical"      : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipEndVertical.png")));  this.label.setGraphic(image); break;
+                    case "end horizontal"    : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipEndHorizontal.png")));  this.label.setGraphic(image); break;
+                    case "middle vertical"   : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipMiddleVertical.png")));  this.label.setGraphic(image); break;
+                    case "middle horizontal" : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipMiddleHorizontal.png")));  this.label.setGraphic(image); break;
+                    case "destroyed"         : image.setImage(new Image(getClass().getResourceAsStream("Gui_View/images/shipHit.png"))); this.label.setGraphic(image); break;
+                    default: System.out.println("Alignment not found");
+                }
+            }
+        });
     }
 
 }

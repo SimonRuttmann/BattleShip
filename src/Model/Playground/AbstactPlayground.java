@@ -2,6 +2,7 @@ package Model.Playground;
 
 import Model.Ship.IShip;
 import Model.Util.IDrawable;
+import Model.Util.Water;
 import Player.ActiveGameState;
 import javafx.scene.control.Label;
 

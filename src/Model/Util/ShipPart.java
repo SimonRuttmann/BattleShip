@@ -12,7 +12,7 @@ public class ShipPart implements IDrawable{
     private String part;
     private IShip owner = null;
     private boolean shot;
-    private boolean validShipPlacementMarker = false;
+    private boolean validShipPlacementMarker = true;
 
     //ShipsParts in our Field have an associated Ship
     public ShipPart(String part, IShip owner) {
@@ -82,7 +82,7 @@ public class ShipPart implements IDrawable{
 
 
         } //todo hit&sunk
-
+            */
         // todo test if platfrom run later works here
         Platform.runLater( () -> {
             if (shot) {ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shitHit.png")));

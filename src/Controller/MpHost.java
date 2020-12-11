@@ -38,8 +38,8 @@ public class MpHost implements Initializable {
             @Override
             public void run() {
                 System.out.println("Connection offered - waiting for paring");
-                if (server.startSeverConnection()) {
-                    ActiveGameState.setServer(server);
+                if (server.startSeverConnection()) { //todo SockeTimoutException abfangen -> throw -> falls BackButton gedrückt, Server schließen
+                    ActiveGameState.setServer(server); //todo das sonst irgendwann alter server für gameabbruch sorgt... (SP soweiso oder MP neu)
                     // platform run later -> sends task to GuiThread -> Gui does this as soon as this piece of code is reached
                     // -> this means: when connection is established, next window will appear - if failed: pop up
                     Platform.runLater(() -> {
@@ -66,7 +66,7 @@ public class MpHost implements Initializable {
     }
 
     public void backToLastScene() throws IOException {
-        // todo shutdown server + close everything
+        // todo shutdown server + close everything -> we need a server.terminate
         Parent mpSelect = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpSelect.fxml"));
         Main.primaryStage.setScene(new Scene(mpSelect));
         Main.primaryStage.show();

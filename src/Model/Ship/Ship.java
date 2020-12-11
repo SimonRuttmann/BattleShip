@@ -76,7 +76,8 @@ public class Ship implements IShip {
         }
         else{
             for ( int i = 0; i < this.size; i++){
-                coordinates[i] = new Point(posStart.getY(), posStart.getX() + i);
+                //coordinates[i] = new Point(posStart.getY(), posStart.getX() + i);
+                coordinates[i] = new Point(posStart.getX()+i, posStart.getY());
             }
         }
         return coordinates;

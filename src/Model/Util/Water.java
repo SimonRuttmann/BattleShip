@@ -13,9 +13,16 @@ public class Water implements IDrawable {
 
     @Override
     public void draw(){
+        /*
         System.out.print("*water*");
         this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/water.png"))));
+    */
+        if(!this.validShipPlacementMarker)
+        {
+            this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipHit.png"))));
+        }
     }
+
 
     @Override
     public Label getLabel() {

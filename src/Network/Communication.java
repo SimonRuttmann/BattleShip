@@ -31,8 +31,16 @@ public abstract class Communication implements ICommunication{
 
         if (!connected) return;
         try {
-            outputWriter.write(sendCMD);
+            outputWriter.write(String.format("%s%n",sendCMD));
             outputWriter.flush();
+
+
+
+            // Abwechselnd vom Benutzer lesen und ins Socket schreiben
+            // bzw. vom Socket lesen und auf den Bildschirm schreiben.
+            // Abbruch bei EOF oder Leerzeile vom Benutzer bzw. bei EOF vom Socket.
+
+
             // flush sorgt dafür, dass der Writer garantiert alle Zeichen
             // in den unterliegenden Ausgabestrom schreibt.
         } catch (IOException e) {
@@ -65,7 +73,7 @@ public abstract class Communication implements ICommunication{
             }).start();
             */// -> Thread inputReader.readLine();
 
-            String cmd = inputReader.readLine();
+                String cmd = inputReader.readLine();
 
             //timout.join() inputReaderThread.join();
             // -> Wer zuerst joint -> Befehl oder Befehl"Timout"

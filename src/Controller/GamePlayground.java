@@ -34,6 +34,7 @@ public class GamePlayground implements Initializable {
     // todo: Feld zusammenhängend machen + Window size so, dass ganzes Feld passt aber nicht kleiner
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ActiveGameState.setSceneIsPlaceShips(false);
         // set Labels to Player Names
         ownFieldLabel.setText(ActiveGameState.getOwnPlayerName() + "'s Spielfeld");
         // todo evtl für Gegner - bekommen wir einen Namen?????

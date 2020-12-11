@@ -157,7 +157,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
     }
 
-    //TODO is von isShipPlacementValid kopiert -> Hilfsmethoden auslagern
+    //TODO is von isShipPlacementValid kopiert -> Hilfsmethoden auslagern // todo horizontal/vertical schliessen sich nicht(immer??) aus - gibt Fehler
     /**
      *
      * @param startPoint

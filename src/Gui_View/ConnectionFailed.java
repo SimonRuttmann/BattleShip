@@ -1,8 +1,9 @@
 package Gui_View;
 
-import Player.SaveAndLoad;
-import Player.Savegame;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,28 +12,24 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+public class ConnectionFailed {
 
-public class ConnectionLost {
-
-    static Scene conLost;
+    static Scene conFailed;
     static int width = 300;
     static int height = 100;
 
     public static void display() {
-        Stage lost = new Stage();
-        lost.initModality(Modality.APPLICATION_MODAL);
+        Stage failed = new Stage();
+        failed.initModality(Modality.APPLICATION_MODAL);
 
-        // todo implement funktion + speicheranfrage ?
-        Label showError = new Label("Verbindung verloren");
+        Label showError = new Label("Verbindungsaufbau fehlgeschlagen");
         Button backToStart = new Button("Hauptmenü");
         Button endGame = new Button("Spiel beenden");
         backToStart.setOnAction(event -> {
             // todo -> go back. how??? static???
         });
         endGame.setOnAction(event -> {
-            lost.close();
+            failed.close();
             Main.primaryStage.close();
         });
 
@@ -45,12 +42,12 @@ public class ConnectionLost {
         layout1.setAlignment(Pos.CENTER);
 
 
-        conLost = new Scene(layout1, width, height);
-        conLost.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
+        conFailed = new Scene(layout1, width, height);
+        conFailed.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
 
-        lost.setScene(conLost);
-        HelpMethods.alignStageCenter(lost, width, height);
-        lost.setResizable(false);
-        lost.showAndWait();
+        failed.setScene(conFailed);
+        HelpMethods.alignStageCenter(failed, width, height);
+        failed.setResizable(false);
+        failed.showAndWait();
     }
 }

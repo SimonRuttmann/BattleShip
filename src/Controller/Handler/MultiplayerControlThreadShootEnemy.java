@@ -63,7 +63,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                 if ( shotResponse.isGameWin())
                 {
                     ActiveGameState.setRunning(false);
-                    HelpMethods.winOrlose(true);
+                    HelpMethods.winOrLose(true);
                 }
                 break;
 

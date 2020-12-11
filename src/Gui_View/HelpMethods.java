@@ -31,11 +31,14 @@ public class HelpMethods {
         CancelGame.save();
     }
 
+    // connectionFailed
+    public static void connectionFailed() {ConnectionFailed.display(); }
+
     // connection lost
     public static void connectionLost() {ConnectionLost.display(); }
 
     // win or lose - new game or exit
-    public static void winOrlose(boolean win) {
+    public static void winOrLose(boolean win) {
         WinLose.display(win);
     }
 

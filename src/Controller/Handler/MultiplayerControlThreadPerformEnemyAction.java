@@ -67,6 +67,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 else {
                     ActiveGameState.getClient().sendCMD(CMD.answer, answerToEnemyAction);
                 }
+                break;
 
                 //TODO Save And Load methods have to be adjusted
             case "save":
@@ -79,6 +80,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 else {
                     ActiveGameState.getClient().sendCMD(CMD.done, "");
                 }
+                break;
             case "load":
                 SaveAndLoad.load(new Savegame(), cmdReceived[1]);
                 if (ActiveGameState.isAmIServer()) {
@@ -88,6 +90,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 else {
                     ActiveGameState.getClient().sendCMD(CMD.done, "");
                 }
+                break;
             case "timeout":
                 if (ActiveGameState.isAmIServer()) {
                     ActiveGameState.getServer().closeConnection();
@@ -95,6 +98,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                     ActiveGameState.getClient().closeConnection();
                 }
                 ActiveGameState.setRunning(false);
+                break;
                 //TODO Yannick POPUP für Timeout setzen
             default:
                 System.out.println("Unexpected message from connection partner");

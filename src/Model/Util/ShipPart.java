@@ -65,6 +65,11 @@ public class ShipPart implements IDrawable{
 
     @Override
     public void draw() {
+        if(!this.validShipPlacementMarker)
+        {
+            this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipHit.png"))));
+        }
+        /*
         switch (part){
             case "start vertical"    : System.out.print("^");break;
             case "start horizontal"  : System.out.print("<");break;
@@ -74,6 +79,7 @@ public class ShipPart implements IDrawable{
             case "middle horizontal" : System.out.print("=");break;
             case "destroyed"         : System.out.print("H");
             default: System.out.println("Alignment not found");
+
 
         } //todo hit&sunk
 
@@ -110,6 +116,20 @@ public class ShipPart implements IDrawable{
                 }
             }
         });
+
+        
+        /*
+
+         */
+        //if ( shot ){
+        //    this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipHit.png"))));
+        //}
+        //else{
+        //    this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/ship.png"))));
+        //}
+
+
+
     }
 
 }

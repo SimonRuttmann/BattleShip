@@ -14,6 +14,7 @@ public class ShotWater implements IDrawable {
 
     @Override
     public void draw(){
+
         System.out.print("*shotWater*");
         // -> Gui should update when drawing shotWater
         Platform.runLater(() -> {
@@ -24,9 +25,21 @@ public class ShotWater implements IDrawable {
             this.label.setGraphic(image);
         });
         //this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/waterHit.png"))));
+
+        /*System.out.print("X");
+        this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/waterHit.png"))));
+
         //bei .draw kann dann das label mit drawableobject.getLabel.setStyle("-fx-background-color:blue");
         //und später noch DrawableObjekt.draw.setDiabled("true")
+
+    */
+
+        if(!this.validShipPlacementMarker)
+        {
+            this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipHit.png"))));
+        }
     }
+
 
     @Override
     public Label getLabel() {

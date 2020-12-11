@@ -194,7 +194,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         this.shipListOfThisPlayground.remove(ship);
         return true;
     }
-
+//TODO die schiffspositionen selbst werden nicht markiert
     /**
      * Checks if the ship represented by these two points is valid
      * if the ship placement is valid the method creates the ship and adds it to the shipList itself
@@ -239,6 +239,10 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         //Adding the Ship to the Playground
         this.addShipToPlayground(ship);
 
+        for ( Point point : coordinates){
+            setPlacementMarkerToField(point.getX(),point.getY(), null);
+        }
+
         return ship;
     }
 
@@ -282,7 +286,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         //Set the placementMarker of the Field to true
         if( Field[x][y] != null){
             Field[x][y].setValidShipPlacementMarker(false);
-            MarkedPositions.add(new Point(x,y));
+            if ( MarkedPositions!= null) MarkedPositions.add(new Point(x,y));
         }
     }
 

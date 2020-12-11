@@ -1,6 +1,10 @@
 package Controller;
 
+
 import Gui_View.HelpMethods;
+
+import Controller.Handler.MultiplayerControlThreadConfigCommunication;
+
 import Gui_View.Main;
 import Network.Client;
 import Player.ActiveGameState;
@@ -37,6 +41,7 @@ public class MpJoin {
 
     // todo -> read from text field, make connect in bg, show spinner -> use thread:
     public void connect() throws IOException {
+        ActiveGameState.setAmIServer(false);
         loadingIndicator.setVisible(true);
         connectButton.setVisible(false);
         System.out.println("connectButton pressed");
@@ -48,6 +53,7 @@ public class MpJoin {
                 System.out.println("Searching for Host");
                 //todo schauen ob korrekte ip adresse
                 ActiveGameState.setClient(new Client(hostIP.getText()));
+
 
                 if (ActiveGameState.isRunning()) {
                     // platform run later -> sends task to GuiThread -> Gui does this as soon as this piece of code is reached
@@ -73,5 +79,6 @@ public class MpJoin {
             }
         });
         searchHost.start();
+
     }
 }

@@ -14,9 +14,12 @@ public class Water implements IDrawable {
     }
 
     @Override
+
     public void draw() {
         System.out.print("*water*");
         // Wasser = keine Grafik
+      
+      //TODO Erstmal mit, und später ohne Testen -> wenns ohne geht rausschmeisen -> (setGraphic wurde nicht in jedem Fall in der Gui angezeigt) -> Whr löschen
         this.label.setGraphic(null);
         Platform.runLater(() -> {
             if (!validShipPlacementMarker && ActiveGameState.isSceneIsPlaceShips()) {
@@ -27,7 +30,21 @@ public class Water implements IDrawable {
                 this.label.setGraphic(image);
             }
         });
+
+  /*  public void draw(){
+        /*
+        System.out.print("*water*");
+        this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/water.png"))));
+    */
+  /*
+        if(!this.validShipPlacementMarker)
+        {
+            this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipHit.png"))));
+        }
+  */
+
     }
+
 
     @Override
     public Label getLabel() {

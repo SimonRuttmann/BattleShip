@@ -65,6 +65,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                     ActiveGameState.setRunning(false);
                     HelpMethods.winOrLose(true);
                 }
+                break;
 
             case "timeout":
                 if ( ActiveGameState.isAmIServer()){
@@ -74,6 +75,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                     ActiveGameState.getClient().closeConnection();
                 }
                 ActiveGameState.setRunning(false);
+                break;
                 //TODO Yannick POPUP für Timeout setzen
             default:
                 System.out.println("Unexpected message from connection partner");

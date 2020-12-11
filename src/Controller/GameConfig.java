@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
 import Model.Playground.EnemyPlayground;
 import Model.Playground.OwnPlayground;
@@ -87,6 +88,9 @@ public class GameConfig implements Initializable {
         ActiveGameState.setAmountShipSize5(number5Ships.getValue());
 
         // todo Simon -> neuer Thread : wenn Server -> send cmd ships 222 333 44 ... to client
+
+        //MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
+        //multiplayerControlThreadConfigCommunication.start();
 
         Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/chooseSelfOrKi.fxml"));
         Main.primaryStage.setScene(new Scene(start));

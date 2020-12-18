@@ -59,11 +59,23 @@ public class ActiveGameState {
     private static int amountShipSize3;
     private static int amountShipSize4;
     private static int amountShipSize5;
-    private static boolean sceneIsPlaceShips;
     private static int amountShipSize2placed;
     private static int amountShipSize3placed;
     private static int amountShipSize4placed;
     private static int amountShipSize5placed;
+
+    private static boolean sceneIsPlaceShips;
+
+    //Hinzugefügt für Drawable Objekte -> Draw Methode
+    public static boolean isSceneIsGamePlayground() {
+        return sceneIsGamePlayground;
+    }
+
+    public static void setSceneIsGamePlayground(boolean sceneIsGamePlayground) {
+        ActiveGameState.sceneIsGamePlayground = sceneIsGamePlayground;
+    }
+
+    private static boolean sceneIsGamePlayground = false;
 
     // Game Variables
 // -> Gestrichen -> neuer Zugriff über ActiveGameState.getOwnPlayer.get[Own][Enemy]Playground

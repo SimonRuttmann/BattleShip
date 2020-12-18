@@ -23,6 +23,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
     @Override
     public void run() {
 
+        System.out.println( "Starte Multiplayer Perform Enemy Action");
         while( !ActiveGameState.isYourTurn() && ActiveGameState.isRunning()) {
 
         //1
@@ -36,7 +37,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
         else {
             cmdReceived = ActiveGameState.getClient().getCMD();
         }
-
+            System.out.println( "Received the Command " + cmdReceived );
         //2,3,4
         String answerToEnemyAction;
 
@@ -107,5 +108,6 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
     }
         //5
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
+        System.out.println( "Beende Multiplayer Perform Enemy Action ");
     }
 }

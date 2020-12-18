@@ -16,14 +16,23 @@ public class Water implements IDrawable {
     @Override
 
     public void draw() {
-        System.out.print("*water*");
+       // System.out.print("*water*");
         // Wasser = keine Grafik
       
       //TODO Erstmal mit, und später ohne Testen -> wenns ohne geht rausschmeisen -> (setGraphic wurde nicht in jedem Fall in der Gui angezeigt) -> Whr löschen
         this.label.setGraphic(null);
         Platform.runLater(() -> {
+            //Das ist für die PlaceShips Scene
             if (!validShipPlacementMarker && ActiveGameState.isSceneIsPlaceShips()) {
                 ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/notValidPlacementMarker.png")));
+                // making ships resizeable -> fitting to current label size
+                image.fitWidthProperty().bind(label.widthProperty());
+                image.fitHeightProperty().bind(label.heightProperty());
+                this.label.setGraphic(image);
+            }
+            //HINZUGEFÜGT, für die Spiel Scene ( die Szene auf der gegeneinadner gespielt wird )
+            if (ActiveGameState.isSceneIsGamePlayground()){
+                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/water.png")));
                 // making ships resizeable -> fitting to current label size
                 image.fitWidthProperty().bind(label.widthProperty());
                 image.fitHeightProperty().bind(label.heightProperty());
@@ -58,7 +67,16 @@ public class Water implements IDrawable {
 
     @Override
     public void setLabelNonClickable() {
-        this.label.setDisable(false);
+        Platform.runLater(()->{
+            this.label.setDisable(true);
+        });
+    }
+
+    @Override
+    public void setLabelClickable() {
+        Platform.runLater(()->{
+            this.label.setDisable(false);
+        });
     }
 
     @Override

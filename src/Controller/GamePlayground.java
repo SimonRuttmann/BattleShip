@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.Handler.MultiplayerControlThreadPerformEnemyAction;
 import Model.Playground.IEnemyPlayground;
 import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
@@ -34,6 +35,7 @@ public class GamePlayground implements Initializable {
     // todo: Feld zusammenhängend machen + Window size so, dass ganzes Feld passt aber nicht kleiner
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ActiveGameState.setSceneIsGamePlayground(true);
         ActiveGameState.setSceneIsPlaceShips(false);
         // set Labels to Player Names
         ownFieldLabel.setText(ActiveGameState.getOwnPlayerName() + "'s Spielfeld");
@@ -57,7 +59,10 @@ public class GamePlayground implements Initializable {
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
                 Label label = new Label();
+
+                //fliegt später raus
                 label.setStyle("-fx-background-color: lightblue");
+
                 label.setMinSize(5, 5);
                 label.setPrefSize(30, 30);
                 label.setMaxSize(30, 30);
@@ -73,7 +78,10 @@ public class GamePlayground implements Initializable {
                 Label label= new Label();
                 // todo make button clickable
                 label.setOnMouseClicked(new GameShootEnemy());
+
+                //fliegt später raus
                 label.setStyle("-fx-background-color: lightblue");
+
                 label.setMinSize(5, 5);
                 label.setPrefSize(30, 30);
                 label.setMaxSize(30, 30);
@@ -96,6 +104,14 @@ public class GamePlayground implements Initializable {
         enemyFieldArray = enemyField.getChildren().toArray();
         ActiveGameState.getOwnPlayerIEnemyPlayground().setLabels(enemyFieldArray);
         ActiveGameState.getOwnPlayerIEnemyPlayground().drawPlayground();
+
+        //Client -> Zuerst ist der Server dran -> Setze alle Labels im gegnerischen Spielfeld nicht klickbar
+        // Starte den Perform Enemy Action Thread um auf die Eingaben des Servers zu reagieren -> Danach PingPong Prinzip
+        if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer()){
+            MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
+            multiplayerControlThreadPerformEnemyAction.start();
+            ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
+        }
     }
 
     // when Button cancleGame is pressed - save or no saving?

@@ -41,6 +41,8 @@ public class MpHost implements Initializable {
                 System.out.println("Connection offered - waiting for paring");
                 if (server.startSeverConnection()) { //todo SockeTimoutException abfangen -> throw -> falls BackButton gedrückt, Server schließen
                     ActiveGameState.setServer(server); //todo das sonst irgendwann alter server für gameabbruch sorgt... (SP soweiso oder MP neu)
+                    ActiveGameState.setRunning(true);
+
                     // platform run later -> sends task to GuiThread -> Gui does this as soon as this piece of code is reached
                     // -> this means: when connection is established, next window will appear - if failed: pop up
                     Platform.runLater(() -> {

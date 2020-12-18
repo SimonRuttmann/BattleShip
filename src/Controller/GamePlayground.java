@@ -35,6 +35,7 @@ public class GamePlayground implements Initializable {
     // todo: Feld zusammenhängend machen + Window size so, dass ganzes Feld passt aber nicht kleiner
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ActiveGameState.setSceneIsGamePlayground(true);
         ActiveGameState.setSceneIsPlaceShips(false);
         // set Labels to Player Names
         ownFieldLabel.setText(ActiveGameState.getOwnPlayerName() + "'s Spielfeld");
@@ -58,7 +59,10 @@ public class GamePlayground implements Initializable {
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
                 Label label = new Label();
+
+                //fliegt später raus
                 label.setStyle("-fx-background-color: lightblue");
+
                 label.setMinSize(5, 5);
                 label.setPrefSize(30, 30);
                 label.setMaxSize(30, 30);
@@ -76,7 +80,9 @@ public class GamePlayground implements Initializable {
                 // every labels gets it's handler: GameShootEnemy -> activated on mouse click: fire shot
                 label.setOnMouseClicked(new GameShootEnemy());
 
+                //todo fliegt später raus
                 label.setStyle("-fx-background-color: lightblue");
+
                 label.setMinSize(5, 5);
                 label.setPrefSize(30, 30);
                 label.setMaxSize(30, 30);
@@ -100,14 +106,12 @@ public class GamePlayground implements Initializable {
         ActiveGameState.getOwnPlayerIEnemyPlayground().setLabels(enemyFieldArray);
         ActiveGameState.getOwnPlayerIEnemyPlayground().drawPlayground();
 
-        // at begin, only labels of the host are activated //todo swap activated - not activated every round
-        if ( !ActiveGameState.isYourTurn()) ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
-
-        // at begin, the client has to start the MultiplayerContorlEnemyActionThread
-        // -> because the host will fire the first shot -> client has to wait for that at the beginning
-        if(ActiveGameState.isMultiplayer() && !ActiveGameState.isAmIServer()) {
-            MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction= new MultiplayerControlThreadPerformEnemyAction();
+        //Client -> Zuerst ist der Server dran -> Setze alle Labels im gegnerischen Spielfeld nicht klickbar
+        // Starte den Perform Enemy Action Thread um auf die Eingaben des Servers zu reagieren -> Danach PingPong Prinzip
+        if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer()){
+            MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
+            ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
         }
     }
 

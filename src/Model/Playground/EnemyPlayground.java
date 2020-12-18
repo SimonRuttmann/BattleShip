@@ -254,7 +254,8 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
         {
             for ( int y = 0; y < this.playgroundsize; y++)
             {
-                Field[x][y].getLabel().setDisable(false);
+                Field[x][y].setLabelNonClickable();
+                //Field[x][y].getLabel().setDisable(false);
             }
         }
     }
@@ -267,7 +268,8 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             {
                 if ( Field[x][y] instanceof Water)
                 {
-                    Field[x][y].getLabel().setDisable(true);
+                    Field[x][y].setLabelClickable();
+                    //Field[x][y].getLabel().setDisable(false);
                 }
 
             }

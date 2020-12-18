@@ -60,7 +60,7 @@ public class MpJoin implements Initializable {
                 System.out.println("Searching for Host");
                 //todo schauen ob korrekte ip adresse
                 ActiveGameState.setClient(new Client(hostIP.getText()));
-
+                ActiveGameState.setRunning(true);
 
                 if (true/*ActiveGameState.isRunning()*/) {
                     // platform run later -> sends task to GuiThread -> Gui does this as soon as this piece of code is reached

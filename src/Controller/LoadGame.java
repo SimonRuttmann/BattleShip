@@ -33,7 +33,7 @@ public class LoadGame implements Initializable {
         ObservableList<File> observableList = FXCollections.observableArrayList();
         // dir is the folder that contains our saved game files - different for singleplayer and multiplayer
         File dir;
-        if(ActiveGameState.isMultiplayer())
+        if(ActiveGameState.isMultiplayer())         //TODO AN DER DATEIENDUNG HERUMZUPFUSCHEN IST MURKS HOCH 10 -> ORDNER SINGLEPLAYER UND ORDNER MULTIPLAYER -> SAVEGAME DARAUS LADEN -> DIE DATEIENDUNG BLEIBT NATÜRLICH .json, DA ES OFFENSICHTLICHERWEISE EINE JSON DATEI IST...
             dir = new File(".savedGames"); //todo mit simon: dateiendung -> besser .svsingle .svmulti ?? und laden only multiplayer with ip????
         else
             dir = new File(".savedGames"); // todo: dann statt über ordner über filename schauen???

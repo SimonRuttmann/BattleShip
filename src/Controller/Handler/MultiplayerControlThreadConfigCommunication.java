@@ -55,6 +55,7 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                     ships.append(" ");
                 }
 
+                //ships 5 5 5 5 2 3 2 3
 
                 ActiveGameState.getServer().sendCMD(CMD.ships, ships.toString());
 

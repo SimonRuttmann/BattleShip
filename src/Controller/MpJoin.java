@@ -80,7 +80,7 @@ public class MpJoin implements Initializable {
                 } else {
                     System.out.println("Connection could not be established");
                     // Method reference -> "Lambda could be replaced with method reference" -> done that
-                    Platform.runLater(HelpMethods::connectionFailed);
+                    HelpMethods.connectionFailed();
                 }
 
             }

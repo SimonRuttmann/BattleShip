@@ -84,11 +84,6 @@ public class LoadGame implements Initializable {
                         // todo now we have a Savegameobject: gameObject -> todo -> load game
 
 
-                        // Versehentliches Schließen des Spiels verhindern + Speicheraufforderung
-                        Main.primaryStage.setOnCloseRequest(j -> {
-                            j.consume();
-                            HelpMethods.closeProgrammSaveGame();
-                        });
                         // Change scene to game Playground
                         Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                         Main.primaryStage.setScene(new Scene(game));

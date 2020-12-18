@@ -187,88 +187,92 @@ public class PlaceShips implements Initializable {
 
                     //The following is done for every ship size (all different placeable ship labels)
 
-                    // event.getGestureSource() is getting the Element, which is hovered over the label (here the placable ship label)
-                    if (event.getGestureSource() == twoShip) {
+                    try {
+                        // event.getGestureSource() is getting the Element, which is hovered over the label (here the placable ship label)
+                        if (event.getGestureSource() == twoShip) {
 
-                        //When the ship placement is allowed, the String indicateValidPlacement is set to the string green, which contains a -fx css color-scheme
-                        //if the ship placement is not allowed the String is set to the string red, containing another -fx css color-scheme
-                        if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY), new Point(finalX + 1, finalY))) ||
-                                (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY), new Point(finalX, finalY + 1)))) {
-                            // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
-                            event.acceptTransferModes(TransferMode.ANY);
-                            indicateValidPlacement = green;
-                        } else
-                            indicateValidPlacement = red;
-                        label.setStyle(indicateValidPlacement);
+                            //When the ship placement is allowed, the String indicateValidPlacement is set to the string green, which contains a -fx css color-scheme
+                            //if the ship placement is not allowed the String is set to the string red, containing another -fx css color-scheme
+                            if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY), new Point(finalX + 1, finalY))) ||
+                                    (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY), new Point(finalX, finalY + 1)))) {
+                                // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
+                                event.acceptTransferModes(TransferMode.ANY);
+                                indicateValidPlacement = green;
+                            } else
+                                indicateValidPlacement = red;
+                            label.setStyle(indicateValidPlacement);
 
-                        // Set the style of the labels for all labels, where the ship is hovered over
-                        if (horizontal)
-                            (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
-                        else
-                            (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
-                    }
-
-
-                    if (event.getGestureSource() == threeShip) {
-                        if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 1, finalY))) ||
-                                (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 1)))) {
-                            // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
-                            event.acceptTransferModes(TransferMode.ANY);
-                            indicateValidPlacement = green;
-                        } else
-                            indicateValidPlacement = red;
-                        label.setStyle(indicateValidPlacement);
-                        if (horizontal) {
-                            (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY, finalX - 1, ownField)).setStyle(indicateValidPlacement);
-                        } else {
-                            (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY - 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                            // Set the style of the labels for all labels, where the ship is hovered over
+                            if (horizontal)
+                                (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
+                            else
+                                (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
                         }
-                    }
 
 
-                    if (event.getGestureSource() == fourShip) {
-                        if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 2, finalY))) ||
-                                (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 2)))) {
-                            // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
-                            event.acceptTransferModes(TransferMode.ANY);
-                            indicateValidPlacement = green;
-                        } else
-                            indicateValidPlacement = red;
-                        label.setStyle(indicateValidPlacement);
-                        if (horizontal) {
-                            (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY, finalX - 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY, finalX + 2, ownField)).setStyle(indicateValidPlacement);
-                        } else {
-                            (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY - 1, finalX, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY + 2, finalX, ownField)).setStyle(indicateValidPlacement);
+                        if (event.getGestureSource() == threeShip) {
+                            if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 1, finalY))) ||
+                                    (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 1)))) {
+                                // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
+                                event.acceptTransferModes(TransferMode.ANY);
+                                indicateValidPlacement = green;
+                            } else
+                                indicateValidPlacement = red;
+                            label.setStyle(indicateValidPlacement);
+                            if (horizontal) {
+                                (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY, finalX - 1, ownField)).setStyle(indicateValidPlacement);
+                            } else {
+                                (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY - 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                            }
                         }
-                    }
 
 
-                    if (event.getGestureSource() == fiveShip) {
-                        if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 2, finalY), new Point(finalX + 2, finalY))) ||
-                                (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 2), new Point(finalX, finalY + 2)))) {
-                            // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shiplabel gets dropped back to start position
-                            event.acceptTransferModes(TransferMode.ANY);
-                            indicateValidPlacement = green;
-                        } else
-                            indicateValidPlacement = red;
-                        label.setStyle(indicateValidPlacement);
-                        if (horizontal) {
-                            (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY, finalX - 1, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY, finalX + 2, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY, finalX - 2, ownField)).setStyle(indicateValidPlacement);
-                        } else {
-                            (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY - 1, finalX, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY + 2, finalX, ownField)).setStyle(indicateValidPlacement);
-                            (getNodeByRowColumnIndex(finalY - 2, finalX, ownField)).setStyle(indicateValidPlacement);
+                        if (event.getGestureSource() == fourShip) {
+                            if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 2, finalY))) ||
+                                    (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 2)))) {
+                                // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
+                                event.acceptTransferModes(TransferMode.ANY);
+                                indicateValidPlacement = green;
+                            } else
+                                indicateValidPlacement = red;
+                            label.setStyle(indicateValidPlacement);
+                            if (horizontal) {
+                                (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY, finalX - 1, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY, finalX + 2, ownField)).setStyle(indicateValidPlacement);
+                            } else {
+                                (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY - 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY + 2, finalX, ownField)).setStyle(indicateValidPlacement);
+                            }
                         }
+
+
+                        if (event.getGestureSource() == fiveShip) {
+                            if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 2, finalY), new Point(finalX + 2, finalY))) ||
+                                    (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 2), new Point(finalX, finalY + 2)))) {
+                                // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shiplabel gets dropped back to start position
+                                event.acceptTransferModes(TransferMode.ANY);
+                                indicateValidPlacement = green;
+                            } else
+                                indicateValidPlacement = red;
+                            label.setStyle(indicateValidPlacement);
+                            if (horizontal) {
+                                (getNodeByRowColumnIndex(finalY, finalX + 1, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY, finalX - 1, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY, finalX + 2, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY, finalX - 2, ownField)).setStyle(indicateValidPlacement);
+                            } else {
+                                (getNodeByRowColumnIndex(finalY + 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY - 1, finalX, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY + 2, finalX, ownField)).setStyle(indicateValidPlacement);
+                                (getNodeByRowColumnIndex(finalY - 2, finalX, ownField)).setStyle(indicateValidPlacement);
+                            }
+                        }
+                    } catch (Exception ignored) {
+                        // ignore Exceptions when placing wrong -> console should not be full of them
                     }
 
                     // consume -> event should not be dispatched to any further event listeners
@@ -545,11 +549,6 @@ public class PlaceShips implements Initializable {
 
     // readyButton -> starts the game, only clickable when ships are placed in a valid way
     public void startGame() throws IOException {
-        // Versehentliches Schließen des Spiels verhindern + Speicheraufforderung
-        Main.primaryStage.setOnCloseRequest(e -> {
-            e.consume();
-            Gui_View.HelpMethods.closeProgrammSaveGame();
-        });
         Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
         Main.primaryStage.setScene(new Scene(game));
         Main.primaryStage.show();

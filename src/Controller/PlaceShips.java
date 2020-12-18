@@ -461,6 +461,10 @@ public class PlaceShips implements Initializable {
 
     public void rotateShip90() {
         horizontal = !horizontal;
+        if(horizontal)
+            rotate90.setStyle(red);
+        else
+            rotate90.setStyle(green);
     }
 
     public void newRandomPlacement() {

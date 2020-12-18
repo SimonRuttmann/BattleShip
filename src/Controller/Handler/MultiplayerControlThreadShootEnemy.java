@@ -10,6 +10,8 @@ import javafx.event.Event;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
+import java.util.Arrays;
+
 /**
  *  This thread will:
  *          1. disable all Labels on enemy playground
@@ -43,6 +45,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         //Report from the remoteSocket
         String[] cmdReceived;
         System.out.println("Sende: " + CMD.shot + " " + cmdParameter);
+
         //We are the server
         if ( ActiveGameState.isAmIServer()){
             ActiveGameState.getServer().sendCMD(CMD.shot, cmdParameter);
@@ -56,6 +59,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
 
         System.out.println( "Sende shot " + cmdParameter);
         System.out.println( "Erhalte " + cmdReceived);
+
         //4 determine the response and act depending on it
         IEnemyPlayground enemyPlayground = ActiveGameState.getOwnPlayerIEnemyPlayground();
 
@@ -85,10 +89,14 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         }
 
         System.out.println( "Ein durchgang Durchgang von Shoot Enemy abgeschlossen");
-        System.out.println( cmdReceived[0] + " " + cmdReceived[1]);
+
+        if ( cmdReceived.length == 2 ) System.out.println( cmdReceived[0] + " " + cmdReceived[1]);
+        else System.out.println(Arrays.toString(cmdReceived));
+
+
         if (ActiveGameState.isRunning()) {
             //If the answer was 1 or 2, we enable the Labels (player can click/shoot again) and end the thread
-            if (cmdReceived[0].equals("answer") && (Integer.parseInt(cmdReceived[1]) == 1 || Integer.parseInt(cmdReceived[1]) == 1)) {
+            if (cmdReceived[0].equals("answer") && (Integer.parseInt(cmdReceived[1]) == 1 || Integer.parseInt(cmdReceived[1]) == 2)) {
                 enemyPlayground.setAllWaterFieldsClickable();
                 System.out.println( "Der Spieler ist nochmal dran, da er etwas getroffen hat");
             }

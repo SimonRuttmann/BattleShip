@@ -54,8 +54,9 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                     answerToEnemyAction = "1";
                 } else {
                     answerToEnemyAction = "0";
+                    // Wrong -> need to wait for the next cmd
                     //If nothing got hit, we send the answer and our turn started
-                    ActiveGameState.setYourTurn(true);
+                    //ActiveGameState.setYourTurn(true);
                 }
 
                 //Send the answer to the remote socket
@@ -91,6 +92,9 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 else {
                     ActiveGameState.getClient().sendCMD(CMD.done, "");
                 }
+                break;
+            case "next":
+                ActiveGameState.setYourTurn(true);
                 break;
             case "timeout":
                 if (ActiveGameState.isAmIServer()) {

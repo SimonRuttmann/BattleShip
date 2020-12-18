@@ -11,6 +11,7 @@ import Player.ActiveGameState;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,8 +19,10 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class MpJoin {
+public class MpJoin implements Initializable {
 
     @FXML
     private Button backButton;
@@ -32,6 +35,10 @@ public class MpJoin {
     @FXML
     private ProgressIndicator loadingIndicator;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        ActiveGameState.setAmIServer(false);
+    }
 
     public void backToLastScene() throws IOException {
         Parent mpSelect = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpSelect.fxml"));
@@ -55,7 +62,7 @@ public class MpJoin {
                 ActiveGameState.setClient(new Client(hostIP.getText()));
                 ActiveGameState.setRunning(true);
 
-                if (ActiveGameState.isRunning()) {
+                if (true/*ActiveGameState.isRunning()*/) {
                     // platform run later -> sends task to GuiThread -> Gui does this as soon as this piece of code is reached
                     // -> this means: when connection is established, next window will appear - if failed: pop up
                     Platform.runLater(() -> {

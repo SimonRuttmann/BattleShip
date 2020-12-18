@@ -13,11 +13,12 @@ import javafx.scene.layout.GridPane;
 /**
  *  This thread will:
  *          1. disable all Labels on enemy playground
- *          2. send the client/server an message containing all necessary information
- *          3. awaiting an answer from the client/server
+ *          2. send the client/server a message containing all necessary information
+ *          3. wait for an answer from the client/server
  *          4. perform all necessary actions depending on the report from client/server
- *          5. start the MultiplayerControlThreadPerformEnemyAction, when our turn expired
+ *          5. start the MultiplayerControlThreadPerformEnemyAction, when our turn is expired
  */
+
 public class MultiplayerControlThreadShootEnemy extends Thread{
 
     public Event event;

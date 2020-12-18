@@ -67,7 +67,6 @@ public class GamePlayground implements Initializable {
                 label.setPrefSize(30, 30);
                 label.setMaxSize(30, 30);
                 GridPane.setConstraints(label, h, v);
-                //todo label in array oder so speichern, um dann darauf zugreifen zu können???
                 ownField.getChildren().addAll(label);
             }
         }
@@ -76,10 +75,12 @@ public class GamePlayground implements Initializable {
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
                 Label label= new Label();
-                // todo make button clickable
+
+
+                // every labels gets it's handler: GameShootEnemy -> activated on mouse click: fire shot
                 label.setOnMouseClicked(new GameShootEnemy());
 
-                //fliegt später raus
+                //todo fliegt später raus
                 label.setStyle("-fx-background-color: lightblue");
 
                 label.setMinSize(5, 5);
@@ -94,7 +95,7 @@ public class GamePlayground implements Initializable {
            to change the properties of the Label, e.g. the color
            ! important: Objects of grid pane are stored "vertically"*/
 
-        // connect Labels to Playground
+        // connect Labels to Playground - labels are saved in arrays
         Object[] ownFieldArray = new Object[gamesize*gamesize];
         ownFieldArray = ownField.getChildren().toArray();
         ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);

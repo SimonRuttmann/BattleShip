@@ -11,13 +11,15 @@ public class GameShootEnemy implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent event) {
 
-        // In both cases, the player acts, not the Ki (the Ki can´t because he can't perform an MouseEvent)
+        // In both cases, the player acts, not the Ki (the Ki can´t because it can't perform a MouseEvent)
         if (ActiveGameState.isMultiplayer()) {
             if ( !ActiveGameState.isYourTurn()) ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
             //Multiplayer Mode
 
+            // todo: all labels must be disabled/enabled when game starts? - is this implemented?
+
             //This thread will:
-            // 1. disable all Labels on enemy playground
+            // 1. disable all Labels on enemy playground //todo indicate by mouse pointer? -> not clickable, todo reverse when enemy shot happended
             // 2. send the client/server an message containing all necessary information
             // 3. awaiting an answer from the client/server
             // 4. perform all necessary actions depending on the report from client/server

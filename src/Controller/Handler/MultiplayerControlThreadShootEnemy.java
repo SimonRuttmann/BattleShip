@@ -28,7 +28,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
     @Override
     public void run() {
 
-
+        System.out.println( "Starte Multiplayer Shoot Enemy ");
         //1.
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
         //2. and 3.
@@ -41,7 +41,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
 
         //Report from the remoteSocket
         String[] cmdReceived;
-
+        System.out.println("Sende: " + CMD.shot + " " + cmdParameter);
         //We are the server
         if ( ActiveGameState.isAmIServer()){
             ActiveGameState.getServer().sendCMD(CMD.shot, cmdParameter);
@@ -53,7 +53,8 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
             cmdReceived = ActiveGameState.getClient().getCMD();
         }
 
-
+        System.out.println( "Sende shot " + cmdParameter);
+        System.out.println( "Erhalte " + cmdReceived);
         //4 determine the response and act depending on it
         IEnemyPlayground enemyPlayground = ActiveGameState.getOwnPlayerIEnemyPlayground();
 
@@ -82,17 +83,20 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                 ActiveGameState.setRunning(false);
         }
 
+        System.out.println( "Ein durchgang Durchgang von Shoot Enemy abgeschlossen");
+        System.out.println( cmdReceived[0] + " " + cmdReceived[1]);
         if (ActiveGameState.isRunning()) {
             //If the answer was 1 or 2, we enable the Labels (player can click/shoot again) and end the thread
             if (cmdReceived[0].equals("answer") && (Integer.parseInt(cmdReceived[1]) == 1 || Integer.parseInt(cmdReceived[1]) == 1)) {
                 enemyPlayground.setAllWaterFieldsClickable();
+                System.out.println( "Der Spieler ist nochmal dran, da er etwas getroffen hat");
             }
             //TODO Yannick Display Your Turn
 
             //If the answer was 0, its the enemy´s turn, so we end the current thread and start the getShot thread
             if (cmdReceived[0].equals("answer") && Integer.parseInt(cmdReceived[1]) == 0) {
                 ActiveGameState.setYourTurn(false);
-
+                System.out.println( " DIE ANTWORT WAR 0 -> Start den Multiplayer Controll Thread");
                 //Send next to maintain the Ping-Pong methodology
                 //We are the server
                 if (ActiveGameState.isAmIServer()) {
@@ -107,5 +111,6 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
             }
         }
         //TODO Yannick Display Enemy Turn
+        System.out.println( "Beende Multiplayer Shoot Enemy");
     }
 }

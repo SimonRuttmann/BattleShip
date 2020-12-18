@@ -24,6 +24,7 @@ public class MainMenu implements Initializable {    //todo: ordentliche Namen f√
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ActiveGameState.setSceneIsPlaceShips(false);
+        this.singleplayerButton.setDisable(true);
     }
 
 

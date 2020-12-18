@@ -15,7 +15,7 @@ public class ShotWater implements IDrawable {
     @Override
     public void draw(){
 
-        System.out.print("*shotWater*");
+       // System.out.print("*shotWater*");
         // -> Gui should update when drawing shotWater
         Platform.runLater(() -> {
             ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/waterHit.png")));
@@ -53,7 +53,18 @@ public class ShotWater implements IDrawable {
 
     @Override
     public void setLabelNonClickable() {
-        this.label.setDisable(false);
+        Platform.runLater(()->{
+            this.label.setDisable(true);
+        });
+
+    }
+
+    @Override
+    public void setLabelClickable() {
+        Platform.runLater(()->{
+            this.label.setDisable(false);
+        });
+
     }
 
     @Override

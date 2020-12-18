@@ -28,7 +28,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
     /**
      * Connects all Fields with an Label
-     * Sets all Fields non clickable
+     * //Sets all Fields non clickable -> They are Clickable because of Place Ships, and as they didnt got an actionEvent in the main szene doenst make any difference at all
      * @param labelArray an array of objects containing labels
      */
     @Override
@@ -45,7 +45,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
                 else{
                     Label label = (Label)labelArray[i];
                     Field[x][y].setLabel(label);
-                    Field[x][y].setLabelNonClickable();
+                   // Field[x][y].setLabelNonClickable();
                     i++;
                 }
 

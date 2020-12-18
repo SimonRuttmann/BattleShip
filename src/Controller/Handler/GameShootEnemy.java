@@ -2,6 +2,7 @@ package Controller.Handler;
 
 
 import Player.ActiveGameState;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
@@ -12,7 +13,7 @@ public class GameShootEnemy implements EventHandler<MouseEvent> {
 
         // In both cases, the player acts, not the Ki (the Ki can´t because he can't perform an MouseEvent)
         if (ActiveGameState.isMultiplayer()) {
-
+            if ( !ActiveGameState.isYourTurn()) ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
             //Multiplayer Mode
 
             //This thread will:

@@ -111,11 +111,23 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
         //Ship hit and sunken
         if (shipSunken) {
             counterShipDestroyed++;
+
+            //Spiel gewonnen
             if (counterShipDestroyed == this.shipsplaced) {
                 this.gameWon = true;
                 return new ShotResponse(true, null);
             }
-            Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart("Destroyed", null);
+
+            //Spiel nicht gewonnen, aber Schiff versenkt
+
+            //Labelaustausch und neues zerstörtes Schiffsteil nicht klickbar machen
+
+            Label label = Field[pos_shot.getX()][pos_shot.getY()].getLabel();
+            Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart("Destroyed", true);                              //--------------------- Ship Sunk ------------------------//
+            Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
+            Field[pos_shot.getX()][pos_shot.getY()].draw();
+            Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();
+
             //finde heraus wie das schiff stand
             //setze alle umliegenden Felder auf ShotWater();
             int shotX = pos_shot.getX();
@@ -123,14 +135,20 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
 
 
             Point[] destroyedShip = new Point[9];
+
             //Enemy Ship horizontal placed
-            if (Field[shotX + 1][shotY] instanceof ShipPart || Field[shotX - 1][shotY] instanceof ShipPart) {
+
+
+                //Feld rechts oder links ist ein Schiffsteil
+                if ( (   (shotX+1 < playgroundsize) && (Field[shotX + 1][shotY] instanceof ShipPart)   ) || (  (shotX -1 >= 0) && (Field[shotX - 1][shotY] instanceof ShipPart)  ) ) {
                 //ermittle Schiffpositionen
+
+
 
                 //Schiff is horizontal plaziert und ist untergegangen -> Ermittle die positionen des Schiffs
                 //Schiffsgröße 2 3 4 5
                 //zähle rechte und linke positionen
-                int i = shotX;
+                int currX = shotX;
                 int count = 4;
 
 
@@ -139,25 +157,40 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
                 boolean hit = true;
 
                 //Ermittle HitPositionen rechts davon
+
+                //Starte bei Position 5 (beginnend bei 0)
+
                 while (hit) {
-                    if (Field[i][shotY] instanceof ShipPart) {
-                        destroyedShip[count] = new Point(i, shotY);
+                    //Spielfeld wird durch i nach links unterschritten
+                    if ( currX >= playgroundsize|| currX < 0 || count < 0 || count > 8) break;
+
+                    if (Field[currX][shotY] instanceof ShipPart) {
+                        destroyedShip[count] = new Point(currX, shotY);
                         count++;
-                        i++;
+                        currX++;
                     } else {
                         hit = false;
                     }
                 }
 
-                i = shotX;
+                //Auf Anfangswerte zurücksetzen
+                currX = shotX;
                 count = 4;
+
+                //Beginne bei Position 4 (beginnend bei 0)
+
                 hit = true;
                 //Ermittle HitPositinen links davon
+
                 while (hit) {
-                    if (Field[i][shotY] instanceof ShipPart) {
-                        destroyedShip[count] = new Point(i, shotY);
+
+                    //Spielfeld wird durch i nach rechts übertreten
+                    if ( currX >= playgroundsize|| currX < 0 || count < 0 || count > 8) break;
+
+                    if (Field[currX][shotY] instanceof ShipPart) {
+                        destroyedShip[count] = new Point(currX, shotY);
                         count--;
-                        i--;
+                        currX--;
                     } else {
                         hit = false;
                     }
@@ -169,12 +202,14 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             }
 
             //Enemy Ship vertical placed
-            if (Field[shotX][shotY + 1] instanceof ShipPart || Field[shotX][shotY - 1] instanceof ShipPart) {
+            //Feld darunter oder darüber ein Schiffsteil
 
-                //Schiff is vertikal plaziert und ist untergegangen -> Ermittle die positionen des Schiffs
+            if ( (   (shotY+1 < playgroundsize) && (Field[shotX][shotY+1] instanceof ShipPart)   ) || (  (shotY -1 >= 0) && (Field[shotX][shotY-1] instanceof ShipPart)  ) ){
+
+                    //Schiff is vertikal plaziert und ist untergegangen -> Ermittle die positionen des Schiffs
                 //Schiffsgröße 2 3 4 5
                 //zähle obere und untere positionen
-                int i = shotY;
+                int currY = shotY;
                 int count = 4;
 
 
@@ -192,25 +227,30 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
 
                 //Ermittle HitPositionen oben davon
                 while (hit) {
-                    if (Field[shotX][i] instanceof ShipPart) {
-                        destroyedShip[count] = new Point(i, shotY);
+                    //Spielfeld wird durch i nach oben überschritten
+                    if ( currY >= playgroundsize|| currY < 0 || count < 0 || count > 8) break;
+
+                    if (Field[shotX][currY] instanceof ShipPart) {
+                        destroyedShip[count] = new Point(shotX, currY);
                         count--;
-                        i--;
+                        currY--;
                     } else {
                         hit = false;
                     }
                 }
 
-                i = shotY;
+                currY = shotY;
                 count = 4;
                 hit = true;
 
-                //Ermittle HitPositinen links davon
+                //Ermittle HitPositinen unten davon
                 while (hit) {
-                    if (Field[i][shotY] instanceof ShipPart) {
-                        destroyedShip[count] = new Point(i, shotY);
+                    //Spielfeld wrid durch i nach unten überschritten
+                    if ( currY >= playgroundsize|| currY < 0 || count < 0 || count > 8) break;
+                    if (Field[currY][shotY] instanceof ShipPart) {
+                        destroyedShip[count] = new Point(shotX, currY);
                         count++;
-                        i++;
+                        currY++;
                     } else {
                         hit = false;
                     }
@@ -230,8 +270,10 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
 
            //Change the Object to an ShipPart with shot status
             Label label = Field[pos_shot.getX()][pos_shot.getY()].getLabel();
-            Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart("Destroyed", null);
+            //Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart("Destroyed", null);
+            Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart("Destroyed", true);
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
+            Field[pos_shot.getX()][pos_shot.getY()].draw();
             Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();
             return new ShotResponse(false, null);
         }
@@ -242,6 +284,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             Label label = Field[pos_shot.getX()][pos_shot.getY()].getLabel();
             Field[pos_shot.getX()][pos_shot.getY()] = new ShotWater();
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
+            Field[pos_shot.getX()][pos_shot.getY()].draw();
             Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();
             return new ShotResponse(false, null);
         }
@@ -285,9 +328,10 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
     private ArrayList<Point> setAllImpossibleFieldsToWater(Point[] destroyedShip) {
         ArrayList<Point> ImpossiblePostions = new ArrayList<>();
 
+        //bsp Point-Array: [null, null, point, point, point, point, null, null, null]
         //For every Point in the destroyedShip array
         for (Point point : destroyedShip) {
-
+                if (point == null) continue;
                 //Get all the surrounding Fields of the point and switch them to shotWater
                 int x = point.getX();
                 int y = point.getY();

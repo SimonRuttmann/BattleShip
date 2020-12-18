@@ -12,6 +12,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 public class Main extends Application {
+/*
+ZU GIT:
+Guppe 14 Yannick$ git rm --cached -r .savedGames
+git rm --cached -r .savedGames
+--> Cache löschen, wenn ausversehen Dateien hinzugefügt worden sind (z.b. der out-Ordner)
+--> Danach normal Comitten
+ */
 
     public static Stage primaryStage;
     int width = 600;

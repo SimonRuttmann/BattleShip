@@ -34,10 +34,10 @@ public class ShotWater implements IDrawable {
 
     */
 
-        if(!this.validShipPlacementMarker)
+      /*  if(!this.validShipPlacementMarker)
         {
             this.label.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipHit.png"))));
-        }
+        }*/
     }
 
 

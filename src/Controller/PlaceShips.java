@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 
 public class PlaceShips implements Initializable {
 
+    // connect everything to FXML
     @FXML
     private Label ownFieldLabel;
     @FXML
@@ -80,20 +81,30 @@ public class PlaceShips implements Initializable {
     @FXML
     private Button readyButton;
 
+    // define colors
     String green = "-fx-background-color: #a5fda5";
     String red = "-fx-background-color: #ffa1a1";
     String blue = "-fx-background-color: lightblue";
     String indicateValidPlacement = red;
+
+    // at beginning, ship placement is set to horizontal
     boolean horizontal = true;
 
+    // counter: how much ships of each type are placed -> is displayed on screen, updating when ship is placed
     int amountShipSize2placed = 0;
-    int amountShipSize3placed = 0;//todo weg or needed???
+    int amountShipSize3placed = 0;
     int amountShipSize4placed = 0;
     int amountShipSize5placed = 0;
 
+    // the size of the playground is depending on the field size the player (host in mp) has configured
     int gamesize = ActiveGameState.getPlaygroundSize();
     Object[] ownFieldArray = new Object[gamesize * gamesize];
 
+
+    /** initialize-method:
+     *  -
+     *
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ActiveGameState.setSceneIsPlaceShips(true);
@@ -101,12 +112,13 @@ public class PlaceShips implements Initializable {
         // create playgrounds
         ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
         ActiveGameState.setOwnPlayerIEnemyPlayground(new EnemyPlayground());
+        // in sp, playgrounds for the KI must be created too
         if (!ActiveGameState.isMultiplayer()) {
             ActiveGameState.setEnemyPlayerOwnPlayground(new OwnPlayground());
             ActiveGameState.setEnemyPlayerEnemyPlayground(new EnemyPlayground());
         }
 
-        // build playgrounds
+        // build playgrounds - playgrounds are displayed on screen
         ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
         ActiveGameState.getOwnPlayerIEnemyPlayground().buildPlayground();
         if (!ActiveGameState.isMultiplayer()) {
@@ -306,7 +318,7 @@ public class PlaceShips implements Initializable {
                         ActiveGameState.setAmountShipSize2placed(ActiveGameState.getAmountShipSize2placed() + 1);
                         amountShipSize2placed++; //todo decide which amountshipsize5placed... same for 2,3,4
 
-                        SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed); //todo wtf still does not work
+                        SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed);
                         twoOf.textProperty().bind(Bindings.convert(two));
 
                         // only make that much ships placeable, that are allowed by gameConfig
@@ -322,7 +334,7 @@ public class PlaceShips implements Initializable {
                         ActiveGameState.setAmountShipSize3placed(ActiveGameState.getAmountShipSize3placed() + 1);
                         amountShipSize3placed++; //todo decide which amountshipsize5placed... same for 2,3,4
 
-                        SimpleIntegerProperty three= new SimpleIntegerProperty(amountShipSize3placed); //todo wtf still does not work
+                        SimpleIntegerProperty three = new SimpleIntegerProperty(amountShipSize3placed);
                         threeOf.textProperty().bind(Bindings.convert(three));
 
                         // only make that much ships placeable, that are allowed by gameConfig
@@ -338,7 +350,7 @@ public class PlaceShips implements Initializable {
                         ActiveGameState.setAmountShipSize4placed(ActiveGameState.getAmountShipSize4placed() + 1);
                         amountShipSize4placed++; //todo decide which amountshipsize5placed... same for 2,3,4
 
-                        SimpleIntegerProperty four = new SimpleIntegerProperty(amountShipSize4placed); //todo wtf still does not work
+                        SimpleIntegerProperty four = new SimpleIntegerProperty(amountShipSize4placed);
                         fourOf.textProperty().bind(Bindings.convert(four));
 
                         // only make that much ships placeable, that are allowed by gameConfig
@@ -354,7 +366,7 @@ public class PlaceShips implements Initializable {
                         ActiveGameState.setAmountShipSize5placed(ActiveGameState.getAmountShipSize5placed() + 1);
                         amountShipSize5placed++; //todo decide which amountshipsize5placed... same for 2,3,4
 
-                        SimpleIntegerProperty five = new SimpleIntegerProperty(amountShipSize5placed); //todo wtf still does not work
+                        SimpleIntegerProperty five = new SimpleIntegerProperty(amountShipSize5placed);
                         fiveOf.textProperty().bind(Bindings.convert(five));
 
                         // only make that much ships placeable, that are allowed by gameConfig

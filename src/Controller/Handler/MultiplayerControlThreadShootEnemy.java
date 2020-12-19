@@ -1,13 +1,17 @@
 package Controller.Handler;
 
+import Controller.GamePlayground;
 import Gui_View.HelpMethods;
 import Model.Playground.IEnemyPlayground;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
 import Player.ActiveGameState;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 import java.util.Arrays;
@@ -66,6 +70,45 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         switch (cmdReceived[0]){
             case "answer":
                 ShotResponse shotResponse = enemyPlayground.shoot(shootPosition, Integer.parseInt(cmdReceived[1]));
+
+
+                //VIEW SHOW
+                Label headShipSunken = null;            // <- == Label, des zerstörten Schiffs oben links
+                boolean horizontal = false;
+                int size = 0;
+                //label = shotResponse.getLabel();
+                //horizontal = shotResponse.getAlignment();
+                //size = shotResponse.getSize();
+
+                //für 2er, 3er, 4er, 5er
+                Label shiplabel = new Label();
+                shiplabel.setLayoutX(headShipSunken.getLayoutX());
+                shiplabel.setLayoutY(headShipSunken.getLayoutY());
+
+                //TODO Add sunken images
+                if ( horizontal ){
+                    switch (size){
+                        case(2):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));  break;
+                        case(3):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png"))));  break;
+                        case(4):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png"))));  break;
+                        case(5):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));  break;
+                        default:
+                            System.out.println("Debug");
+                    }
+                }
+                else{
+                    switch (size){
+                        case(2):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiffVertical.png"))));  break;
+                        case(3):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiffVertical.png"))));  break;
+                        case(4):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiffVertical.png"))));  break;
+                        case(5):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiffVertical.png"))));  break;
+                        default:
+                            System.out.println("Debug");
+                    }
+                }
+                Platform.runLater(  ()  -> { GamePlayground.getGroupEnemP().getChildren().add(shiplabel); } );
+                //END VIEW SHOW
+
                 if ( shotResponse.isGameWin())
                 {
                     ActiveGameState.setRunning(false);

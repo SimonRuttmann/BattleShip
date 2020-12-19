@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -105,6 +106,11 @@ public class PlaceShips implements Initializable {
      *  -
      *
      */
+
+    double localX;
+    double localY;
+    public Group groupID;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ActiveGameState.setSceneIsPlaceShips(true);
@@ -294,8 +300,45 @@ public class PlaceShips implements Initializable {
 
                 //TODO DIE LÖSUNG FÜR ALL UNSERE PROBLEME
                 // Group a = new Group();
-                // a.getChildren().add(Hintergrundelemente (Labels));
-                // a.getChildren().add(Vordergrundelemente (Schiffe));
+                // a.getChildren().add(Hintergrundelemente (Labels)); <- Gesammtes Gridpane
+                // a.getChildren().add(Vordergrundelemente (Schiffe));  <- Schifflabels hinzufügen
+
+                // Anzeige eigenes Spielfeld im Spiel
+                // label -> ArrayList -> Game Szene -> Group by -> eigenes Spielfeld hinzufügen
+
+                // Anzeige gegnerisches Spielfeld im Spiel
+                // -> siehe Szene Game
+
+
+
+
+                //Gridpane
+                //________________________
+                //|      |       |       |
+                //|-----------------------
+                //|      |       |       |
+                //-------------------------
+
+                //1
+                //Group Anzeige = new Group();
+                //Anzeige.add(Gridpane)
+
+                //2
+                // -> On Drag Exited Event
+                //Label label = new Label()
+                //label.setGraphics(getClass.getRessource("...."));
+
+                //3
+                //Anzeige.add(localX:    ,localY:      ,Schiffslabel)
+
+                // X und Y Position -> Postion von Label der Position oben links
+                // localX = Label(x,y) .getLocalBoundX
+                // localY = Label(x,y) .getLocalBoundY
+
+                //Event für Label adden: (Hilfsmethode)
+                //On Drag Exited Event -> { Anstatt von isPlacementValid <-> moveShip Rest: Copy Paste von bisherigem }
+
+
 
                 // remove visual feedback when moving on
                 label.setOnDragExited(event -> {
@@ -309,10 +352,29 @@ public class PlaceShips implements Initializable {
                 // if ship is dropped (can only be dropped if label is a valid location) -> place ship in back end
                 // increment the ship counter for the added type of ship
                 label.setOnDragDropped(event -> {
+                    //TODO
+                    //2
+                    Label shiplabel = new Label();
+
+                    Bounds bounds = label.getBoundsInParent();
+                    localX = bounds.getMinX();
+                    localY = bounds.getMinY();
+
+
                     System.out.println("Dropped successfully");
                     if (event.getGestureSource() == twoShip) {
-                        if (horizontal)
+                        if (horizontal) {
+
+                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png")));
+                            shiplabel.setGraphic(image);
+                            shiplabel.setLayoutX(label.getLayoutX());
+                            shiplabel.setLayoutY(label.getLayoutY());
+
+                            groupID.getChildren().add( shiplabel);
+
+
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
+                        }
                         else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY + 1));
                         ActiveGameState.setAmountShipSize2placed(ActiveGameState.getAmountShipSize2placed() + 1);
@@ -396,6 +458,11 @@ public class PlaceShips implements Initializable {
                 ownField.getChildren().addAll(label);
             }
         }
+
+
+        //TODO
+        //1 IN FXML
+        //groupID.getChildren().add(ownField);
 
 
         // connect Labels to Playground (backend)

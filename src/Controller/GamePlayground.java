@@ -9,6 +9,7 @@ import Player.Savegame;
 import Controller.Handler.GameShootEnemy;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,6 +23,7 @@ import java.util.logging.Handler;
 
 public class GamePlayground implements Initializable {
 
+
     @FXML
     private Button cancleGame;
     @FXML
@@ -33,9 +35,21 @@ public class GamePlayground implements Initializable {
     @FXML
     private Label enemyFieldLabel;
 
+
+    public Group groupOwnP;
+    public Group groupEnemP;
+
+    public static Group groupEnemyPS;
+
+    public static Group getGroupEnemP(){
+        return groupEnemyPS;
+    }
+
+
     // todo: Feld zusammenhängend machen + Window size so, dass ganzes Feld passt aber nicht kleiner
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        groupEnemyPS = groupEnemP;
 
         // Versehentliches Schließen des Spiels verhindern + Speicheraufforderung
         Main.primaryStage.setOnCloseRequest(e -> {
@@ -123,6 +137,9 @@ public class GamePlayground implements Initializable {
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
         }
     }
+
+    // Group -> Add Label (localX, localY, Schiffslabel)
+    // -> localX und localY bekommen wir von Label.getLayoutX und Label.getLayoutY -> Von dem Label, das wir bei shoot mit Answer 2 zurückbekommen + Größe vom Schiff + Ausrichtung vom Schiff (also Vertikal oder Horizontal)
 
     // when Button cancleGame is pressed - save or no saving?
     public void cancleGameMethod() {

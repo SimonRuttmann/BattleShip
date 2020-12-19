@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+// close client beim zurück -> AcitveGameStatet.getSclient()/Server().closeConnection(); TODO VERY IMPORTANT -> auch beim Client
 
 public class MpHost implements Initializable {
 
@@ -60,7 +61,7 @@ public class MpHost implements Initializable {
                 } else {
                     System.out.println("Connection could not be established");
                     // Method reference -> "Lambda could be replaced with method reference" -> done that
-                    Platform.runLater(HelpMethods::connectionFailed);
+                    HelpMethods.connectionFailed();
                 }
 
             }

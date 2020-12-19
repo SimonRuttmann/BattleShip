@@ -34,14 +34,6 @@ git rm --cached -r .savedGames
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;
 
-        // Versehentliches Schließen des Spiels verhindern
-        primaryStage.setOnCloseRequest(e -> {
-            // e.consume catches closeWindowEvent, which would otherwise be sent to OS
-            // -> stage would be closed even when "do you want to close -> no" is selected
-            e.consume();
-            HelpMethods.closeProgramm();
-        });
-
         Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
         primaryStage.setTitle("Schiffe versenken");
         primaryStage.setScene(new Scene(root, width, height));

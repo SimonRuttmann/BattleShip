@@ -1,6 +1,7 @@
 package Controller;
 
 import Controller.Handler.MultiplayerControlThreadPerformEnemyAction;
+import Gui_View.Main;
 import Model.Playground.IEnemyPlayground;
 import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
@@ -35,6 +36,14 @@ public class GamePlayground implements Initializable {
     // todo: Feld zusammenhängend machen + Window size so, dass ganzes Feld passt aber nicht kleiner
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        // Versehentliches Schließen des Spiels verhindern + Speicheraufforderung
+        Main.primaryStage.setOnCloseRequest(e -> {
+            e.consume();
+            Gui_View.HelpMethods.closeProgrammSaveGame();
+        });
+
+
         ActiveGameState.setSceneIsGamePlayground(true);
         ActiveGameState.setSceneIsPlaceShips(false);
         // set Labels to Player Names

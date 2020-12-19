@@ -1,5 +1,6 @@
 package Controller;
 
+import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Player.ActiveGameState;
 import javafx.fxml.FXML;
@@ -24,7 +25,14 @@ public class MainMenu implements Initializable {    //todo: ordentliche Namen fÃ
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ActiveGameState.setSceneIsPlaceShips(false);
-        this.singleplayerButton.setDisable(true);
+
+        // Versehentliches SchlieÃŸen des Spiels verhindern
+        Main.primaryStage.setOnCloseRequest(e -> {
+            // e.consume catches closeWindowEvent, which would otherwise be sent to OS
+            // -> stage would be closed even when "do you want to close -> no" is selected
+            e.consume();
+            HelpMethods.closeProgramm();
+        });
     }
 
 

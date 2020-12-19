@@ -46,7 +46,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 ShotResponse shotResponse = ActiveGameState.getOwnPlayerIOwnPlayground().shoot(new Point(Integer.parseInt(cmdReceived[1]), Integer.parseInt(cmdReceived[2])));
                 if (shotResponse.isGameLost()) {
                     ActiveGameState.setRunning(false);
-                    HelpMethods.winOrLose(true);
+                    HelpMethods.winOrLose(false);
                 }
                 if (shotResponse.isShipDestroyed()) {
                     answerToEnemyAction = "2";

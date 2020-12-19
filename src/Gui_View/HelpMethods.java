@@ -2,6 +2,7 @@
 
 package Gui_View;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -32,14 +33,18 @@ public class HelpMethods {
     }
 
     // connectionFailed
-    public static void connectionFailed() {ConnectionFailed.display(); }
+    public static void connectionFailed() {
+        Platform.runLater(ConnectionFailed::display);
+    }
 
     // connection lost
-    public static void connectionLost() {ConnectionLost.display(); }
+    public static void connectionLost() {
+        Platform.runLater(ConnectionLost::display);
+    }
 
     // win or lose - new game or exit
     public static void winOrLose(boolean win) {
-        WinLose.display(win);
+        Platform.runLater(() -> WinLose.display(win)); //todo -> only one is showed: when won - no response from client???
     }
 
     // todo: evtl better, does work but really slow

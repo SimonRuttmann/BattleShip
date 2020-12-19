@@ -7,9 +7,6 @@ import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableIntegerValue;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +26,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 
-import javax.naming.Binding;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -76,11 +72,10 @@ public class PlaceShips implements Initializable {
     @FXML
     private Button rotate90;
     @FXML
-    private Button randomPlacement;
-    @FXML
-    private Button resetPlacement;
-    @FXML
     private Button readyButton;
+    @FXML
+    private Group groupID;
+
 
     // define colors
     String green = "-fx-background-color: #a5fda5";
@@ -88,8 +83,10 @@ public class PlaceShips implements Initializable {
     String blue = "-fx-background-color: lightblue";
     String indicateValidPlacement = red;
 
+
     // at beginning, ship placement is set to horizontal
     boolean horizontal = true;
+
 
     // counter: how much ships of each type are placed -> is displayed on screen, updating when ship is placed
     int amountShipSize2placed = 0;
@@ -97,34 +94,44 @@ public class PlaceShips implements Initializable {
     int amountShipSize4placed = 0;
     int amountShipSize5placed = 0;
 
-    // the size of the playground is depending on the field size the player (host in mp) has configured
+
+    // the size of the playground is depending on the field size the player (in mp only the host) has configured
     int gamesize = ActiveGameState.getPlaygroundSize();
+
+
+    // ownFieldArray and localX localY have to be declared here -> must exist when they are called in Drag&Drop functions oft labels
     Object[] ownFieldArray = new Object[gamesize * gamesize];
+    double localX;
+    double localY;
+
 
 
     /** initialize-method:
-     *  -
+     * -----------------------------------------------------------------------------------------------------------------
+     *  -> sets all basic stuff: Start-Button disabled, start-Image of the Rotate-Button, save all necessary in ActiveGameState...
      *
-     */
-
-    double localX;
-    double localY;
-    public Group groupID;
-
+     *  -> creates labels that fill the GridPane: this labels recognize Drag&Drop -> Ships can be dropped into them
+     *                                                                            -> backend-stuff executed
+     *
+     *  -> make ShipLabels at the right side of the Playground draggable -> can be placed on Playground
+     *
+     *  -> when ship is Placed: a Label is placed on top of the Grid-Pane to indicate a Placed-Ship:
+     *     this Label is just like the ShipLabel at the right side, it can be dragged -> so already placed ships can be moved
+     *----------------------------------------------------------------------------------------------------------------*/
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // basic initialization tasks ----------------------------------------------------------------------------------
         ActiveGameState.setSceneIsPlaceShips(true);
 
-        // create playgrounds
+        // create new playgrounds, save them in ActiveGameState
         ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
         ActiveGameState.setOwnPlayerIEnemyPlayground(new EnemyPlayground());
-        // in sp, playgrounds for the KI must be created too
         if (!ActiveGameState.isMultiplayer()) {
             ActiveGameState.setEnemyPlayerOwnPlayground(new OwnPlayground());
             ActiveGameState.setEnemyPlayerEnemyPlayground(new EnemyPlayground());
         }
 
-        // build playgrounds - playgrounds are displayed on screen
+        // build these playgrounds - playgrounds are now displayed on screen
         ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
         ActiveGameState.getOwnPlayerIEnemyPlayground().buildPlayground();
         if (!ActiveGameState.isMultiplayer()) {
@@ -132,21 +139,26 @@ public class PlaceShips implements Initializable {
             ActiveGameState.getEnemyPlayerEnemyPlayground().buildPlayground();
         }
 
-        //Sets the Image for the rotate 90 Degree button
-        rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButton.png"))));
+
+        //Sets the Image for the rotate 90 Degree button - vertiacal at beginning
+        rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButtonVertical.png"))));
         //disables the readyButton -> game can only be started if all ships are placed
         readyButton.setDisable(true);
+        //--------------------------------------------------------------------------------------------------------------
 
-        System.out.println("window size: " + Main.primaryStage.getHeight());
+
+
+        // TODO BIG: make resizeable window looking nice
+        System.out.println("window size: " + Main.primaryStage.getHeight()); //todo use or delete - debug-line
         //todo public scale - for fields -> pref size -> better way 2:3 for programm fix -> use SceneSizeChangeListener to scale properly all the time - no strange things happening
-
         //The scale of one Field,   Ship size 2 -> Image: | 30px | 30px |
         //                          Ship size 3 -> Image: | 30px | 30px | 30px |
-        int scale = 30;
+        int scale = 30; //todo: scale should be dependent on window size, no fix value like now
 
 
-        // Sets the prefSize depending on the size of the ship
-        // Loads the Image for the Ship's
+
+        // for ShipLabels at the right side of the Playground + the (x/x placed)-Labels --------------------------------
+        // Sets the prefSize depending on the size of the ship + loads the Image of each ship
         twoShip.setPrefSize(2 * scale, scale);
         twoShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));
 
@@ -160,7 +172,7 @@ public class PlaceShips implements Initializable {
         fiveShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));
 
 
-        // Labels e.g. (0 out of 4 Placed) -> set Hight Matching to scale -> ship labels depend on scale //todo evlt. einfach generell auf 30 statt so umstaendlich
+        // Labels e.g. (0 out of 4 Placed) -> set Height Matching to scale -> ship labels depend on scale
         bracket2.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
         bracket3.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
         bracket4.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
@@ -173,34 +185,42 @@ public class PlaceShips implements Initializable {
         xOfx3Ships.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
         xOfx4Ships.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
         xOfx5Ships.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
+        //--------------------------------------------------------------------------------------------------------------
 
 
-        // set field title Label to Player Name
+
+        // playground field --------------------------------------------------------------------------------------------
+        // Label right over the GridPane (= the field) will show the Name of the Player
         ownFieldLabel.setText(ActiveGameState.getOwnPlayerName() + "'s Spielfeld");
-        // 2D field for Labels:
+
+
+        // the gridPane has gaps - little Lines between all the fields
         ownField.setHgap(1);
         ownField.setVgap(1);
 
-        // Creates the ownPlayground as a GridPane. Creating a table of Labels, these are later connected to the game playground via the method setLabels()
+
+        // The field (= the GridPane) is filled with Labels. This labels recognize Drag&Drop -> Ships can be dropped into them
+        // when ship is dragged over a label, it indicates if the placement would be valid, if so, it can be dropped -> backend stuff is handled then
+        // all Labels of the GridPane are connected to the gamePlayground via the method setLabels()
         for (int x = 0; x < gamesize; x++) {
             for (int y = 0; y < gamesize; y++) {
 
                 //Creating the Labels
                 Label label = new Label();
-                label.setStyle(blue);
+                label.setStyle(blue); // at the moment, water is displayed blue (color can be changed here)
                 label.setMinSize(5, 5);
                 label.setPrefSize(scale, scale);
                 label.setMaxSize(scale, scale);
 
-
-                // finalX is the x position of the label
-                // finalY is the y position of the label
+                // finalX is the x position of the current label
+                // finalY is the y position of the current label
                 int finalX = x;
                 int finalY = y;
 
-                //Every label is getting an OnDragOver-Listener, listening if a ship is hovered over it
-                //if the placement is valid, this will be displayed by green fields, if not by red
-                //ships can only be dropped, if the placement is valid (green)
+
+                // Every label is getting an OnDragOver-Listener, listening if a ship is hovered over it
+                // if the placement is valid, this will be displayed by green fields, if not by red
+                // ships can only be dropped, if the placement is valid (green)
                 label.setOnDragOver(event -> {
 
                     //The following is done for every ship size (all different placeable ship labels)
@@ -310,8 +330,6 @@ public class PlaceShips implements Initializable {
                 // -> siehe Szene Game
 
 
-
-
                 //Gridpane
                 //________________________
                 //|      |       |       |
@@ -337,7 +355,6 @@ public class PlaceShips implements Initializable {
 
                 //Event für Label adden: (Hilfsmethode)
                 //On Drag Exited Event -> { Anstatt von isPlacementValid <-> moveShip Rest: Copy Paste von bisherigem }
-
 
 
                 // remove visual feedback when moving on
@@ -370,12 +387,11 @@ public class PlaceShips implements Initializable {
                             shiplabel.setLayoutX(label.getLayoutX());
                             shiplabel.setLayoutY(label.getLayoutY());
 
-                            groupID.getChildren().add( shiplabel);
+                            groupID.getChildren().add(shiplabel);
 
 
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
-                        }
-                        else
+                        } else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY + 1));
                         ActiveGameState.setAmountShipSize2placed(ActiveGameState.getAmountShipSize2placed() + 1);
                         amountShipSize2placed++; //todo decide which amountshipsize5placed... same for 2,3,4
@@ -541,13 +557,17 @@ public class PlaceShips implements Initializable {
 
     }//end of initialize
 
-
-    public void rotateShip90() {
+    /**
+     * rotate ship button:
+     * -> changes graphic: the arrow point of the arrows change between being horizontal and vertical
+     * -> boolean horizontal is inversed - used by ship placement methods
+     */
+    public void rotateShip90() { //todo - this way or switch arrows? discuss together -> find preference, only style-question
         horizontal = !horizontal;
-        if(horizontal)
-            rotate90.setStyle(red);
+        if (horizontal)
+            rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButtonVertical.png"))));
         else
-            rotate90.setStyle(green);
+            rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButtonHorizontal.png"))));
     }
 
     public void newRandomPlacement() {
@@ -566,7 +586,8 @@ public class PlaceShips implements Initializable {
         ActiveGameState.setAmountShipSize5placed(ActiveGameState.getAmountShipSize5());
 
         amountShipSize2placed = ActiveGameState.getAmountShipSize2();
-        amountShipSize3placed = ActiveGameState.getAmountShipSize3();;//todo weg or needed???
+        amountShipSize3placed = ActiveGameState.getAmountShipSize3();
+        ;//todo weg or needed???
         amountShipSize4placed = ActiveGameState.getAmountShipSize4();
         amountShipSize5placed = ActiveGameState.getAmountShipSize5();
         SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed); //todo works but wtf clean this fucking code
@@ -589,7 +610,7 @@ public class PlaceShips implements Initializable {
         //readyButton.setDisable(false); //todo enable again when random placement is implemented
     }
 
-    public void resetPlacement() {
+    public void resetPlacement() { //todo delete ship labels group
         // create new OwnPlayground - link same Labels
         ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
         ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
@@ -635,7 +656,7 @@ public class PlaceShips implements Initializable {
 
     //todo reset label ??? was soll das heißen @Simon
 
-    // gives back the node at a a specific column index of a GridPane
+    // gives back the node at a a specific column index of a GridPane - help Method to indicate valid placement
     public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         Node result = null;
         ObservableList<Node> childrens = gridPane.getChildren();

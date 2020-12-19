@@ -71,7 +71,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
             case "answer":
                 ShotResponse shotResponse = enemyPlayground.shoot(shootPosition, Integer.parseInt(cmdReceived[1]));
 
-
+/*
                 //VIEW SHOW
                 Label headShipSunken = null;            // <- == Label, des zerstörten Schiffs oben links
                 boolean horizontal = false;
@@ -108,7 +108,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                 }
                 Platform.runLater(  ()  -> { GamePlayground.getGroupEnemP().getChildren().add(shiplabel); } );
                 //END VIEW SHOW
-
+*/
                 if ( shotResponse.isGameWin())
                 {
                     ActiveGameState.setRunning(false);

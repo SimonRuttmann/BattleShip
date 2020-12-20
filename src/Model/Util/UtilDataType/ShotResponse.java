@@ -19,10 +19,9 @@ public class ShotResponse {
         this.shipDestroyed = shipDestroyed;
     }
 
-    //Constructor, when we hit the enemy´s Playground
-    public ShotResponse(boolean gameWin, ArrayList<Point> impossiblePositions) {
+    //Constructor, when we hit the enemy´s Playground and a ship didn't sink
+    public ShotResponse(boolean gameWin) {
         this.gameWin = gameWin;
-        this.impossiblePositions = impossiblePositions;
     }
 
     //Constructor, when we hit the enemy´s Playground and we sunk a ship
@@ -52,6 +51,7 @@ public class ShotResponse {
     public ShotResponse (boolean gameWin, ArrayList<Point> impossiblePositions, Label label, boolean horizontal, int sizeOfSunkenShip){
         this.gameWin = gameWin;
         this.impossiblePositions = impossiblePositions;
+        this.label = label;
         this.horizontal = horizontal;
         this.sizeOfSunkenShip = sizeOfSunkenShip;
     }

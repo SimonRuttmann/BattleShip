@@ -37,12 +37,14 @@ public interface IOwnPlayground extends IPlayground{
      */
     boolean moveShip(Ship shipToMove, Point newStartPoint, Point newEndpoint);
 
-    //TODO
+
     /**
+     * This method only checks whether the ship (represented by start and endpoint) can be placed or not
+     * In both cases no ship is created
      *
-     * @param startPoint
-     * @param endPoint
-     * @return
+     * @param startPoint The start point of the ship
+     * @param endPoint  The end point of the ship
+     * @return true, if placement is allowed
      */
     boolean isValidPlacement(Point startPoint, Point endPoint);
 

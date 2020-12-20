@@ -51,7 +51,7 @@ public class HelpMethods {
     /*public void backToMainMenu() {
         Parent mainMenu = null;
         try {
-            mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+            mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu2.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }

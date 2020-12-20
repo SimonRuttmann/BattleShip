@@ -1,6 +1,5 @@
 package Model.Playground;
 
-import Model.Ship.IShip;
 import Model.Util.ShipPart;
 import Model.Util.ShotWater;
 import Model.Util.UtilDataType.Point;
@@ -121,7 +120,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             //Spiel gewonnen
             if (counterShipDestroyed == this.shipsplaced) {
                 this.gameWon = true;
-                return new ShotResponse(true, null);
+                return new ShotResponse(true);
             }
 
             //Spiel nicht gewonnen, aber Schiff versenkt
@@ -303,7 +302,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
             Field[pos_shot.getX()][pos_shot.getY()].draw();
             Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();
-            return new ShotResponse(false, null);
+            return new ShotResponse(false);
         }
         //No Hit
         else {
@@ -314,7 +313,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
             Field[pos_shot.getX()][pos_shot.getY()].draw();
             Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();
-            return new ShotResponse(false, null);
+            return new ShotResponse(false);
         }
 
     }

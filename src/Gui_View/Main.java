@@ -4,7 +4,6 @@
 
 package Gui_View;
 
-import Player.SaveAndLoad;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,8 +20,8 @@ git rm --cached -r .savedGames
  */
 
     public static Stage primaryStage;
-    int width = 600;
-    int height = 400;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
     CancelGame cancelGame = new CancelGame();
     WinLose winLose = new WinLose();
 
@@ -35,11 +34,11 @@ git rm --cached -r .savedGames
         Main.primaryStage = primaryStage;
 
         Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
-        primaryStage.setTitle("Schiffe versenken");
-        primaryStage.setScene(new Scene(root, width, height));
-        HelpMethods.alignStageCenter(primaryStage, width, height);
-        primaryStage.setMinWidth(width);
-        primaryStage.setMinHeight(height);
+        primaryStage.setTitle("Battleship");
+        primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
+        HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);
+        //primaryStage.setMinWidth(width);
+        //primaryStage.setMinHeight(height);
         primaryStage.show();
 
     }

@@ -76,6 +76,16 @@ public class ActiveGameState {
 
     private static boolean sceneIsGamePlayground = false;
 
+    public static int getDifficulty() {
+        return difficulty;
+    }
+
+    public static void setDifficulty(int difficulty) {
+        ActiveGameState.difficulty = difficulty;
+    }
+
+    private static int difficulty; //wählt die Schwierigkeit aus, 0 = normal, 1 = schwer
+
     // Game Variables
 // -> Gestrichen -> neuer Zugriff über ActiveGameState.getOwnPlayer.get[Own][Enemy]Playground
 //    private static IEnemyPlayground enemyPlayground;

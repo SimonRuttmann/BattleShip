@@ -44,7 +44,13 @@ public class HelpMethods {
 
     // win or lose - new game or exit
     public static void winOrLose(boolean win) {
-        Platform.runLater(() -> WinLose.display(win)); //todo -> only one is showed: when won - no response from client???
+        Platform.runLater(() -> WinLose.display(win));
+        //todo -> only one is showed: when won - no response from client??
+        // when client wins: both displayed,
+        // when server wins: game does not stop for server, only for client - abfrage needed if all ships sunk in main??
+        // @Yannick @Simon Fehler finden
+
+        // todo beim popup -> systemleiste ausblenden -> soll nicht schließbar sein
     }
 
     // todo: evtl better, does work but really slow

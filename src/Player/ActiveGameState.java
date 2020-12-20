@@ -59,10 +59,6 @@ public class ActiveGameState {
     private static int amountShipSize3;
     private static int amountShipSize4;
     private static int amountShipSize5;
-    private static int amountShipSize2placed;
-    private static int amountShipSize3placed;
-    private static int amountShipSize4placed;
-    private static int amountShipSize5placed;
 
     private static boolean sceneIsPlaceShips;
 
@@ -170,34 +166,6 @@ public class ActiveGameState {
 
     public static boolean isSceneIsPlaceShips() {return sceneIsPlaceShips;};
     public static void setSceneIsPlaceShips(boolean sceneIsPlaceShips) {ActiveGameState.sceneIsPlaceShips = sceneIsPlaceShips;};
-
-    public static int getAmountShipSize2placed() {
-        return amountShipSize2placed;
-    }
-    public static void setAmountShipSize2placed(int amountShipSize2placed) {
-        ActiveGameState.amountShipSize2placed = amountShipSize2placed;
-    }
-
-    public static int getAmountShipSize3placed() {
-        return amountShipSize3placed;
-    }
-    public static void setAmountShipSize3placed(int amountShipSize3placed) {
-        ActiveGameState.amountShipSize3placed = amountShipSize3placed;
-    }
-
-    public static int getAmountShipSize4placed() {
-        return amountShipSize4placed;
-    }
-    public static void setAmountShipSize4placed(int amountShipSize4placed) {
-        ActiveGameState.amountShipSize4placed = amountShipSize4placed;
-    }
-
-    public static int getAmountShipSize5placed() {
-        return amountShipSize5placed;
-    }
-    public static void setAmountShipSize5placed(int amountShipSize5placed) {
-        ActiveGameState.amountShipSize5placed = amountShipSize5placed;
-    }
 
 
     // Game Variables

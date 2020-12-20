@@ -595,7 +595,9 @@ public class PlaceShips implements Initializable {
         amountShipSize4placed = ActiveGameState.getAmountShipSize4();
         amountShipSize5placed = ActiveGameState.getAmountShipSize5();
 
-        SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed); //todo works but wtf clean this fucking code
+
+        // display on screen that all ships of each types are added to the playground now
+        SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed);
         twoOf.textProperty().bind(Bindings.convert(two));
         SimpleIntegerProperty three = new SimpleIntegerProperty(amountShipSize3placed);
         threeOf.textProperty().bind(Bindings.convert(three));
@@ -613,23 +615,36 @@ public class PlaceShips implements Initializable {
         System.out.println("Ships placed randomly");
 
 
-        // enable ready button due to all ships being placed
+        // enable ready button due to all ships being placed, game can be started now
         readyButton.setDisable(false);
     }
 
+
+
+    /** reset placement button:
+     *------------------------------------------------------------------------------------------------------------------
+     * -> creates a new playground - eventually placed ships are deleted
+     * -> places all ships randomly - KI does that
+     * -> enables the ready button due to all ships being placed
+     *----------------------------------------------------------------------------------------------------------------*/
     public void resetPlacement() { //todo delete ship labels group
-        // create new OwnPlayground - link same Labels
+
+        // create new OwnPlayground - link the same Labels -> playground is empty again, old placement is deleted //todo delete ship labels above!!
         ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
         ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
         ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
         ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
+
 
         // set counters of placed ships to zero because all are removed
         amountShipSize2placed = 0;
         amountShipSize3placed = 0;
         amountShipSize4placed = 0;
         amountShipSize5placed = 0;
-        SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed); //todo wtf still does not work
+
+
+        // display on screen that no ships of each types are added to the playground now
+        SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed);
         twoOf.textProperty().bind(Bindings.convert(two));
         SimpleIntegerProperty three = new SimpleIntegerProperty(amountShipSize3placed);
         threeOf.textProperty().bind(Bindings.convert(three));
@@ -645,21 +660,30 @@ public class PlaceShips implements Initializable {
         fourShip.setDisable(false);
         fiveShip.setDisable(false);
 
-        // disable ready button
+
+        // disable ready button due to no ships being placed, game can not be started now
         readyButton.setDisable(true);
     }
 
 
-    // readyButton -> starts the game, only clickable when ships are placed in a valid way
+
+    /** ready button:
+     *------------------------------------------------------------------------------------------------------------------
+     * -> starts the game ( = switches scene to gamePlayground), only clickable when all ships are placed in a valid way
+     *----------------------------------------------------------------------------------------------------------------*/
     public void startGame() throws IOException {
         Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
         Main.primaryStage.setScene(new Scene(game));
         Main.primaryStage.show();
     }
 
-    //todo reset label ??? was soll das heißen @Simon
 
-    // gives back the node at a a specific column index of a GridPane - help Method to indicate valid placement
+
+    /** getNodeByRowColumIndex - help method:
+     *------------------------------------------------------------------------------------------------------------------
+     * -> gives back the node at a a specific column index of a GridPane
+     * -> used in initialize method to indicate valid placement
+     *----------------------------------------------------------------------------------------------------------------*/
     public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         Node result = null;
         ObservableList<Node> childrens = gridPane.getChildren();
@@ -673,6 +697,12 @@ public class PlaceShips implements Initializable {
         return result;
     }
 }
+
+
+
+
+
+
 
 
 /*

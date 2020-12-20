@@ -5,10 +5,18 @@ import Model.Util.UtilDataType.ShotResponse;
 
 public interface IEnemyPlayground extends IPlayground{
     /**
-     * Draws the shot-position in the playground depending on the shipHit, shipSunken parameters
+     * Call this method on the enemy playground when you shot the enemy and you know, what you hit
+     *
+     * Draws the shot-position in the playground depending on the answer parameter
      * Also marks all impossible positions as ShotWater, when a ship is sunken
      *
-     * If the ship is sunken, the ShotResponse contains an Point-Array of impossible positions and the information if the game is won
+     * If the ship is sunken, the ShotResponse contains following information:
+     *      1. The information if the game is won
+     *      2. An Point-Array of impossible positions
+     *      3. The label of the topLeft position, where the sunken ship was placed
+     *      4. The information if the ship was placed horizontal or vertical
+     *      5. The size of the Ship
+     *
      * In any other case the return value can be ignored
      *
      *
@@ -17,10 +25,8 @@ public interface IEnemyPlayground extends IPlayground{
      *               0: shipHit false, shipSunken false
      *               1: shipHit true, shipSunken false
      *               2: shipHit true, shipSunken true
-     * shipHit If a ship on enemy playground is hit, this variable is set to true
-     * shipSunken If a ship on enemy playground is sunken, this variable is set to true
      *
-     * @return An object of type ShotResponse, the object contains all information
+     * @return An object of type ShotResponse, the object contains all necessary information
      *
      *
      */

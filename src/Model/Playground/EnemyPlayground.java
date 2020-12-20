@@ -70,10 +70,18 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
     //Muss sich Schiffe gegnerische Schiffe merken können um unmögliche Felder als Wasser zu markieren, soweit sie noch nicht beschossenes Wasser sind
     //Muss zudem die gegnerisch versunkenen Schiffe zählen um ein gewonnenes Spiel auszugeben
     /**
-     * Draws the shot-position in the playground depending on the shipHit, shipSunken parameters
+     * Call this method on the enemy playground when you shot the enemy and you know, what you hit
+     *
+     * Draws the shot-position in the playground depending on the answer parameter
      * Also marks all impossible positions as ShotWater, when a ship is sunken
      *
-     * If the ship is sunken, the ShotResponse contains an Point-Array of impossible positions and the information if the game is won
+     * If the ship is sunken, the ShotResponse contains following information:
+     *      1. The information if the game is won
+     *      2. An Point-Array of impossible positions
+     *      3. The label of the topLeft position, where the sunken ship was placed
+     *      4. The information if the ship was placed horizontal or vertical
+     *      5. The size of the Ship
+     *
      * In any other case the return value can be ignored
      *
      *
@@ -82,10 +90,8 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
      *               0: shipHit false, shipSunken false
      *               1: shipHit true, shipSunken false
      *               2: shipHit true, shipSunken true
-     * shipHit If a ship on enemy playground is hit, this variable is set to true
-     * shipSunken If a ship on enemy playground is sunken, this variable is set to true
      *
-     * @return An object of type ShotResponse, the object contains all information
+     * @return An object of type ShotResponse, the object contains all necessary information
      *
      *
      */
@@ -138,11 +144,11 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
 
             //Enemy Ship horizontal placed
 
-
+                boolean horizontal = false;
                 //Feld rechts oder links ist ein Schiffsteil
                 if ( (   (shotX+1 < playgroundsize) && (Field[shotX + 1][shotY] instanceof ShipPart)   ) || (  (shotX -1 >= 0) && (Field[shotX - 1][shotY] instanceof ShipPart)  ) ) {
                 //ermittle Schiffpositionen
-
+                horizontal = true;
 
 
                 //Schiff is horizontal plaziert und ist untergegangen -> Ermittle die positionen des Schiffs
@@ -205,8 +211,8 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             //Feld darunter oder darüber ein Schiffsteil
 
             if ( (   (shotY+1 < playgroundsize) && (Field[shotX][shotY+1] instanceof ShipPart)   ) || (  (shotY -1 >= 0) && (Field[shotX][shotY-1] instanceof ShipPart)  ) ){
-
-                    //Schiff is vertikal plaziert und ist untergegangen -> Ermittle die positionen des Schiffs
+                horizontal = false;
+                //Schiff is vertikal plaziert und ist untergegangen -> Ermittle die positionen des Schiffs
                 //Schiffsgröße 2 3 4 5
                 //zähle obere und untere positionen
                 int currY = shotY;
@@ -262,7 +268,29 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             //Die Schiffsposition ist jetzt im PointArray destroyedShip
             ArrayList<Point> ImpossiblePositions = this.setAllImpossibleFieldsToWater(destroyedShip);
 
-            return new ShotResponse(false, ImpossiblePositions);
+            //Informationen bereitstellen:
+            //Head = Position oben links
+            Point positionHead = null;
+            int size = 0;
+            //Get first not null Point and get amount of not null points
+            for ( Point point : destroyedShip){
+                if ( point != null) {
+                    size++;
+                    if (positionHead  == null) positionHead = point;
+                }
+            }
+
+
+            if (positionHead == null) {
+                System.out.println( "Couldn't find the Head of the Ship");
+                return null;
+            }
+            else {
+                Label headLabel = Field[positionHead.getX()][positionHead.getY()].getLabel();
+                //public ShotResponse (boolean gameWin, ArrayList<Point> impossiblePositions, Label label, boolean horizontal, int sizeOfSunkenShip)
+                return new ShotResponse(false, ImpossiblePositions, headLabel, horizontal, size);
+            }
+
         }
 
         //Ship only hit

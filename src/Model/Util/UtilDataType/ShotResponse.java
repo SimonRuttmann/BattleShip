@@ -1,5 +1,7 @@
 package Model.Util.UtilDataType;
 
+import javafx.scene.control.Label;
+
 import java.util.ArrayList;
 
 public class ShotResponse {
@@ -21,6 +23,37 @@ public class ShotResponse {
     public ShotResponse(boolean gameWin, ArrayList<Point> impossiblePositions) {
         this.gameWin = gameWin;
         this.impossiblePositions = impossiblePositions;
+    }
+
+    //Constructor, when we hit the enemy´s Playground and we sunk a ship
+
+
+    private Label label;
+    private boolean horizontal;
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public boolean getAlignment() {
+        return horizontal;
+    }
+
+    public int getSizeOfSunkenShip() {
+        return sizeOfSunkenShip;
+    }
+
+    private int sizeOfSunkenShip;
+
+    //label = shotResponse.getLabel();
+    //horizontal = shotResponse.getAlignment();
+    //size = shotResponse.getSize();
+    //Constructor, when we hit the enemy´s Playground and we sunk a ship
+    public ShotResponse (boolean gameWin, ArrayList<Point> impossiblePositions, Label label, boolean horizontal, int sizeOfSunkenShip){
+        this.gameWin = gameWin;
+        this.impossiblePositions = impossiblePositions;
+        this.horizontal = horizontal;
+        this.sizeOfSunkenShip = sizeOfSunkenShip;
     }
 
     public boolean isGameWin() {

@@ -25,6 +25,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import sun.plugin.javascript.navig4.LayerArray;
 
 import java.io.IOException;
 import java.net.URL;
@@ -103,7 +104,11 @@ public class PlaceShips implements Initializable {
     Object[] ownFieldArray = new Object[gamesize * gamesize];
     double localX;
     double localY;
-
+//todo solution
+    Label twoShiplabel;
+    Label threeShiplabel;
+    Label fourShiplabel;
+    Label fiveShiplabel;
 
 
     /** initialize-method:
@@ -237,7 +242,7 @@ public class PlaceShips implements Initializable {
 
                         // for every placeable ship label (size2, size3, size4, size5)-> own reaction, code really similar
                         // here (twoShip) everything commented, for 3,4,5-ship: similar, look here
-                        if (event.getGestureSource() == twoShip) {
+                        if (event.getGestureSource() == twoShip || event.getGestureSource() == twoShiplabel) { //todo
                             //When the ship placement is allowed, the String indicateValidPlacement is set to the string green, which contains a -fx css color-scheme
                             //if the ship placement is not allowed the String is set to the string red, containing another -fx css color-scheme
                             if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY), new Point(finalX + 1, finalY))) ||
@@ -259,7 +264,7 @@ public class PlaceShips implements Initializable {
 
 
                         // for comments -> look at twoShip
-                        if (event.getGestureSource() == threeShip) {
+                        if (event.getGestureSource() == threeShip || event.getGestureSource() == threeShiplabel) { //todo
                             if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 1, finalY))) ||
                                     (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 1)))) {
                                 // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
@@ -279,7 +284,7 @@ public class PlaceShips implements Initializable {
 
 
                         // for comments -> look at twoShip
-                        if (event.getGestureSource() == fourShip) {
+                        if (event.getGestureSource() == fourShip || event.getGestureSource() == fourShiplabel) { //todo
                             if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 2, finalY))) ||
                                     (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 2)))) {
                                 // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
@@ -301,7 +306,7 @@ public class PlaceShips implements Initializable {
 
 
                         // for comments -> look at twoShip
-                        if (event.getGestureSource() == fiveShip) {
+                        if (event.getGestureSource() == fiveShip || event.getGestureSource() == fiveShiplabel) { //todo
                             if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 2, finalY), new Point(finalX + 2, finalY))) ||
                                     (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 2), new Point(finalX, finalY + 2)))) {
                                 // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shiplabel gets dropped back to start position
@@ -394,51 +399,113 @@ public class PlaceShips implements Initializable {
                 // GridPane is the bottom layer, ship labels are placed above it
 
                 label.setOnDragDropped(event -> {
+                    System.out.println("Dropped successfully");
 
-                    // when ship is dropped into the playground, a new label is created for this ship
-                    Label shiplabel = new Label();
-
-                    // making this label draggable too //todo
-                    shiplabel.setOnDragDetected(e -> {handlerSetOnDragDetected(shiplabel, 2, true); e.consume();});
 
                     // the bounds are set: minX and minY position = where the upper left corner of the label should be on screen //todo for bigger ship size + how the fuck to resize???
-                    Bounds bounds = label.getBoundsInParent();
-                    localX = bounds.getMinX(); //todo with simon - is this needed? no code occurrences found
-                    localY = bounds.getMinY();
+                  //  Bounds bounds = label.getBoundsInParent();
+                   // localX = bounds.getMinX(); //todo with simon - is this needed? no code occurrences found
+                    //localY = bounds.getMinY();
 
 
                     // depending on the type of ship, different code is executed when ship is dropped successfully- very similar, only commented in twoShip
-                    System.out.println("Dropped successfully");
-                    if (event.getGestureSource() == twoShip) {
+                    if (event.getGestureSource() == twoShip || event.getGestureSource() == twoShiplabel) {
+
+                        // when ship is dropped into the playground, a new label is created for this ship
+                        twoShiplabel = new Label();
+
+                        // making this label draggable too //todo
+                        twoShiplabel.setOnDragDetected(e -> {handlerSetOnDragDetected(twoShiplabel, 2, true); e.consume();});
+
+
                         if (horizontal) {
 
                             // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
                             ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png")));
-                            shiplabel.setGraphic(image);
+                            twoShiplabel.setGraphic(image);
 
-                            shiplabel.setLayoutX(label.getLayoutX());
-                            shiplabel.setLayoutY(label.getLayoutY());
-                            groupID.getChildren().add(shiplabel);
+                            twoShiplabel.setLayoutX(label.getLayoutX());
+                            twoShiplabel.setLayoutY(label.getLayoutY());
+                            groupID.getChildren().add(twoShiplabel);
 
                             // this will place the ship in back-end representation of playground
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
-                        } else
-                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY + 1));
-                        amountShipSize2placed++;
+                        }
 
+                        else {
+
+                            // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
+                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiffVertical.png")));
+                            twoShiplabel.setGraphic(image);
+
+                            twoShiplabel.setLayoutX(label.getLayoutX());
+                            twoShiplabel.setLayoutY(label.getLayoutY());
+                            groupID.getChildren().add(twoShiplabel);
+
+                            // this will place the ship in back-end representation of playground
+                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY + 1));
+                        }
+
+
+                        // incrementing the counter for the number of ShipSize2s are placed //todo only when placing new ship
+                        amountShipSize2placed++;
+                        // displaying the new number of the counter on screen
                         SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed);
                         twoOf.textProperty().bind(Bindings.convert(two));
 
+
                         // only make that much ships placeable, that are allowed by gameConfig
+                        // when all ships of the type are placed, button for new ship of this size gets disabled
                         if (ActiveGameState.getAmountShipSize2() <= amountShipSize2placed)
                             twoShip.setDisable(true);
+
+
+                        // todo other idea
+
+
+
+
+
+
                     }
 
-                    if (event.getGestureSource() == threeShip) {
-                        if (horizontal)
+
+
+                    if (event.getGestureSource() == threeShip || event.getGestureSource() == threeShiplabel) {
+
+                        // when ship is dropped into the playground, a new label is created for this ship
+                        threeShiplabel = new Label();
+
+                        // making this label draggable too //todo
+                        threeShiplabel.setOnDragDetected(e -> {handlerSetOnDragDetected(threeShiplabel, 3, true); e.consume();});
+
+                        if (horizontal) {
+
+                            // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
+                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png")));
+                            threeShiplabel.setGraphic(image);
+
+                            threeShiplabel.setLayoutX(label.getLayoutX() - scale);
+                            threeShiplabel.setLayoutY(label.getLayoutY());
+                            groupID.getChildren().add(threeShiplabel);
+
+                            // this will place the ship in back-end representation of playground
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 1, finalY), new Point(finalX + 1, finalY));
-                        else
+                        }
+
+                        else {
+                            // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
+                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiffVertical.png")));
+                            threeShiplabel.setGraphic(image);
+
+                            threeShiplabel.setLayoutX(label.getLayoutX());
+                            threeShiplabel.setLayoutY(label.getLayoutY() - scale);
+                            groupID.getChildren().add(threeShiplabel);
+
+                            // this will place the ship in back-end representation of playground
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 1), new Point(finalX, finalY + 1));
+                        }
+
                         amountShipSize3placed++;
 
                         SimpleIntegerProperty three = new SimpleIntegerProperty(amountShipSize3placed);
@@ -449,11 +516,40 @@ public class PlaceShips implements Initializable {
                             threeShip.setDisable(true);
                     }
 
-                    if (event.getGestureSource() == fourShip) {
-                        if (horizontal)
+                    if (event.getGestureSource() == fourShip || event.getGestureSource() == fourShiplabel) {
+
+                        // when ship is dropped into the playground, a new label is created for this ship
+                        fourShiplabel = new Label();
+
+                        // making this label draggable too //todo
+                        fourShiplabel.setOnDragDetected(e -> {handlerSetOnDragDetected(fourShiplabel, 4, true); e.consume();});
+
+                        if (horizontal) {
+                            // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
+                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png")));
+                            fourShiplabel.setGraphic(image);
+
+                            fourShiplabel.setLayoutX(label.getLayoutX() - scale);
+                            fourShiplabel.setLayoutY(label.getLayoutY());
+                            groupID.getChildren().add(fourShiplabel);
+
+                            // this will place the ship in back-end representation of playground
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 1, finalY), new Point(finalX + 2, finalY));
-                        else
+                        }
+
+                        else {
+                            // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
+                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiffVertical.png")));
+                            fourShiplabel.setGraphic(image);
+
+                            fourShiplabel.setLayoutX(label.getLayoutX());
+                            fourShiplabel.setLayoutY(label.getLayoutY() - scale);
+                            groupID.getChildren().add(fourShiplabel);
+
+                            // this will place the ship in back-end representation of playground
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 1), new Point(finalX, finalY + 2));
+                        }
+
                         amountShipSize4placed++;
 
                         SimpleIntegerProperty four = new SimpleIntegerProperty(amountShipSize4placed);
@@ -464,11 +560,40 @@ public class PlaceShips implements Initializable {
                             fourShip.setDisable(true);
                     }
 
-                    if (event.getGestureSource() == fiveShip) {
-                        if (horizontal)
+                    if (event.getGestureSource() == fiveShip || event.getGestureSource() == fiveShiplabel) {
+
+                        // when ship is dropped into the playground, a new label is created for this ship
+                        fiveShiplabel = new Label();
+
+                        // making this label draggable too //todo
+                        fiveShiplabel.setOnDragDetected(e -> {handlerSetOnDragDetected(fiveShiplabel, 5, true); e.consume();});
+
+                        if (horizontal) {
+                            // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
+                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png")));
+                            fiveShiplabel.setGraphic(image);
+
+                            fiveShiplabel.setLayoutX(label.getLayoutX() - 2*scale);
+                            fiveShiplabel.setLayoutY(label.getLayoutY());
+                            groupID.getChildren().add(fiveShiplabel);
+
+                            // this will place the ship in back-end representation of playground
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 2, finalY), new Point(finalX + 2, finalY));
-                        else
+                        }
+
+                        else {
+                            // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
+                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiffVertical.png")));
+                            fiveShiplabel.setGraphic(image);
+
+                            fiveShiplabel.setLayoutX(label.getLayoutX());
+                            fiveShiplabel.setLayoutY(label.getLayoutY() - 2*scale);
+                            groupID.getChildren().add(fiveShiplabel);
+
+                            // this will place the ship in back-end representation of playground
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 2), new Point(finalX, finalY + 2));
+                        }
+
                         amountShipSize5placed++;
 
                         SimpleIntegerProperty five = new SimpleIntegerProperty(amountShipSize5placed);
@@ -479,10 +604,12 @@ public class PlaceShips implements Initializable {
                             fiveShip.setDisable(true);
                     }
 
+
                     System.out.println("Ship placed!");
                     // Labels for ship were changed -> update
                     ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
                     ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
+
 
                     //ensure all ships are placed: ready only clickable when all ships are placed in a valid way
                     if (ActiveGameState.getAmountShipSize2() == amountShipSize2placed
@@ -490,6 +617,11 @@ public class PlaceShips implements Initializable {
                             && ActiveGameState.getAmountShipSize4() == amountShipSize4placed
                             && ActiveGameState.getAmountShipSize5() == amountShipSize5placed)
                         readyButton.setDisable(false);
+                    //todo not really needed when all is working - but now since there can be more ships placed than allowed,
+                    // this is important
+                    else
+                        readyButton.setDisable(true);
+
 
                     // is always true - valid placement already called in OnDragOver
                     event.setDropCompleted(true);
@@ -533,8 +665,6 @@ public class PlaceShips implements Initializable {
 
 
         // making the ship labels at the right hand side of the playground draggable -----------------------------------
-        // help method handlerStOnDragDetected is called for that
-
         twoShip.setOnDragDetected(event -> {
             handlerSetOnDragDetected(twoShip, 2, false);
             event.consume();
@@ -720,22 +850,24 @@ public class PlaceShips implements Initializable {
 
 
         // clip board is not really needed because nothing has to be transferred, but without a drag and drop event is not working: have to transfer String ""
-        // -> dragboard needs to have content
+        // -> Dragboard needs to have content
         Dragboard db = shipLabel.startDragAndDrop(TransferMode.ANY);
-        ClipboardContent content = new ClipboardContent();
+        ClipboardContent content = new ClipboardContent(); //todo make use of transfer mode copy and move
         content.putString("");
         db.setContent(content);
 
 
-        // depending on the ship size a drag view is set //todo solve the horizontal problem when moving existing
+        // depending on the ship size a drag view is set, displayed when dragging the element
+        // this view is horizontal or vertical, depending on the current setting made by the rotate90-Button
         String horizontalURL = "/Gui_View/images/" + shipSize + "erSchiff.png";
         String verticalURL = "/Gui_View/images/" + shipSize + "erSchiffVertical.png";
 
-        // a drag view is set, displayed when dragging the element
-        // little offset -> ship should not be in middle of mouse pointer because that would make placing an awkward experience
-        // due to be always in the middle of two labels when placing the ship to fit right into the label
+
+        // setting the drag view with little offset
+        // -> ship should not be in middle of mouse pointer because that would make placing an awkward experience
+        //    due to be always in the middle of two labels when placing the ship to fit right into the label
         if (horizontal)
-            db.setDragView(new Image(horizontalURL), 10, 0); //todo eventell offsets -> probably needed, maybe not for moving existing
+            db.setDragView(new Image(horizontalURL), 10, 0);
         else
             db.setDragView(new Image(verticalURL), 0, -10);
     }

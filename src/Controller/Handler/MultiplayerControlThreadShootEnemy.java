@@ -62,7 +62,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         }
 
         System.out.println( "Sende shot " + cmdParameter);
-        System.out.println( "Erhalte " + cmdReceived);
+        System.out.println( "Erhalte " + Arrays.toString(cmdReceived));
 
         //4 determine the response and act depending on it
         IEnemyPlayground enemyPlayground = ActiveGameState.getOwnPlayerIEnemyPlayground();

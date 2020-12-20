@@ -1,5 +1,5 @@
 package Controller;
-
+//TODO now dead code
 import Gui_View.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +16,7 @@ public class MpSelect {
     @FXML private Button joinGame;
 
     public void backToLastScene() throws IOException{
-        Parent hello = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+        Parent hello = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu2.fxml"));
         Main.primaryStage.setScene(new Scene(hello));
         Main.primaryStage.show();
     }

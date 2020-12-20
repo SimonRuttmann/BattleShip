@@ -157,12 +157,15 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
     }
 
-    //TODO is von isShipPlacementValid kopiert -> Hilfsmethoden auslagern // todo horizontal/vertical schliessen sich nicht(immer??) aus - gibt Fehler
+    //TODO is von isShipPlacementValid kopiert -> Hilfsmethoden auslagern
+    // todo von Yannick: horizontal/vertical schliessen sich nicht(immer??) aus - gibt Fehler <- Was heist das?
     /**
+     * This method only checks whether the ship (represented by start and endpoint) can be placed or not
+     * In both cases no ship is created
      *
-     * @param startPoint
-     * @param endPoint
-     * @return
+     * @param startPoint The start point of the ship
+     * @param endPoint  The end point of the ship
+     * @return true, if placement is allowed
      */
     public boolean isValidPlacement(Point startPoint, Point endPoint){
         int startX = startPoint.getX();
@@ -194,7 +197,9 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         this.shipListOfThisPlayground.remove(ship);
         return true;
     }
+
 //TODO die schiffspositionen selbst werden nicht markiert
+
     /**
      * Checks if the ship represented by these two points is valid
      * if the ship placement is valid the method creates the ship and adds it to the shipList itself

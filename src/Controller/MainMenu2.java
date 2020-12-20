@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainMenu implements Initializable {    //todo: ordentliche Namen für Scenes - alle verweise überprüfen - duplikate entfernen
+public class MainMenu2 implements Initializable {    //todo: ordentliche Namen für Scenes - alle verweise überprüfen - duplikate entfernen
     //todo -> acitveGameState hier alles auf null setzten (evtl. -> wenn rückkehr aus spiel)
 
     // views

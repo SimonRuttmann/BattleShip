@@ -16,15 +16,18 @@ public class ActiveGameState {
      *
      * Es gibt folgende Modi:
      *
-     * 1 Spieler      vs anderen Spieler/KI wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld             wie bisher
      *
-     * 2 Spieler      vs eigene KI          wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     * playerVsRemote       Spieler      vs anderen Spieler/KI wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld             wie bisher
+     *
+     * KiVsRemote           Ki (unsere)  vs anderen Spieler/KI wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     *
+     * playerVsKi           Spieler      vs eigene KI          wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld
      *                                     -> Die KI hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
      *
-     * 3 eigene KI    vs eigene KI          Die KI 1 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     * KivsKi eigene KI    vs eigene KI          Die KI 1 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
      *                                      Die KI 2 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
      */
-    private static int modes;
+    private static GameMode modes;
 
     private static boolean OwnPlayerKi; //<- Das ist die KI, welche bei Modus 2 und 3 benötigt wird
     private static IOwnPlayground ownPlayerIOwnPlayground;
@@ -201,11 +204,11 @@ public class ActiveGameState {
     }
 
 
-    public static int getModes() {
+    public static GameMode getModes() {
         return modes;
     }
 
-    public static void setModes(int modes) {
+    public static void setModes(GameMode modes) {
         ActiveGameState.modes = modes;
     }
 

@@ -67,16 +67,12 @@ public class Water implements IDrawable {
 
     @Override
     public void setLabelNonClickable() {
-        Platform.runLater(()->{
-            this.label.setDisable(true);
-        });
+        Platform.runLater(()-> this.label.setDisable(true));
     }
 
     @Override
     public void setLabelClickable() {
-        Platform.runLater(()->{
-            this.label.setDisable(false);
-        });
+        Platform.runLater(()-> this.label.setDisable(false));
     }
 
     @Override

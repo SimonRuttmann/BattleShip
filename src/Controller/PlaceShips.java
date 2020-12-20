@@ -131,7 +131,7 @@ public class PlaceShips implements Initializable {
             ActiveGameState.setEnemyPlayerEnemyPlayground(new EnemyPlayground());
         }
 
-        // build these playgrounds - playgrounds are now displayed on screen
+        // build these playgrounds - playgrounds can now be displayed on screen
         ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
         ActiveGameState.getOwnPlayerIEnemyPlayground().buildPlayground();
         if (!ActiveGameState.isMultiplayer()) {
@@ -140,8 +140,8 @@ public class PlaceShips implements Initializable {
         }
 
 
-        //Sets the Image for the rotate 90 Degree button - vertiacal at beginning
-        rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButtonVertical.png"))));
+        //Sets the Image for the rotate 90 Degree button - horizontal at beginning
+        rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButtonHorizontal.png"))));
         //disables the readyButton -> game can only be started if all ships are placed
         readyButton.setDisable(true);
         //--------------------------------------------------------------------------------------------------------------
@@ -393,14 +393,13 @@ public class PlaceShips implements Initializable {
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
                         } else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY + 1));
-                        ActiveGameState.setAmountShipSize2placed(ActiveGameState.getAmountShipSize2placed() + 1);
-                        amountShipSize2placed++; //todo decide which amountshipsize5placed... same for 2,3,4
+                        amountShipSize2placed++;
 
                         SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed);
                         twoOf.textProperty().bind(Bindings.convert(two));
 
                         // only make that much ships placeable, that are allowed by gameConfig
-                        if (ActiveGameState.getAmountShipSize2() <= ActiveGameState.getAmountShipSize2placed())
+                        if (ActiveGameState.getAmountShipSize2() <= amountShipSize2placed)
                             twoShip.setDisable(true);
                     }
 
@@ -409,14 +408,13 @@ public class PlaceShips implements Initializable {
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 1, finalY), new Point(finalX + 1, finalY));
                         else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 1), new Point(finalX, finalY + 1));
-                        ActiveGameState.setAmountShipSize3placed(ActiveGameState.getAmountShipSize3placed() + 1);
-                        amountShipSize3placed++; //todo decide which amountshipsize5placed... same for 2,3,4
+                        amountShipSize3placed++;
 
                         SimpleIntegerProperty three = new SimpleIntegerProperty(amountShipSize3placed);
                         threeOf.textProperty().bind(Bindings.convert(three));
 
                         // only make that much ships placeable, that are allowed by gameConfig
-                        if (ActiveGameState.getAmountShipSize3() <= ActiveGameState.getAmountShipSize3placed())
+                        if (ActiveGameState.getAmountShipSize3() <= amountShipSize3placed)
                             threeShip.setDisable(true);
                     }
 
@@ -425,14 +423,13 @@ public class PlaceShips implements Initializable {
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 1, finalY), new Point(finalX + 2, finalY));
                         else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 1), new Point(finalX, finalY + 2));
-                        ActiveGameState.setAmountShipSize4placed(ActiveGameState.getAmountShipSize4placed() + 1);
-                        amountShipSize4placed++; //todo decide which amountshipsize5placed... same for 2,3,4
+                        amountShipSize4placed++;
 
                         SimpleIntegerProperty four = new SimpleIntegerProperty(amountShipSize4placed);
                         fourOf.textProperty().bind(Bindings.convert(four));
 
                         // only make that much ships placeable, that are allowed by gameConfig
-                        if (ActiveGameState.getAmountShipSize4() <= ActiveGameState.getAmountShipSize4placed())
+                        if (ActiveGameState.getAmountShipSize4() <= amountShipSize4placed)
                             fourShip.setDisable(true);
                     }
 
@@ -441,14 +438,13 @@ public class PlaceShips implements Initializable {
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX - 2, finalY), new Point(finalX + 2, finalY));
                         else
                             ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY - 2), new Point(finalX, finalY + 2));
-                        ActiveGameState.setAmountShipSize5placed(ActiveGameState.getAmountShipSize5placed() + 1);
-                        amountShipSize5placed++; //todo decide which amountshipsize5placed... same for 2,3,4
+                        amountShipSize5placed++;
 
                         SimpleIntegerProperty five = new SimpleIntegerProperty(amountShipSize5placed);
                         fiveOf.textProperty().bind(Bindings.convert(five));
 
                         // only make that much ships placeable, that are allowed by gameConfig
-                        if (ActiveGameState.getAmountShipSize5() <= ActiveGameState.getAmountShipSize5placed())
+                        if (ActiveGameState.getAmountShipSize5() <= amountShipSize5placed)
                             fiveShip.setDisable(true);
                     }
 
@@ -458,10 +454,10 @@ public class PlaceShips implements Initializable {
                     ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
 
                     //ensure all ships are placed: ready only clickable when all ships are placed in a valid way
-                    if (ActiveGameState.getAmountShipSize2() == ActiveGameState.getAmountShipSize2placed()
-                            && ActiveGameState.getAmountShipSize3() == ActiveGameState.getAmountShipSize3placed()
-                            && ActiveGameState.getAmountShipSize4() == ActiveGameState.getAmountShipSize4placed()
-                            && ActiveGameState.getAmountShipSize5() == ActiveGameState.getAmountShipSize5placed())
+                    if (ActiveGameState.getAmountShipSize2() == amountShipSize2placed
+                            && ActiveGameState.getAmountShipSize3() == amountShipSize3placed
+                            && ActiveGameState.getAmountShipSize4() == amountShipSize4placed
+                            && ActiveGameState.getAmountShipSize5() == amountShipSize5placed)
                         readyButton.setDisable(false);
 
                     // is always true - valid placement already called in OnDragOver
@@ -557,39 +553,48 @@ public class PlaceShips implements Initializable {
 
     }//end of initialize
 
-    /**
-     * rotate ship button:
+
+
+    /** rotate ship button:
+     *------------------------------------------------------------------------------------------------------------------
      * -> changes graphic: the arrow point of the arrows change between being horizontal and vertical
      * -> boolean horizontal is inversed - used by ship placement methods
-     */
-    public void rotateShip90() { //todo - this way or switch arrows? discuss together -> find preference, only style-question
+     *----------------------------------------------------------------------------------------------------------------*/
+    public void rotateShip90() {
         horizontal = !horizontal;
         if (horizontal)
-            rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButtonVertical.png"))));
-        else
             rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButtonHorizontal.png"))));
+        else
+            rotate90.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/rotateShipButtonVertical.png"))));
     }
 
+
+
+    /** random placement button:
+     *------------------------------------------------------------------------------------------------------------------
+     * -> creates a new playground - eventually placed ships are deleted
+     * -> places all ships randomly - KI does that
+     * -> enables the ready button due to all ships being placed
+     *----------------------------------------------------------------------------------------------------------------*/
     public void newRandomPlacement() {
-        // todo really needed - resets all... -> probably yes, old ships should not be there anymore
-        // create new OwnPlayground - link same Labels
+
+        // create new OwnPlayground - link the same Labels -> playground is empty again, old placement is deleted //todo delete ship labels above!!
         ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
         ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
         ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
         ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
+
+
         //todo -> call random place function
         //todo -> update Gui after that -> thread? .runlater nutzen für refresh
-        // set counters of placed ships to max because all are added
-        ActiveGameState.setAmountShipSize2placed(ActiveGameState.getAmountShipSize2());
-        ActiveGameState.setAmountShipSize3placed(ActiveGameState.getAmountShipSize3());
-        ActiveGameState.setAmountShipSize4placed(ActiveGameState.getAmountShipSize4());
-        ActiveGameState.setAmountShipSize5placed(ActiveGameState.getAmountShipSize5());
 
+
+        // set counters of placed ships to max because all are added
         amountShipSize2placed = ActiveGameState.getAmountShipSize2();
         amountShipSize3placed = ActiveGameState.getAmountShipSize3();
-        ;//todo weg or needed???
         amountShipSize4placed = ActiveGameState.getAmountShipSize4();
         amountShipSize5placed = ActiveGameState.getAmountShipSize5();
+
         SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed); //todo works but wtf clean this fucking code
         twoOf.textProperty().bind(Bindings.convert(two));
         SimpleIntegerProperty three = new SimpleIntegerProperty(amountShipSize3placed);
@@ -599,6 +604,7 @@ public class PlaceShips implements Initializable {
         SimpleIntegerProperty five = new SimpleIntegerProperty(amountShipSize5placed);
         fiveOf.textProperty().bind(Bindings.convert(five));
 
+
         // disable Dropping for all Labels cause all ships are placed
         twoShip.setDisable(true);
         threeShip.setDisable(true);
@@ -606,8 +612,9 @@ public class PlaceShips implements Initializable {
         fiveShip.setDisable(true);
         System.out.println("Ships placed randomly");
 
-        // enable ready button
-        //readyButton.setDisable(false); //todo enable again when random placement is implemented
+
+        // enable ready button due to all ships being placed
+        readyButton.setDisable(false);
     }
 
     public void resetPlacement() { //todo delete ship labels group
@@ -618,12 +625,8 @@ public class PlaceShips implements Initializable {
         ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
 
         // set counters of placed ships to zero because all are removed
-        ActiveGameState.setAmountShipSize2placed(0);
-        ActiveGameState.setAmountShipSize3placed(0);
-        ActiveGameState.setAmountShipSize4placed(0);
-        ActiveGameState.setAmountShipSize5placed(0);
         amountShipSize2placed = 0;
-        amountShipSize3placed = 0;//todo weg or needed???
+        amountShipSize3placed = 0;
         amountShipSize4placed = 0;
         amountShipSize5placed = 0;
         SimpleIntegerProperty two = new SimpleIntegerProperty(amountShipSize2placed); //todo wtf still does not work

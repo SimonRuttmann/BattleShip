@@ -376,7 +376,6 @@ public class PlaceShips implements Initializable {
                             // when ship is dropped into the playground, a new label is created for this ship
                             twoShiplabel = new Label();
 
-
                             // help Method placeNewShip is called -> places Ship in Gui and backend
                             placeNewShip(twoShiplabel, label,2, finalX, finalY, scale);
 
@@ -584,7 +583,9 @@ public class PlaceShips implements Initializable {
 
 
         // delete old ship labels -> GUI Playground is also empty again
-        groupID.getChildren().removeAll(twoShiplabel, threeShiplabel, fourShiplabel, fiveShiplabel);
+        // groupID.lookupAll finds all Nodes of type Label and removes them - possible here, the only item which should
+        // not be remvoed from the group is the gridPane -> no Label, no problem
+        groupID.getChildren().removeAll(groupID.lookupAll(".label"));
 
 
         //todo -> call random place function
@@ -630,8 +631,7 @@ public class PlaceShips implements Initializable {
      * -> places all ships randomly - KI does that
      * -> enables the ready button due to all ships being placed
      *----------------------------------------------------------------------------------------------------------------*/
-    public void resetPlacement() { //todo find bugs :D problem: some empty fields are not accessile yet?? sometimes(rarely) a ship does not disappear
-        // todo -> problem genauer: wenn mehr als ein ship vom type platziert, nur eins verschwindet
+    public void resetPlacement() {
 
         // create new OwnPlayground - link the same Labels -> playground is empty again, old placement is deleted
         ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
@@ -641,8 +641,9 @@ public class PlaceShips implements Initializable {
 
 
         // delete old ship labels -> GUI Playground is also empty again
-        groupID.getChildren().removeAll(twoShiplabel, threeShiplabel, fourShiplabel, fiveShiplabel); // todo hier is der fehler -> doch nicht mit der Referenz ansprechen sondern mit dem find "kind of"
-
+        // groupID.lookupAll finds all Nodes of type Label and removes them - possible here, the only item which should
+        // not be remvoed from the group is the gridPane -> no Label, no problem
+        groupID.getChildren().removeAll(groupID.lookupAll(".label"));
 
         // set counters of placed ships to zero because all are removed
         amountShipSize2placed = 0;
@@ -752,7 +753,7 @@ public class PlaceShips implements Initializable {
      *----------------------------------------------------------------------------------------------------------------*/
     public void placeNewShip(Label newShipLabel, Label gridPaneLabel, int shipSize, int finalX, int finalY, int scale){
 
-        // making this label draggable too //todo set back Opacity when not successful
+        // making the newly created ShipLabel draggable too
         newShipLabel.setOnDragDetected(e -> {
             handlerSetOnDragDetected(newShipLabel, shipSize, true);
             e.consume();
@@ -843,7 +844,7 @@ public class PlaceShips implements Initializable {
 
 
 
-    /** moveShip - help method:
+    /** moveShip - help method: // todo big bug - only the lastest one is moveable - make this over id will solve problem: twoShipLabel etc need ids, field labels accept them not by name but by id... todo tomorrow
      *------------------------------------------------------------------------------------------------------------------
      * -> called when existing ship label is successfully moved
      * -> Gui: moving already placed ship to a new location: change coordinates of the moved ship label
@@ -936,14 +937,6 @@ public class PlaceShips implements Initializable {
         }
     }
 }
-
-
-
-
-
-
-
-
 
 
 

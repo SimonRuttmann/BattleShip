@@ -398,6 +398,8 @@ public class PlaceShips implements Initializable {
                     // when ship is dropped into the playground, a new label is created for this ship
                     Label shiplabel = new Label();
 
+                    // making this label draggable too //todo
+                    shiplabel.setOnDragDetected(e -> {handlerSetOnDragDetected(shiplabel, 2, true); e.consume();});
 
                     // the bounds are set: minX and minY position = where the upper left corner of the label should be on screen //todo for bigger ship size + how the fuck to resize???
                     Bounds bounds = label.getBoundsInParent();
@@ -406,7 +408,6 @@ public class PlaceShips implements Initializable {
 
 
                     // depending on the type of ship, different code is executed when ship is dropped successfully- very similar, only commented in twoShip
-                    //
                     System.out.println("Dropped successfully");
                     if (event.getGestureSource() == twoShip) {
                         if (horizontal) {
@@ -505,6 +506,7 @@ public class PlaceShips implements Initializable {
         // end of creating playground field ----------------------------------------------------------------------------
 
 
+
         // connecting Labels to backend representation of the playground and draw this - now labels are displayed on screen
         // as water and will be updated when a ship is placed/shot
         ownFieldArray = ownField.getChildren().toArray();
@@ -522,6 +524,7 @@ public class PlaceShips implements Initializable {
         SimpleIntegerProperty five = new SimpleIntegerProperty(amountShipSize5placed);
         fiveOf.textProperty().bind(Bindings.convert(five));
 
+
         xOfx2Ships.setText("/" + ActiveGameState.getAmountShipSize2() + " platziert)");
         xOfx3Ships.setText("/" + ActiveGameState.getAmountShipSize3() + " platziert)");
         xOfx4Ships.setText("/" + ActiveGameState.getAmountShipSize4() + " platziert)");
@@ -530,63 +533,25 @@ public class PlaceShips implements Initializable {
 
 
         // making the ship labels at the right hand side of the playground draggable -----------------------------------
-        // quite similar for each ship type(2,3,4,5), comments only in twoShip
+        // help method handlerStOnDragDetected is called for that
 
         twoShip.setOnDragDetected(event -> {
-
-            // clip board is not really needed because nothing has to be transferred, but without a drag and drop event is not working: have to transfer String ""
-            // -> dragboard needs to have content
-            Dragboard db = twoShip.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent content = new ClipboardContent();
-            content.putString("");
-            db.setContent(content);
-
-            // a drag view is set, displayed when dragging the element
-            // little offset -> ship should not be in middle of mouse pointer because that would make placing an awkward experience
-            // due to be always in the middle of two labels when placing the ship to fit right into the label
-            if (horizontal)
-                db.setDragView(new Image("/Gui_View/images/2erSchiff.png"), 10, 0);
-            else
-                db.setDragView(new Image("/Gui_View/images/2erSchiffVertical.png"), 0, -10);
+            handlerSetOnDragDetected(twoShip, 2, false);
             event.consume();
         });
-
 
         threeShip.setOnDragDetected(event -> {
-            Dragboard db = threeShip.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent content = new ClipboardContent();
-            content.putString("");
-            db.setContent(content);
-            if (horizontal)
-                db.setDragView(new Image("/Gui_View/images/3erSchiff.png"));
-            else
-                db.setDragView(new Image("/Gui_View/images/3erSchiffVertical.png"));
+            handlerSetOnDragDetected(threeShip, 3, false);
             event.consume();
         });
-
 
         fourShip.setOnDragDetected(event -> {
-            Dragboard db = fourShip.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent content = new ClipboardContent();
-            content.putString("");
-            db.setContent(content);
-            if (horizontal)
-                db.setDragView(new Image("/Gui_View/images/4erSchiff.png"), 10, 0);
-            else
-                db.setDragView(new Image("/Gui_View/images/4erSchiffVertical.png"), 0, -10);
+            handlerSetOnDragDetected(fourShip, 4, false);
             event.consume();
         });
 
-
         fiveShip.setOnDragDetected(event -> {
-            Dragboard db = fiveShip.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent content = new ClipboardContent();
-            content.putString("");
-            db.setContent(content);
-            if (horizontal)
-                db.setDragView(new Image("/Gui_View/images/5erSchiff.png"));
-            else
-                db.setDragView(new Image("/Gui_View/images/5erSchiffVertical.png"));
+            handlerSetOnDragDetected(fiveShip, 5, false);
             event.consume();
         });
         // end of making the labels on the right hand side of the playground draggable ---------------------------------
@@ -735,6 +700,44 @@ public class PlaceShips implements Initializable {
             }
         }
         return result;
+    }
+
+
+
+    /** makeLabelDraggable - help method:
+     *------------------------------------------------------------------------------------------------------------------
+     * -> makes a label draggable - for ShipSize 2,3,4,5
+     * -> difference between placing new ship and moving existing ship:
+     *      -   new ship means the dragged label is a label at the right hand side of the playground
+     *          -> this label will still be displayed
+     *      -   existing ship means the dragged label is label in the playground
+     *          -> this label has to disappear once it is moved
+     *----------------------------------------------------------------------------------------------------------------*/
+    public void handlerSetOnDragDetected(Label shipLabel, int shipSize, boolean alreadyPlaced) {
+
+        // if ship is already existing, label must be deleted when moving - or not shown //todo: important: label should move to new direction would be easy but old has to disapper really
+
+
+
+        // clip board is not really needed because nothing has to be transferred, but without a drag and drop event is not working: have to transfer String ""
+        // -> dragboard needs to have content
+        Dragboard db = shipLabel.startDragAndDrop(TransferMode.ANY);
+        ClipboardContent content = new ClipboardContent();
+        content.putString("");
+        db.setContent(content);
+
+
+        // depending on the ship size a drag view is set //todo solve the horizontal problem when moving existing
+        String horizontalURL = "/Gui_View/images/" + shipSize + "erSchiff.png";
+        String verticalURL = "/Gui_View/images/" + shipSize + "erSchiffVertical.png";
+
+        // a drag view is set, displayed when dragging the element
+        // little offset -> ship should not be in middle of mouse pointer because that would make placing an awkward experience
+        // due to be always in the middle of two labels when placing the ship to fit right into the label
+        if (horizontal)
+            db.setDragView(new Image(horizontalURL), 10, 0); //todo eventell offsets -> probably needed, maybe not for moving existing
+        else
+            db.setDragView(new Image(verticalURL), 0, -10);
     }
 }
 

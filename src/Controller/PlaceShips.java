@@ -411,39 +411,66 @@ public class PlaceShips implements Initializable {
                     // depending on the type of ship, different code is executed when ship is dropped successfully- very similar, only commented in twoShip
                     if (event.getGestureSource() == twoShip || event.getGestureSource() == twoShiplabel) {
 
-                        // when ship is dropped into the playground, a new label is created for this ship
-                        twoShiplabel = new Label();
 
-                        // making this label draggable too //todo
-                        twoShiplabel.setOnDragDetected(e -> {handlerSetOnDragDetected(twoShiplabel, 2, true); e.consume();});
+                        if(event.getGestureSource() == twoShip) {
+
+                            // when ship is dropped into the playground, a new label is created for this ship
+                            twoShiplabel = new Label();
+
+                            // making this label draggable too //todo
+                            twoShiplabel.setOnDragDetected(e -> {
+                                handlerSetOnDragDetected(twoShiplabel, 2, true);
+                                e.consume();
+                            });
 
 
-                        if (horizontal) {
+                            if (horizontal) {
 
-                            // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
-                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png")));
-                            twoShiplabel.setGraphic(image);
+                                // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
+                                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png")));
+                                twoShiplabel.setGraphic(image);
 
-                            twoShiplabel.setLayoutX(label.getLayoutX());
-                            twoShiplabel.setLayoutY(label.getLayoutY());
-                            groupID.getChildren().add(twoShiplabel);
+                                twoShiplabel.setLayoutX(label.getLayoutX());
+                                twoShiplabel.setLayoutY(label.getLayoutY());
+                                groupID.getChildren().add(twoShiplabel);
 
-                            // this will place the ship in back-end representation of playground
-                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
+                                // this will place the ship in back-end representation of playground
+                                ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
+                            } else {
+
+                                // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
+                                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiffVertical.png")));
+                                twoShiplabel.setGraphic(image);
+
+                                twoShiplabel.setLayoutX(label.getLayoutX());
+                                twoShiplabel.setLayoutY(label.getLayoutY());
+                                groupID.getChildren().add(twoShiplabel);
+
+                                // this will place the ship in back-end representation of playground
+                                ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY + 1));
+                            }
                         }
 
-                        else {
+                        else { //todo yeah it is working like i thought :))))
+                            if(horizontal) {
 
-                            // adding the right image to the ship label //todo cinematic graphics lol, todo making resizeable
-                            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiffVertical.png")));
-                            twoShiplabel.setGraphic(image);
+                                // take the existing label of the ship and change it's position
+                                twoShiplabel.setLayoutX(label.getLayoutX());
+                                twoShiplabel.setLayoutY(label.getLayoutY());
 
-                            twoShiplabel.setLayoutX(label.getLayoutX());
-                            twoShiplabel.setLayoutY(label.getLayoutY());
-                            groupID.getChildren().add(twoShiplabel);
+                                // this will place the ship in back-end representation of playground //todo move ship
+                                ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
+                            }
 
-                            // this will place the ship in back-end representation of playground
-                            ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY + 1));
+                            else {
+
+                                // take the existing label of the ship and change it's position
+                                twoShiplabel.setLayoutX(label.getLayoutX());
+                                twoShiplabel.setLayoutY(label.getLayoutY());
+
+                                // this will place the ship in back-end representation of playground //todo move ship
+                                ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX + 1, finalY));
+                            }
                         }
 
 
@@ -459,8 +486,6 @@ public class PlaceShips implements Initializable {
                         if (ActiveGameState.getAmountShipSize2() <= amountShipSize2placed)
                             twoShip.setDisable(true);
 
-
-                        // todo other idea
 
 
 

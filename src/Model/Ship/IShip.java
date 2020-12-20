@@ -68,4 +68,16 @@ public interface IShip {
      * @param placementMarkers An Array of Points representing the Fields which got marked as not placeable
      */
     void setPlacementMarkers(ArrayList<Point> placementMarkers);
+
+    /**
+     *
+     * @return The starposition of the selected ship
+     */
+    Point getPosStart();
+
+    /**
+     *
+     * @return The endposition of the selected ship
+     */
+    Point getPosEnd();
 }

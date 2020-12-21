@@ -1,5 +1,6 @@
 package Controller;
 
+//todo let player choose between self and ki
 
 import Gui_View.HelpMethods;
 

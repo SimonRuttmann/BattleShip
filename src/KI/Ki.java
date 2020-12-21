@@ -30,7 +30,7 @@ public class Ki implements IKi{
          */
 
         //Rekursionsauflösung alle Schiffe plaziert
-        if ( laufvariable > kiShips.size()){
+        if ( laufvariable >= kiShips.size()){
             return newShips;
         }
 
@@ -50,11 +50,11 @@ public class Ki implements IKi{
             random_y = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
 
             Point point = new Point ( random_x, random_y);
-            checkedPoints.add(point);
             placementStyle = -1;
 
             if (checkedPoints.contains(point) ) continue;
 
+            checkedPoints.add(point);
             placementStyle = getPlacementStyle(new Point(random_x, random_y), kiShip.getSize(), ActiveGameState.getPlaygroundSize(), occupiedDotsList);
             counter++;
 
@@ -64,10 +64,10 @@ public class Ki implements IKi{
 
                 //Ermittle Schiffspositionen
                 switch(placementStyle){
-                    case 0: newEndPos = new Point ( random_x , random_y-kiShip.getSize()); break;
-                    case 1: newEndPos = new Point ( random_x + kiShip.getSize(), random_y); break;
-                    case 2: newEndPos = new Point ( random_x , random_y+kiShip.getSize()); break;
-                    case 3: newEndPos = new Point ( random_x - kiShip.getSize(), random_y); break;
+                    case 0: newEndPos = new Point ( random_x ,                        random_y-kiShip.getSize()+1); break;      //Oben
+                    case 1: newEndPos = new Point ( random_x + kiShip.getSize()-1,    random_y); break;                         //Rechts
+                    case 2: newEndPos = new Point ( random_x ,                        random_y+kiShip.getSize()-1); break;      //Unten
+                    case 3: newEndPos = new Point ( random_x - kiShip.getSize()+1,    random_y); break;                         //Links
                     default:
                         throw new IllegalStateException("Unexpected value: " + placementStyle);
                 }
@@ -79,14 +79,18 @@ public class Ki implements IKi{
                 //Schiffspositionen + Umgebungspositionen
                 ArrayList<Point> shipPositions = new ArrayList<>();
                 shipPositions = markShipDots(point, kiShip.getSize(), placementStyle, shipPositions);
+
                 ArrayList<Point> shipPositionsAndSurroundings = surroundShipDots(shipPositions);
+                shipPositionsAndSurroundings.addAll(shipPositions);
 
 
                 //Bishige Schiffspositionen (aus früheren Rekursionsschritten + Schiffspostion + Umgebungsposition von aktuellem Rekursionschritt)
                 ArrayList<Point> newOccupiedDotsList = new ArrayList<Point>(occupiedDotsList);
                 newOccupiedDotsList.addAll(shipPositionsAndSurroundings);
 
-                ArrayList<IShip>  ergebnis = placeShip(newOccupiedDotsList, kiShips, newShips, playground, laufvariable++);
+                laufvariable++;
+                ArrayList<IShip>  ergebnis = placeShip(newOccupiedDotsList, kiShips, newShips, playground, laufvariable);
+                laufvariable--;
 
                 // Für diese Plazierung des Schiffs gibt es keine Möglichkeit die restlichen zu plazieren
                 if ( ergebnis == null){
@@ -107,7 +111,7 @@ public class Ki implements IKi{
         return newShips;
     }
 
-    public ArrayList<IShip> placeships(OwnPlayground playground) {
+    public ArrayList<IShip> placeships(IOwnPlayground playground) {
 
 
         ArrayList<Point> occupiedDotsList = new ArrayList<>();
@@ -116,19 +120,19 @@ public class Ki implements IKi{
 
 
         //Alles Schifftypen werden in eine Arraylist gespeichert damit sie unabhängig bearbeitet werden können
-        for(int u = 0; u <= ActiveGameState.getAmountShipSize5(); u++){
+        for(int u = 0; u < ActiveGameState.getAmountShipSize5(); u++){
             Ship ship = new Ship(new Point(0,0), new Point(0, 4), playground);
             kiShips.add(ship);
         }
-        for(int u = 0; u <= ActiveGameState.getAmountShipSize4(); u++){
+        for(int u = 0; u < ActiveGameState.getAmountShipSize4(); u++){
             Ship ship = new Ship(new Point(0,0), new Point(0, 3), playground);
             kiShips.add(ship);
         }
-        for(int u = 0; u <= ActiveGameState.getAmountShipSize3(); u++){
+        for(int u = 0; u < ActiveGameState.getAmountShipSize3(); u++){
             Ship ship = new Ship(new Point(0,0), new Point(0, 2), playground);
             kiShips.add(ship);
         }
-        for(int u = 0; u <= ActiveGameState.getAmountShipSize2(); u++){
+        for(int u = 0; u < ActiveGameState.getAmountShipSize2(); u++){
             Ship ship = new Ship(new Point(0,0), new Point(0, 1), playground);
             kiShips.add(ship);
         }

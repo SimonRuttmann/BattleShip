@@ -18,6 +18,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
     private ArrayList<IShip> shipListOfThisPlayground = new ArrayList<>();
 
+    @Override
     public void setShipListOfThisPlayground(ArrayList<IShip> shipListOfThisPlayground) {
         this.shipListOfThisPlayground = shipListOfThisPlayground;
     }
@@ -423,6 +424,11 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
             int xEnd = shipposition[1].getX();
             int yEnd = shipposition[1].getY();
 
+            //for ( Point point : ship.getCoordinates()){
+            //    Field[point.getX()][point.getY()] = new ShipPart("start vertical", ship);
+            //}
+
+
             //Insert Ship parts
             //Ship vertical
             if (xStart == xEnd) {
@@ -440,6 +446,8 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
                     Field[i][yStart] = new ShipPart("middle horizontal", ship);
                 }
             }
+
+
 
     }
 }

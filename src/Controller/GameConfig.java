@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
+import KI.Ki;
 import Model.Playground.EnemyPlayground;
 import Model.Playground.OwnPlayground;
 import Player.ActiveGameState;
@@ -70,7 +71,7 @@ public class GameConfig implements Initializable {
 
         numberOfShips.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4,8,5));
         number2Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2,1));
-        number3Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2,2,2));
+        number3Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2,3,2));
         number4Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2,1));
         number5Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2,1));
     }
@@ -90,6 +91,9 @@ public class GameConfig implements Initializable {
         ActiveGameState.setAmountShipSize3(number3Ships.getValue());
         ActiveGameState.setAmountShipSize4(number4Ships.getValue());
         ActiveGameState.setAmountShipSize5(number5Ships.getValue());
+
+        // ki must be initialized
+        ActiveGameState.setKi(new Ki());
 
         // todo Simon -> neuer Thread : wenn Server -> send cmd ships 222 333 44 ... to client
 

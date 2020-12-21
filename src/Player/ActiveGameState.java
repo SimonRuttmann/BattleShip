@@ -1,5 +1,6 @@
 package Player;
 
+import KI.Ki;
 import Model.Playground.*;
 import Network.*;
 
@@ -62,6 +63,7 @@ public class ActiveGameState {
     private static int amountShipSize3;
     private static int amountShipSize4;
     private static int amountShipSize5;
+    private static Ki ki;
 
     private static boolean sceneIsPlaceShips;
 
@@ -176,6 +178,9 @@ public class ActiveGameState {
     public static void setAmountShipSize5(int amountShipSize5) {
         ActiveGameState.amountShipSize5 = amountShipSize5;
     }
+
+    public static Ki getKi() { return ki; }
+    public static void setKi(Ki ki) { ActiveGameState.ki = ki; }
 
     public static boolean isSceneIsPlaceShips() {return sceneIsPlaceShips;};
     public static void setSceneIsPlaceShips(boolean sceneIsPlaceShips) {ActiveGameState.sceneIsPlaceShips = sceneIsPlaceShips;};

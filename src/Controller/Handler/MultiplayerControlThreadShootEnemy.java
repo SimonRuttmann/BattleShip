@@ -71,39 +71,57 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
             case "answer":
                 ShotResponse shotResponse = enemyPlayground.shoot(shootPosition, Integer.parseInt(cmdReceived[1]));
 
-                //VIEW SHOW
-                Label headShipSunken = shotResponse.getLabel(); // <- == Label, des zerstörten Schiffs oben links
-                boolean horizontal = shotResponse.getAlignment();
-                int size = shotResponse.getSizeOfSunkenShip();
+                //VIEW SHOW---------------------------------------------------------------------------------------------
+                if ( Integer.parseInt(cmdReceived[1]) == 2) {
+                    Label headShipSunken = shotResponse.getLabel(); // <- == Label, des zerstörten Schiffs oben links
+                    boolean horizontal = shotResponse.getAlignment();
+                    int size = shotResponse.getSizeOfSunkenShip();
 
-                //für 2er, 3er, 4er, 5er
-                Label shiplabel = new Label();
-                shiplabel.setLayoutX(headShipSunken.getLayoutX());
-                shiplabel.setLayoutY(headShipSunken.getLayoutY());
+                    //für 2er, 3er, 4er, 5er
+                    Label shiplabel = new Label();
+                    shiplabel.setLayoutX(headShipSunken.getLayoutX());
+                    shiplabel.setLayoutY(headShipSunken.getLayoutY());
 
-                //TODO Add sunken images
-                if ( horizontal ){
-                    switch (size){
-                        case(2):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));  break;
-                        case(3):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png"))));  break;
-                        case(4):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png"))));  break;
-                        case(5):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));  break;
-                        default:
-                            System.out.println("Debug");
+                    //TODO Add sunken images
+                    if (horizontal) {
+                        switch (size) {
+                            case (2):
+                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));
+                                break;
+                            case (3):
+                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png"))));
+                                break;
+                            case (4):
+                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png"))));
+                                break;
+                            case (5):
+                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));
+                                break;
+                            default:
+                                System.out.println("Debug");
+                        }
+                    } else {
+                        switch (size) {
+                            case (2):
+                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiffVertical.png"))));
+                                break;
+                            case (3):
+                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiffVertical.png"))));
+                                break;
+                            case (4):
+                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiffVertical.png"))));
+                                break;
+                            case (5):
+                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiffVertical.png"))));
+                                break;
+                            default:
+                                System.out.println("Debug");
+                        }
                     }
+                    Platform.runLater(() -> GamePlayground.getGroupEnemP().getChildren().add(shiplabel));
                 }
-                else{
-                    switch (size){
-                        case(2):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiffVertical.png"))));  break;
-                        case(3):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiffVertical.png"))));  break;
-                        case(4):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiffVertical.png"))));  break;
-                        case(5):  shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiffVertical.png"))));  break;
-                        default:
-                            System.out.println("Debug");
-                    }
-                }
-                Platform.runLater(  ()  -> GamePlayground.getGroupEnemP().getChildren().add(shiplabel));
-                //END VIEW SHOW
+                //END VIEW SHOW-----------------------------------------------------------------------------------------
+
 
                 if ( shotResponse.isGameWin())
                 {

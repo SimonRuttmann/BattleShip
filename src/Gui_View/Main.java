@@ -20,8 +20,8 @@ git rm --cached -r .savedGames
  */
 
     public static Stage primaryStage;
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
+    public static final int WIDTH = 600;//1280;
+    public static final int HEIGHT = 400;//720;
     CancelGame cancelGame = new CancelGame();
     WinLose winLose = new WinLose();
 
@@ -33,8 +33,9 @@ git rm --cached -r .savedGames
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;
 
-        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
-        primaryStage.setTitle("Battleship");
+        //todo MainMenu 1 vs 2
+        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
+        primaryStage.setTitle("Schiffe versenken");
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);
         //primaryStage.setMinWidth(width);

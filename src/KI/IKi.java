@@ -10,7 +10,7 @@ import Model.Util.UtilDataType.Point;
 import java.util.ArrayList;
 
 public interface IKi {
-    Point getShot(OwnPlayground playground);
+    Point getShot(IOwnPlayground playground);
 
-    ArrayList<IShip> placeships(OwnPlayground playground);
+    ArrayList<IShip> placeships(IOwnPlayground playground);
 }

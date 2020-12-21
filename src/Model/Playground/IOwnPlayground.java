@@ -51,7 +51,7 @@ public interface IOwnPlayground extends IPlayground{
     boolean isValidPlacement(Point startPoint, Point endPoint);
 
 
-    /**
-     * */
     ArrayList<IShip> getShipListOfThisPlayground();
+
+
 }

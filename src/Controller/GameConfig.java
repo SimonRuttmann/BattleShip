@@ -70,7 +70,7 @@ public class GameConfig implements Initializable {
 
         numberOfShips.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4,8,5));
         number2Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2,1));
-        number3Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2,2,2));
+        number3Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2,3,2));
         number4Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2,1));
         number5Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2,1));
     }

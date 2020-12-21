@@ -11,7 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -25,7 +24,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
-import sun.plugin.javascript.navig4.LayerArray;
 
 import java.io.IOException;
 import java.net.URL;
@@ -105,10 +103,10 @@ public class PlaceShips implements Initializable {
     double localX;
     double localY;
 //todo solution
-    Label twoShiplabel;
-    Label threeShiplabel;
-    Label fourShiplabel;
-    Label fiveShiplabel;
+    Label twoShipLabel;
+    Label threeShipLabel;
+    Label fourShipLabel;
+    Label fiveShipLabel;
 
 
     /** initialize-method:
@@ -242,7 +240,9 @@ public class PlaceShips implements Initializable {
 
                         // for every placeable ship label (size2, size3, size4, size5)-> own reaction, code really similar
                         // here (twoShip) everything commented, for 3,4,5-ship: similar, look here
-                        if (event.getGestureSource() == twoShip || event.getGestureSource() == twoShiplabel) {
+
+                        // the Dragboard is used to indicate which ship type is hovered -> String indicates Ship Size, 2N: size 2, new ship, 2P: size 2, already placed ship
+                        if (event.getDragboard().hasString() && (event.getDragboard().getString().equals("2N") || event.getDragboard().getString().equals("2P"))) {
                             //When the ship placement is allowed, the String indicateValidPlacement is set to the string green, which contains a -fx css color-scheme
                             //if the ship placement is not allowed the String is set to the string red, containing another -fx css color-scheme
                             if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY), new Point(finalX + 1, finalY))) ||
@@ -264,7 +264,7 @@ public class PlaceShips implements Initializable {
 
 
                         // for comments -> look at twoShip
-                        if (event.getGestureSource() == threeShip || event.getGestureSource() == threeShiplabel) {
+                        if (event.getDragboard().hasString() && (event.getDragboard().getString().equals("3N") || event.getDragboard().getString().equals("3P"))) {
                             if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 1, finalY))) ||
                                     (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 1)))) {
                                 // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
@@ -284,7 +284,7 @@ public class PlaceShips implements Initializable {
 
 
                         // for comments -> look at twoShip
-                        if (event.getGestureSource() == fourShip || event.getGestureSource() == fourShiplabel) {
+                        if (event.getDragboard().hasString() && (event.getDragboard().getString().equals("4N") || event.getDragboard().getString().equals("4P"))) {
                             if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 1, finalY), new Point(finalX + 2, finalY))) ||
                                     (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 1), new Point(finalX, finalY + 2)))) {
                                 // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shipLabel gets dropped back to start position
@@ -306,7 +306,7 @@ public class PlaceShips implements Initializable {
 
 
                         // for comments -> look at twoShip
-                        if (event.getGestureSource() == fiveShip || event.getGestureSource() == fiveShiplabel) {
+                        if (event.getDragboard().hasString() && (event.getDragboard().getString().equals("5N") || event.getDragboard().getString().equals("5P"))) {
                             if ((horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX - 2, finalY), new Point(finalX + 2, finalY))) ||
                                     (!horizontal && ActiveGameState.getOwnPlayerIOwnPlayground().isValidPlacement(new Point(finalX, finalY - 2), new Point(finalX, finalY + 2)))) {
                                 // label does only accept ship if placement is valid -> when not valid, ship is not placeable, shiplabel gets dropped back to start position
@@ -368,16 +368,18 @@ public class PlaceShips implements Initializable {
 
                     // Beginning Ship Size two -------------------------------------------------------------------------
                     // code is similar for other ship sizes -> only commented here
-                    if (event.getGestureSource() == twoShip || event.getGestureSource() == twoShiplabel) {
+
+                    // the Dragboard is used to indicate which ship type is hovered -> String indicates Ship Size, 2N: size 2, new ship, 2P: size 2, already placed ship
+                    if (event.getDragboard().hasString() && (event.getDragboard().getString().equals("2N") || event.getDragboard().getString().equals("2P"))) {
 
                         // first time placing ship: create a new ship label
-                        if(event.getGestureSource() == twoShip) {
+                        if(event.getDragboard().getString().equals("2N")) {
 
                             // when ship is dropped into the playground, a new label is created for this ship
-                            twoShiplabel = new Label();
+                            twoShipLabel = new Label();
 
                             // help Method placeNewShip is called -> places Ship in Gui and backend
-                            placeNewShip(twoShiplabel, label,2, finalX, finalY, scale);
+                            placeNewShip(twoShipLabel, label,2, finalX, finalY, scale);
 
 
                             // incrementing the counter for the number of ShipSize2s are placed
@@ -395,7 +397,7 @@ public class PlaceShips implements Initializable {
 
                         // moving already placed ship to a new location: move the ship label
                         else {
-                            moveShip(twoShiplabel, label, 2, finalX, finalY, scale);
+                            moveShip(twoShipLabel, label, 2, finalX, finalY, scale);
                         }
                     }
                     // End Ship Size two -------------------------------------------------------------------------------
@@ -403,11 +405,11 @@ public class PlaceShips implements Initializable {
 
                     // Beginning Ship Size three -----------------------------------------------------------------------
                     // very similar for each ship size, only commented in twoShip
-                    if (event.getGestureSource() == threeShip || event.getGestureSource() == threeShiplabel) {
+                    if (event.getDragboard().hasString() && (event.getDragboard().getString().equals("3N") || event.getDragboard().getString().equals("3P"))) {
 
-                        if(event.getGestureSource() == threeShip) {
-                            threeShiplabel = new Label();
-                            placeNewShip(threeShiplabel, label,3, finalX, finalY, scale);
+                        if(event.getDragboard().getString().equals("3N")) {
+                            threeShipLabel = new Label();
+                            placeNewShip(threeShipLabel, label,3, finalX, finalY, scale);
 
                             amountShipSize3placed++;
                             SimpleIntegerProperty three = new SimpleIntegerProperty(amountShipSize3placed);
@@ -417,7 +419,7 @@ public class PlaceShips implements Initializable {
                                 threeShip.setDisable(true);
                         }
                         else {
-                            moveShip(threeShiplabel, label, 3, finalX, finalY, scale);
+                            moveShip(threeShipLabel, label, 3, finalX, finalY, scale);
                         }
                     }
                     // End Ship Size three -----------------------------------------------------------------------------
@@ -425,11 +427,11 @@ public class PlaceShips implements Initializable {
 
                     // Beginning Ship Size four ------------------------------------------------------------------------
                     // very similar for each ship size, only commented in twoShip
-                    if (event.getGestureSource() == fourShip || event.getGestureSource() == fourShiplabel) {
+                    if (event.getDragboard().hasString() && (event.getDragboard().getString().equals("4N") || event.getDragboard().getString().equals("4P"))) {
 
-                        if(event.getGestureSource() == fourShip) {
-                            fourShiplabel = new Label();
-                            placeNewShip(fourShiplabel, label,4, finalX, finalY, scale);
+                        if(event.getDragboard().getString().equals("4N")) {
+                            fourShipLabel = new Label();
+                            placeNewShip(fourShipLabel, label,4, finalX, finalY, scale);
 
                             amountShipSize4placed++;
                             SimpleIntegerProperty four = new SimpleIntegerProperty(amountShipSize4placed);
@@ -439,7 +441,7 @@ public class PlaceShips implements Initializable {
                                 fourShip.setDisable(true);
                         }
                         else {
-                            moveShip(fourShiplabel, label, 4, finalX, finalY, scale);
+                            moveShip(fourShipLabel, label, 4, finalX, finalY, scale);
                         }
                     }
                     // End Ship Size four ------------------------------------------------------------------------------
@@ -447,11 +449,11 @@ public class PlaceShips implements Initializable {
 
                     // Beginning Ship Size five ------------------------------------------------------------------------
                     // very similar for each ship size, only commented in twoShip
-                    if (event.getGestureSource() == fiveShip || event.getGestureSource() == fiveShiplabel) {
+                    if (event.getDragboard().hasString() && (event.getDragboard().getString().equals("5N") || event.getDragboard().getString().equals("5P"))) {
 
-                        if(event.getGestureSource() == fiveShip) {
-                            fiveShiplabel = new Label();
-                            placeNewShip(fiveShiplabel, label,5, finalX, finalY, scale);
+                        if(event.getDragboard().getString().equals("5N")) {
+                            fiveShipLabel = new Label();
+                            placeNewShip(fiveShipLabel, label,5, finalX, finalY, scale);
 
                             amountShipSize5placed++;
                             SimpleIntegerProperty five = new SimpleIntegerProperty(amountShipSize5placed);
@@ -461,7 +463,7 @@ public class PlaceShips implements Initializable {
                                 fiveShip.setDisable(true);
                         }
                         else {
-                            moveShip(fiveShiplabel, label, 5, finalX, finalY, scale);
+                            moveShip(fiveShipLabel, label, 5, finalX, finalY, scale);
                         }
                     }
                     // End Ship Size five ------------------------------------------------------------------------------
@@ -720,14 +722,18 @@ public class PlaceShips implements Initializable {
     public void handlerSetOnDragDetected(Label shipLabel, int shipSize, boolean alreadyPlaced) {
 
         // if ship is already existing, label will be invisible while moving - coming back visible when moving is complete (done by on drag dropped)
-        if(alreadyPlaced)shipLabel.setOpacity(0); //todo rollback when dragging failed
+        if(alreadyPlaced)shipLabel.setOpacity(0); //todo rollback when dragging failed -> onDragExited
 
 
-        // clip board is not really needed because nothing has to be transferred, but without a drag and drop event is not working: have to transfer String ""
-        // -> Dragboard needs to have content
+        // the Dragboard is used to indicate which ship type is hovered -> String indicates Sh4Pip Size, 2N: size 2, new ship, 2P: size 2, already placed ship
         Dragboard db = shipLabel.startDragAndDrop(TransferMode.ANY);
         ClipboardContent content = new ClipboardContent();
-        content.putString("");
+        String shipInfo;
+        if(alreadyPlaced)
+            shipInfo = String.valueOf(shipSize) + "P";
+        else
+            shipInfo = String.valueOf(shipSize) + "N";
+        content.putString(shipInfo);
         db.setContent(content);
 
 
@@ -793,7 +799,7 @@ public class PlaceShips implements Initializable {
             }
             groupID.getChildren().add(newShipLabel);
 
-            // this will place the ship in back-end representation of playground // todo return value
+            // this will place the ship in back-end representation of playground // todo return value -> array[4] -> 4 ArrayLists
             switch (shipSize) {
                 case 2: ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX +1, finalY)); break;
                 case 3: ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX -1, finalY), new Point(finalX +1, finalY)); break;
@@ -810,7 +816,7 @@ public class PlaceShips implements Initializable {
             ImageView image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
             newShipLabel.setGraphic(image);
 
-            // sets the X and Y starting position of the label (top left corner) to the correct location //todo make dependend on ship size
+            // sets the X and Y starting position of the label (top left corner) to the correct location
             // ( = to the starting position of the label below on the Gridpane)
             switch (shipSize) {
                 case 2:
@@ -850,7 +856,7 @@ public class PlaceShips implements Initializable {
      * -> Gui: moving already placed ship to a new location: change coordinates of the moved ship label
      * -> backend representation: moveShip is called
      *----------------------------------------------------------------------------------------------------------------*/
-    public void moveShip(Label newShipLabel, Label gridPaneLabel, int shipSize, int finalX, int finalY, int scale) {
+    public void moveShip(Label existingShipLabel, Label gridPaneLabel, int shipSize, int finalX, int finalY, int scale) {
 
         // decide if ship has to be re-placed horizontal or vertical
         if(horizontal) {
@@ -859,28 +865,28 @@ public class PlaceShips implements Initializable {
             String imageURL = "/Gui_View/images/" + shipSize +"erSchiff.png";
 
             ImageView image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
-            newShipLabel.setGraphic(image);
+            existingShipLabel.setGraphic(image);
 
             // make the label visible again (was invisible while moving)
-            newShipLabel.setOpacity(100);
+            existingShipLabel.setOpacity(100);
 
             // take the existing label of the ship and change it's position
             switch (shipSize) {
                 case 2:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
+                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
+                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 4:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale );
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale );
+                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 5:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - 2* scale);
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - 2* scale);
+                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
             }
 
@@ -900,29 +906,29 @@ public class PlaceShips implements Initializable {
             String imageURL = "/Gui_View/images/" + shipSize +"erSchiffVertical.png";
 
             ImageView image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
-            newShipLabel.setGraphic(image);
+            existingShipLabel.setGraphic(image);
 
             // make the label visible again (was invisible while moving)
-            newShipLabel.setOpacity(100);
+            existingShipLabel.setOpacity(100);
 
             // take the existing label of the ship and change it's position
-            newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
+            existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
             switch (shipSize) {
                 case 2:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
+                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
+                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
                     break;
                 case 4:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
+                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
                     break;
                 case 5:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - 2* scale);
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
+                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - 2* scale);
                     break;
             }
 
@@ -939,7 +945,8 @@ public class PlaceShips implements Initializable {
 }
 
 
-
+//BIG TODO : bug when more than one ship -> old labels die?? two are moveable but the false ones - fix
+// -> immer das erstplatziert und das letztplatzierte sind weiter verschiebbar statt den beiden letztplatzierte -> wtf?
 
 
 /*

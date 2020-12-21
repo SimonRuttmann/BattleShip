@@ -5,6 +5,8 @@ import Model.Ship.Ship;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 
+import java.util.ArrayList;
+
 public interface IOwnPlayground extends IPlayground{
     /**
      * Use this method when the enemy shoots at our playground
@@ -48,4 +50,8 @@ public interface IOwnPlayground extends IPlayground{
      */
     boolean isValidPlacement(Point startPoint, Point endPoint);
 
+
+    /**
+     * */
+    ArrayList<IShip> getShipListOfThisPlayground();
 }

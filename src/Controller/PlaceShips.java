@@ -591,7 +591,9 @@ public class PlaceShips implements Initializable {
 
 
         //todo -> call random place function
-        //todo -> update Gui after that -> thread? .runlater nutzen für refresh
+        ActiveGameState.getKi().placeships(ActiveGameState.getOwnPlayerIOwnPlayground());
+        ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
+        ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
         // todo -> random place function must add labels to group -> they should be moveable too... RIP holidays hahahha
 
 

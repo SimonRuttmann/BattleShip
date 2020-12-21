@@ -19,7 +19,8 @@ public class Ki implements IKi{
         Playgroundsize = ActiveGameState.getPlaygroundSize();
     }
 
-    public ArrayList<IShip> placeships(OwnPlayground playground) {
+    @Override
+    public ArrayList<IShip> placeships(IOwnPlayground playground) {
 
         int random_x;
         int random_y;
@@ -56,7 +57,7 @@ public class Ki implements IKi{
         for (IShip kiShip : kiShips) {
 
             ArrayList<Point> currentShipDots;
-            int placementStyle;
+            int placementStyle;//todo erst die großen Schiffe platzieren, dann die kleinen -> bessere Performance
             //In der do-While Schleife wird ein zufälliger Punkt erzeugt und überprüft ob es für ihn einen Style/ eine Ausrichtung gibt die gültig bzw. möglich ist
             do {
                 random_x = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
@@ -79,7 +80,7 @@ public class Ki implements IKi{
 
     //Markiert alle Punkte um das Schiff herum
     protected ArrayList<Point> surroundShipDots(ArrayList<Point> currentShipDots) {
-        ArrayList<Point> surrDots = null;
+        ArrayList<Point> surrDots = new ArrayList<>();
             for(int i = 0 ; i < currentShipDots.size() ; i++) {
                 Point p = new Point(currentShipDots.get(i).getX(), currentShipDots.get(i).getY());
                 for(int z = 0; z < 9 ; z ++){
@@ -243,7 +244,7 @@ public class Ki implements IKi{
 
     //gibt einen Punkt zurück
     @Override
-    public Point getShot(OwnPlayground playground) {
+    public Point getShot(IOwnPlayground playground) {
         //die Ki besitzt die Schwierigkeit = normal
         if(ActiveGameState.getDifficulty() == 0){
             Point returnShot;
@@ -263,7 +264,7 @@ public class Ki implements IKi{
     protected boolean startDestroy;
     protected Point normalKiShot;
 
-    protected Point normaleKi(OwnPlayground playground){
+    protected Point normaleKi(IOwnPlayground playground){
         ShotResponse answerofShot;
         int random_x;
         int random_y;
@@ -311,7 +312,7 @@ public class Ki implements IKi{
 
     //TODO stand jz sollte die Ki zufällig ein Schiff finden und wenn gefunden auch zerstören (ohne große Taktik)
     //soll das gefundene Schiff zerstören
-    private Point destroyShip(Point firstHit,OwnPlayground playground ){
+    private Point destroyShip(Point firstHit,IOwnPlayground playground ){
         ShotResponse answerofShot;
         //wenn Schiff zerstört wurde wird Ausgangszustand wieder hergestellt
         if(isShipcomDestroyed){

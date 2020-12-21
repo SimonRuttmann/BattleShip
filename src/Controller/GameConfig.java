@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
+import KI.Ki;
 import Model.Playground.EnemyPlayground;
 import Model.Playground.OwnPlayground;
 import Player.ActiveGameState;
@@ -90,6 +91,9 @@ public class GameConfig implements Initializable {
         ActiveGameState.setAmountShipSize3(number3Ships.getValue());
         ActiveGameState.setAmountShipSize4(number4Ships.getValue());
         ActiveGameState.setAmountShipSize5(number5Ships.getValue());
+
+        // ki must be initialized
+        ActiveGameState.setKi(new Ki());
 
         // todo Simon -> neuer Thread : wenn Server -> send cmd ships 222 333 44 ... to client
 

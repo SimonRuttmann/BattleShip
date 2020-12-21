@@ -1,5 +1,6 @@
 package Model.Ship;
 
+import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Util.UtilDataType.Point;
 
@@ -20,7 +21,7 @@ public class Ship implements IShip {
 
     private ArrayList<Point> placementMarkers;
 
-    public Ship ( Point posStart, Point posEnd, OwnPlayground ownPlayground){
+    public Ship ( Point posStart, Point posEnd, IOwnPlayground ownPlayground){
         this.posStart = posStart;
         this.posEnd = posEnd;
         getSizeOfShip (posStart, posEnd);

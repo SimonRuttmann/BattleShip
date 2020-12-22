@@ -83,7 +83,7 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setAmIServer(false);
         ActiveGameState.setYourTurn(false);
 
-        if (this.rightBarMultiplayer_RbSelectKI.isPressed()) {
+        if (this.rightBarMultiplayer_RbSelectKI.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
         }
         else{
@@ -100,7 +100,7 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setMultiplayer(true);
         ActiveGameState.setAmIServer(true);
         ActiveGameState.setYourTurn(true);
-        if (this.rightBarMultiplayer_RbSelectKI.isPressed()) {
+        if (this.rightBarMultiplayer_RbSelectKI.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
         }
         else{

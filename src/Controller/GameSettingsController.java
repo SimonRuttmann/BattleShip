@@ -1,6 +1,7 @@
 package Controller;
 
 
+import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
 import Player.ActiveGameState;
 import Player.GameMode;
@@ -86,22 +87,29 @@ public class GameSettingsController implements Initializable{
         ActiveGameState.setAmountOfShips( selectAmount2Ships.getValue() + selectAmount3Ships.getValue() +
                                           selectAmount4Ships.getValue() + selectAmount5Ships.getValue());
 
-        //Set Scene
-        Scene nextScene;
-        Parent parent = null;
+        //Start MultiplayerControlThread if multiplayer mode selected
+        //GameMode and multiplayer related flags are set by the Menu Scene
+        //Client and Server socket are set by the Client, Server Scenes
         switch (ActiveGameState.getModes()){
-            case kiVsKi:        parent = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml")); break;
-            case kiVsRemote:    parent = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml")); break;
-            case playerVsKi:    parent = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml")); break;
-            case playerVsRemote:parent = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml")); break;
-            default:
-                System.out.println( "Mode is unknown");
-
+            case playerVsRemote:
+            case kiVsRemote:    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
+                                multiplayerControlThreadConfigCommunication.start();
+                                break;
         }
-        nextScene = new Scene(parent);
 
-        Main.primaryStage.setScene(nextScene);
-        Main.primaryStage.show();
+        //Set Scene if singleplayer mode is selected
+        switch (ActiveGameState.getModes()){
+            case kiVsKi:        Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                                Main.primaryStage.setScene(new Scene(gamePlayground));
+                                Main.primaryStage.show();
+                                break;
+
+            case playerVsKi:    Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+                                Main.primaryStage.setScene(new Scene(placeShips));
+                                Main.primaryStage.show();
+                                break;
+        }
+
     }
 
 
@@ -118,7 +126,8 @@ public class GameSettingsController implements Initializable{
         setValuesOfPlaygroundAndShip();
         setRadioButtonSettings();
 
-        if (ActiveGameState.getModes() == GameMode.playerVsKi) setOwnKiSelectionInvisible();
+        System.out.println(ActiveGameState.getModes());
+        if ( (ActiveGameState.getModes() == GameMode.playerVsKi) || ( ActiveGameState.getModes() == GameMode.playerVsRemote)) setOwnKiSelectionInvisible();
     }
 
     public void setRadioButtonSettings(){

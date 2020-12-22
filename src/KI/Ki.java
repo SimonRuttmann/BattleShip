@@ -118,7 +118,6 @@ public class Ki implements IKi{
         ArrayList<IShip> kiShips = new ArrayList<>();
         ArrayList<IShip> newShips = new ArrayList<>();
 
-
         //Alles Schifftypen werden in eine Arraylist gespeichert damit sie unabhängig bearbeitet werden können
         for(int u = 0; u < ActiveGameState.getAmountShipSize5(); u++){
             Ship ship = new Ship(new Point(0,0), new Point(0, 4), playground);
@@ -145,7 +144,9 @@ public class Ki implements IKi{
         4. Die start und endposition des Schiffs wird gespeichert und eine Liste mit den Schiffen zurückgegeben
          */
 
+
        return placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
+
 
     }
 
@@ -202,15 +203,14 @@ public class Ki implements IKi{
         }
         return currShip;
     }
+
     //prüft ob der Punkt in der übergebenen Arrayliste vorhanden ist
    protected boolean checkArrayList(ArrayList<Point> list, Point p){
         if(list == null) {
             return false;
         }
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i).getX() == p.getX() && list.get(i).getY() == p.getY()){
-               return true;
-            }
+        if(list.contains(p)){
+            return true;
         }
         return false;
    }
@@ -254,8 +254,8 @@ public class Ki implements IKi{
         int style;
         int count = 0;
         boolean check = false;
+        style = getRandomInt(0 , 3);
         do{
-            style = getRandomInt(0 , 3);
             if(style == 0){
                 for(int i = 0; i < size; i++){
                     if(checkArrayList(list, new Point(p.getX(), p.getY() - i))){
@@ -297,8 +297,9 @@ public class Ki implements IKi{
                 else
                     check = true;
             }
+            style = (style + 1) % 4;
             count++;
-        }while(check && count <= 20);
+        }while(check && count < 4);
        return -1;
     }
 
@@ -324,7 +325,7 @@ public class Ki implements IKi{
             //TODO die normale KI unbedingt zuerst Testen sobald möglich !!
             // die Ki besitzt die Schwierigkeit = schwer
         }else{
-
+            //TODO schwere KI
         }
         return null;
     }
@@ -398,6 +399,7 @@ public class Ki implements IKi{
             countDestroyShots++;
         }
 
+        //TODO die KI soll nicht systematisch um den firstHit herum schießen -> mit random arbeiten
         //es wird vom firstHit aus nach oben geschossen, wenn der Rand erreicht ist und das Schiff nicht zerstört, dann wird nach unten vom firstHit aus geschossen bis es zerstört ist
         //wird ein leeres Feld beim beschießen der Felder nach oben getroffen, wird nach unten geschossen bis das Schiffzerstört ist
         if( !horizFlagRechts  && !vertFlagUnten  && !horizFlagLinks ){
@@ -595,7 +597,7 @@ public class Ki implements IKi{
             }
         }
 
-        if( !horizFlagRechts  && !vertFlagOben  && !vertFlagUnten){
+        if(!horizFlagRechts  && !vertFlagOben  && !vertFlagUnten){
             if(firstHit.getX() - countDestroyShots - 1 >= 0){
                 Point newHit = new Point(firstHit.getX() - countDestroyShots - 1, firstHit.getY());
                 answerofShot = playground.shoot(newHit);

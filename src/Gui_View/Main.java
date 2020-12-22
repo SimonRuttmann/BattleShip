@@ -34,6 +34,7 @@ git rm --cached -r .savedGames
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;
 
+
         //TODO new Scene
         Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
         ActiveGameState.newView = true;
@@ -45,6 +46,7 @@ git rm --cached -r .savedGames
 
         // root.getStylesheets().add(getClass().getResource("Stylesheets/Radio.css").toExternalForm());
         primaryStage.setTitle("Schiffe versenken");
+
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);
         //primaryStage.setMinWidth(width);

@@ -28,7 +28,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
     /**
      * Connects all Fields with an Label
-     * Sets all Fields non clickable
+     * //Sets all Fields non clickable -> They are Clickable because of Place Ships, and as they didnt got an actionEvent in the main szene doenst make any difference at all
      * @param labelArray an array of objects containing labels
      */
     @Override
@@ -45,7 +45,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
                 else{
                     Label label = (Label)labelArray[i];
                     Field[x][y].setLabel(label);
-                    Field[x][y].setLabelNonClickable();
+                   // Field[x][y].setLabelNonClickable();
                     i++;
                 }
 
@@ -158,11 +158,14 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
     }
 
     //TODO is von isShipPlacementValid kopiert -> Hilfsmethoden auslagern
+    // todo von Yannick: horizontal/vertical schliessen sich nicht(immer??) aus - gibt Fehler <- Was heist das?
     /**
+     * This method only checks whether the ship (represented by start and endpoint) can be placed or not
+     * In both cases no ship is created
      *
-     * @param startPoint
-     * @param endPoint
-     * @return
+     * @param startPoint The start point of the ship
+     * @param endPoint  The end point of the ship
+     * @return true, if placement is allowed
      */
     public boolean isValidPlacement(Point startPoint, Point endPoint){
         int startX = startPoint.getX();
@@ -194,6 +197,8 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         this.shipListOfThisPlayground.remove(ship);
         return true;
     }
+
+//TODO die schiffspositionen selbst werden nicht markiert
 
     /**
      * Checks if the ship represented by these two points is valid
@@ -239,6 +244,10 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         //Adding the Ship to the Playground
         this.addShipToPlayground(ship);
 
+        for ( Point point : coordinates){
+            setPlacementMarkerToField(point.getX(),point.getY(), null);
+        }
+
         return ship;
     }
 
@@ -282,7 +291,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
         //Set the placementMarker of the Field to true
         if( Field[x][y] != null){
             Field[x][y].setValidShipPlacementMarker(false);
-            MarkedPositions.add(new Point(x,y));
+            if ( MarkedPositions!= null) MarkedPositions.add(new Point(x,y));
         }
     }
 

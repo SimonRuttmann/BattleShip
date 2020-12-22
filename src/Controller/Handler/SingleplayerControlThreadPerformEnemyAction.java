@@ -32,7 +32,7 @@ public class SingleplayerControlThreadPerformEnemyAction extends Thread{
 
             // The player lost
             if (shotResponse.isGameLost()){
-                HelpMethods.winOrlose(false);
+                HelpMethods.winOrLose(false);
                 ActiveGameState.setRunning(false);
             }
 

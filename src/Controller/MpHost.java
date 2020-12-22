@@ -1,8 +1,10 @@
 package Controller;
 
+import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Network.*;
 import Player.ActiveGameState;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+// close client beim zurück -> AcitveGameStatet.getSclient()/Server().closeConnection(); TODO VERY IMPORTANT -> auch beim Client
 
 public class MpHost implements Initializable {
 
@@ -37,42 +40,39 @@ public class MpHost implements Initializable {
             @Override
             public void run() {
                 System.out.println("Connection offered - waiting for paring");
-                if(server.startSeverConnection()){
-                    Parent newOrLoad = null;
-                    try {
-                        newOrLoad = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    ActiveGameState.setServer(server);
+                if (server.startSeverConnection()) { //todo SockeTimoutException abfangen -> throw -> falls BackButton gedrückt, Server schließen
+                    ActiveGameState.setServer(server); //todo das sonst irgendwann alter server für gameabbruch sorgt... (SP soweiso oder MP neu)
+                    ActiveGameState.setRunning(true);
 
-                    if ( newOrLoad == null) {
-                        System.out.println("Error at loading Scene newOrLoad");
-                    }
-                    else {
-                        Main.primaryStage.setScene(new Scene(newOrLoad));
-                        Main.primaryStage.show(); //todo geht nicht in diesem thread -> muss im javafx application thread erfolgen
-                    }
+                    // platform run later -> sends task to GuiThread -> Gui does this as soon as this piece of code is reached
+                    // -> this means: when connection is established, next window will appear - if failed: pop up
+                    Platform.runLater(() -> {
+                        Parent a = null;
+                        try {
+                            a = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (a != null) {
+                            Main.primaryStage.setScene(new Scene(a));
+                            Main.primaryStage.show();
+                        }
+                    });
+                } else {
+                    System.out.println("Connection could not be established");
+                    // Method reference -> "Lambda could be replaced with method reference" -> done that
+                    HelpMethods.connectionFailed();
                 }
-                else
-                    System.out.println("didn't work");//todo fehler
+
             }
         });
         offerConnection.start();
-
-
     }
 
     public void backToLastScene() throws IOException {
-        // todo shutdown server + close everything
+        // todo shutdown server + close everything -> we need a server.terminate
         Parent mpSelect = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpSelect.fxml"));
         Main.primaryStage.setScene(new Scene(mpSelect));
-        Main.primaryStage.show();
-    }
-
-    public void establishConnection() throws IOException {
-        Parent newOrLoad = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
-        Main.primaryStage.setScene(new Scene(newOrLoad));
         Main.primaryStage.show();
     }
 }

@@ -16,15 +16,18 @@ public class ActiveGameState {
      *
      * Es gibt folgende Modi:
      *
-     * 1 Spieler      vs anderen Spieler/KI wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld             wie bisher
      *
-     * 2 Spieler      vs eigene KI          wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     * playerVsRemote       Spieler      vs anderen Spieler/KI wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld             wie bisher
+     *
+     * KiVsRemote           Ki (unsere)  vs anderen Spieler/KI wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     *
+     * playerVsKi           Spieler      vs eigene KI          wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld
      *                                     -> Die KI hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
      *
-     * 3 eigene KI    vs eigene KI          Die KI 1 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
+     * KivsKi eigene KI    vs eigene KI          Die KI 1 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
      *                                      Die KI 2 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
      */
-    private static int modes;
+    private static GameMode modes;
 
     private static boolean OwnPlayerKi; //<- Das ist die KI, welche bei Modus 2 und 3 benötigt wird
     private static IOwnPlayground ownPlayerIOwnPlayground;
@@ -59,10 +62,19 @@ public class ActiveGameState {
     private static int amountShipSize3;
     private static int amountShipSize4;
     private static int amountShipSize5;
-    private static int amountShipSize2placed;
-    private static int amountShipSize3placed;
-    private static int amountShipSize4placed;
-    private static int amountShipSize5placed;
+
+    private static boolean sceneIsPlaceShips;
+
+    //Hinzugefügt für Drawable Objekte -> Draw Methode
+    public static boolean isSceneIsGamePlayground() {
+        return sceneIsGamePlayground;
+    }
+
+    public static void setSceneIsGamePlayground(boolean sceneIsGamePlayground) {
+        ActiveGameState.sceneIsGamePlayground = sceneIsGamePlayground;
+    }
+
+    private static boolean sceneIsGamePlayground = false;
 
     public static int getDifficulty() {
         return difficulty;
@@ -165,33 +177,8 @@ public class ActiveGameState {
         ActiveGameState.amountShipSize5 = amountShipSize5;
     }
 
-    public static int getAmountShipSize2placed() {
-        return amountShipSize2placed;
-    }
-    public static void setAmountShipSize2placed(int amountShipSize2placed) {
-        ActiveGameState.amountShipSize2placed = amountShipSize2placed;
-    }
-
-    public static int getAmountShipSize3placed() {
-        return amountShipSize3placed;
-    }
-    public static void setAmountShipSize3placed(int amountShipSize3placed) {
-        ActiveGameState.amountShipSize3placed = amountShipSize3placed;
-    }
-
-    public static int getAmountShipSize4placed() {
-        return amountShipSize4placed;
-    }
-    public static void setAmountShipSize4placed(int amountShipSize4placed) {
-        ActiveGameState.amountShipSize4placed = amountShipSize4placed;
-    }
-
-    public static int getAmountShipSize5placed() {
-        return amountShipSize5placed;
-    }
-    public static void setAmountShipSize5placed(int amountShipSize5placed) {
-        ActiveGameState.amountShipSize5placed = amountShipSize5placed;
-    }
+    public static boolean isSceneIsPlaceShips() {return sceneIsPlaceShips;};
+    public static void setSceneIsPlaceShips(boolean sceneIsPlaceShips) {ActiveGameState.sceneIsPlaceShips = sceneIsPlaceShips;};
 
 
     // Game Variables
@@ -227,11 +214,11 @@ public class ActiveGameState {
     }
 
 
-    public static int getModes() {
+    public static GameMode getModes() {
         return modes;
     }
 
-    public static void setModes(int modes) {
+    public static void setModes(GameMode modes) {
         ActiveGameState.modes = modes;
     }
 

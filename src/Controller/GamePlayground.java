@@ -1,5 +1,7 @@
 package Controller;
 
+import Controller.Handler.MultiplayerControlThreadPerformEnemyAction;
+import Gui_View.Main;
 import Model.Playground.IEnemyPlayground;
 import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
@@ -7,6 +9,7 @@ import Player.Savegame;
 import Controller.Handler.GameShootEnemy;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,6 +23,7 @@ import java.util.logging.Handler;
 
 public class GamePlayground implements Initializable {
 
+
     @FXML
     private Button cancleGame;
     @FXML
@@ -31,9 +35,31 @@ public class GamePlayground implements Initializable {
     @FXML
     private Label enemyFieldLabel;
 
+
+    public Group groupOwnP;
+    public Group groupEnemP;
+
+    public static Group groupEnemyPS;
+
+    public static Group getGroupEnemP(){
+        return groupEnemyPS;
+    }
+
+
     // todo: Feld zusammenhängend machen + Window size so, dass ganzes Feld passt aber nicht kleiner
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        groupEnemyPS = groupEnemP;
+
+        // Versehentliches Schließen des Spiels verhindern + Speicheraufforderung
+        Main.primaryStage.setOnCloseRequest(e -> {
+            e.consume();
+            Gui_View.HelpMethods.closeProgrammSaveGame();
+        });
+
+
+        ActiveGameState.setSceneIsGamePlayground(true);
+        ActiveGameState.setSceneIsPlaceShips(false);
         // set Labels to Player Names
         ownFieldLabel.setText(ActiveGameState.getOwnPlayerName() + "'s Spielfeld");
         // todo evtl für Gegner - bekommen wir einen Namen?????
@@ -56,12 +82,14 @@ public class GamePlayground implements Initializable {
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
                 Label label = new Label();
+
+                //fliegt später raus
                 label.setStyle("-fx-background-color: lightblue");
+
                 label.setMinSize(5, 5);
                 label.setPrefSize(30, 30);
                 label.setMaxSize(30, 30);
                 GridPane.setConstraints(label, h, v);
-                //todo label in array oder so speichern, um dann darauf zugreifen zu können???
                 ownField.getChildren().addAll(label);
             }
         }
@@ -70,9 +98,14 @@ public class GamePlayground implements Initializable {
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
                 Label label= new Label();
-                // todo make button clickable
+
+
+                // every labels gets it's handler: GameShootEnemy -> activated on mouse click: fire shot
                 label.setOnMouseClicked(new GameShootEnemy());
+
+                //todo fliegt später raus
                 label.setStyle("-fx-background-color: lightblue");
+
                 label.setMinSize(5, 5);
                 label.setPrefSize(30, 30);
                 label.setMaxSize(30, 30);
@@ -85,7 +118,7 @@ public class GamePlayground implements Initializable {
            to change the properties of the Label, e.g. the color
            ! important: Objects of grid pane are stored "vertically"*/
 
-        // connect Labels to Playground
+        // connect Labels to Playground - labels are saved in arrays
         Object[] ownFieldArray = new Object[gamesize*gamesize];
         ownFieldArray = ownField.getChildren().toArray();
         ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
@@ -95,7 +128,18 @@ public class GamePlayground implements Initializable {
         enemyFieldArray = enemyField.getChildren().toArray();
         ActiveGameState.getOwnPlayerIEnemyPlayground().setLabels(enemyFieldArray);
         ActiveGameState.getOwnPlayerIEnemyPlayground().drawPlayground();
+
+        //Client -> Zuerst ist der Server dran -> Setze alle Labels im gegnerischen Spielfeld nicht klickbar
+        // Starte den Perform Enemy Action Thread um auf die Eingaben des Servers zu reagieren -> Danach PingPong Prinzip
+        if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer()){
+            MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
+            multiplayerControlThreadPerformEnemyAction.start();
+            ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
+        }
     }
+
+    // Group -> Add Label (localX, localY, Schiffslabel)
+    // -> localX und localY bekommen wir von Label.getLayoutX und Label.getLayoutY -> Von dem Label, das wir bei shoot mit Answer 2 zurückbekommen + Größe vom Schiff + Ausrichtung vom Schiff (also Vertikal oder Horizontal)
 
     // when Button cancleGame is pressed - save or no saving?
     public void cancleGameMethod() {

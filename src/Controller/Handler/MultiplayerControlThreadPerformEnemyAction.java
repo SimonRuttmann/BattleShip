@@ -23,6 +23,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
     @Override
     public void run() {
 
+        System.out.println( "Starte Multiplayer Perform Enemy Action");
         while( !ActiveGameState.isYourTurn() && ActiveGameState.isRunning()) {
 
         //1
@@ -36,7 +37,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
         else {
             cmdReceived = ActiveGameState.getClient().getCMD();
         }
-
+            System.out.println( "Received the Command " + cmdReceived );
         //2,3,4
         String answerToEnemyAction;
 
@@ -45,7 +46,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 ShotResponse shotResponse = ActiveGameState.getOwnPlayerIOwnPlayground().shoot(new Point(Integer.parseInt(cmdReceived[1]), Integer.parseInt(cmdReceived[2])));
                 if (shotResponse.isGameLost()) {
                     ActiveGameState.setRunning(false);
-                    HelpMethods.winOrlose(true);
+                    HelpMethods.winOrLose(false);
                 }
                 if (shotResponse.isShipDestroyed()) {
                     answerToEnemyAction = "2";
@@ -53,8 +54,9 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                     answerToEnemyAction = "1";
                 } else {
                     answerToEnemyAction = "0";
+                    // Wrong -> need to wait for the next cmd
                     //If nothing got hit, we send the answer and our turn started
-                    ActiveGameState.setYourTurn(true);
+                    //ActiveGameState.setYourTurn(true);
                 }
 
                 //Send the answer to the remote socket
@@ -91,6 +93,9 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                     ActiveGameState.getClient().sendCMD(CMD.done, "");
                 }
                 break;
+            case "next":
+                ActiveGameState.setYourTurn(true);
+                break;
             case "timeout":
                 if (ActiveGameState.isAmIServer()) {
                     ActiveGameState.getServer().closeConnection();
@@ -107,5 +112,6 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
     }
         //5
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
+        System.out.println( "Beende Multiplayer Perform Enemy Action ");
     }
 }

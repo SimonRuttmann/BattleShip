@@ -2,6 +2,7 @@
 
 package Gui_View;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -31,19 +32,32 @@ public class HelpMethods {
         CancelGame.save();
     }
 
+    // connectionFailed
+    public static void connectionFailed() {
+        Platform.runLater(ConnectionFailed::display);
+    }
+
     // connection lost
-    public static void connectionLost() {ConnectionLost.display(); }
+    public static void connectionLost() {
+        Platform.runLater(ConnectionLost::display);
+    }
 
     // win or lose - new game or exit
-    public static void winOrlose(boolean win) {
-        WinLose.display(win);
+    public static void winOrLose(boolean win) {
+        Platform.runLater(() -> WinLose.display(win));
+        //todo -> only one is showed: when won - no response from client??
+        // when client wins: both displayed,
+        // when server wins: game does not stop for server, only for client - abfrage needed if all ships sunk in main??
+        // @Yannick @Simon Fehler finden
+
+        // todo beim popup -> systemleiste ausblenden -> soll nicht schließbar sein
     }
 
     // todo: evtl better, does work but really slow
     /*public void backToMainMenu() {
         Parent mainMenu = null;
         try {
-            mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+            mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu2.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }

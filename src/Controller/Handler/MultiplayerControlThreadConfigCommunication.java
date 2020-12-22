@@ -39,22 +39,23 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
                 StringBuilder ships = new StringBuilder();
                 for ( int i = 0; i < ActiveGameState.getAmountShipSize2(); i++){
-                    ships.append(" ");
                     ships.append("2");
+                    ships.append(" ");
                 }
                 for ( int i = 0; i < ActiveGameState.getAmountShipSize3(); i++){
-                    ships.append(" ");
                     ships.append("3");
+                    ships.append(" ");
                 }
                 for ( int i = 0; i < ActiveGameState.getAmountShipSize4(); i++){
-                    ships.append(" ");
                     ships.append("4");
+                    ships.append(" ");
                 }
                 for ( int i = 0; i < ActiveGameState.getAmountShipSize5(); i++){
-                    ships.append(" ");
                     ships.append("5");
+                    ships.append(" ");
                 }
 
+                //ships 5 5 5 5 2 3 2 3
 
                 ActiveGameState.getServer().sendCMD(CMD.ships, ships.toString());
 

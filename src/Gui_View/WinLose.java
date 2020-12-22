@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 public class WinLose {
 
     static Scene win, lose;
-    static int width = 300;
+    static int width = 300; //todo platform run later TODO TODOT TODO jdfslkfkldsfkljdljk
     static int height = 100;
 
     public static void display(boolean winTrue) {
@@ -23,11 +23,6 @@ public class WinLose {
 
         Button startAgain = new Button("Neues Spiel");
         startAgain.setOnAction(f -> {
-            // Versehentliches Schließen des Spiels verhindern - zurück zu ohne Speicheraufforderung
-            Main.primaryStage.setOnCloseRequest(e -> {
-                e.consume();
-                HelpMethods.closeProgramm();
-            });
             // todo neues Spiel starten - im Hintergrund??
             // am einfachsten wohl Programm neu starten
         });

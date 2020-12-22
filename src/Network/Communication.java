@@ -31,8 +31,18 @@ public abstract class Communication implements ICommunication{
 
         if (!connected) return;
         try {
-            outputWriter.write(sendCMD);
+            System.out.println( "Von Communication: Sende Befehl: " );
+            System.out.println( String.format("%s%n",sendCMD));
+            outputWriter.write(String.format("%s%n",sendCMD));
             outputWriter.flush();
+
+
+
+            // Abwechselnd vom Benutzer lesen und ins Socket schreiben
+            // bzw. vom Socket lesen und auf den Bildschirm schreiben.
+            // Abbruch bei EOF oder Leerzeile vom Benutzer bzw. bei EOF vom Socket.
+
+
             // flush sorgt dafür, dass der Writer garantiert alle Zeichen
             // in den unterliegenden Ausgabestrom schreibt.
         } catch (IOException e) {
@@ -47,6 +57,7 @@ public abstract class Communication implements ICommunication{
     @Override
     public String[] getCMD() {
         if (!connected) return null;
+        System.out.println( "Connected ist true");
         try {
            /* lock = true;
             Thread timeout = new Thread(new Runnable() {
@@ -65,8 +76,8 @@ public abstract class Communication implements ICommunication{
             }).start();
             */// -> Thread inputReader.readLine();
 
-            String cmd = inputReader.readLine();
-
+                String cmd = inputReader.readLine();
+            System.out.println( "inputReader liest:" + cmd);
             //timout.join() inputReaderThread.join();
             // -> Wer zuerst joint -> Befehl oder Befehl"Timout"
             if(validDataReceived(cmd)){
@@ -228,8 +239,8 @@ public abstract class Communication implements ICommunication{
                 if ( splitData.length == 3){
                     int row = Integer.parseInt(splitData[1]);
                     int column = Integer.parseInt(splitData[2]);
-                    if (!(5<=row && row <= 30)) return false;
-                    if (!(5<=column && column <= 30)) return false;
+                    if (!(0<=row && row <= 30)) return false;       //TODO  0 -> 1 Bei Übergabe erhöhen
+                    if (!(0<=column && column <= 30)) return false; //TODO  0 -> 1 Bei Übergabe erhöhen
                     return true;
                 }
                 return false;

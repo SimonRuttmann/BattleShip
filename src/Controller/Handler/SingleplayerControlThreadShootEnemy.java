@@ -41,7 +41,7 @@ public class SingleplayerControlThreadShootEnemy extends Thread{
         //The Ki lost the game, so the player won the game
         if(shotResponse.isGameLost()){
             ActiveGameState.setRunning(false);
-            HelpMethods.winOrlose(true);
+            HelpMethods.winOrLose(true);
         }
 
         int answerFromKi;

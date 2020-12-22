@@ -25,6 +25,11 @@ public interface IDrawable {
     void setLabelNonClickable();
 
     /**
+     * Sets the label referenced to the Object to the enabled status
+     */
+    void setLabelClickable();
+
+    /**
      * Sets an marker which signals, that a ship placement on this field is valid
      */
     void setValidShipPlacementMarker(boolean valid);

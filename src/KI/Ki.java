@@ -27,7 +27,6 @@ public class Ki implements IKi{
         ArrayList<IShip> kiShips = new ArrayList<>();
         ArrayList<IShip> newShips = new ArrayList<>();
 
-
         //Alles Schifftypen werden in eine Arraylist gespeichert damit sie unabhängig bearbeitet werden können
         for(int u = 0; u <= ActiveGameState.getAmountShipSize2(); u++){
             Ship ship = new Ship(new Point(0,0), new Point(0, 1), playground);
@@ -58,15 +57,21 @@ public class Ki implements IKi{
             ArrayList<Point> currentShipDots;
             int placementStyle;
             //In der do-While Schleife wird ein zufälliger Punkt erzeugt und überprüft ob es für ihn einen Style/ eine Ausrichtung gibt die gültig bzw. möglich ist
+            //TODO den random Punkt nur erstellen wenn der Punkt nicht bereits belegt ist (mit occupiedDotsList vergleichen)
             do {
                 random_x = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
                 random_y = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
                 placementStyle = getPlacementStyle(new Point(random_x, random_y), kiShip.getSize(), ActiveGameState.getPlaygroundSize(), occupiedDotsList);
             } while (placementStyle < 0);
+
             //wurde ein gültiger Style gefunden, dann werden die Flächen des Schiffs gespeichert
+
             occupiedDotsList.addAll(markShipDots(new Point(random_x, random_y), kiShip.getSize(), placementStyle, occupiedDotsList)); //die Punkte des Schiffs werden in die Liste gespeichert
+            //TODO remove einbinden wenn backtracking erforderlich sein wird
             //das Aktuelle Schiff wird in eine extra Liste gespeichert
+
             currentShipDots = markShipDots(new Point(random_x, random_y), kiShip.getSize(), placementStyle, occupiedDotsList);
+
             //die umgebenden Schiffspunkte in die occupiedDotsList hinzufügen
             occupiedDotsList.addAll(surroundShipDots(currentShipDots));
 
@@ -130,15 +135,14 @@ public class Ki implements IKi{
         }
         return currShip;
     }
+
     //prüft ob der Punkt in der übergebenen Arrayliste vorhanden ist
    protected boolean checkArrayList(ArrayList<Point> list, Point p){
         if(list == null) {
             return false;
         }
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i).getX() == p.getX() && list.get(i).getY() == p.getY()){
-               return true;
-            }
+        if(list.contains(p)){
+            return true;
         }
         return false;
    }
@@ -182,8 +186,8 @@ public class Ki implements IKi{
         int style;
         int count = 0;
         boolean check = false;
+        style = getRandomInt(0 , 3);
         do{
-            style = getRandomInt(0 , 3);
             if(style == 0){
                 for(int i = 0; i < size; i++){
                     if(checkArrayList(list, new Point(p.getX(), p.getY() - i))){
@@ -225,8 +229,9 @@ public class Ki implements IKi{
                 else
                     check = true;
             }
+            style = (style + 1) % 4;
             count++;
-        }while(check && count <= 20);
+        }while(check && count < 4);
        return -1;
     }
 
@@ -252,7 +257,7 @@ public class Ki implements IKi{
             //TODO die normale KI unbedingt zuerst Testen sobald möglich !!
             // die Ki besitzt die Schwierigkeit = schwer
         }else{
-
+            //TODO schwere KI
         }
         return null;
     }
@@ -326,6 +331,7 @@ public class Ki implements IKi{
             countDestroyShots++;
         }
 
+        //TODO die KI soll nicht systematisch um den firstHit herum schießen -> mit random arbeiten
         //es wird vom firstHit aus nach oben geschossen, wenn der Rand erreicht ist und das Schiff nicht zerstört, dann wird nach unten vom firstHit aus geschossen bis es zerstört ist
         //wird ein leeres Feld beim beschießen der Felder nach oben getroffen, wird nach unten geschossen bis das Schiffzerstört ist
         if( !horizFlagRechts  && !vertFlagUnten  && !horizFlagLinks ){
@@ -523,7 +529,7 @@ public class Ki implements IKi{
             }
         }
 
-        if( !horizFlagRechts  && !vertFlagOben  && !vertFlagUnten){
+        if(!horizFlagRechts  && !vertFlagOben  && !vertFlagUnten){
             if(firstHit.getX() - countDestroyShots - 1 >= 0){
                 Point newHit = new Point(firstHit.getX() - countDestroyShots - 1, firstHit.getY());
                 answerofShot = playground.shoot(newHit);

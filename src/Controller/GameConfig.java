@@ -64,13 +64,18 @@ public class GameConfig implements Initializable {
         playerName.setPromptText("Spielername eingeben");
         fieldSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5,30, 10));
         // todo: get Number of ships + make 2,3,4,5 dependend on number + make number of ships depened on field size
-        numberOfShips.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4,4,4));
-        number2Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,1,1));
-        number3Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,1,1));
-        number4Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,1,1));
-        number5Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,1,1));
+
+        // Gesamtzahl festlegen durch Spieler?? - evtl beschränken abhängig von Spielfeldgroesse
+        // todo how to: /4, %4 fuer 3er Schiffe
+
+        numberOfShips.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4,8,5));
+        number2Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2,1));
+        number3Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2,2,2));
+        number4Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2,1));
+        number5Ships.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2,1));
     }
 
+    //TODO BIG use nice GREEN COMMENTS for STRUCTURE -> like in Oracle's Java classes
 
     public void startGame() throws IOException {
         // read in all parameters

@@ -1,0 +1,44 @@
+.RadioButton {
+    -fx-font-size: 1em;
+}
+
+.RadioButton .radio  {
+    -fx-background-insets: 0em;
+    -fx-background-radius: 0.833333em;
+    -fx-border-insets: 0em;
+    -fx-border-radius: 0.833333em;
+    -fx-padding: 0.5em;
+}
+
+.RadioButton:focused .radio {
+    -fx-background-insets: 0em;
+    -fx-background-radius: 0.833333em;
+    -fx-border-insets: 0em;
+    -fx-border-radius: 0.833333em;
+    -fx-padding: 0.5em;
+}
+
+.RadioButton:hover .radio {
+    -fx-background-insets: 0em;
+    -fx-background-radius: 0.833333em;
+    -fx-border-insets: 0em;
+    -fx-border-radius: 0.833333em;
+    -fx-padding: 0.5em;
+}
+.RadioButton:armed .radio {
+    -fx-background-insets: 0em;
+    -fx-background-radius: 0.833333em;
+    -fx-border-insets: 0em;
+    -fx-border-radius: 0.833333em;
+    -fx-padding: 0.5em;
+}
+
+.RadioButton .dot {
+    -fx-background-insets: 0em;
+    -fx-background-radius: 0.833333em;
+    -fx-padding: 0.4em;
+}
+
+.RadioButton:selected .dot {
+    -fx-background-insets: 0em;
+}

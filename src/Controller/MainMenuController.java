@@ -2,6 +2,7 @@ package Controller;
 
 import Gui_View.HelpMethods;
 import Gui_View.Main;
+import KI.Ki;
 import Player.ActiveGameState;
 import Player.GameMode;
 import javafx.animation.*;
@@ -10,10 +11,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.RadioButton;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -36,6 +37,11 @@ import javafx.scene.text.Text;
 
 public class MainMenuController implements Initializable {
 
+
+    public StackPane rightBar_Mult_SpSelectRole;
+    public Polygon rightBarMultiplayer_PolySelectRole;
+    public VBox rightBarMultiplayer_VBoxSelectRole;
+    public RadioButton rightBarMultiplayer_RbSelectKI;
 
     /**External Handling's**/
     //Singleplayer Player vs KI
@@ -75,8 +81,15 @@ public class MainMenuController implements Initializable {
 
         ActiveGameState.setMultiplayer(true);
         ActiveGameState.setAmIServer(false);
+        ActiveGameState.setYourTurn(false);
 
-        Parent mpJoin = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpJoin.fxml"));
+        if (this.rightBarMultiplayer_RbSelectKI.isPressed()) {
+            ActiveGameState.setModes(GameMode.kiVsRemote);
+        }
+        else{
+            ActiveGameState.setModes(GameMode.playerVsRemote);
+        }
+        Parent mpJoin = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MpClient.fxml")); //mpJoin alt
         Main.primaryStage.setScene(new Scene(mpJoin));
         Main.primaryStage.show();
     }
@@ -86,8 +99,15 @@ public class MainMenuController implements Initializable {
 
         ActiveGameState.setMultiplayer(true);
         ActiveGameState.setAmIServer(true);
+        ActiveGameState.setYourTurn(true);
+        if (this.rightBarMultiplayer_RbSelectKI.isPressed()) {
+            ActiveGameState.setModes(GameMode.kiVsRemote);
+        }
+        else{
+            ActiveGameState.setModes(GameMode.playerVsRemote);
+        }
 
-        Parent mpHost = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpHost.fxml"));
+        Parent mpHost = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MpServer.fxml"));
         Main.primaryStage.setScene(new Scene(mpHost));
         Main.primaryStage.show();
     }
@@ -165,7 +185,8 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        //KI needs to be added, to get functionality of KI Methods (place ships random, shoot enemy)
+        ActiveGameState.setKi(new Ki());
 
         System.out.println("Main Menu");
         setBackground();
@@ -174,6 +195,7 @@ public class MainMenuController implements Initializable {
         setRightBarMultiplayerInvisible(true);
         setTextSettings();
         setTitleSettings();
+        setRadioButtonSettings();
         setLineSettings();
         setPolygonSettings(); //BOTH SIDES!
         startAnimationLeftSide();
@@ -252,8 +274,8 @@ public class MainMenuController implements Initializable {
 
     public void startAnimationLeftSide() {
 
-        int lineScaleDuration = 1;
-        double slideSpeed = 1.5;
+        double lineScaleDuration = 0.75;
+        double slideSpeed = 0.75;
         ScaleTransition scaleLineLeft = new ScaleTransition(Duration.seconds(lineScaleDuration),this.leftBarLine);
 
         //This one says, how far we want to scale, with one the object will have the same size as initial, with 2 the object will have the double size
@@ -315,8 +337,8 @@ public class MainMenuController implements Initializable {
     public void startAnimationRightSideSingleplayer(){
 
 
-        int lineScaleDuration = 1;
-        double slideSpeed = 1.5;
+        double lineScaleDuration = 0.75;
+        double slideSpeed = 1.0;
         ScaleTransition scaleLineRight = new ScaleTransition(Duration.seconds(lineScaleDuration),this.rightBarLine);
 
         //This one says, how far we want to scale, with one the object will have the same size as initial, with 2 the object will have the double size
@@ -430,8 +452,8 @@ public class MainMenuController implements Initializable {
     public void startAnimationRightSideMultiplayer(){
 
 
-        int lineScaleDuration = 1;
-        double slideSpeed = 1.5;
+        double lineScaleDuration = 0.75;
+        double slideSpeed = 1.0;
         ScaleTransition scaleLineRight = new ScaleTransition(Duration.seconds(lineScaleDuration),this.rightBarLineMult);
 
         //This one says, how far we want to scale, with one the object will have the same size as initial, with 2 the object will have the double size
@@ -443,6 +465,7 @@ public class MainMenuController implements Initializable {
         //Die StackPanes
         this.rightBar_Mult_HostPolyText.setTranslateX(from);
         this.rightBar_Mult_ClientPolyText.setTranslateX(from);
+        this.rightBar_Mult_SpSelectRole.setTranslateX(from);
 
 
         //Notwendiges Rechteck, damit die Items erst angezeigt werden, wenn sie durch die Linie hindurchgehen
@@ -453,6 +476,10 @@ public class MainMenuController implements Initializable {
         clip = new Rectangle(300,100);
         clip.translateXProperty().bind(rightBar_Mult_ClientPolyText.translateXProperty().negate());
         this.rightBar_Mult_ClientPolyText.setClip(clip);
+
+        clip = new Rectangle(300,100);
+        clip.translateXProperty().bind(rightBar_Mult_SpSelectRole.translateXProperty().negate());
+        this.rightBar_Mult_SpSelectRole.setClip(clip);
 
 
         //-> After the right line is drawn
@@ -468,6 +495,9 @@ public class MainMenuController implements Initializable {
             slideElements.setToX(0);
             slideElements.play();
 
+            slideElements = new TranslateTransition(Duration.seconds(1+1.3*slideSpeed), this.rightBar_Mult_SpSelectRole);
+            slideElements.setToX(0);
+            slideElements.play();
 
         });
 
@@ -492,11 +522,12 @@ public class MainMenuController implements Initializable {
         //Singleplayer
         polygons.add(rightBarSinglplayer_PolyPlayerVsKI);
         polygons.add(rightBarSinglplayer_PolyKIVsKI);
-
         polygons.add(rightBarSinglplayer_PolyLoad);
+
         //Multiplayer
         polygons.add(rightBarMultplayer_PolyHost);
         polygons.add(rightBarMultiplayer_PolyClient);
+        polygons.add(rightBarMultiplayer_PolySelectRole);
 
         //Text
         //Left Side
@@ -509,8 +540,8 @@ public class MainMenuController implements Initializable {
         //Singleplayer
         texts.add(rightBarSinglplayer_TextPlayerVsKI);
         texts.add(rightBarSinglplayer_TextKIVsKI);
-
         texts.add(rightBarSinglplayer_TextLoad);
+
         //Multiplayer
         texts.add(rightBarMultiplayer_TextHost);
         texts.add(rightBarMultiplayer_TextClient);
@@ -523,15 +554,17 @@ public class MainMenuController implements Initializable {
         stackPanes.add(leftBar_MultPolyText);
         stackPanes.add(leftBar_SettPolyText);
         stackPanes.add(leftBar_QuitPolyText);
+
         //Right Side
         //Singleplayer
         stackPanes.add(rightBar_Sing_PlayerVsKIPolyText);
         stackPanes.add(rightBar_Sing_KIVsKIPolyText);
-
         stackPanes.add(rightBar_Sing_LoadPolyText);
+
         //Multiplayer
         stackPanes.add(rightBar_Mult_HostPolyText);
         stackPanes.add(rightBar_Mult_ClientPolyText);
+        stackPanes.add(rightBar_Mult_SpSelectRole);
 
         for(Polygon polygon : polygons) {
             //Draw the Polygons right, for any reason it is not allowed to do in the scene builder...
@@ -553,12 +586,15 @@ public class MainMenuController implements Initializable {
 
         //Adding effects to the Text and Polygons based on the properties of the StackPanes
         for (int i = 0; i < polygons.size(); i++){
+
             //Polygon effects
             polygons.get(i).fillProperty().bind(
                     Bindings.when(stackPanes.get(i).pressedProperty())
                             .then(Color.color(1, 1, 1, 0.9))
                             .otherwise(Color.color(1, 1, 1, 0.7))
             );
+
+            if (i == 9) break;  // Role selection has no text
             //Text effects
             texts.get(i).effectProperty().bind(
                     Bindings.when(stackPanes.get(i).hoverProperty())
@@ -566,6 +602,8 @@ public class MainMenuController implements Initializable {
                             .otherwise(blur)
             );
         }
+
+
 
     }
 
@@ -600,14 +638,28 @@ public class MainMenuController implements Initializable {
         rightBarText.add(this.rightBarMultiplayer_TextHost);
         rightBarText.add(this.rightBarMultiplayer_TextClient);
 
+
         Color textColorRightBar = new Color(0.2, 0.2, 0.2, 1);
 
         for ( Text text : rightBarText ){
             text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
             text.setFill(textColorRightBar);
             text.setEffect(new DropShadow(30, Color.BLACK));
-            //text.setStyle("-fx-font: 24 arial;");
+
         }
+
+
+
+    }
+
+    public void setRadioButtonSettings(){
+        Color textColorRightBar = new Color(0.2, 0.2, 0.2, 1);
+
+        //Radio Buttons
+
+        this.rightBarMultiplayer_RbSelectKI.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        this.rightBarMultiplayer_RbSelectKI.setTextFill(textColorRightBar);
+        this.rightBarMultiplayer_RbSelectKI.setEffect(new DropShadow(30, Color.BLACK));
 
     }
 

@@ -26,15 +26,19 @@ git rm --cached -r .savedGames
     WinLose winLose = new WinLose();
 
     public static void main(String[] args) {
-        launch(args);
+            launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;
 
-        //todo MainMenu 1 vs 2
-        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
+        //TODO new Scene
+        //Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
+        //TODO old Scene
+        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
+
+       // root.getStylesheets().add(getClass().getResource("Stylesheets/Radio.css").toExternalForm());
         primaryStage.setTitle("Schiffe versenken");
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);

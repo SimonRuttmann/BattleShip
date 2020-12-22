@@ -331,7 +331,7 @@ public class Ki implements IKi{
     }
 
     protected boolean isHitFlag; //default Wert ist false
-    protected ArrayList<Point> previousShots;
+    protected ArrayList<Point> previousShots = new ArrayList<>();
     protected Point firstHit;
     protected boolean startDestroy;
     protected Point normalKiShot;
@@ -350,6 +350,8 @@ public class Ki implements IKi{
             }while (checkArrayList(previousShots, new Point(random_x,random_y)));
             answerofShot = playground.shoot(new Point(random_x,random_y));
 
+            System.out.println(random_x);
+            System.out.println(random_y);
             if(answerofShot.isHit()){
             isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
             firstHit = new Point(random_x,random_y); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert

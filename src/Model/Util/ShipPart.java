@@ -42,11 +42,13 @@ public class ShipPart implements IDrawable{
 
     @Override
     public void setLabelNonClickable() {
+        if ( this.label == null ) return;
         Platform.runLater(()-> this.label.setDisable(true));
     }
 
     @Override
     public void setLabelClickable() {
+        if ( this.label == null ) return;
         Platform.runLater(()-> this.label.setDisable(false));
     }
 
@@ -70,6 +72,7 @@ public class ShipPart implements IDrawable{
 
     @Override
     public void draw() {
+        if ( this.label == null) return;
       //  // Was machst du hier Yannick?
       //  if(!this.validShipPlacementMarker)
       //  {

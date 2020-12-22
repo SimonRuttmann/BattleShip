@@ -17,6 +17,7 @@ public class ShotWater implements IDrawable {
 
     @Override
     public void draw(){
+        if(this.label == null) return;
 
        // System.out.print("*shotWater*");
         // -> Gui should update when drawing shotWater
@@ -52,12 +53,14 @@ public class ShotWater implements IDrawable {
 
     @Override
     public void setLabelNonClickable() {
+        if ( this.label == null) return;
         Platform.runLater(()-> this.label.setDisable(true));
 
     }
 
     @Override
     public void setLabelClickable() {
+        if ( this.label == null ) return;
         Platform.runLater(()-> this.label.setDisable(false));
 
     }

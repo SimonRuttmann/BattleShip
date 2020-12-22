@@ -109,11 +109,14 @@ public class ShipPart implements IDrawable{
                 this.label.setGraphic(image);*/
 
                 // for test: draw ships "right"
-                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png")));
+
+                // ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png")));
+                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/waterHit.png")));
+                this.label.setGraphic(image);
                 // making ships resizeable -> fitting to current label size
                 image.fitWidthProperty().bind(label.widthProperty());
                 image.fitHeightProperty().bind(label.heightProperty());
-                switch (part) {
+              /*  switch (part) {
                     case "start vertical"    : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png"))); this.label.setGraphic(image); break;
                     case "start horizontal"  : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartHorizontal.png"))); this.label.setGraphic(image); break;
                     case "end vertical"      : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipEndVertical.png")));  this.label.setGraphic(image); break;
@@ -123,6 +126,8 @@ public class ShipPart implements IDrawable{
                     case "destroyed"         : image.setImage(new Image(getClass().getResourceAsStream("Gui_View/images/shipHit.png"))); this.label.setGraphic(image); break;
                     default: System.out.println("Alignment not found");
                 }
+
+               */
             }
         });
 

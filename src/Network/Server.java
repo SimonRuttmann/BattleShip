@@ -74,6 +74,7 @@ public class Server extends Communication implements IServer{
         try {
             System.out.println("Waiting for Client");
             Socket server_connected  = server.accept();
+            server_connected.setSoTimeout(60000);
             System.out.println("Connection from Server to Client established");
             // Ein- und Ausgabestrom des Sockets ermitteln
             // und als BufferedReader bzw. Writer verpacken

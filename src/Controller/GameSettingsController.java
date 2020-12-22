@@ -4,14 +4,15 @@ package Controller;
 import Gui_View.Main;
 import Player.ActiveGameState;
 import Player.GameMode;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
@@ -62,6 +63,12 @@ public class GameSettingsController implements Initializable{
     public Button button_Start;
     public AnchorPane anchorPane;
 
+    public Spinner<Integer> selectAmount2Ships;
+    public Spinner<Integer> selectAmount3Ships;
+    public Spinner<Integer> selectAmount4Ships;
+    public Spinner<Integer> selectAmount5Ships;
+    public Text sliderValueText;
+
     /** External Handling**/
     public void backToMainMenu(ActionEvent actionEvent) throws IOException {
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
@@ -70,6 +77,16 @@ public class GameSettingsController implements Initializable{
     }
 
     public void startShipPlacement(ActionEvent actionEvent) throws IOException{
+        //Set the selected Settings to ActiveGameState
+        ActiveGameState.setPlaygroundSize(this.selectPlaygroundsizeSlider.valueProperty().intValue());
+        ActiveGameState.setAmountShipSize2(selectAmount2Ships.getValue());
+        ActiveGameState.setAmountShipSize3(selectAmount3Ships.getValue());
+        ActiveGameState.setAmountShipSize4(selectAmount4Ships.getValue());
+        ActiveGameState.setAmountShipSize5(selectAmount5Ships.getValue());
+        ActiveGameState.setAmountOfShips( selectAmount2Ships.getValue() + selectAmount3Ships.getValue() +
+                                          selectAmount4Ships.getValue() + selectAmount5Ships.getValue());
+
+        //Set Scene
         Scene nextScene;
         Parent parent = null;
         switch (ActiveGameState.getModes()){
@@ -98,8 +115,93 @@ public class GameSettingsController implements Initializable{
         setRectangleSettings();
         setShipImages();
         startAnimation();
+        setValuesOfPlaygroundAndShip();
+        setRadioButtonSettings();
 
-        if (ActiveGameState.getModes() == GameMode.kiVsKi) setOwnKiSelectionInvisible();
+        if (ActiveGameState.getModes() == GameMode.playerVsKi) setOwnKiSelectionInvisible();
+    }
+
+    public void setRadioButtonSettings(){
+        ToggleGroup toggleOwn = new ToggleGroup();
+        this.rB_difficultyOwnNormal.setToggleGroup(toggleOwn);
+        this.rB_difficultyOwnHard.setToggleGroup(toggleOwn);
+
+        this.rB_difficultyOwnNormal.setSelected(true);
+
+        ToggleGroup toggleEnemy = new ToggleGroup();
+        this.rB_difficultyEnemyNormal.setToggleGroup(toggleEnemy);
+        this.rB_difficultyEnemyHard.setToggleGroup(toggleEnemy);
+
+        this.rB_difficultyEnemyNormal.setSelected(true);
+    }
+
+
+
+    public void setValuesOfPlaygroundAndShip(){
+
+            //Slider
+            this.sliderValueText.setText("10");
+            this.selectPlaygroundsizeSlider.setMin(5);
+            this.selectPlaygroundsizeSlider.setMax(30);
+            this.selectPlaygroundsizeSlider.setValue(10);
+            this.selectPlaygroundsizeSlider.setBlockIncrement(1);
+
+            this.selectPlaygroundsizeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+
+                @Override
+                public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                    sliderValueText.setText("" + newValue.intValue());
+                }
+            });
+
+        /*
+        SimpleIntegerProperty initialValue2 = new SimpleIntegerProperty();
+        SimpleIntegerProperty initialValue3 = new SimpleIntegerProperty();
+        SimpleIntegerProperty initialValue4 = new SimpleIntegerProperty();
+        SimpleIntegerProperty initialValue5 = new SimpleIntegerProperty();
+
+        initialValue2.bind(selectPlaygroundsizeSlider.valueProperty().divide(2));
+        initialValue3.bind(selectPlaygroundsizeSlider.valueProperty().divide(3));
+        initialValue4.bind(selectPlaygroundsizeSlider.valueProperty().divide(5));
+        initialValue5.bind(selectPlaygroundsizeSlider.valueProperty().divide(10));
+*/
+
+            //Spinner
+            SimpleIntegerProperty maxValue2 = new SimpleIntegerProperty();
+            SimpleIntegerProperty maxValue3 = new SimpleIntegerProperty();
+            SimpleIntegerProperty maxValue4 = new SimpleIntegerProperty();
+            SimpleIntegerProperty maxValue5 = new SimpleIntegerProperty();
+
+            maxValue2.bind(selectPlaygroundsizeSlider.valueProperty().divide(1.7));
+            maxValue3.bind(selectPlaygroundsizeSlider.valueProperty().divide(2.3));
+            maxValue4.bind(selectPlaygroundsizeSlider.valueProperty().divide(3));
+            maxValue5.bind(selectPlaygroundsizeSlider.valueProperty().divide(7));
+
+
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner2Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 5);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner3Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 5);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner4Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 5);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner5Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 5);
+
+            IntegerProperty max2Property = spinner2Factory.maxProperty();
+            IntegerProperty max3Property = spinner3Factory.maxProperty();
+            IntegerProperty max4Property = spinner4Factory.maxProperty();
+            IntegerProperty max5Property = spinner5Factory.maxProperty();
+
+
+            max2Property.bindBidirectional(maxValue2);
+            max3Property.bindBidirectional(maxValue3);
+            max4Property.bindBidirectional(maxValue4);
+            max5Property.bindBidirectional(maxValue5);
+
+
+            this.selectAmount2Ships.setValueFactory(spinner2Factory);
+            this.selectAmount3Ships.setValueFactory(spinner3Factory);
+            this.selectAmount4Ships.setValueFactory(spinner4Factory);
+            this.selectAmount5Ships.setValueFactory(spinner5Factory);
+
+
+
     }
 
     public void setOwnKiSelectionInvisible(){
@@ -193,7 +295,7 @@ public class GameSettingsController implements Initializable{
         headlines.add(this.selectPlaygroundsizeText);
         headlines.add(this.selectDifficultyEnemyKIText);
         headlines.add(this.selectDifficultyOwnKIText);
-
+        headlines.add(this.sliderValueText);
 
         Color textColorHeadlines = new Color(0.8,0.8,0.8,1);
 

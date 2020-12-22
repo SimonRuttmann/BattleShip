@@ -2,7 +2,9 @@ package Controller;
 
 import Gui_View.Main;
 import Model.Playground.EnemyPlayground;
+import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
+import Model.Ship.IShip;
 import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
 import javafx.beans.binding.Bindings;
@@ -27,6 +29,7 @@ import javafx.scene.layout.Region;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class PlaceShips implements Initializable {
@@ -579,9 +582,9 @@ public class PlaceShips implements Initializable {
 
         // create new OwnPlayground - link the same Labels -> playground is empty again, old placement is deleted
         ActiveGameState.setOwnPlayerIOwnPlayground(new OwnPlayground());
-        ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
-        ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
-        ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
+
+        IOwnPlayground ownPlayground = ActiveGameState.getOwnPlayerIOwnPlayground();
+        ownPlayground.buildPlayground();
 
 
         // delete old ship labels -> GUI Playground is also empty again
@@ -589,13 +592,17 @@ public class PlaceShips implements Initializable {
         // not be remvoed from the group is the gridPane -> no Label, no problem
         groupID.getChildren().removeAll(groupID.lookupAll(".label"));
 
+        ArrayList<IShip> newShips = ActiveGameState.getKi().placeships(ownPlayground);
+        ownPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
 
-        //todo -> call random place function
-        ActiveGameState.getKi().placeships(ActiveGameState.getOwnPlayerIOwnPlayground());
-        ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
-        ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
+        for (IShip ship : newShips) {
+            ownPlayground.isShipPlacementValid(ship.getPosStart(), ship.getPosEnd());
+        }
+
+        ownPlayground.setLabels(ownFieldArray);
+        ownPlayground.drawPlayground();
+
         // todo -> random place function must add labels to group -> they should be moveable too... RIP holidays hahahha
-
 
         // set counters of placed ships to max because all are added
         amountShipSize2placed = ActiveGameState.getAmountShipSize2();
@@ -787,11 +794,8 @@ public class PlaceShips implements Initializable {
                     newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
                 case 4:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale );
+                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
                     newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 5:

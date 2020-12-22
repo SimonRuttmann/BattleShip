@@ -53,5 +53,7 @@ public interface IOwnPlayground extends IPlayground{
 
     ArrayList<IShip> getShipListOfThisPlayground();
 
+    void setShipListOfThisPlayground(ArrayList<IShip> shipListOfThisPlayground);
+
 
 }

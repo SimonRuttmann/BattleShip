@@ -25,8 +25,7 @@ public class SingleplayerControlThreadPerformEnemyAction extends Thread{
         while ( !ActiveGameState.isYourTurn()){
             //Get the position, where the enemy wants to shoot
             Point posToShoot = null;
-            //TODO Christian, Konstruktor für Objekt, welche das Interface implementiert = ObjectWhichImplements.getShot();
-
+            posToShoot = ActiveGameState.getKi().getShot(ActiveGameState.getOwnPlayerIOwnPlayground());
             //Shoot the Players ownPlayground
             ShotResponse shotResponse = ActiveGameState.getEnemyPlayerOwnPlayground().shoot(posToShoot);
 

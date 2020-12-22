@@ -4,6 +4,7 @@
 
 package Gui_View;
 
+import Player.ActiveGameState;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -34,11 +35,15 @@ git rm --cached -r .savedGames
         Main.primaryStage = primaryStage;
 
         //TODO new Scene
-        //Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
-        //TODO old Scene
-        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
+        ActiveGameState.newView = true;
 
-       // root.getStylesheets().add(getClass().getResource("Stylesheets/Radio.css").toExternalForm());
+
+        //TODO old Scene
+        //Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
+
+
+        // root.getStylesheets().add(getClass().getResource("Stylesheets/Radio.css").toExternalForm());
         primaryStage.setTitle("Schiffe versenken");
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);

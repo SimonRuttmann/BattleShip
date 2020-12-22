@@ -78,16 +78,11 @@ public class MpClientController implements Initializable {
 
                 if (ActiveGameState.isRunning()) {
 
-                    // platform run later -> sends task to GuiThread -> Gui does this as soon as this piece of code is reached
-                    // -> this means: when connection is established, next window will appear - if failed: pop up
-
-
                         MpClientController.infoLabelS.setVisible(true);
 
                         MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
                         multiplayerControlThreadConfigCommunication.start();
 
-                        //TODO Automatischer Szenewechsel im MultiplayerControlThread, wenn Übertragung erledigt
 
                 } else {
                     System.out.println("Connection could not be established");

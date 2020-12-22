@@ -47,6 +47,18 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 if (shotResponse.isGameLost()) {
                     ActiveGameState.setRunning(false);
                     HelpMethods.winOrLose(false);
+
+                    //Game ended, send the finish command, to enable the client to execute
+                    //and close the reader, writer and sockets
+                    if(ActiveGameState.isAmIServer()){
+                        ActiveGameState.getServer().sendCMD(CMD.answer, "2");
+                        ActiveGameState.getServer().closeConnection();
+                    }
+                    else{
+                        ActiveGameState.getClient().sendCMD(CMD.answer, "2");
+                        ActiveGameState.getClient().closeConnection();
+                    }
+
                 }
                 if (shotResponse.isShipDestroyed()) {
                     answerToEnemyAction = "2";
@@ -54,9 +66,10 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                     answerToEnemyAction = "1";
                 } else {
                     answerToEnemyAction = "0";
-                    // Wrong -> need to wait for the next cmd
-                    //If nothing got hit, we send the answer and our turn started
-                    //ActiveGameState.setYourTurn(true);
+                    //The next answer from the Remote will be "next",
+                    //therefore we continue, get the next command and
+                    //end the enemy turn at "next"
+
                 }
 
                 //Send the answer to the remote socket
@@ -74,7 +87,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 //TODO Save And Load methods have to be adjusted
             case "save":
                 //TODO Yannick Save the game and CONTINUE playing, don't stop!
-                SaveAndLoad.save(new Savegame(), cmdReceived[1]);
+                SaveAndLoad.save( cmdReceived[1]);
                 if (ActiveGameState.isAmIServer()) {
                     ActiveGameState.getServer().sendCMD(CMD.done, "");
                 }
@@ -84,7 +97,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 }
                 break;
             case "load":
-                SaveAndLoad.load(new Savegame(), cmdReceived[1]);
+                SaveAndLoad.load( cmdReceived[1]);
                 if (ActiveGameState.isAmIServer()) {
                     ActiveGameState.getServer().sendCMD(CMD.done, "");
                 }

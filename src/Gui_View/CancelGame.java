@@ -63,10 +63,10 @@ public class CancelGame {
         Button saveGame = new Button("Spiel speichern");
         saveGame.setOnAction(e -> {
             //todo get current Gamestats into Savegame Object -> gamemode in Dateiname - Multiplayer vs Singeplayer
-            Savegame toSave = new Savegame();
-            String time = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
-            String temp = "Spiel am: " + time; // todo besserer Name
-            if(SaveAndLoad.save(toSave, temp))
+
+            String time = new SimpleDateFormat("MM.dd.yyyy HH mm ss").format(Calendar.getInstance().getTime());
+            String temp = "Spiel am  " + time; // todo besserer Name
+            if(SaveAndLoad.save(temp))
                 save.setScene(success);
             //else
             //    save.setScene(failure);//todo create scene failure

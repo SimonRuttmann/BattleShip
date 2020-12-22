@@ -1,22 +1,44 @@
 package Controller.Handler;
+import Gui_View.Main;
 import Network.CMD;
 import Player.ActiveGameState;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
-//TODO Commentary
-//TODO Create informative Exceptions for every ControlThread
+import java.io.IOException;
+
+
 /**
- * is called by GameConfig StartButton Action Event
- * vorerst in ChooseSelforKi, ist die einzige Szene bei der ich beide auf einmal aurufen kann
+ * This thread will:
+ *
+ *  When we are Server:
+ *      1. Send the command "size" with parameters
+ *      2. Get the command "next"
+ *      3. Send the command "ships" with parameters
+ *      4. Get the command "done"
+ *
+ * When we are Client:
+ *      1. Get the command "size" and parameters
+ *      2. Send the command "next"
+ *      3. Get the command "ships" and parameters
+ *      4. Send the command "done"
+ *
+ * In both cases:
+ * The scene is set depending on the mode selected
+ * player   -> place ships scene
+ * ki       -> playground scene
+ *
+ * Send/received parameters are either received or stored form the ActiveGameState.java
  */
 public class MultiplayerControlThreadConfigCommunication extends Thread{
     @Override
     public void run(){
         System.out.println("Multiplayer Control Thread Config Communication");
+
         //Server
-        //size 5
-        // get next
-        //ships 5 5 5
-        // get done
+
         if (ActiveGameState.isAmIServer()){
             ActiveGameState.setYourTurn(true);
 
@@ -55,8 +77,8 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                     ships.append(" ");
                 }
 
-                //ships 5 5 5 5 2 3 2 3
-
+                //ships example:    5 5 5 5 2 3 2 3
+                //with CMD.ships:   ships 5 5 5 5 2 3 2 3
                 ActiveGameState.getServer().sendCMD(CMD.ships, ships.toString());
 
 
@@ -79,16 +101,9 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
             System.out.println("Game Configurations successfully transmitted to Client.");
 
 
-
-
-
         }
 
         //Client
-        //get size
-        //send next
-        //get ships
-        //send done
 
         else{
             ActiveGameState.setYourTurn(false);
@@ -156,5 +171,29 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
             System.out.println("Game Configurations from Server successfully transmitted.");
 
         }
+
+        if(ActiveGameState.newView){
+            Platform.runLater(()->{
+                try{
+                    //Switch scene, depending on ki selection
+                    switch (ActiveGameState.getModes()){
+                        case playerVsRemote: Parent placeShips =  FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+                            Main.primaryStage.setScene(new Scene(placeShips));
+                            Main.primaryStage.show();
+                            break;
+
+                        case kiVsRemote:     Parent gamePlayground =  FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                            Main.primaryStage.setScene(new Scene(gamePlayground));
+                            Main.primaryStage.show();
+                            break;
+                    }
+                }catch(IOException e){
+                    System.out.println("Couldn't load the Scene");
+                }
+            });
+        }
+
+
     }
+    //end run
 }

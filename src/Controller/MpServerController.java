@@ -70,7 +70,7 @@ public class MpServerController implements Initializable {
 
     }
 
-
+    //TODO Scenenwechsel -> Game Settings -> Game Settings Beendet -> Start MultiplayerControlThreadConfigCommunication
     public void offerConnection(){
         IServer server = new Server();
         textToShowIP.setText(" " + server.getIPAddress());
@@ -83,11 +83,19 @@ public class MpServerController implements Initializable {
                 if (server.startSeverConnection()) {
                     ActiveGameState.setServer(server);
                     ActiveGameState.setRunning(true);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
+                                Main.primaryStage.setScene(new Scene(gameSettings));
+                                Main.primaryStage.show();
+                            }catch (IOException e){
+                                System.out.println( "Game settings Scene couldn't be loaded");
+                            }
+                        }
+                    });
 
-                    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
-                    multiplayerControlThreadConfigCommunication.start();
-
-                    //TODO Automatischer Szenewechsel im MultiplayerControlThread, wenn Übertragung erledigt
                 } else {
                     System.out.println("Connection could not be established");
                     HelpMethods.connectionFailed();

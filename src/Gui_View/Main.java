@@ -33,7 +33,7 @@ git rm --cached -r .savedGames
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;
 
-        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
         primaryStage.setTitle("Battleship");
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);

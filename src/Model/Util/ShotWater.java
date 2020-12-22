@@ -5,8 +5,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.beans.Transient;
+
 public class ShotWater implements IDrawable {
-    private Label label;
+
+    private transient Label label;
     private boolean validShipPlacementMarker = true;
 
     public ShotWater() {

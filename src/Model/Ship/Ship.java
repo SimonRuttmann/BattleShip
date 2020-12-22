@@ -1,5 +1,6 @@
 package Model.Ship;
 
+import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Util.UtilDataType.Point;
 
@@ -20,7 +21,30 @@ public class Ship implements IShip {
 
     private ArrayList<Point> placementMarkers;
 
-    public Ship ( Point posStart, Point posEnd, OwnPlayground ownPlayground){
+    public Ship ( Point posStart, Point posEnd, IOwnPlayground ownPlayground){
+
+        //Wenn positionen vertauscht wurden, dann tausche entsprechende positionen
+        //Vertikal
+        if ( posStart.getX() == posEnd.getX()){
+            //Tauschen wenn Start Y <  Ende Y
+            if ( posStart.getY() > posEnd.getY()){
+                Point temp;
+                temp = posEnd;
+                posEnd = posStart;
+                posStart = temp;
+            }
+        }
+
+        //Horizontal
+        if ( posStart.getY() == posEnd.getY()){
+            if(posStart.getX() > posEnd.getX()){
+                Point temp;
+                temp = posEnd;
+                posEnd = posStart;
+                posStart = temp;
+            }
+        }
+
         this.posStart = posStart;
         this.posEnd = posEnd;
         getSizeOfShip (posStart, posEnd);

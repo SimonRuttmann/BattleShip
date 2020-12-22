@@ -4,6 +4,7 @@
 
 package Gui_View;
 
+import Player.ActiveGameState;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -26,15 +27,26 @@ git rm --cached -r .savedGames
     WinLose winLose = new WinLose();
 
     public static void main(String[] args) {
-        launch(args);
+            launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;
 
-        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
-        primaryStage.setTitle("Battleship");
+
+        //TODO new Scene
+        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
+        ActiveGameState.newView = true;
+
+
+        //TODO old Scene
+        //Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
+
+
+        // root.getStylesheets().add(getClass().getResource("Stylesheets/Radio.css").toExternalForm());
+        primaryStage.setTitle("Schiffe versenken");
+
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);
         //primaryStage.setMinWidth(width);

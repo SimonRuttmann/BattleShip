@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Water implements IDrawable {
-    private Label label;
+    private transient Label label;
     private boolean validShipPlacementMarker = true;
 
     public Water() {

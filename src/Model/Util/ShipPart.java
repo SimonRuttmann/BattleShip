@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 
 public class ShipPart implements IDrawable{
 
-    private Label label;
+    private transient Label label;
     private String part;
     private IShip owner = null;
     private boolean shot;

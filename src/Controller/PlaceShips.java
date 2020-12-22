@@ -591,8 +591,8 @@ public class PlaceShips implements Initializable {
 
 
         //todo -> call random place function
-        ActiveGameState.getKi().placeships(ActiveGameState.getOwnPlayerIOwnPlayground());
-        ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
+        ActiveGameState.getKi().placeships(ActiveGameState.getOwnPlayerIOwnPlayground()); //todo hier endless loop
+       // ActiveGameState.getOwnPlayerIOwnPlayground().setLabels(ownFieldArray);
         ActiveGameState.getOwnPlayerIOwnPlayground().drawPlayground();
         // todo -> random place function must add labels to group -> they should be moveable too... RIP holidays hahahha
 
@@ -787,11 +787,8 @@ public class PlaceShips implements Initializable {
                     newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
                 case 4:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale );
+                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
                     newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 5:
@@ -826,9 +823,6 @@ public class PlaceShips implements Initializable {
                     newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
-                    break;
                 case 4:
                     newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
                     newShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
@@ -879,11 +873,8 @@ public class PlaceShips implements Initializable {
                     existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
                 case 4:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale );
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
                     existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 5:
@@ -921,9 +912,6 @@ public class PlaceShips implements Initializable {
                     existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
-                    break;
                 case 4:
                     existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
                     existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);

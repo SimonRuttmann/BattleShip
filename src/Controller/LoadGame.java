@@ -1,6 +1,5 @@
 package Controller;
 
-import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Player.ActiveGameState;
 import Player.SaveAndLoad;
@@ -116,7 +115,7 @@ public class LoadGame implements Initializable {
     }
 
     public void backToLastScene() throws IOException {
-        Parent newOrLoad = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
+        Parent newOrLoad = FXMLLoader.load(getClass().getResource("/OldView/newOrLoad.fxml"));
         Main.primaryStage.setScene(new Scene(newOrLoad));
         Main.primaryStage.show();
     }

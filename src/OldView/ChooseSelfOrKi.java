@@ -1,4 +1,4 @@
-package Controller;
+package OldView;
 
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;

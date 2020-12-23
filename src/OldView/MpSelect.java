@@ -1,4 +1,4 @@
-package Controller;
+package OldView;
 //TODO now dead code
 import Gui_View.Main;
 import javafx.fxml.FXML;
@@ -16,19 +16,19 @@ public class MpSelect {
     @FXML private Button joinGame;
 
     public void backToLastScene() throws IOException{
-        Parent hello = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu2.fxml"));
+        Parent hello = FXMLLoader.load(getClass().getResource("/OldView/MainMenu2.fxml"));
         Main.primaryStage.setScene(new Scene(hello));
         Main.primaryStage.show();
     }
 
     public void offerConnection() throws IOException {
-        Parent mpHost = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpHost.fxml"));
+        Parent mpHost = FXMLLoader.load(getClass().getResource("/OldView/mpHost.fxml"));
         Main.primaryStage.setScene(new Scene(mpHost));
         Main.primaryStage.show();
     }
 
     public void acceptConnection() throws IOException{
-        Parent mpJoin = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpJoin.fxml"));
+        Parent mpJoin = FXMLLoader.load(getClass().getResource("/OldView/mpJoin.fxml"));
         Main.primaryStage.setScene(new Scene(mpJoin));
         Main.primaryStage.show();
     }

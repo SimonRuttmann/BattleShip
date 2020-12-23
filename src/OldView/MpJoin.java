@@ -1,10 +1,8 @@
-package Controller;
+package OldView;
 
 //todo let player choose between self and ki
 
 import Gui_View.HelpMethods;
-
-import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 
 import Gui_View.Main;
 import Network.Client;
@@ -42,7 +40,7 @@ public class MpJoin implements Initializable {
     }
 
     public void backToLastScene() throws IOException {
-        Parent mpSelect = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpSelect.fxml"));
+        Parent mpSelect = FXMLLoader.load(getClass().getResource("/OldView/mpSelect.fxml"));
         Main.primaryStage.setScene(new Scene(mpSelect));
         Main.primaryStage.show();
     }
@@ -69,7 +67,7 @@ public class MpJoin implements Initializable {
                     Platform.runLater(() -> {
                         Parent chooseSelfOrKI = null;
                         try {
-                            chooseSelfOrKI = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/chooseSelfOrKi.fxml"));
+                            chooseSelfOrKI = FXMLLoader.load(getClass().getResource("/OldView/chooseSelfOrKi.fxml"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

@@ -1,15 +1,11 @@
-package Controller;
+package OldView;
 
-import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
 import KI.Ki;
-import Model.Playground.EnemyPlayground;
-import Model.Playground.OwnPlayground;
 import Player.ActiveGameState;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -100,14 +96,14 @@ public class GameConfig implements Initializable {
         //MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
         //multiplayerControlThreadConfigCommunication.start();
 
-        Parent start = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/chooseSelfOrKi.fxml"));
+        Parent start = FXMLLoader.load(getClass().getResource("/OldView/chooseSelfOrKi.fxml"));
         Main.primaryStage.setScene(new Scene(start));
         Main.primaryStage.show();
     }
 
 
     public void backToLastScene() throws IOException{
-        Parent newOrLoad = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
+        Parent newOrLoad = FXMLLoader.load(getClass().getResource("/OldView/newOrLoad.fxml"));
         Main.primaryStage.setScene(new Scene(newOrLoad));
         Main.primaryStage.show();
     }

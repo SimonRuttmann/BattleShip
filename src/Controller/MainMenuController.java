@@ -71,7 +71,7 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.playerVsKi);
 
-        Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame2.fxml"));
+        Parent loadGame = FXMLLoader.load(getClass().getResource("/OldView/loadGame2.fxml"));
         Main.primaryStage.setScene(new Scene(loadGame));
         Main.primaryStage.show();
     }

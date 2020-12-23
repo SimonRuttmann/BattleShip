@@ -5,29 +5,63 @@ import Model.Ship.*;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Player.ActiveGameState;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.prefs.Preferences;
 
 
 public class Ki implements IKi{
-enum NextLocation { nextTop, nextBottom, nextLeft, nextRight, noDestination}
-enum DestroyStatus {notFound, destroying, destroyed}
-private DestroyStatus destroyStatus;
-private NextLocation nextLocation;
 
-    //TODO BUGFIX
-    //Die KI beschießt bereits das Spielfeld, deshalb darf im Controller nicht mehr die shoot methode aufgerufen werden -> es muss das shotResponse Objekt zurückgegeben werden
+
+    /**
+     * Bugfixed
+     * Diese Enumerationen erstzen all deine Booleans:
+     *    Alle Variablen die für die destroyShipNotonEdge gebraucht werden
+     *
+     *
+     *
+     *     protected boolean vertFlagOben;
+     *     protected boolean horizFlagRechts;
+     *     protected boolean vertFlagUnten;
+     *     protected boolean horizFlagLinks;
+     *     protected boolean waslastShotaHit = true;
+     *     protected int countDestroyShots = -1;
+     *     protected boolean isShipcomDestroyed;
+     *
+     * Dadurch das die Booleans wegfallen, hat man in den if elseif elseif else Anweisungen nur noch 1 Argument
+     * Dass kann man dann mit einem Switch Case sehr einfach machen -> 80% des Codes fällt weg
+     *
+     * Eine kleine Änderung musste ich noch wegen dem return machen, da du die shoot-Methode bereits aufrufst, darf ich sie im Controller nicht nochmal aufrufen,
+     * weshalb nun nicht der punkt, sondern das ergebnis (ShotResponse) des Aufrufs mit playground.shoot(punkt) übergeben wird
+     *
+     * Codetechnisch/Logiktechnisch ist alles gleich geblieben, außer das zusätzlich noch geprüft wird, ob der Punkt, bei dem man schließen möchte schon als shotWater markiert wurde
+     *
+     *
+     * Das hattest du Teilweise schon drin, jedoch wird bei einer ArrayListe arrayList.contains(new Point(x,y)) immer false kommen, da referenzen überprüft werden und
+     * intern nicht die equals-Methode (die wir btw garnicht haben :D).
+     * Dafür hab ich die Methode isNextShotInPreviousList geschrieben, diese überprüft, ob es in der Liste schon einen ANDEREN Punkt (andere Referenz) gibt mit den gleichen
+     * X und Y Koordinaten gibt
+     *
+     */
+
+    enum NextLocation { nextTop, nextBottom, nextLeft, nextRight, noDestination}    //Zeigt an, wo man als nächstes hinschießt
+    enum DestroyStatus {notFound, destroying}                                       //Gibt an, ob man gerade im Modus Schiff zerstören oder Random schießen ist
+
+    private DestroyStatus destroyStatus = DestroyStatus.notFound;
+    private NextLocation nextLocation;                              //nächste position auf die Geschossen wird
+    int rangeToShot = 1;                                            //1. Schuss (treffer) nach oben -> rangeToShot wird auf 2 erhöht
+                                                                    //2. Schuss (treffer) nach oben -> rangeToShot wird auf 3 erhöht
+                                                                    //3. Schuss  (kein treffer) rangeToShot wird auf 1 gesetzt                  und die position ist jetzt nextBottom
+                                                                    //1. Schuss (treffer) nach unten -> rangeToShot wird auf 2 erhöht
+                                                                    //2. Schuss (kein treffer) nach unten -> rangeToShot wird auf 1 gesetzt     und die position ist jetzt nextleft
+                                                                    //...
     ShotResponse shotResponseFromKI;
 
-    //TODO BUGFIX
+
     /**
-     * Bugfix
-     * @param x
-     * @param y
-     * @return
+     * Checks if the previous list contains a point with the same x and y coordinates
+     * @param x coordinate x axis
+     * @param y coordinate y axis
+     * @return true if the previous list contains a point with the same x and y coordinates
      */
     public boolean isNextShotInPreviousList(int x, int y){
         for ( Point point : previousShots){
@@ -343,11 +377,7 @@ private NextLocation nextLocation;
         //die Ki besitzt die Schwierigkeit = normal
         if(ActiveGameState.getDifficulty() == 0){
             Point returnShot;
-            returnShot = normaleKi(playground);
-
-            if (returnShot == null) System.out.println( "null Punkt übergeben");
-
-            System.out.println( "Hat beschossen: " + returnShot.getX() + " " + returnShot.getY());
+            normaleKi(playground);
 
             return this.shotResponseFromKI;
             //TODO die normale KI unbedingt zuerst Testen sobald möglich !!
@@ -364,49 +394,61 @@ private NextLocation nextLocation;
     protected boolean startDestroy;
     protected Point normalKiShot;
 
-    protected Point normaleKi(IOwnPlayground playground){
+    protected void normaleKi(IOwnPlayground playground){
         ShotResponse answerofShot;
         int random_x;
         int random_y;
 
         //wird beim ersten Aufruf betreten, da der Default Wert von isHitFlag = false ist
-        if(!isHitFlag && !startDestroy){
+        if(this.destroyStatus == DestroyStatus.notFound){
             //solange der Punkt schon beschossen wurde wird ein neuer Punkt gesucht
             do {
                 random_x = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
                 random_y = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
             }while (isNextShotInPreviousList(random_x,random_y) /*checkArrayList(previousShots, new Point(random_x,random_y))*/); //TODO BUGFIX Kann hier nicht mit .contains(e) überprüft werden, da contains hier auf referenzen überprüft.
             System.out.println("first shoot call");
-            answerofShot = playground.shoot(new Point(random_x,random_y));
-            this.shotResponseFromKI = answerofShot; //TODO BUGFIX
+
+            Point currentShot = new Point(random_x, random_y);
+            answerofShot = playground.shoot(currentShot);
+            this.shotResponseFromKI = answerofShot;
+            previousShots.add(currentShot);
+
+
             System.out.println(random_x);
             System.out.println(random_y);
+
             if(answerofShot.isHit()){
-            destroyStatus = DestroyStatus.destroying;
-            isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
-            firstHit = new Point(random_x,random_y); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert
-            previousShots.add(new Point(random_x, random_y));//der Punkt wird gespeichert
-            startDestroy = true;
-            return firstHit;
-        }else{
-            previousShots.add(new Point(random_x, random_y)); //es ist kein Treffer und der Punkt wird gespeichert und zuückgegeben
-            return new Point(random_x,random_y);
+                destroyStatus = DestroyStatus.destroying;
+                nextLocation = NextLocation.nextTop;
+
+                isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
+                firstHit = new Point(random_x,random_y); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert
+                //previousShots.add(new Point(random_x, random_y));//der Punkt wird gespeichert
+                startDestroy = true;
+
+            }
+            else{
+                this.destroyStatus = DestroyStatus.notFound;
+                //previousShots.add(new Point(random_x, random_y)); //es ist kein Treffer und der Punkt wird gespeichert und zuückgegeben
+
+            }
         }
-    }
-        if(startDestroy){
-           try{
-               normalKiShot = destroyShip(firstHit,playground);
-               if (normalKiShot == null) System.out.println("Destroy ship liefert null punkt");
-           }catch (Exception e){
-               System.out.println("Fehler in der destroyShip Methode");
-               e.printStackTrace();
-           }
+
+        if(destroyStatus == DestroyStatus.destroying){
+
+            destroyShip(firstHit,playground);
+
+
         }
-        if (normalKiShot == null) System.out.println( "Nullpunkt von der normalen KI übergeben");
-        return normalKiShot;
+
+
     }
 
     //Alle Variablen die für die destroyShipNotonEdge gebraucht werden
+   /*
+
+    All diese booleans kann man durch die Enum nextLocation ersetzten, wodurch die Abfragebedingungen wegfallen, sowie die initialisierungs if´s und rücksetz if´s wegfallen
+
     protected boolean vertFlagOben;
     protected boolean horizFlagRechts;
     protected boolean vertFlagUnten;
@@ -414,320 +456,167 @@ private NextLocation nextLocation;
     protected boolean waslastShotaHit = true;
     protected int countDestroyShots = -1;
     protected boolean isShipcomDestroyed;
+    */
+
     protected ArrayList<Point> shiptoDestroy = new ArrayList<>(); //TODO BUGFIX, war nicht initialisiert
+
+    private int debug= 0;
 
     //TODO stand jz sollte die Ki zufällig ein Schiff finden und wenn gefunden auch zerstören (ohne große Taktik)
     //soll das gefundene Schiff zerstören
     //TODO von Simon zu den Bugfixes, es darf nicht auf bereits beschossenen Wasser (sowie aufgedeckt durch Schiffszerstörung als auch durch beschießen) geschossen werden,
     //TODO deshalb habe ich bei jeder if else die Bedingung !isNextShotInPreviousList(x, y) hinzugefügt. Sie Methode checkt nur, ob der Punkt bereits in der Liste enthalten ist
-    private Point destroyShip(Point firstHit,IOwnPlayground playground ){
-        ShotResponse answerofShot;
-        System.out.println( "KI Flags am anfang der destroyShip Methode");
-        System.out.println( "vertFlagOben " + vertFlagOben );
-        System.out.println( "vertFlagUnten " + vertFlagUnten);
-        System.out.println( "horizFlagLinks " + horizFlagLinks );
-        System.out.println( "horizFlagRechts " + horizFlagLinks);
-        System.out.println( "isShipcomDestroyed " + isShipcomDestroyed);
-        System.out.println( "wasLastShotaHit " + waslastShotaHit);
-        System.out.println( "countDestroyShots " + countDestroyShots);
-        //wenn Schiff zerstört wurde wird Ausgangszustand wieder hergestellt
-        if(isShipcomDestroyed){
-            vertFlagOben = false;
-            horizFlagRechts = false;
-            horizFlagLinks = false;
-            countDestroyShots = -1;
-            isShipcomDestroyed = false;
-        }
+    private void destroyShip(Point firstHit,IOwnPlayground playground ){
 
-        if(waslastShotaHit){
-            countDestroyShots++;
+
+        System.out.println("Next Position to shoot: " + this.nextLocation + " rangeToShot: " + rangeToShot);
+
+        Point nextPositionToShoot;
+
+        switch (this.nextLocation){
+            case nextTop:
+                nextPositionToShoot = new Point(firstHit.getX(), firstHit.getY() - rangeToShot);
+                if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
+                        &&  (nextPositionToShoot.getY() >= 0 )      ){
+
+                    //Schiessposition erlaubt
+                    previousShots.add(nextPositionToShoot);
+                    shotResponseFromKI = playground.shoot(nextPositionToShoot);
+                    //Hit and Destroyed
+                    if(shotResponseFromKI.isShipDestroyed()){
+                        this.nextLocation = NextLocation.noDestination;
+                        this.rangeToShot = 1;
+                        this.destroyStatus = DestroyStatus.notFound;
+
+                        shiptoDestroy.add(nextPositionToShoot);
+                        previousShots.addAll(surroundShipDots(shiptoDestroy));
+                    }
+                    //Hit
+                    else if ( shotResponseFromKI.isHit() ){
+                        this.nextLocation = NextLocation.nextTop;
+                        this.rangeToShot++;
+                    }
+                    //no Hit
+                    else {
+                        this.nextLocation = NextLocation.nextBottom;
+                        this.rangeToShot = 1;
+                    }
+
+                    //Leave the switch case, as we have already shot the enemy
+                    break;
+                }
+                //Schiessposition nicht erlaubt, gehe in den nächsten case
+                rangeToShot = 1;
+            case nextBottom:
+                nextPositionToShoot = new Point(firstHit.getX(), firstHit.getY() + rangeToShot);
+                if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
+                        &&  (nextPositionToShoot.getY() < ActiveGameState.getPlaygroundSize() )      ){
+
+                    //Schiessposition erlaubt
+                    previousShots.add(nextPositionToShoot);
+                    shotResponseFromKI = playground.shoot(nextPositionToShoot);
+                    //Hit and Destroyed
+                    if(shotResponseFromKI.isShipDestroyed()){
+                        this.nextLocation = NextLocation.noDestination;
+                        this.rangeToShot = 1;
+                        this.destroyStatus = DestroyStatus.notFound;
+
+                        shiptoDestroy.add(nextPositionToShoot);
+                        previousShots.addAll(surroundShipDots(shiptoDestroy));
+                    }
+                    //Hit
+                    else if ( shotResponseFromKI.isHit() ){
+                        this.nextLocation = NextLocation.nextBottom;
+                        this.rangeToShot++;
+                    }
+                    //no Hit
+                    else {
+                        this.nextLocation = NextLocation.nextLeft;
+                        this.rangeToShot = 1;
+                    }
+
+                    //Leave the switch case, as we have already shot the enemy
+                    break;
+                }
+                //Schiessposition nicht erlaubt, gehe in den nächsten case
+                rangeToShot = 1;
+            case nextRight:
+                nextPositionToShoot = new Point(firstHit.getX() - rangeToShot, firstHit.getY());
+                if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
+                        &&  (nextPositionToShoot.getX() >= 0 )      ){
+
+                    //Schiessposition erlaubt
+                    previousShots.add(nextPositionToShoot);
+                    shotResponseFromKI = playground.shoot(nextPositionToShoot);
+                    //Hit and Destroyed
+                    if(shotResponseFromKI.isShipDestroyed()){
+                        this.nextLocation = NextLocation.noDestination;
+                        this.rangeToShot = 1;
+                        this.destroyStatus = DestroyStatus.notFound;
+
+                        shiptoDestroy.add(nextPositionToShoot);
+                        previousShots.addAll(surroundShipDots(shiptoDestroy));
+                    }
+                    //Hit
+                    else if ( shotResponseFromKI.isHit() ){
+                        this.nextLocation = NextLocation.nextRight;
+                        this.rangeToShot++;
+                    }
+                    //no Hit
+                    else {
+                        this.nextLocation = NextLocation.nextLeft;
+                        this.rangeToShot = 1;
+                    }
+
+                    //Leave the switch case, as we have already shot the enemy
+                    break;
+                }
+                //Schiessposition nicht erlaubt, gehe in den nächsten case
+                rangeToShot = 1;
+            case nextLeft:
+                nextPositionToShoot = new Point(firstHit.getX()+rangeToShot, firstHit.getY());
+                if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
+                        &&  (nextPositionToShoot.getX() < ActiveGameState.getPlaygroundSize() )      ) {
+
+                    //Schiessposition erlaubt
+                    previousShots.add(nextPositionToShoot);
+                    shotResponseFromKI = playground.shoot(nextPositionToShoot);
+                    //Hit and Destroyed
+                    if(shotResponseFromKI.isShipDestroyed()){
+                        this.nextLocation = NextLocation.noDestination;
+                        this.rangeToShot = 1;
+                        this.destroyStatus = DestroyStatus.notFound;
+
+                        shiptoDestroy.add(nextPositionToShoot);
+                        previousShots.addAll(surroundShipDots(shiptoDestroy));
+
+                    }
+                    //Hit
+                    else if ( shotResponseFromKI.isHit() ){
+                        this.nextLocation = NextLocation.nextLeft;
+                        this.rangeToShot++;
+                        shiptoDestroy.add(nextPositionToShoot);
+                    }
+                    //no Hit
+                    else {
+                        System.out.println( "Can't be, shoot at left and all other positions are cleared");
+                        this.nextLocation = NextLocation.nextTop;
+                        this.rangeToShot = 1;
+                    }
+
+                    //Leave the switch case, as we have already shot the enemy
+                    break;
+                }
+                rangeToShot = 1;
+            default:
+                System.out.println( "No position found");
+
         }
 
         //TODO die KI soll nicht systematisch um den firstHit herum schießen -> mit random arbeiten
         //es wird vom firstHit aus nach oben geschossen, wenn der Rand erreicht ist und das Schiff nicht zerstört, dann wird nach unten vom firstHit aus geschossen bis es zerstört ist
         //wird ein leeres Feld beim beschießen der Felder nach oben getroffen, wird nach unten geschossen bis das Schiffzerstört ist
-        if( !horizFlagRechts  && !vertFlagUnten  && !horizFlagLinks && !isNextShotInPreviousList(firstHit.getX(), firstHit.getY()-countDestroyShots-1)){    //TODO BUGFIX
-            if(firstHit.getY() - countDestroyShots - 1 >= 0 ){
-                Point newHit = new Point(firstHit.getX(), firstHit.getY() - countDestroyShots - 1);
-                System.out.println("second shoot call");
-                answerofShot = playground.shoot(newHit);
-                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
-                if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    vertFlagUnten = false;
-                    vertFlagOben = true;
-                    horizFlagLinks = false;
-                    horizFlagRechts = false;
-                    waslastShotaHit = true;
-                    return newHit;
-                }
-                else if (answerofShot.isHit() && answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    previousShots.addAll(surroundShipDots(shiptoDestroy));
-                    shiptoDestroy.clear();
-                    isShipcomDestroyed = true;
-                    startDestroy = false;
-                    return newHit;
-                }else{
-                    vertFlagOben = false;
-                    vertFlagUnten = true;
-                    horizFlagLinks = false;
-                    horizFlagRechts = false;
-                    countDestroyShots = -1;
-                    previousShots.add(newHit);
-                    return newHit;
-                }
-            }else if ( !isNextShotInPreviousList(firstHit.getX(), firstHit.getY()+countDestroyShots+1)){ //TODO BUGFIX war vorher ein else ohne Bedingung     //wenn die Schüsse nach oben den Rand erreichen und das Schiff nicht zerstört ist, wird nach unten geschossen bis es zerstört ist (vom firsthit punkt aus)
-                Point newHit = new Point(firstHit.getX(), firstHit.getY() + countDestroyShots + 1);
-                System.out.println("third shoot call");
-                answerofShot = playground.shoot(newHit);
-                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
-                if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    vertFlagUnten = true;
-                    vertFlagOben = false;
-                    horizFlagLinks = false;
-                    horizFlagRechts = false;
-                    waslastShotaHit = true;
-                    return newHit;
-                }
-                else if (answerofShot.isHit() && answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    previousShots.addAll(surroundShipDots(shiptoDestroy));
-                    shiptoDestroy.clear();
-                    isShipcomDestroyed = true;
-                    startDestroy = false;
-                    return newHit;
-                }else{
-                    vertFlagOben = false;
-                    vertFlagUnten = false;
-                    horizFlagLinks = false;
-                    horizFlagRechts = true;
-                    countDestroyShots = -1;
-                    previousShots.add(newHit);
-                    return newHit;
-                }
-            }
-        }
 
-        //ist das Feld über dem firstHit kein Treffer gewesen, wird nach unten beschossen
-        if( !horizFlagRechts  && !vertFlagOben  && !horizFlagLinks  && !isNextShotInPreviousList(firstHit.getX(), firstHit.getY()+countDestroyShots+1)){ //TODO BUGFIX
-            if(firstHit.getY() + countDestroyShots + 1 <= ActiveGameState.getPlaygroundSize() - 1 ){
-                Point newHit = new Point(firstHit.getX(), firstHit.getY() + countDestroyShots + 1);
-                System.out.println("4th shoot call");
-                answerofShot = playground.shoot(newHit);
-                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
-                if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    vertFlagUnten = true;
-                    vertFlagOben = false;
-                    horizFlagLinks = false;
-                    horizFlagRechts = false;
-                    waslastShotaHit = true;
-                    return newHit;
-                }
-                else if (answerofShot.isHit() && answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    previousShots.addAll(surroundShipDots(shiptoDestroy));
-                    shiptoDestroy.clear();
-                    isShipcomDestroyed = true;
-                    startDestroy = false;
-                    return newHit;
-                }else{
-                    vertFlagOben = false;
-                    vertFlagUnten = false;
-                    horizFlagLinks = false;
-                    horizFlagRechts = true;
-                    countDestroyShots = -1;
-                    previousShots.add(newHit);
-                    return newHit;
-                }
-            }
-
-        }else if ( !isNextShotInPreviousList(firstHit.getX(), firstHit.getY()-countDestroyShots-1)){ //TODO BUGFIX, war davor ein else ohne Bedingung
-            Point newHit = new Point(firstHit.getX(), firstHit.getY() - countDestroyShots - 1);
-            System.out.println("5th shoot call");
-            answerofShot = playground.shoot(newHit);
-            this.shotResponseFromKI = answerofShot; //TODO BUGFIX
-            if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
-                previousShots.add(newHit);
-                shiptoDestroy.add(newHit);
-                vertFlagUnten = false;
-                vertFlagOben = true;
-                horizFlagLinks = false;
-                horizFlagRechts = false;
-                waslastShotaHit = true;
-                return newHit;
-            }
-            else if (answerofShot.isHit() && answerofShot.isShipDestroyed()){
-                previousShots.add(newHit);
-                shiptoDestroy.add(newHit);
-                previousShots.addAll(surroundShipDots(shiptoDestroy));
-                shiptoDestroy.clear();
-                isShipcomDestroyed = true;
-                startDestroy = false;
-                return newHit;
-            }else{
-                vertFlagOben = false;
-                vertFlagUnten = true;
-                horizFlagLinks = false;
-                horizFlagRechts = false;
-                countDestroyShots = -1;
-                previousShots.add(newHit);
-                return newHit;
-            }
-        }
-
-        //wenn über und unterhalb des firstHits kein Treffer ist, dann wird rechts vom firstHit geschossen
-        if( !vertFlagOben  && !vertFlagUnten  && !horizFlagLinks && !isNextShotInPreviousList(firstHit.getX()+ countDestroyShots +1, firstHit.getY())){ //TODO BUGFIX
-            if(firstHit.getX() + countDestroyShots + 1 <= ActiveGameState.getPlaygroundSize() - 1){
-                Point newHit = new Point(firstHit.getX() + countDestroyShots + 1, firstHit.getY() );
-                System.out.println("6th shoot call");
-                answerofShot = playground.shoot(newHit);
-                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
-                if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    vertFlagUnten = false;
-                    vertFlagOben = false;
-                    horizFlagLinks = false;
-                    horizFlagRechts = true;
-                    waslastShotaHit = true;
-                    return newHit;
-                }
-                else if (answerofShot.isHit() && answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    previousShots.addAll(surroundShipDots(shiptoDestroy));
-                    shiptoDestroy.clear();
-                    isShipcomDestroyed = true;
-                    startDestroy = false;
-                    return newHit;
-                }else{
-                    vertFlagOben = false;
-                    vertFlagUnten = false;
-                    horizFlagLinks = true;
-                    horizFlagRechts = false;
-                    countDestroyShots = -1;
-                    previousShots.add(newHit);
-                    return newHit;
-                }
-            }else if (!isNextShotInPreviousList(firstHit.getX() - countDestroyShots -1, firstHit.getY())){ //TODO BUGFIX, war davor ein else ohne Bedingung     //wenn die Schüsse nach rechts den Rand erreichen und das Schiff nicht zerstört ist, wird nach links geschossen bis es zerstört ist (vom firsthit punkt aus)
-                Point newHit = new Point(firstHit.getX() - countDestroyShots - 1, firstHit.getY());
-                System.out.println("7th shoot call");
-                answerofShot = playground.shoot(newHit);
-                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
-                if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    vertFlagUnten = false;
-                    vertFlagOben = false;
-                    horizFlagLinks = true;
-                    horizFlagRechts = false;
-                    waslastShotaHit = true;
-                    return newHit;
-                }
-                else if (answerofShot.isHit() && answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    previousShots.addAll(surroundShipDots(shiptoDestroy));
-                    shiptoDestroy.clear();
-                    isShipcomDestroyed = true;
-                    startDestroy = false;
-                    return newHit;
-                }else{
-                    vertFlagOben = false;
-                    vertFlagUnten = false;
-                    horizFlagLinks = true;
-                    horizFlagRechts = false;
-                    countDestroyShots = -1;
-                    previousShots.add(newHit);
-                    return newHit;
-                }
-            }
-        }
-
-        if(!horizFlagRechts  && !vertFlagOben  && !vertFlagUnten && !isNextShotInPreviousList(firstHit.getX()- countDestroyShots -1 , firstHit.getY())){ //TODO BUGFIX
-            if(firstHit.getX() - countDestroyShots - 1 >= 0){
-                Point newHit = new Point(firstHit.getX() - countDestroyShots - 1, firstHit.getY());
-                System.out.println("8th shoot call");
-                answerofShot = playground.shoot(newHit);
-                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
-                if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    vertFlagUnten = true;
-                    vertFlagOben = false;
-                    horizFlagLinks = false;
-                    horizFlagRechts = false;
-                    waslastShotaHit = true;
-                    return newHit;
-                }
-                else if (answerofShot.isHit() && answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    previousShots.addAll(surroundShipDots(shiptoDestroy));
-                    shiptoDestroy.clear();
-                    isShipcomDestroyed = true;
-                    startDestroy = false;
-                    return newHit;
-                }else{
-                    vertFlagOben = false;
-                    vertFlagUnten = false;
-                    horizFlagLinks = false;
-                    horizFlagRechts = true;
-                    countDestroyShots = -1;
-                    previousShots.add(newHit);
-                    return newHit;
-                }
-            }
-        }else if ( !isNextShotInPreviousList(firstHit.getX() + countDestroyShots +1, firstHit.getY())){ //TODO BUGFIX, war davor ein else ohne Bedingung
-                Point newHit = new Point(firstHit.getX() + countDestroyShots + 1, firstHit.getY() );
-                System.out.println("9th shoot call");
-                answerofShot = playground.shoot(newHit);
-                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
-                if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    vertFlagUnten = false;
-                    vertFlagOben = false;
-                    horizFlagLinks = false;
-                    horizFlagRechts = true;
-                    waslastShotaHit = true;
-                    return newHit;
-                }
-                else if (answerofShot.isHit() && answerofShot.isShipDestroyed()){
-                    previousShots.add(newHit);
-                    shiptoDestroy.add(newHit);
-                    previousShots.addAll(surroundShipDots(shiptoDestroy));
-                    shiptoDestroy.clear();
-                    isShipcomDestroyed = true;
-                    startDestroy = false;
-                    return newHit;
-                }else{
-                    vertFlagOben = false;
-                    vertFlagUnten = false;
-                    horizFlagLinks = true;
-                    horizFlagRechts = false;
-                    countDestroyShots = -1;
-                    previousShots.add(newHit);
-                    return newHit;
-                }
-        }
-        System.out.println("Keine position zum schießen gefunden");
-        System.out.println( "vertFlagOben " + vertFlagOben );
-        System.out.println( "vertFlagUnten " + vertFlagUnten);
-        System.out.println( "horizFlagLinks " + horizFlagLinks );
-        System.out.println( "horizFlagRechts " + horizFlagLinks);
-        System.out.println( "countDestroyShots " + countDestroyShots);
-
-        return null;
     }
 
     protected Point getLastShot(ArrayList<Point> prevShots){

@@ -41,11 +41,13 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         //2. and 3.
         int xPos = GridPane.getColumnIndex((Label) event.getSource());
         int yPos = GridPane.getRowIndex((Label) event.getSource());
+
         Point shootPosition = new Point(xPos, yPos);
 
         //Preparing command which has to be send
-        String cmdParameter = xPos + " " + yPos;
-
+        //Communication Protocol: shot 1 1 = Pos 0, 0 in the Playground
+        String cmdParameter = (xPos+1) + " " + (yPos+1);
+        System.out.println( cmdParameter);
         //Report from the remoteSocket
         String[] cmdReceived;
         System.out.println("Sende: " + CMD.shot + " " + cmdParameter);
@@ -67,6 +69,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         //4 determine the response and act depending on it
         IEnemyPlayground enemyPlayground = ActiveGameState.getOwnPlayerIEnemyPlayground();
 
+
         switch (cmdReceived[0]){
             case "answer":
                 ShotResponse shotResponse = enemyPlayground.shoot(shootPosition, Integer.parseInt(cmdReceived[1]));
@@ -80,24 +83,24 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                     int size = shotResponse.getSizeOfSunkenShip();
 
                     //für 2er, 3er, 4er, 5er
-                    Label shiplabel = new Label();
-                    shiplabel.setLayoutX(headShipSunken.getLayoutX());
-                    shiplabel.setLayoutY(headShipSunken.getLayoutY());
+                    Label shipLabel = new Label();
+                    shipLabel.setLayoutX(headShipSunken.getLayoutX());
+                    shipLabel.setLayoutY(headShipSunken.getLayoutY());
 
                     //TODO Add sunken images
                     if (horizontal) {
                         switch (size) {
                             case (2):
-                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));
+                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));
                                 break;
                             case (3):
-                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png"))));
+                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png"))));
                                 break;
                             case (4):
-                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png"))));
+                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png"))));
                                 break;
                             case (5):
-                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));
+                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));
                                 break;
                             default:
                                 System.out.println("Debug");
@@ -105,22 +108,22 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                     } else {
                         switch (size) {
                             case (2):
-                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiffVertical.png"))));
+                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiffVertical.png"))));
                                 break;
                             case (3):
-                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiffVertical.png"))));
+                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiffVertical.png"))));
                                 break;
                             case (4):
-                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiffVertical.png"))));
+                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiffVertical.png"))));
                                 break;
                             case (5):
-                                shiplabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiffVertical.png"))));
+                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiffVertical.png"))));
                                 break;
                             default:
                                 System.out.println("Debug");
                         }
                     }
-                    Platform.runLater(() -> GamePlayground.getGroupEnemP().getChildren().add(shiplabel));
+                    Platform.runLater(() -> GamePlayground.getGroupEnemP().getChildren().add(shipLabel));
                 }
 
                 //END VIEW SHOW
@@ -130,6 +133,13 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                 {
                     ActiveGameState.setRunning(false);
                     HelpMethods. winOrLose(true);
+                    System.out.println("Game won");
+                    if(ActiveGameState.isAmIServer()){
+                        ActiveGameState.getServer().closeConnection();
+                    }
+                    else{
+                        ActiveGameState.getClient().closeConnection();
+                    }
                 }
                 break;
 

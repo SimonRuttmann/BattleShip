@@ -1,107 +1,15 @@
 package Network;
 
-import com.sun.javaws.Main;
 
 import java.io.*;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 public abstract class Communication implements ICommunication{
+
     private boolean connected = false;
-
-    //private String sendCMD
-    //private final Object sendFlag = new Object();
-
-    //private String getCMD;
-    //private final Object getFlag = new Object();
-
-
-
-
-    // Ein- und Ausgabestrom des Sockets ermitteln
-    // und als BufferedReader bzw. Writer verpacken.
-
-    @Override
-    public void sendCMD(CMD command, String parameter) {
-        String sendCMD;
-        if (!parameter.isEmpty()) {
-            sendCMD = command.toString() + " " + parameter;
-        }
-        else{
-            sendCMD = command.toString();
-        }
-
-        if (!connected) return;
-        try {
-            System.out.println( "Von Communication: Sende Befehl: " );
-            System.out.println( String.format("%s%n",sendCMD));
-            outputWriter.write(String.format("%s%n",sendCMD));
-            outputWriter.flush();
-
-
-
-            // Abwechselnd vom Benutzer lesen und ins Socket schreiben
-            // bzw. vom Socket lesen und auf den Bildschirm schreiben.
-            // Abbruch bei EOF oder Leerzeile vom Benutzer bzw. bei EOF vom Socket.
-
-
-            // flush sorgt dafür, dass der Writer garantiert alle Zeichen
-            // in den unterliegenden Ausgabestrom schreibt.
-        } catch (IOException e) {
-            System.out.println("Error while writing!" + sendCMD);
-            e.printStackTrace();
-        }
-/*            //Gibt CommThread frei -> schreibt Befehl
-            sendFlag.notify();
-*/
-    }
-
-    @Override
-    public String[] getCMD() {
-        if (!connected) return null;
-        System.out.println( "Connected ist true");
-        try {
-
-            String cmd = inputReader.readLine();
-            System.out.println( "inputReader liest:" + cmd);
-
-            if(validDataReceived(cmd)){
-                String[] cmdSplit = cmd.split(" ");
-                cmdSplit[0] = cmdSplit[0].toLowerCase();
-                return cmdSplit;
-            }
-            System.out.println( "The received Data is not valid");
-            return null;
-
-        }catch( SocketTimeoutException e){
-            String[] timeout = new String[1];
-            timeout[0] = "timeout";
-            return timeout;
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Could not read next Command!");
-            return null;
-        }
-
-
-    /*
-        //Gibt CommThread frei -> Liest Befehl
-        // -> Befehl wird von CommThread in getCMD gespeichert, bis dahin darf der MainThread noch nicht die ReturnZeile ausführen -> er wird deshalb erstmal angehalten und vom CommThread wieder erweckt
-        //Problematik: ComThread is so schnell, dass er Main bereits erweckt, bevor dieser schläft
-        try {
-            getFlag.notify();
-            wait(); // Dieses Wait kann erst nach dem Notify des CommThreads augeführt werden //UMGEHUNG!?
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return this.getCMD.split(" ");
-
-   */
-    }
-
     private BufferedReader inputReader;
-    private Writer outputWriter;
+    private BufferedWriter outputWriter;
 
     public void setConnected(boolean connected) {
         this.connected = connected;
@@ -115,80 +23,108 @@ public abstract class Communication implements ICommunication{
         this.outputWriter = outputWriter;
     }
 
-/*
-  / //Thread CommThread starten
+
+    /**
+     * Sends a command to the connection partner (e.g. sendCMD(CMD.ships,"5 5 5"))
+     * @param command Keyword of the Command, accessible via the CMD enumeration
+     * @param parameter the following parameters for this command, starting without a space
+     */
     @Override
-    public void startListening() {
-        Thread CommThread = new Thread(new Runnable() {
+    public void sendCMD(CMD command, String parameter) {
+        //Building up the String
+        String sendCMD;
+        if (!parameter.isEmpty()) {
+            sendCMD = command.toString() + " " + parameter;
+        }
+        else{
+            sendCMD = command.toString();
+        }
 
+        if (!connected) return;
+        try {
+            System.out.println( "Von Communication: Sende Befehl: " );
+            System.out.println( String.format("%s%n",sendCMD));
 
-            @Override
-            public void run(){
+            //Necessary to write the command and a new line
+            outputWriter.write(String.format("%s%n",sendCMD));
 
+            //The outputWriter is a bufferedWriter,
+            //therefore we need to flush the buffer respectively
+            //to write any saved characters
+            outputWriter.flush();
 
-                while ( connected ){
-                //Nachricht lesen
-                    //Nachricht checken -> break -> conneted = false
-                //einen Befehl schicken -> erst dann wenn wir die Methode send Message -> attribute auf true -> befehl schicken
-
-                        // Solange warten bis sendFlag.notify (von sendCMD) augerufen wird -> wait wird beendet -> CMD wird geschrieben
-                        if (ourTurn) {
-                            try {
-                                sendFlag.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                outputWriter.write(sendCMD);
-                                outputWriter.flush();
-                                // flush sorgt dafür, dass der Writer garantiert alle Zeichen
-                                // in den unterliegenden Ausgabestrom schreibt.
-                            } catch (IOException e) {
-                                System.out.println("Error while writing!" + sendCMD);
-                                e.printStackTrace();
-                            }
-                            try {
-                                this.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            ourTurn = false;
-                        }
-
-                        // Solange warten, bis getFlag.notify (von getCMD) augerufen wird -> wait wird beendet -> CMD wird gelesen
-
-                        try {
-                            getFlag.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        //Nachricht lesen
-                        try {
-                            String temp = inputReader.readLine();
-                            if (validDataReceived(temp)){
-                                getCMD = temp;
-                            }
-                            connected = false;
-
-                            notifyAll(); // weckt Mainthread auf
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            System.out.println("Error at reading !");
-                        }
-
-                        ourTurn = true;
-                }
-
-
-            }
-        });
-        CommThread.start();
+        } catch (IOException e) {
+            System.out.println("Error while writing!" + sendCMD);
+            e.printStackTrace();
+        }
     }
-*/
+
+    /**
+     * Gets the next command written by the connected partner
+     * The command is already separated into strings for the keyword and every single parameter if any
+     * @return a valid command form the connected partner
+     */
+    @Override
+    public String[] getCMD() {
+        if (!connected) return null;
+        System.out.println( "Connected ist true");
+        try {
+
+            String cmd = inputReader.readLine();
+            System.out.println( "inputReader liest:" + cmd);
+
+            //Check if the data received is valid
+            if(validDataReceived(cmd)){
+                //If the data is valid, return the split command
+                String[] cmdSplit = cmd.split(" ");
+                cmdSplit[0] = cmdSplit[0].toLowerCase();
+                return cmdSplit;
+            }
+            System.out.println( "The received Data is not valid");
+            return null;
+
+        }
+        //Exception handling
+        //In those cases the handler´s, calling this method need the command timeout
+
+        //This exception will occur, when the remote closes the connection,
+        //after 1 min (time set up) the readerLine() method will throw an
+        //SocketTimeoutException
+        catch( SocketTimeoutException e){
+            e.printStackTrace();
+            System.out.println("Socket Timout Exception at reading the next command");
+
+            String[] timeout = new String[1];
+            timeout[0] = "timeout";
+            return timeout;
+        }
+
+        catch(SocketException e){
+            e.printStackTrace();
+            System.out.println("Connection reset");
+            String[] timeout = new String[1];
+            timeout[0] = "timeout";
+            return timeout;
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("IO Exception at reading the next command");
+
+            String[] timeout = new String[1];
+            timeout[0] = "timeout";
+            return timeout;
+
+        }
+
+    }
 
 
+    /**
+     * This method checks if the data we received
+     * @param receivedDate The string to check
+     * @return True, if the date received is valid
+     */
     private boolean validDataReceived(String receivedDate){
         try{
             return this.validDataChecker(receivedDate);
@@ -197,10 +133,18 @@ public abstract class Communication implements ICommunication{
         }
     }
 
-    // Ships 5 5 5 5
+    /**
+     * HelpMethod to check the string
+     * @param receivedData The string to check
+     * @return True, if the data received is valid
+     *         False or NumberFormat exception, when the data is invalid
+     * @throws NumberFormatException The exception can be thrown, if the parameters aren´t numbers
+     */
     private boolean validDataChecker(String receivedData) throws NumberFormatException{
         String[] splitData = receivedData.split(" ");
-        //Keyword klein Schreiben und dann prüfen, die befehle sind nicht Groß/Kleinschreibsensitiv
+
+        //No definition of lower- or uppercase commands
+        //therefore, transform the chars into lower case
         String keyword = splitData[0].toLowerCase();
 
         switch(keyword){
@@ -211,7 +155,7 @@ public abstract class Communication implements ICommunication{
                 }
                 return false;
 
-            case "ships":   //ships 5 5 5 3 3 3 -> 3 5er Schiffe und 3 3er Schiffe
+            case "ships":
                 boolean isValid = false;
 
                 if (splitData.length >= 2){
@@ -227,26 +171,25 @@ public abstract class Communication implements ICommunication{
                 }
                 return isValid;
 
-            case "shot": //shop 4 2
+            case "shot":
                 if ( splitData.length == 3){
                     int row = Integer.parseInt(splitData[1]);
                     int column = Integer.parseInt(splitData[2]);
-                    if (!(0<=row && row <= 30)) return false;       //TODO  0 -> 1 Bei Übergabe erhöhen
-                    if (!(0<=column && column <= 30)) return false; //TODO  0 -> 1 Bei Übergabe erhöhen
-                    return true;
+                    return (1 <= row && row <= 30) && (1 <= column && column <= 30);
                 }
                 return false;
 
-            case "answer": //answer [0,1,2]
+            case "answer":
                 if ( splitData.length == 2){
                     int arg = Integer.parseInt(splitData[1]);
                     return arg == 0 || arg == 1 || arg == 2;
                 }
                 return false;
 
-            case "save": //save 34234
-            case "load": //load 23432
+            case "save":
+            case "load":
                 if (splitData.length == 2){
+                    //id never used, but necessary to throw an number format exception
                     long id = Long.parseLong(splitData[1]);
                     return true;
                 }
@@ -258,11 +201,10 @@ public abstract class Communication implements ICommunication{
                 return splitData.length == 1;
 
 
-            //Optionale Kommandos
+            //optional commands for the extended mode
             case "timeout":
                 if (splitData.length == 2){
                     long time = Long.parseLong(splitData[1]);
-                    //min 10 Sekunden muss Zeit gegeben werden
                     return time > 10000;
                 }
                 return false;
@@ -276,6 +218,10 @@ public abstract class Communication implements ICommunication{
 
     }
 
+    /**
+     * This method is called by the closeConnection method in Server.java and Client.java
+     * Closes the readers and writers
+     */
     protected void closeReaderWriter(){
 
         try {

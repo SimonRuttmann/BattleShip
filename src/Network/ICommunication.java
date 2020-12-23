@@ -2,11 +2,7 @@ package Network;
 
 public interface ICommunication {
 
-//    /**
-//     * This method needs to be started, before commands can be send or received
-//     * Starts the communication Thread to enable the transmission
-//     */
-//    void startListening();
+
     /**
      * Sends a command to the connection partner (e.g. sendCMD(CMD.ships,"5 5 5"))
      * @param command Keyword of the Command, accessible via the CMD enumeration
@@ -22,7 +18,7 @@ public interface ICommunication {
     String[] getCMD ();
 
     /**
-     * Closes the Client or SeverSocket and the associated Writers and Readers
+     * Closes the client or sever socket and the associated writers and readers
      */
     void closeConnection();
 }

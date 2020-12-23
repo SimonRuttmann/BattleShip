@@ -117,13 +117,6 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
         if (shipSunken) {
             counterShipDestroyed++;
 
-            //Spiel gewonnen
-            if (counterShipDestroyed == this.shipsplaced) {
-                this.gameWon = true;
-                return new ShotResponse(true);
-            }
-
-            //Spiel nicht gewonnen, aber Schiff versenkt
 
             //Labelaustausch und neues zerstörtes Schiffsteil nicht klickbar machen
 
@@ -287,8 +280,11 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             else {
                 Label headLabel = Field[positionHead.getX()][positionHead.getY()].getLabel();
                 //public ShotResponse (boolean gameWin, ArrayList<Point> impossiblePositions, Label label, boolean horizontal, int sizeOfSunkenShip)
-                return new ShotResponse(false, ImpossiblePositions, headLabel, horizontal, size);
+
+                                    //Counter == Ship Destroyed -> Spiel gewonnen -> sonst verloren
+                return new ShotResponse((counterShipDestroyed==this.shipsplaced), ImpossiblePositions, headLabel, horizontal, size);
             }
+
 
         }
 

@@ -35,7 +35,8 @@ public class SingleplayerControlThreadShootEnemy extends Thread{
         int yPos = GridPane.getRowIndex((Label) event.getSource());
         Point shootPosition = new Point(xPos, yPos);
 
-        //3. ! We are now in the Enemy´s sight of view !
+        System.out.println( "Player is shooting at " + xPos + " " +  yPos);
+        //3. ! We are now in the Enemy´s sight of view ! Aus unserer Sicht, beschießen wir den Gegner sein eigenes Feld
         ShotResponse shotResponse = ActiveGameState.getEnemyPlayerOwnPlayground().shoot(shootPosition);
 
         //The Ki lost the game, so the player won the game

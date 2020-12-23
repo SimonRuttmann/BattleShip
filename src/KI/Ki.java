@@ -11,7 +11,30 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.prefs.Preferences;
 
+
 public class Ki implements IKi{
+enum NextLocation { nextTop, nextBottom, nextLeft, nextRight, noDestination}
+enum DestroyStatus {notFound, destroying, destroyed}
+private DestroyStatus destroyStatus;
+private NextLocation nextLocation;
+
+    //TODO BUGFIX
+    //Die KI beschießt bereits das Spielfeld, deshalb darf im Controller nicht mehr die shoot methode aufgerufen werden -> es muss das shotResponse Objekt zurückgegeben werden
+    ShotResponse shotResponseFromKI;
+
+    //TODO BUGFIX
+    /**
+     * Bugfix
+     * @param x
+     * @param y
+     * @return
+     */
+    public boolean isNextShotInPreviousList(int x, int y){
+        for ( Point point : previousShots){
+            if ( point.getX() == x && point.getY() == y) return true;
+        }
+        return false;
+    }
 
     protected int Playgroundsize;
 
@@ -316,12 +339,17 @@ public class Ki implements IKi{
 
     //gibt einen Punkt zurück
     @Override
-    public Point getShot(IOwnPlayground playground) {
+    public ShotResponse getShot(IOwnPlayground playground) {
         //die Ki besitzt die Schwierigkeit = normal
         if(ActiveGameState.getDifficulty() == 0){
             Point returnShot;
             returnShot = normaleKi(playground);
-            return returnShot;
+
+            if (returnShot == null) System.out.println( "null Punkt übergeben");
+
+            System.out.println( "Hat beschossen: " + returnShot.getX() + " " + returnShot.getY());
+
+            return this.shotResponseFromKI;
             //TODO die normale KI unbedingt zuerst Testen sobald möglich !!
             // die Ki besitzt die Schwierigkeit = schwer
         }else{
@@ -347,12 +375,14 @@ public class Ki implements IKi{
             do {
                 random_x = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
                 random_y = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
-            }while (checkArrayList(previousShots, new Point(random_x,random_y)));
+            }while (isNextShotInPreviousList(random_x,random_y) /*checkArrayList(previousShots, new Point(random_x,random_y))*/); //TODO BUGFIX Kann hier nicht mit .contains(e) überprüft werden, da contains hier auf referenzen überprüft.
+            System.out.println("first shoot call");
             answerofShot = playground.shoot(new Point(random_x,random_y));
-
+            this.shotResponseFromKI = answerofShot; //TODO BUGFIX
             System.out.println(random_x);
             System.out.println(random_y);
             if(answerofShot.isHit()){
+            destroyStatus = DestroyStatus.destroying;
             isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
             firstHit = new Point(random_x,random_y); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert
             previousShots.add(new Point(random_x, random_y));//der Punkt wird gespeichert
@@ -366,11 +396,13 @@ public class Ki implements IKi{
         if(startDestroy){
            try{
                normalKiShot = destroyShip(firstHit,playground);
+               if (normalKiShot == null) System.out.println("Destroy ship liefert null punkt");
            }catch (Exception e){
                System.out.println("Fehler in der destroyShip Methode");
                e.printStackTrace();
            }
         }
+        if (normalKiShot == null) System.out.println( "Nullpunkt von der normalen KI übergeben");
         return normalKiShot;
     }
 
@@ -382,12 +414,22 @@ public class Ki implements IKi{
     protected boolean waslastShotaHit = true;
     protected int countDestroyShots = -1;
     protected boolean isShipcomDestroyed;
-    protected ArrayList<Point> shiptoDestroy;
+    protected ArrayList<Point> shiptoDestroy = new ArrayList<>(); //TODO BUGFIX, war nicht initialisiert
 
     //TODO stand jz sollte die Ki zufällig ein Schiff finden und wenn gefunden auch zerstören (ohne große Taktik)
     //soll das gefundene Schiff zerstören
+    //TODO von Simon zu den Bugfixes, es darf nicht auf bereits beschossenen Wasser (sowie aufgedeckt durch Schiffszerstörung als auch durch beschießen) geschossen werden,
+    //TODO deshalb habe ich bei jeder if else die Bedingung !isNextShotInPreviousList(x, y) hinzugefügt. Sie Methode checkt nur, ob der Punkt bereits in der Liste enthalten ist
     private Point destroyShip(Point firstHit,IOwnPlayground playground ){
         ShotResponse answerofShot;
+        System.out.println( "KI Flags am anfang der destroyShip Methode");
+        System.out.println( "vertFlagOben " + vertFlagOben );
+        System.out.println( "vertFlagUnten " + vertFlagUnten);
+        System.out.println( "horizFlagLinks " + horizFlagLinks );
+        System.out.println( "horizFlagRechts " + horizFlagLinks);
+        System.out.println( "isShipcomDestroyed " + isShipcomDestroyed);
+        System.out.println( "wasLastShotaHit " + waslastShotaHit);
+        System.out.println( "countDestroyShots " + countDestroyShots);
         //wenn Schiff zerstört wurde wird Ausgangszustand wieder hergestellt
         if(isShipcomDestroyed){
             vertFlagOben = false;
@@ -404,10 +446,12 @@ public class Ki implements IKi{
         //TODO die KI soll nicht systematisch um den firstHit herum schießen -> mit random arbeiten
         //es wird vom firstHit aus nach oben geschossen, wenn der Rand erreicht ist und das Schiff nicht zerstört, dann wird nach unten vom firstHit aus geschossen bis es zerstört ist
         //wird ein leeres Feld beim beschießen der Felder nach oben getroffen, wird nach unten geschossen bis das Schiffzerstört ist
-        if( !horizFlagRechts  && !vertFlagUnten  && !horizFlagLinks ){
-            if(firstHit.getY() - countDestroyShots - 1 >= 0){
+        if( !horizFlagRechts  && !vertFlagUnten  && !horizFlagLinks && !isNextShotInPreviousList(firstHit.getX(), firstHit.getY()-countDestroyShots-1)){    //TODO BUGFIX
+            if(firstHit.getY() - countDestroyShots - 1 >= 0 ){
                 Point newHit = new Point(firstHit.getX(), firstHit.getY() - countDestroyShots - 1);
+                System.out.println("second shoot call");
                 answerofShot = playground.shoot(newHit);
+                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
                 if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
                     previousShots.add(newHit);
                     shiptoDestroy.add(newHit);
@@ -435,9 +479,11 @@ public class Ki implements IKi{
                     previousShots.add(newHit);
                     return newHit;
                 }
-            }else{      //wenn die Schüsse nach oben den Rand erreichen und das Schiff nicht zerstört ist, wird nach unten geschossen bis es zerstört ist (vom firsthit punkt aus)
+            }else if ( !isNextShotInPreviousList(firstHit.getX(), firstHit.getY()+countDestroyShots+1)){ //TODO BUGFIX war vorher ein else ohne Bedingung     //wenn die Schüsse nach oben den Rand erreichen und das Schiff nicht zerstört ist, wird nach unten geschossen bis es zerstört ist (vom firsthit punkt aus)
                 Point newHit = new Point(firstHit.getX(), firstHit.getY() + countDestroyShots + 1);
+                System.out.println("third shoot call");
                 answerofShot = playground.shoot(newHit);
+                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
                 if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
                     previousShots.add(newHit);
                     shiptoDestroy.add(newHit);
@@ -469,10 +515,12 @@ public class Ki implements IKi{
         }
 
         //ist das Feld über dem firstHit kein Treffer gewesen, wird nach unten beschossen
-        if( !horizFlagRechts  && !vertFlagOben  && !horizFlagLinks ){
-            if(firstHit.getY() + countDestroyShots + 1 <= ActiveGameState.getPlaygroundSize() - 1){
+        if( !horizFlagRechts  && !vertFlagOben  && !horizFlagLinks  && !isNextShotInPreviousList(firstHit.getX(), firstHit.getY()+countDestroyShots+1)){ //TODO BUGFIX
+            if(firstHit.getY() + countDestroyShots + 1 <= ActiveGameState.getPlaygroundSize() - 1 ){
                 Point newHit = new Point(firstHit.getX(), firstHit.getY() + countDestroyShots + 1);
+                System.out.println("4th shoot call");
                 answerofShot = playground.shoot(newHit);
+                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
                 if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
                     previousShots.add(newHit);
                     shiptoDestroy.add(newHit);
@@ -502,9 +550,11 @@ public class Ki implements IKi{
                 }
             }
 
-        }else{
+        }else if ( !isNextShotInPreviousList(firstHit.getX(), firstHit.getY()-countDestroyShots-1)){ //TODO BUGFIX, war davor ein else ohne Bedingung
             Point newHit = new Point(firstHit.getX(), firstHit.getY() - countDestroyShots - 1);
+            System.out.println("5th shoot call");
             answerofShot = playground.shoot(newHit);
+            this.shotResponseFromKI = answerofShot; //TODO BUGFIX
             if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
                 previousShots.add(newHit);
                 shiptoDestroy.add(newHit);
@@ -535,10 +585,12 @@ public class Ki implements IKi{
         }
 
         //wenn über und unterhalb des firstHits kein Treffer ist, dann wird rechts vom firstHit geschossen
-        if( !vertFlagOben  && !vertFlagUnten  && !horizFlagLinks ){
+        if( !vertFlagOben  && !vertFlagUnten  && !horizFlagLinks && !isNextShotInPreviousList(firstHit.getX()+ countDestroyShots +1, firstHit.getY())){ //TODO BUGFIX
             if(firstHit.getX() + countDestroyShots + 1 <= ActiveGameState.getPlaygroundSize() - 1){
                 Point newHit = new Point(firstHit.getX() + countDestroyShots + 1, firstHit.getY() );
+                System.out.println("6th shoot call");
                 answerofShot = playground.shoot(newHit);
+                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
                 if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
                     previousShots.add(newHit);
                     shiptoDestroy.add(newHit);
@@ -566,9 +618,11 @@ public class Ki implements IKi{
                     previousShots.add(newHit);
                     return newHit;
                 }
-            }else{      //wenn die Schüsse nach rechts den Rand erreichen und das Schiff nicht zerstört ist, wird nach links geschossen bis es zerstört ist (vom firsthit punkt aus)
+            }else if (!isNextShotInPreviousList(firstHit.getX() - countDestroyShots -1, firstHit.getY())){ //TODO BUGFIX, war davor ein else ohne Bedingung     //wenn die Schüsse nach rechts den Rand erreichen und das Schiff nicht zerstört ist, wird nach links geschossen bis es zerstört ist (vom firsthit punkt aus)
                 Point newHit = new Point(firstHit.getX() - countDestroyShots - 1, firstHit.getY());
+                System.out.println("7th shoot call");
                 answerofShot = playground.shoot(newHit);
+                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
                 if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
                     previousShots.add(newHit);
                     shiptoDestroy.add(newHit);
@@ -599,10 +653,12 @@ public class Ki implements IKi{
             }
         }
 
-        if(!horizFlagRechts  && !vertFlagOben  && !vertFlagUnten){
+        if(!horizFlagRechts  && !vertFlagOben  && !vertFlagUnten && !isNextShotInPreviousList(firstHit.getX()- countDestroyShots -1 , firstHit.getY())){ //TODO BUGFIX
             if(firstHit.getX() - countDestroyShots - 1 >= 0){
                 Point newHit = new Point(firstHit.getX() - countDestroyShots - 1, firstHit.getY());
+                System.out.println("8th shoot call");
                 answerofShot = playground.shoot(newHit);
+                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
                 if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
                     previousShots.add(newHit);
                     shiptoDestroy.add(newHit);
@@ -631,9 +687,11 @@ public class Ki implements IKi{
                     return newHit;
                 }
             }
-        }else{
+        }else if ( !isNextShotInPreviousList(firstHit.getX() + countDestroyShots +1, firstHit.getY())){ //TODO BUGFIX, war davor ein else ohne Bedingung
                 Point newHit = new Point(firstHit.getX() + countDestroyShots + 1, firstHit.getY() );
+                System.out.println("9th shoot call");
                 answerofShot = playground.shoot(newHit);
+                this.shotResponseFromKI = answerofShot; //TODO BUGFIX
                 if (answerofShot.isHit() && !answerofShot.isShipDestroyed()){
                     previousShots.add(newHit);
                     shiptoDestroy.add(newHit);
@@ -662,6 +720,13 @@ public class Ki implements IKi{
                     return newHit;
                 }
         }
+        System.out.println("Keine position zum schießen gefunden");
+        System.out.println( "vertFlagOben " + vertFlagOben );
+        System.out.println( "vertFlagUnten " + vertFlagUnten);
+        System.out.println( "horizFlagLinks " + horizFlagLinks );
+        System.out.println( "horizFlagRechts " + horizFlagLinks);
+        System.out.println( "countDestroyShots " + countDestroyShots);
+
         return null;
     }
 

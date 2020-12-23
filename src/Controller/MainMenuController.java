@@ -71,7 +71,7 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.playerVsKi);
 
-        Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame.fxml"));
+        Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame2.fxml"));
         Main.primaryStage.setScene(new Scene(loadGame));
         Main.primaryStage.show();
     }
@@ -227,7 +227,7 @@ public class MainMenuController implements Initializable {
     //    imageView.setFitHeight(Main.HEIGHT);
 
 
-        BackgroundImage myBI= new BackgroundImage(new Image(getClass().getResourceAsStream("/Gui_View/images/BattleshipSuited.jpg")),
+        BackgroundImage myBI= new BackgroundImage(new Image(getClass().getResourceAsStream("/Gui_View/images/WindowBackground.jpg")),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
 

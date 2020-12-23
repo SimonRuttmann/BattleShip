@@ -24,32 +24,30 @@ public class SingleplayerControlThreadPerformEnemyAction extends Thread{
 
         while ( !ActiveGameState.isYourTurn()){
             //Get the position, where the enemy wants to shoot
-            Point posToShoot = null;
-            posToShoot = ActiveGameState.getKi().getShot(ActiveGameState.getOwnPlayerIOwnPlayground());
+            //Point posToShoot = null;
+            System.out.println( "Enemy Turn");
+
+            //ich übergebe der KI mein eigenes spielfeld, die KI beschießt damit mein eigenes Spielfeld
+            ShotResponse shotResponse = ActiveGameState.getKi().getShot(ActiveGameState.getOwnPlayerIOwnPlayground());
+
+            //System.out.println( "Enemy is shooting at " + posToShoot.getX() + posToShoot.getY());
+
+
             //Shoot the Players ownPlayground
-            ShotResponse shotResponse = ActiveGameState.getEnemyPlayerOwnPlayground().shoot(posToShoot);
+            //Ich lasse die Ki mein eigenes spielfeld beschießen, Problem ist, das die KI schon mein eigenes Spielfeld beschießt
+            //ShotResponse shotResponse = ActiveGameState.getOwnPlayerIOwnPlayground().shoot(posToShoot);
 
             // The player lost
             if (shotResponse.isGameLost()){
                 HelpMethods.winOrLose(false);
                 ActiveGameState.setRunning(false);
-            }
-
-            int answerFromPlayer;
-            if (shotResponse.isShipDestroyed()){
-                answerFromPlayer = 2;
-            }
-            else if (shotResponse.isHit()){
-                answerFromPlayer = 1;
-            }
-            else {
-                answerFromPlayer = 0;
+                break;
             }
 
             //Mark it at the EnemyPlayground of the Ki
-            ActiveGameState.getEnemyPlayerEnemyPlayground().shoot(posToShoot, answerFromPlayer );
+           //ActiveGameState.getEnemyPlayerEnemyPlayground().shoot(posToShoot, answerFromPlayer );
 
-            if ( answerFromPlayer == 1 || answerFromPlayer == 2 ) {
+            if ( shotResponse.isHit() ) {
                 ActiveGameState.setYourTurn(false);
                 //TODO Yannick diplay Player's Turn
             }

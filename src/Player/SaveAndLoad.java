@@ -30,7 +30,7 @@ public class SaveAndLoad {
             return false;
         }
     }
-
+    //TODO return boolean
     public static Savegame load(String temp){
 
         try {

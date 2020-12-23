@@ -9,6 +9,7 @@ import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -153,30 +154,52 @@ public class PlaceShips implements Initializable {
         //--------------------------------------------------------------------------------------------------------------
 
 
-
-        // TODO BIG: make resizeable window looking nice
-        System.out.println("window size: " + Main.primaryStage.getHeight()); //todo use or delete - debug-line
-        //todo public scale - for fields -> pref size -> better way 2:3 for programm fix -> use SceneSizeChangeListener to scale properly all the time - no strange things happening
         //The scale of one Field,   Ship size 2 -> Image: | 30px | 30px |
         //                          Ship size 3 -> Image: | 30px | 30px | 30px |
-        int scale = 30; //todo: scale should be dependent on window size, no fix value like now
+        // scale is depended on playground size
+        int scale = 30;
+        if (5 <= gamesize && gamesize <= 10) {
+            scale = 45;
+        } else if (11 <= gamesize && gamesize <= 15) {
+            scale = 35;
+        } else if (16 <= gamesize && gamesize <= 20) {
+            scale = 25;
+        } else if (21 <= gamesize && gamesize <= 25) {
+            scale = 20;
+        } else if (26 <= gamesize && gamesize <= 30) {
+            scale = 15;
+        }
 
+        // finalscale is needed due to using scale in lambda expressions
+        final int finalscale = scale;
 
 
         // for ShipLabels at the right side of the Playground + the (x/x placed)-Labels --------------------------------
-        // Sets the prefSize depending on the size of the ship + loads the Image of each ship
+        // Sets the prefSize depending on the size of the ship + loads the Image of each ship //todo size
+
         twoShip.setPrefSize(2 * scale, scale);
-        twoShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));
+        ImageView image2 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png")));
+        image2.fitWidthProperty().bind(new SimpleIntegerProperty(2 * scale).asObject());
+        image2.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
+        twoShip.setGraphic(image2);
 
         threeShip.setPrefSize(3 * scale, scale);
-        threeShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png"))));
+        ImageView image3 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png")));
+        image3.fitWidthProperty().bind(new SimpleIntegerProperty(3 * scale).asObject());
+        image3.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
+        threeShip.setGraphic(image3);
 
         fourShip.setPrefSize(4 * scale, scale);
-        fourShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png"))));
+        ImageView image4 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png")));
+        image4.fitWidthProperty().bind(new SimpleIntegerProperty(4 * scale).asObject());
+        image4.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
+        fourShip.setGraphic(image4);
 
         fiveShip.setPrefSize(5 * scale, scale);
-        fiveShip.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));
-
+        ImageView image5 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png")));
+        image5.fitWidthProperty().bind(new SimpleIntegerProperty(5 * scale).asObject());
+        image5.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
+        fiveShip.setGraphic(image5);
 
         // Labels e.g. (0 out of 4 Placed) -> set Height Matching to scale -> ship labels depend on scale
         bracket2.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
@@ -196,8 +219,8 @@ public class PlaceShips implements Initializable {
 
 
         // playground field --------------------------------------------------------------------------------------------
-        // Label right above the GridPane (= the field) will show the Name of the Player
-        ownFieldLabel.setText(ActiveGameState.getOwnPlayerName() + "'s Spielfeld");
+        // set Labels for the Playground
+        ownFieldLabel.setText("Own Playground");
 
 
         // the gridPane has gaps - little Lines between all the fields
@@ -218,7 +241,7 @@ public class PlaceShips implements Initializable {
                 //Creating a new label
                 Label label = new Label();
                 label.setStyle(blue); // at the moment, water is displayed blue (color can be changed here)
-                label.setMinSize(5, 5);
+                label.setMinSize(scale, scale);
                 label.setPrefSize(scale, scale);
                 label.setMaxSize(scale, scale);
 
@@ -382,7 +405,7 @@ public class PlaceShips implements Initializable {
                             twoShipLabel = new Label();
 
                             // help Method placeNewShip is called -> places Ship in Gui and backend
-                            placeNewShip(twoShipLabel, label,2, finalX, finalY, scale);
+                            placeNewShip(twoShipLabel, label,2, finalX, finalY, finalscale);
 
 
                             // incrementing the counter for the number of ShipSize2s are placed
@@ -400,7 +423,7 @@ public class PlaceShips implements Initializable {
 
                         // moving already placed ship to a new location: move the ship label
                         else {
-                            moveShip(twoShipLabel, label, 2, finalX, finalY, scale);
+                            moveShip(twoShipLabel, label, 2, finalX, finalY, finalscale);
                         }
                     }
                     // End Ship Size two -------------------------------------------------------------------------------
@@ -412,7 +435,7 @@ public class PlaceShips implements Initializable {
 
                         if(event.getDragboard().getString().equals("3N")) {
                             threeShipLabel = new Label();
-                            placeNewShip(threeShipLabel, label,3, finalX, finalY, scale);
+                            placeNewShip(threeShipLabel, label,3, finalX, finalY, finalscale);
 
                             amountShipSize3placed++;
                             SimpleIntegerProperty three = new SimpleIntegerProperty(amountShipSize3placed);
@@ -422,7 +445,7 @@ public class PlaceShips implements Initializable {
                                 threeShip.setDisable(true);
                         }
                         else {
-                            moveShip(threeShipLabel, label, 3, finalX, finalY, scale);
+                            moveShip(threeShipLabel, label, 3, finalX, finalY, finalscale);
                         }
                     }
                     // End Ship Size three -----------------------------------------------------------------------------
@@ -434,7 +457,7 @@ public class PlaceShips implements Initializable {
 
                         if(event.getDragboard().getString().equals("4N")) {
                             fourShipLabel = new Label();
-                            placeNewShip(fourShipLabel, label,4, finalX, finalY, scale);
+                            placeNewShip(fourShipLabel, label,4, finalX, finalY, finalscale);
 
                             amountShipSize4placed++;
                             SimpleIntegerProperty four = new SimpleIntegerProperty(amountShipSize4placed);
@@ -444,7 +467,7 @@ public class PlaceShips implements Initializable {
                                 fourShip.setDisable(true);
                         }
                         else {
-                            moveShip(fourShipLabel, label, 4, finalX, finalY, scale);
+                            moveShip(fourShipLabel, label, 4, finalX, finalY, finalscale);
                         }
                     }
                     // End Ship Size four ------------------------------------------------------------------------------
@@ -456,7 +479,7 @@ public class PlaceShips implements Initializable {
 
                         if(event.getDragboard().getString().equals("5N")) {
                             fiveShipLabel = new Label();
-                            placeNewShip(fiveShipLabel, label,5, finalX, finalY, scale);
+                            placeNewShip(fiveShipLabel, label,5, finalX, finalY, finalscale);
 
                             amountShipSize5placed++;
                             SimpleIntegerProperty five = new SimpleIntegerProperty(amountShipSize5placed);
@@ -466,7 +489,7 @@ public class PlaceShips implements Initializable {
                                 fiveShip.setDisable(true);
                         }
                         else {
-                            moveShip(fiveShipLabel, label, 5, finalX, finalY, scale);
+                            moveShip(fiveShipLabel, label, 5, finalX, finalY, finalscale);
                         }
                     }
                     // End Ship Size five ------------------------------------------------------------------------------
@@ -830,9 +853,6 @@ public class PlaceShips implements Initializable {
                     newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
-                    break;
                 case 4:
                     newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
                     newShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
@@ -883,11 +903,8 @@ public class PlaceShips implements Initializable {
                     existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
                 case 4:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale );
+                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
                     existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 5:
@@ -925,9 +942,6 @@ public class PlaceShips implements Initializable {
                     existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
                     break;
                 case 3:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
-                    break;
                 case 4:
                     existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
                     existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);

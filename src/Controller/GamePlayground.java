@@ -13,7 +13,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.logging.Handler;
 public class GamePlayground implements Initializable {
 
 
+    // import from FXML
     @FXML
     private Button cancleGame;
     @FXML
@@ -34,42 +36,65 @@ public class GamePlayground implements Initializable {
     private Label ownFieldLabel;
     @FXML
     private Label enemyFieldLabel;
+    @FXML
+    private AnchorPane anchorPane;
+    @FXML
+    private Group groupOwnP;
+    @FXML
+    private Group groupEnemP;
 
 
-    public Group groupOwnP;
-    public Group groupEnemP;
-
-    public static Group groupEnemyPS;
-
-    public static Group getGroupEnemP(){
-        return groupEnemyPS;
-    }
+    int gamesize = ActiveGameState.getPlaygroundSize();
 
 
-    // todo: Feld zusammenhängend machen + Window size so, dass ganzes Feld passt aber nicht kleiner
+    /** initialize-method:
+     * -----------------------------------------------------------------------------------------------------------------
+     *  ->
+     *----------------------------------------------------------------------------------------------------------------*/
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        ActiveGameState.setSceneIsGamePlayground(true);
+        ActiveGameState.setSceneIsPlaceShips(false);
+
+
+        // initialize the static variable groupEnemyPS -> used in MultiplayerControlThreadShootEnemy
         groupEnemyPS = groupEnemP;
 
-        // Versehentliches Schließen des Spiels verhindern + Speicheraufforderung
+
+        //prevent the player from closing the game accidentally -> should be asked wether he wants to save or hard quit
         Main.primaryStage.setOnCloseRequest(e -> {
             e.consume();
             Gui_View.HelpMethods.closeProgrammSaveGame();
         });
 
 
-        ActiveGameState.setSceneIsGamePlayground(true);
-        ActiveGameState.setSceneIsPlaceShips(false);
-        // set Labels to Player Names
-        ownFieldLabel.setText(ActiveGameState.getOwnPlayerName() + "'s Spielfeld");
-        // todo evtl für Gegner - bekommen wir einen Namen?????
-        if(ActiveGameState.isMultiplayer())
-            System.out.println("gegenername");/// name from gegner todo
-        else
-            System.out.println("bot name");// name für ki überlegen todo
+        //The scale of one Field,   Ship size 2 -> Image: | 30px | 30px |
+        //                          Ship size 3 -> Image: | 30px | 30px | 30px |
+        // scale is depended on playground size
+        int scale = 30;
+        if (5 <= gamesize && gamesize <= 10) {
+            scale = 45;
+        } else if (11 <= gamesize && gamesize <= 15) {
+            scale = 35;
+        } else if (16 <= gamesize && gamesize <= 20) {
+            scale = 25;
+        } else if (21 <= gamesize && gamesize <= 25) {
+            scale = 20;
+        } else if (26 <= gamesize && gamesize <= 30) {
+            scale = 15;
+        }
 
-        // todo: Scene builder -> langer Name + kleines Feld: Felder not in Mitte -- verbessern
-        // todo -> oder eben kein name- einfach eigenes feld gegnerisches feld, name nur fürs abspeichern
+        // finalscale is needed due to using scale in lambda expressions
+        final int finalscale = scale;
+
+
+
+        // playground field --------------------------------------------------------------------------------------------
+        // set Labels for the Playgrounds
+        ownFieldLabel.setText("Own Playground");
+        enemyFieldLabel.setText("Enemy Playground");
+
 
         // 2D fields for Labels:
         int gamesize = ActiveGameState.getPlaygroundSize();
@@ -78,45 +103,46 @@ public class GamePlayground implements Initializable {
         enemyField.setHgap(1);
         enemyField.setVgap(1);
 
+
         // own Playground
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
                 Label label = new Label();
 
-                //fliegt später raus
+                // set background for labels
                 label.setStyle("-fx-background-color: lightblue");
 
-                label.setMinSize(5, 5);
-                label.setPrefSize(30, 30);
-                label.setMaxSize(30, 30);
+                label.setMinSize(scale, scale);
+                label.setPrefSize(scale, scale);
+                label.setMaxSize(scale, scale);
                 GridPane.setConstraints(label, h, v);
                 ownField.getChildren().addAll(label);
             }
         }
+
 
         // enemy Playground
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
                 Label label= new Label();
 
-
                 // every labels gets it's handler: GameShootEnemy -> activated on mouse click: fire shot
                 label.setOnMouseClicked(new GameShootEnemy());
 
-                //todo fliegt später raus
+                // set background for labels
                 label.setStyle("-fx-background-color: lightblue");
 
-                label.setMinSize(5, 5);
-                label.setPrefSize(30, 30);
-                label.setMaxSize(30, 30);
+                label.setMinSize(scale, scale);
+                label.setPrefSize(scale, scale);
+                label.setMaxSize(scale, scale);
                 GridPane.setConstraints(label, h, v);
                 enemyField.getChildren().addAll(label);
             }
         }
 
-        /* the elements of a grid-pane can be returned as an array of Objects - cast Objetct to Label, than it is possible
-           to change the properties of the Label, e.g. the color
-           ! important: Objects of grid pane are stored "vertically"*/
+        //  the elements of a grid-pane can be returned as an array of Objects - cast Objetct to Label, than it is possible
+        //  to change the properties of the Label, e.g. the color
+        //  -> important: Objects of grid pane are stored "vertically"
 
         // connect Labels to Playground - labels are saved in arrays
         Object[] ownFieldArray = new Object[gamesize*gamesize];
@@ -136,10 +162,36 @@ public class GamePlayground implements Initializable {
             multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
         }
+
+
+        // setting the background image
+        setBackground();
     }
 
     // Group -> Add Label (localX, localY, Schiffslabel)
     // -> localX und localY bekommen wir von Label.getLayoutX und Label.getLayoutY -> Von dem Label, das wir bei shoot mit Answer 2 zurückbekommen + Größe vom Schiff + Ausrichtung vom Schiff (also Vertikal oder Horizontal)
+
+
+
+    // sets scene background
+    public void setBackground(){
+
+        BackgroundImage myBI= new BackgroundImage(new Image(getClass().getResourceAsStream("/Gui_View/images/WindowBackground.jpg")),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        this.anchorPane.setBackground(new Background(myBI));
+    }
+
+
+
+    // getter for EnemyP Group -> used in MultiplayerControlThreadShootEnemy
+    public static Group groupEnemyPS;
+
+    public static Group getGroupEnemP(){
+        return groupEnemyPS;
+    }
+
 
     // when Button cancleGame is pressed - save or no saving?
     public void cancleGameMethod() {

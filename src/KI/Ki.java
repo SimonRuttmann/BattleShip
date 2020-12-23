@@ -19,31 +19,120 @@ public class Ki implements IKi{
         Playgroundsize = ActiveGameState.getPlaygroundSize();
     }
 
-    @Override
-    public ArrayList<IShip> placeships(IOwnPlayground playground) {
+
+    public ArrayList<IShip> placeShip(ArrayList<Point> occupiedDotsList, ArrayList<IShip> kiShips, ArrayList<IShip> newShips, IOwnPlayground playground, int laufvariable){
+
+        /*Ablauf (alt):
+        1. Zufälliger Punkt wird erstellt und ein dazu eine gültige und passende Ausrichtung des Schiffs
+        2. Die Schiffspunkte werden in eine Arrayliste gespeichert
+        3. Das Schiff wird surrounded und die Punkte ebenfalls in die Arrayliste gespeichert
+        4. Die start und endposition des Schiffs wird gespeichert und eine Liste mit den Schiffen zurückgegeben
+         */
+
+        //Rekursionsauflösung alle Schiffe plaziert
+        if ( laufvariable >= kiShips.size()){
+            return newShips;
+        }
+
 
         int random_x;
         int random_y;
+        int placementStyle;
+        int counter = 0;
+        ArrayList<Point> checkedPoints = new ArrayList<>(occupiedDotsList);
+
+        //Plaziere Schiff an der Stelle laufvariable in der Liste
+        do {
+
+
+            IShip kiShip = kiShips.get(laufvariable);
+            random_x = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
+            random_y = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
+
+            Point point = new Point ( random_x, random_y);
+            placementStyle = -1;
+
+            if (checkedPoints.contains(point) ) continue;
+
+            checkedPoints.add(point);
+            placementStyle = getPlacementStyle(new Point(random_x, random_y), kiShip.getSize(), ActiveGameState.getPlaygroundSize(), occupiedDotsList);
+            counter++;
+
+            // Für jede gültige Plazierung, führe die Rekursion aus
+            if ( placementStyle >= 0){
+                Point newEndPos;
+
+                //Ermittle Schiffspositionen
+                switch(placementStyle){
+                    case 0: newEndPos = new Point ( random_x ,                        random_y-kiShip.getSize()+1); break;      //Oben
+                    case 1: newEndPos = new Point ( random_x + kiShip.getSize()-1,    random_y); break;                         //Rechts
+                    case 2: newEndPos = new Point ( random_x ,                        random_y+kiShip.getSize()-1); break;      //Unten
+                    case 3: newEndPos = new Point ( random_x - kiShip.getSize()+1,    random_y); break;                         //Links
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + placementStyle);
+                }
+
+                //Füge Schiff mit den Positionen hinzu
+                newShips.add(new Ship(new Point(random_x, random_y), newEndPos, playground));
+
+
+                //Schiffspositionen + Umgebungspositionen
+                ArrayList<Point> shipPositions = new ArrayList<>();
+                shipPositions = markShipDots(point, kiShip.getSize(), placementStyle, shipPositions);
+
+                ArrayList<Point> shipPositionsAndSurroundings = surroundShipDots(shipPositions);
+                shipPositionsAndSurroundings.addAll(shipPositions);
+
+
+                //Bishige Schiffspositionen (aus früheren Rekursionsschritten + Schiffspostion + Umgebungsposition von aktuellem Rekursionschritt)
+                ArrayList<Point> newOccupiedDotsList = new ArrayList<Point>(occupiedDotsList);
+                newOccupiedDotsList.addAll(shipPositionsAndSurroundings);
+
+                laufvariable++;
+                ArrayList<IShip>  ergebnis = placeShip(newOccupiedDotsList, kiShips, newShips, playground, laufvariable);
+                laufvariable--;
+
+                // Für diese Plazierung des Schiffs gibt es keine Möglichkeit die restlichen zu plazieren
+                if ( ergebnis == null){
+                    placementStyle = -404;
+                    newShips.remove(kiShip);
+                }
+            }
+
+
+        } while (placementStyle < 0 && counter < ActiveGameState.getPlaygroundSize()*ActiveGameState.getPlaygroundSize());
+
+        //Rekursionsauflösung, Schiff kann nicht plaziert werden
+        if ( placementStyle < 0){
+            return null;
+        }
+
+        //Es hat funktioniert
+        return newShips;
+    }
+
+    public ArrayList<IShip> placeships(IOwnPlayground playground) {
+
+
         ArrayList<Point> occupiedDotsList = new ArrayList<>();
         ArrayList<IShip> kiShips = new ArrayList<>();
         ArrayList<IShip> newShips = new ArrayList<>();
 
-
         //Alles Schifftypen werden in eine Arraylist gespeichert damit sie unabhängig bearbeitet werden können
-        for(int u = 0; u <= ActiveGameState.getAmountShipSize2(); u++){
-            Ship ship = new Ship(new Point(0,0), new Point(0, 1), playground);
+        for(int u = 0; u < ActiveGameState.getAmountShipSize5(); u++){
+            Ship ship = new Ship(new Point(0,0), new Point(0, 4), playground);
             kiShips.add(ship);
         }
-        for(int u = 0; u <= ActiveGameState.getAmountShipSize3(); u++){
-            Ship ship = new Ship(new Point(0,0), new Point(0, 2), playground);
-            kiShips.add(ship);
-        }
-        for(int u = 0; u <= ActiveGameState.getAmountShipSize4(); u++){
+        for(int u = 0; u < ActiveGameState.getAmountShipSize4(); u++){
             Ship ship = new Ship(new Point(0,0), new Point(0, 3), playground);
             kiShips.add(ship);
         }
-        for(int u = 0; u <= ActiveGameState.getAmountShipSize5(); u++){
-            Ship ship = new Ship(new Point(0,0), new Point(0, 4), playground);
+        for(int u = 0; u < ActiveGameState.getAmountShipSize3(); u++){
+            Ship ship = new Ship(new Point(0,0), new Point(0, 2), playground);
+            kiShips.add(ship);
+        }
+        for(int u = 0; u < ActiveGameState.getAmountShipSize2(); u++){
+            Ship ship = new Ship(new Point(0,0), new Point(0, 1), playground);
             kiShips.add(ship);
         }
 
@@ -54,28 +143,11 @@ public class Ki implements IKi{
         3. Das Schiff wird surrounded und die Punkte ebenfalls in die Arrayliste gespeichert
         4. Die start und endposition des Schiffs wird gespeichert und eine Liste mit den Schiffen zurückgegeben
          */
-        for (IShip kiShip : kiShips) {
 
-            ArrayList<Point> currentShipDots;
-            int placementStyle;//todo erst die großen Schiffe platzieren, dann die kleinen -> bessere Performance
-            //In der do-While Schleife wird ein zufälliger Punkt erzeugt und überprüft ob es für ihn einen Style/ eine Ausrichtung gibt die gültig bzw. möglich ist
-            do {
-                random_x = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
-                random_y = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
-                placementStyle = getPlacementStyle(new Point(random_x, random_y), kiShip.getSize(), ActiveGameState.getPlaygroundSize(), occupiedDotsList);
-            } while (placementStyle < 0);
-            //wurde ein gültiger Style gefunden, dann werden die Flächen des Schiffs gespeichert
-            occupiedDotsList.addAll(markShipDots(new Point(random_x, random_y), kiShip.getSize(), placementStyle, occupiedDotsList)); //die Punkte des Schiffs werden in die Liste gespeichert
-            //das Aktuelle Schiff wird in eine extra Liste gespeichert
-            currentShipDots = markShipDots(new Point(random_x, random_y), kiShip.getSize(), placementStyle, occupiedDotsList);
-            //die umgebenden Schiffspunkte in die occupiedDotsList hinzufügen
-            occupiedDotsList.addAll(surroundShipDots(currentShipDots));
 
-            //ändern des start und endwertes der Position des Schiffs
-            Point newEndPos = currentShipDots.get(currentShipDots.size() - 1);
-            newShips.add(new Ship(new Point(random_x, random_y), newEndPos, playground));
-        }
-        return newShips;
+       return placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
+
+
     }
 
     //Markiert alle Punkte um das Schiff herum
@@ -131,15 +203,14 @@ public class Ki implements IKi{
         }
         return currShip;
     }
+
     //prüft ob der Punkt in der übergebenen Arrayliste vorhanden ist
    protected boolean checkArrayList(ArrayList<Point> list, Point p){
         if(list == null) {
             return false;
         }
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i).getX() == p.getX() && list.get(i).getY() == p.getY()){
-               return true;
-            }
+        if(list.contains(p)){
+            return true;
         }
         return false;
    }
@@ -183,8 +254,8 @@ public class Ki implements IKi{
         int style;
         int count = 0;
         boolean check = false;
+        style = getRandomInt(0 , 3);
         do{
-            style = getRandomInt(0 , 3);
             if(style == 0){
                 for(int i = 0; i < size; i++){
                     if(checkArrayList(list, new Point(p.getX(), p.getY() - i))){
@@ -226,8 +297,9 @@ public class Ki implements IKi{
                 else
                     check = true;
             }
+            style = (style + 1) % 4;
             count++;
-        }while(check && count <= 20);
+        }while(check && count < 4);
        return -1;
     }
 
@@ -253,13 +325,13 @@ public class Ki implements IKi{
             //TODO die normale KI unbedingt zuerst Testen sobald möglich !!
             // die Ki besitzt die Schwierigkeit = schwer
         }else{
-
+            //TODO schwere KI
         }
         return null;
     }
 
     protected boolean isHitFlag; //default Wert ist false
-    protected ArrayList<Point> previousShots;
+    protected ArrayList<Point> previousShots = new ArrayList<>();
     protected Point firstHit;
     protected boolean startDestroy;
     protected Point normalKiShot;
@@ -278,6 +350,8 @@ public class Ki implements IKi{
             }while (checkArrayList(previousShots, new Point(random_x,random_y)));
             answerofShot = playground.shoot(new Point(random_x,random_y));
 
+            System.out.println(random_x);
+            System.out.println(random_y);
             if(answerofShot.isHit()){
             isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
             firstHit = new Point(random_x,random_y); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert
@@ -327,6 +401,7 @@ public class Ki implements IKi{
             countDestroyShots++;
         }
 
+        //TODO die KI soll nicht systematisch um den firstHit herum schießen -> mit random arbeiten
         //es wird vom firstHit aus nach oben geschossen, wenn der Rand erreicht ist und das Schiff nicht zerstört, dann wird nach unten vom firstHit aus geschossen bis es zerstört ist
         //wird ein leeres Feld beim beschießen der Felder nach oben getroffen, wird nach unten geschossen bis das Schiffzerstört ist
         if( !horizFlagRechts  && !vertFlagUnten  && !horizFlagLinks ){
@@ -524,7 +599,7 @@ public class Ki implements IKi{
             }
         }
 
-        if( !horizFlagRechts  && !vertFlagOben  && !vertFlagUnten){
+        if(!horizFlagRechts  && !vertFlagOben  && !vertFlagUnten){
             if(firstHit.getX() - countDestroyShots - 1 >= 0){
                 Point newHit = new Point(firstHit.getX() - countDestroyShots - 1, firstHit.getY());
                 answerofShot = playground.shoot(newHit);

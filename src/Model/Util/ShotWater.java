@@ -5,8 +5,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.beans.Transient;
+
 public class ShotWater implements IDrawable {
-    private Label label;
+
+    private transient Label label;
     private boolean validShipPlacementMarker = true;
 
     public ShotWater() {
@@ -14,6 +17,7 @@ public class ShotWater implements IDrawable {
 
     @Override
     public void draw(){
+        if(this.label == null) return;
 
        // System.out.print("*shotWater*");
         // -> Gui should update when drawing shotWater
@@ -49,12 +53,14 @@ public class ShotWater implements IDrawable {
 
     @Override
     public void setLabelNonClickable() {
+        if ( this.label == null) return;
         Platform.runLater(()-> this.label.setDisable(true));
 
     }
 
     @Override
     public void setLabelClickable() {
+        if ( this.label == null ) return;
         Platform.runLater(()-> this.label.setDisable(false));
 
     }

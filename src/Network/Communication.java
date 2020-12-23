@@ -3,6 +3,7 @@ package Network;
 import com.sun.javaws.Main;
 
 import java.io.*;
+import java.net.SocketTimeoutException;
 
 public abstract class Communication implements ICommunication{
     private boolean connected = false;
@@ -59,33 +60,24 @@ public abstract class Communication implements ICommunication{
         if (!connected) return null;
         System.out.println( "Connected ist true");
         try {
-           /* lock = true;
-            Thread timeout = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {//TODO simpletimelimiter
-                        for (int i = 0; i < 1000; i++){
-                            i = i++;
-                            wait(1000);
-                        }
-                        lock = false;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-            */// -> Thread inputReader.readLine();
 
-                String cmd = inputReader.readLine();
+            String cmd = inputReader.readLine();
             System.out.println( "inputReader liest:" + cmd);
-            //timout.join() inputReaderThread.join();
-            // -> Wer zuerst joint -> Befehl oder Befehl"Timout"
+
             if(validDataReceived(cmd)){
-                return cmd.split(" ");
+                String[] cmdSplit = cmd.split(" ");
+                cmdSplit[0] = cmdSplit[0].toLowerCase();
+                return cmdSplit;
             }
+            System.out.println( "The received Data is not valid");
             return null;
 
-        } catch (IOException e) {
+        }catch( SocketTimeoutException e){
+            String[] timeout = new String[1];
+            timeout[0] = "timeout";
+            return timeout;
+        }
+        catch (IOException e) {
             e.printStackTrace();
             System.out.println("Could not read next Command!");
             return null;

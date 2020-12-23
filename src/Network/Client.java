@@ -12,7 +12,7 @@ public class Client extends Communication {
         try {
 
             client = new Socket(ipAddress, 50000);
-            client.setSoTimeout(600000); //1min keine Antwort vom Client -> beendet sich selber
+            client.setSoTimeout(60000); //1min keine Antwort vom Client -> beendet sich selber
             this.setConnected(true);
             // Ein- und Ausgabestrom des Sockets ermitteln
             // und als BufferedReader bzw. Writer verpacken

@@ -19,5 +19,5 @@ public interface IServer extends ICommunication{
      * @return State of Connection, returns true if the server connected and false if an timeout occured
      */
     boolean startSeverConnection();
-    //TODO TIMEOUT implementieren
+
 }

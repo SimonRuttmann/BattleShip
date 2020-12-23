@@ -4,6 +4,7 @@
 
 package Gui_View;
 
+import Player.ActiveGameState;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,22 +21,32 @@ git rm --cached -r .savedGames
  */
 
     public static Stage primaryStage;
-    public static final int WIDTH = 600;//1280;
-    public static final int HEIGHT = 400;//720;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
     CancelGame cancelGame = new CancelGame();
     WinLose winLose = new WinLose();
 
     public static void main(String[] args) {
-        launch(args);
+            launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;
 
-        //todo MainMenu 1 vs 2
-        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
+
+        //TODO new Scene
+        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
+        ActiveGameState.newView = true;
+
+
+        //TODO old Scene
+        //Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
+
+
+        // root.getStylesheets().add(getClass().getResource("Stylesheets/Radio.css").toExternalForm());
         primaryStage.setTitle("Schiffe versenken");
+
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);
         //primaryStage.setMinWidth(width);

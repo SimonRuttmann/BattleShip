@@ -33,10 +33,10 @@ public class LoadGame implements Initializable {
         ObservableList<File> observableList = FXCollections.observableArrayList();
         // dir is the folder that contains our saved game files - different for singleplayer and multiplayer
         File dir;
-        if(ActiveGameState.isMultiplayer())         //TODO AN DER DATEIENDUNG HERUMZUPFUSCHEN IST MURKS HOCH 10 -> ORDNER SINGLEPLAYER UND ORDNER MULTIPLAYER -> SAVEGAME DARAUS LADEN -> DIE DATEIENDUNG BLEIBT NATÜRLICH .json, DA ES OFFENSICHTLICHERWEISE EINE JSON DATEI IST...
-            dir = new File(".savedGames"); //todo mit simon: dateiendung -> besser .svsingle .svmulti ?? und laden only multiplayer with ip????
+        if(ActiveGameState.isMultiplayer())
+            dir = new File(".savedGames");
         else
-            dir = new File(".savedGames"); // todo: dann statt über ordner über filename schauen???
+            dir = new File(".savedGames");
 
         File[] savedGames = dir.listFiles((directory, filename) -> filename.endsWith(".json"));
         // add files to observable List and furthermore to gameList
@@ -73,9 +73,9 @@ public class LoadGame implements Initializable {
                     try {
                         // loading .json file from memory: .savedGames
                         System.out.println(cell.getItem()); //todo savegame not needed
-                        Savegame gameObject = new Savegame();
+
                         String temp = cell.getItem().toString();
-                        gameObject = SaveAndLoad.load(gameObject, temp);
+                        Savegame gameObject = SaveAndLoad.load(temp);
                         // todo test if loading was successful -> not correct at the moment
                         if (gameObject != null) {
                             System.out.println("loading successful");

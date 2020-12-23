@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 
 public class ShipPart implements IDrawable{
 
-    private Label label;
+    private transient Label label;
     private String part;
     private IShip owner = null;
     private boolean shot;
@@ -42,11 +42,13 @@ public class ShipPart implements IDrawable{
 
     @Override
     public void setLabelNonClickable() {
+        if ( this.label == null ) return;
         Platform.runLater(()-> this.label.setDisable(true));
     }
 
     @Override
     public void setLabelClickable() {
+        if ( this.label == null ) return;
         Platform.runLater(()-> this.label.setDisable(false));
     }
 
@@ -70,6 +72,7 @@ public class ShipPart implements IDrawable{
 
     @Override
     public void draw() {
+        if ( this.label == null) return;
       //  // Was machst du hier Yannick?
       //  if(!this.validShipPlacementMarker)
       //  {
@@ -109,11 +112,14 @@ public class ShipPart implements IDrawable{
                 this.label.setGraphic(image);*/
 
                 // for test: draw ships "right"
-                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png")));
+
+                // ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png")));
+                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/waterHit.png")));
+                this.label.setGraphic(image);
                 // making ships resizeable -> fitting to current label size
                 image.fitWidthProperty().bind(label.widthProperty());
                 image.fitHeightProperty().bind(label.heightProperty());
-                switch (part) {
+              /*  switch (part) {
                     case "start vertical"    : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png"))); this.label.setGraphic(image); break;
                     case "start horizontal"  : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartHorizontal.png"))); this.label.setGraphic(image); break;
                     case "end vertical"      : image.setImage(new Image(getClass().getResourceAsStream("/Gui_View/images/shipEndVertical.png")));  this.label.setGraphic(image); break;
@@ -123,6 +129,8 @@ public class ShipPart implements IDrawable{
                     case "destroyed"         : image.setImage(new Image(getClass().getResourceAsStream("Gui_View/images/shipHit.png"))); this.label.setGraphic(image); break;
                     default: System.out.println("Alignment not found");
                 }
+
+               */
             }
         });
 

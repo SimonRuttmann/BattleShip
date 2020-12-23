@@ -10,7 +10,7 @@ import Network.*;
  */
 
 public class ActiveGameState {
-
+    public static boolean newView = false;
 
     // Modes
     /**
@@ -87,6 +87,7 @@ public class ActiveGameState {
     }
 
     private static int difficulty; //wählt die Schwierigkeit aus, 0 = normal, 1 = schwer
+    //TODO evtl enum
 
     // Game Variables
 // -> Gestrichen -> neuer Zugriff über ActiveGameState.getOwnPlayer.get[Own][Enemy]Playground

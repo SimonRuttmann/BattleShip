@@ -37,7 +37,7 @@ public interface IOwnPlayground extends IPlayground{
      * @param newEndpoint The endPosition, where the player wants to move the ship
      * @return true, if the ship movement was correct, false if the movement is not allowed
      */
-    boolean moveShip(Ship shipToMove, Point newStartPoint, Point newEndpoint);
+    boolean moveShip(IShip shipToMove, Point newStartPoint, Point newEndpoint);
 
 
     /**

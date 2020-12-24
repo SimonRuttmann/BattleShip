@@ -316,7 +316,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
      * @return true, if the ship movement was correct, false if the movement is not allowed
      */
     @Override
-    public boolean moveShip(Ship shipToMove, Point newStartPoint, Point newEndpoint) {
+    public boolean moveShip(IShip shipToMove, Point newStartPoint, Point newEndpoint) {
 
         /*
         1. Set the fields, where the ship was to water, the Water Fields got by default an valid placement-marker

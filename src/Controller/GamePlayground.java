@@ -2,9 +2,14 @@ package Controller;
 
 import Controller.Handler.MultiplayerControlThreadPerformEnemyAction;
 import Gui_View.Main;
+import Model.Playground.EnemyPlayground;
 import Model.Playground.IEnemyPlayground;
+import Model.Playground.IOwnPlayground;
+import Model.Playground.OwnPlayground;
+import Model.Ship.IShip;
 import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
+import Player.GameMode;
 import Player.Savegame;
 import Controller.Handler.GameShootEnemy;
 import javafx.fxml.FXML;
@@ -56,6 +61,10 @@ public class GamePlayground implements Initializable {
 
         ActiveGameState.setSceneIsGamePlayground(true);
         ActiveGameState.setSceneIsPlaceShips(false);
+
+
+        // if ki is part of game, playgrounds are not created in placeShips -> done here
+        initializeKiPlayground();
 
 
         // initialize the static variable groupEnemyPS -> used in MultiplayerControlThreadShootEnemy
@@ -155,6 +164,10 @@ public class GamePlayground implements Initializable {
         ActiveGameState.getOwnPlayerIEnemyPlayground().setLabels(enemyFieldArray);
         ActiveGameState.getOwnPlayerIEnemyPlayground().drawPlayground();
 
+
+        //
+
+
         //Client -> Zuerst ist der Server dran -> Setze alle Labels im gegnerischen Spielfeld nicht klickbar
         // Starte den Perform Enemy Action Thread um auf die Eingaben des Servers zu reagieren -> Danach PingPong Prinzip
         if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer()){
@@ -191,6 +204,51 @@ public class GamePlayground implements Initializable {
     public static Group getGroupEnemP(){
         return groupEnemyPS;
     }
+
+
+    /***/
+    public void initializeKiPlayground() {
+
+        // ki is the enemy player
+        if(ActiveGameState.getModes() == GameMode.playerVsKi || ActiveGameState.getModes() == GameMode.kiVsKi) {
+
+            ActiveGameState.setEnemyPlayerEnemyPlayground(new EnemyPlayground());
+            ActiveGameState.getEnemyPlayerEnemyPlayground().buildPlayground();
+
+            IOwnPlayground kiOwnPlayground = new OwnPlayground();
+            ActiveGameState.setEnemyPlayerOwnPlayground(kiOwnPlayground);
+
+            kiOwnPlayground.buildPlayground();
+
+            ArrayList<IShip> newShips = ActiveGameState.getKi().placeships(kiOwnPlayground);
+            kiOwnPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
+
+            for (IShip ship : newShips) {
+                kiOwnPlayground.isShipPlacementValid(ship.getPosStart(), ship.getPosEnd());
+            }
+
+        }
+
+        // ki is the own player
+        if(ActiveGameState.getModes() == GameMode.kiVsKi || ActiveGameState.getModes() == GameMode.kiVsRemote) {
+
+            ActiveGameState.setOwnPlayerIEnemyPlayground(new EnemyPlayground());
+            ActiveGameState.getOwnPlayerIEnemyPlayground().buildPlayground();
+
+            IOwnPlayground ourKiOwnPlayground = new OwnPlayground();
+            ActiveGameState.setOwnPlayerIOwnPlayground(ourKiOwnPlayground);
+
+            ourKiOwnPlayground.buildPlayground();
+
+            ArrayList<IShip> newShips = ActiveGameState.getKi().placeships(ourKiOwnPlayground);
+            ourKiOwnPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
+
+            for (IShip ship : newShips) {
+                ourKiOwnPlayground.isShipPlacementValid(ship.getPosStart(), ship.getPosEnd());
+            }
+        }
+    }
+
 
 
     // when Button cancleGame is pressed - save or no saving?

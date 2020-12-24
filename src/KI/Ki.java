@@ -531,7 +531,7 @@ public class Ki implements IKi{
                     }
                     //no Hit
                     else {
-                        this.nextLocation = NextLocation.nextLeft;
+                        this.nextLocation = NextLocation.nextRight;
                         this.rangeToShot = 1;
                     }
 
@@ -541,9 +541,9 @@ public class Ki implements IKi{
                 //Schiessposition nicht erlaubt, gehe in den nächsten case
                 rangeToShot = 1;
             case nextRight:
-                nextPositionToShoot = new Point(firstHit.getX() - rangeToShot, firstHit.getY());
+                nextPositionToShoot = new Point(firstHit.getX() + rangeToShot, firstHit.getY());
                 if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
-                        &&  (nextPositionToShoot.getX() >= 0 )      ){
+                        &&  (nextPositionToShoot.getX() < ActiveGameState.getPlaygroundSize() )      ){
 
                     //Schiessposition erlaubt
                     previousShots.add(nextPositionToShoot);
@@ -574,9 +574,9 @@ public class Ki implements IKi{
                 //Schiessposition nicht erlaubt, gehe in den nächsten case
                 rangeToShot = 1;
             case nextLeft:
-                nextPositionToShoot = new Point(firstHit.getX()+rangeToShot, firstHit.getY());
+                nextPositionToShoot = new Point(firstHit.getX() - rangeToShot, firstHit.getY());
                 if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
-                        &&  (nextPositionToShoot.getX() < ActiveGameState.getPlaygroundSize() )      ) {
+                        &&  (nextPositionToShoot.getX() >= 0 )      ) {
 
                     //Schiessposition erlaubt
                     previousShots.add(nextPositionToShoot);

@@ -136,6 +136,7 @@ public class Ki implements IKi{
             kiShips.add(ship);
         }
 
+        //TODO PLaygroubndsize ist von 0 bis playgroundsize - 1, kann sein dass dabei noch irgendwo ein fehler auftreten kann
         /*Ablauf:
         1. Zufälliger Punkt wird erstellt und ein dazu eine gültige und passende Ausrichtung des Schiffs
         2. Die Schiffspunkte werden in eine Arrayliste gespeichert
@@ -143,7 +144,9 @@ public class Ki implements IKi{
         4. Die start und endposition des Schiffs wird gespeichert und eine Liste mit den Schiffen zurückgegeben
          */
 
+
        return placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
+
 
     }
 
@@ -246,7 +249,7 @@ public class Ki implements IKi{
 
         /*Prüft für den random Punkt, ob das Ship von ihm aus ins Feld Passt und eine zufällige richtung, wird in 20 versuchen kein Ergebnis gefunden, wird in der
         do -while-Schleife in der placeships- Methode ein neuer zufälliger Punkt erstellt  und für diesen dann diese Überprüfung erneut gemacht*/
-
+        //TODO abchecken wie die Playgroundgröße vorgegeben ist, dann eventl die vergleiche < <= und so anpasssen
     protected int getPlacementStyle(Point p, int size, int playgrounds, ArrayList<Point> list){
         int style;
         int count = 0;
@@ -319,6 +322,7 @@ public class Ki implements IKi{
             Point returnShot;
             returnShot = normaleKi(playground);
             return returnShot;
+            //TODO die normale KI unbedingt zuerst Testen sobald möglich !!
             // die Ki besitzt die Schwierigkeit = schwer
         }else{
             //TODO schwere KI

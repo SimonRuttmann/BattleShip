@@ -8,6 +8,9 @@ public class Server extends Communication implements IServer{
 
     private ServerSocket server;
 
+    /**
+     * Constructor of the server, the port is set up to 500000
+     */
     public Server ( ) {
         try {
 
@@ -20,6 +23,9 @@ public class Server extends Communication implements IServer{
 
     }
 
+    /**
+     * Closes the client or sever socket and the associated writers and readers
+     */
     @Override
     public void closeConnection(){
         if (server != null) {
@@ -76,9 +82,9 @@ public class Server extends Communication implements IServer{
             Socket server_connected  = server.accept();
             server_connected.setSoTimeout(60000);
             System.out.println("Connection from Server to Client established");
-            // Ein- und Ausgabestrom des Sockets ermitteln
-            // und als BufferedReader bzw. Writer verpacken
-            // (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
+
+            //Set up input and output reader reading/writing form the in-/output stream of the socket
+            //Set them up as buffered reader to read and write lines instead of bytes
             this.setInputReader(new BufferedReader(new InputStreamReader(server_connected.getInputStream())));
 
             this.setOutputWriter(new BufferedWriter (new OutputStreamWriter(server_connected.getOutputStream())));

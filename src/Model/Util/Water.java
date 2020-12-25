@@ -16,6 +16,7 @@ public class Water implements IDrawable {
     @Override
 
     public void draw() {
+        if ( this.label == null )return;
        // System.out.print("*water*");
         // Wasser = keine Grafik
       
@@ -67,11 +68,13 @@ public class Water implements IDrawable {
 
     @Override
     public void setLabelNonClickable() {
+        if (this.label == null) return;
         Platform.runLater(()-> this.label.setDisable(true));
     }
 
     @Override
     public void setLabelClickable() {
+        if ( this.label == null) return;
         Platform.runLater(()-> this.label.setDisable(false));
     }
 

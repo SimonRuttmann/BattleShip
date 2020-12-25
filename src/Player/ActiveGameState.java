@@ -56,7 +56,7 @@ public class ActiveGameState {
 
     // Game Configuration
     private static boolean multiplayer;  // true = multiplayer, false = singleplayer
-    private static String ownPlayerName;
+    private static String ownPlayerName;    //todo not needed anymore
     private static int playgroundSize;   // between 5x5 - 30x30
     private static int amountOfShips;
     private static int amountShipSize2;

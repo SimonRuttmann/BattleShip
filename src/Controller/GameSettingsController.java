@@ -187,10 +187,10 @@ public class GameSettingsController implements Initializable{
             maxValue5.bind(selectPlaygroundsizeSlider.valueProperty().divide(7));
 
 
-            SpinnerValueFactory.IntegerSpinnerValueFactory spinner2Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 5);
-            SpinnerValueFactory.IntegerSpinnerValueFactory spinner3Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 5);
-            SpinnerValueFactory.IntegerSpinnerValueFactory spinner4Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 5);
-            SpinnerValueFactory.IntegerSpinnerValueFactory spinner5Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 5);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner2Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 4);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner3Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 3);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner4Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 2);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner5Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
 
             IntegerProperty max2Property = spinner2Factory.maxProperty();
             IntegerProperty max3Property = spinner3Factory.maxProperty();
@@ -221,7 +221,7 @@ public class GameSettingsController implements Initializable{
 
     public void setBackground(){
 
-        BackgroundImage myBI= new BackgroundImage(new Image(getClass().getResourceAsStream("/Gui_View/images/BattleshipSuited.jpg")),
+        BackgroundImage myBI= new BackgroundImage(new Image(getClass().getResourceAsStream("/Gui_View/images/WindowBackground.jpg")),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
 

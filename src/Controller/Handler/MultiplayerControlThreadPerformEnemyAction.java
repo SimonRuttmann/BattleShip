@@ -43,10 +43,9 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
 
         switch (cmdReceived[0]) {
             case "shot":
-                ShotResponse shotResponse = ActiveGameState.getOwnPlayerIOwnPlayground().shoot(new Point(Integer.parseInt(cmdReceived[1]), Integer.parseInt(cmdReceived[2])));
+                ShotResponse shotResponse = ActiveGameState.getOwnPlayerIOwnPlayground().shoot(new Point(Integer.parseInt(cmdReceived[1]) -1, Integer.parseInt(cmdReceived[2])-1) );
                 if (shotResponse.isGameLost()) {
                     ActiveGameState.setRunning(false);
-                    HelpMethods.winOrLose(false);
 
                     //Game ended, send the finish command, to enable the client to execute
                     //and close the reader, writer and sockets
@@ -59,6 +58,8 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                         ActiveGameState.getClient().closeConnection();
                     }
 
+                    HelpMethods.winOrLose(false);
+                    System.out.println("Game lost");
                 }
                 if (shotResponse.isShipDestroyed()) {
                     answerToEnemyAction = "2";

@@ -1,4 +1,4 @@
-package Controller;
+package OldView;
 
 import Gui_View.HelpMethods;
 import Gui_View.Main;
@@ -39,7 +39,7 @@ public class MainMenu2 implements Initializable {    //todo: ordentliche Namen f
     public void startSingleplayer() throws IOException{
         ActiveGameState.setMultiplayer(false);
         // change Scene
-        Parent newOrLoadParent = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
+        Parent newOrLoadParent = FXMLLoader.load(getClass().getResource("/OldView/newOrLoad.fxml"));
         Main.primaryStage.setScene(new Scene(newOrLoadParent));
         Main.primaryStage.show();
     }
@@ -47,7 +47,7 @@ public class MainMenu2 implements Initializable {    //todo: ordentliche Namen f
     public void startMultiplayer() throws IOException{
         ActiveGameState.setMultiplayer(true);
         // change Scene
-        Parent mpSelect = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpSelect.fxml"));
+        Parent mpSelect = FXMLLoader.load(getClass().getResource("/OldView/mpSelect.fxml"));
         Main.primaryStage.setScene(new Scene(mpSelect));
         Main.primaryStage.show();
     }

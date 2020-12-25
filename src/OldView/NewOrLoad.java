@@ -1,4 +1,4 @@
-package Controller;
+package OldView;
 
 import Gui_View.Main;
 import javafx.fxml.FXML;
@@ -25,19 +25,19 @@ public class NewOrLoad implements Initializable {
     }
 
     public void backToLastScene() throws IOException{
-        Parent hello = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu2.fxml"));
+        Parent hello = FXMLLoader.load(getClass().getResource("/OldView/MainMenu2.fxml"));
         Main.primaryStage.setScene(new Scene(hello));
         Main.primaryStage.show();
     }
 
     public void createGame() throws IOException {
-        Parent gameConfig = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gameConfig.fxml"));
+        Parent gameConfig = FXMLLoader.load(getClass().getResource("/OldView/gameConfig.fxml"));
         Main.primaryStage.setScene(new Scene(gameConfig));
         Main.primaryStage.show();
     }
 
     public void loadOldGame() throws IOException {
-        Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame.fxml"));
+        Parent loadGame = FXMLLoader.load(getClass().getResource("/OldView/loadGame2.fxml"));
         Main.primaryStage.setScene(new Scene(loadGame));
         Main.primaryStage.show();
     }

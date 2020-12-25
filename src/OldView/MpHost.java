@@ -1,4 +1,4 @@
-package Controller;
+package OldView;
 
 import Gui_View.HelpMethods;
 import Gui_View.Main;
@@ -49,7 +49,7 @@ public class MpHost implements Initializable {
                     Platform.runLater(() -> {
                         Parent a = null;
                         try {
-                            a = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/newOrLoad.fxml"));
+                            a = FXMLLoader.load(getClass().getResource("/OldView/newOrLoad.fxml"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -71,7 +71,7 @@ public class MpHost implements Initializable {
 
     public void backToLastScene() throws IOException {
         // todo shutdown server + close everything -> we need a server.terminate
-        Parent mpSelect = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/mpSelect.fxml"));
+        Parent mpSelect = FXMLLoader.load(getClass().getResource("/OldView/mpSelect.fxml"));
         Main.primaryStage.setScene(new Scene(mpSelect));
         Main.primaryStage.show();
     }

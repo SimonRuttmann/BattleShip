@@ -42,11 +42,13 @@ public class ShipPart implements IDrawable{
 
     @Override
     public void setLabelNonClickable() {
+        if ( this.label == null ) return;
         Platform.runLater(()-> this.label.setDisable(true));
     }
 
     @Override
     public void setLabelClickable() {
+        if ( this.label == null ) return;
         Platform.runLater(()-> this.label.setDisable(false));
     }
 
@@ -70,6 +72,7 @@ public class ShipPart implements IDrawable{
 
     @Override
     public void draw() {
+        if ( this.label == null) return;
       //  // Was machst du hier Yannick?
       //  if(!this.validShipPlacementMarker)
       //  {
@@ -111,7 +114,7 @@ public class ShipPart implements IDrawable{
                 // for test: draw ships "right"
 
                 // ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/shipStartVertical.png")));
-                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/waterHit.png")));
+                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/ship.png")));
                 this.label.setGraphic(image);
                 // making ships resizeable -> fitting to current label size
                 image.fitWidthProperty().bind(label.widthProperty());

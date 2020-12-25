@@ -57,8 +57,6 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
 
 
 
-
-
     /**
      * Use this method when the enemy shoots at our playground
      * Manages all necessary actions, when and shot occurs on our playground
@@ -70,6 +68,9 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
      * shipDestroyed:   True, if on of our ships got hit and got destroyed
      */
     public ShotResponse shoot(Point pos_shot) {
+        if ( pos_shot.getY() < 0 || pos_shot.getY() >= this.playgroundsize || pos_shot.getX() < 0 || pos_shot.getX() >= this.playgroundsize ){
+            System.out.println( "The Point: " + pos_shot.getX() + " " + pos_shot.getY() + " is outside the playground");
+        }
 
         //Hit
         if (Field[pos_shot.getX()][pos_shot.getY()] instanceof ShipPart){
@@ -118,6 +119,13 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
             Field[pos_shot.getX()][pos_shot.getY()].draw();
             return response;
+        }
+
+        if ( Field[pos_shot.getX()][pos_shot.getY()] instanceof ShotWater) {
+            System.out.println("The Field on Position:  " + pos_shot.getX() + " " + pos_shot.getY() + " is a shotWater Field");
+        }
+        else {
+            System.out.println("The Field on Position:  " + pos_shot.getX() + " " + pos_shot.getY() + " is not instantiated");
         }
         return null;
     }
@@ -308,7 +316,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground{
      * @return true, if the ship movement was correct, false if the movement is not allowed
      */
     @Override
-    public boolean moveShip(Ship shipToMove, Point newStartPoint, Point newEndpoint) {
+    public boolean moveShip(IShip shipToMove, Point newStartPoint, Point newEndpoint) {
 
         /*
         1. Set the fields, where the ship was to water, the Water Fields got by default an valid placement-marker

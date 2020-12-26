@@ -71,7 +71,7 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.playerVsKi);
 
-        Parent loadGame = FXMLLoader.load(getClass().getResource("/OldView/loadGame2.fxml"));
+        Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame.fxml"));
         Main.primaryStage.setScene(new Scene(loadGame));
         Main.primaryStage.show();
     }
@@ -186,7 +186,7 @@ public class MainMenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //KI needs to be added, to get functionality of KI Methods (place ships random, shoot enemy)
-        ActiveGameState.setKi(new Ki());
+        ActiveGameState.setPlacementKi(new Ki());
 
         System.out.println("Main Menu");
         setBackground();

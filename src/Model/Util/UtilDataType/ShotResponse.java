@@ -76,4 +76,13 @@ public class ShotResponse {
         return shipDestroyed;
     }
 
+    private Point shotPosition;
+
+    public Point getShotPosition() {
+        return shotPosition;
+    }
+
+    public void setShotPosition(Point shotPosition) {
+        this.shotPosition = shotPosition;
+    }
 }

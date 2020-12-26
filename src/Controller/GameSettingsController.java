@@ -3,6 +3,7 @@ package Controller;
 
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
+import KI.Ki;
 import Player.ActiveGameState;
 import Player.GameMode;
 import javafx.beans.property.IntegerProperty;
@@ -90,21 +91,29 @@ public class GameSettingsController implements Initializable{
         //Start MultiplayerControlThread if multiplayer mode selected
         //GameMode and multiplayer related flags are set by the Menu Scene
         //Client and Server socket are set by the Client, Server Scenes
+
+        //Hier sind wir der Host
         switch (ActiveGameState.getModes()){
             case playerVsRemote:
-            case kiVsRemote:    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
+            case kiVsRemote:    ActiveGameState.setEnemyKi(new Ki());
+                                MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
                                 multiplayerControlThreadConfigCommunication.start();
                                 break;
         }
 
         //Set Scene if singleplayer mode is selected
         switch (ActiveGameState.getModes()){
-            case kiVsKi:        Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+            case kiVsKi:        ActiveGameState.setOwnKi  (new Ki());
+                                ActiveGameState.setEnemyKi(new Ki());
+                                ActiveGameState.setRunning(true);
+                                Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                                 Main.primaryStage.setScene(new Scene(gamePlayground));
                                 Main.primaryStage.show();
                                 break;
 
-            case playerVsKi:    Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+            case playerVsKi:    ActiveGameState.setRunning(true);
+                                ActiveGameState.setEnemyKi (new Ki());
+                                Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
                                 Main.primaryStage.setScene(new Scene(placeShips));
                                 Main.primaryStage.show();
                                 break;

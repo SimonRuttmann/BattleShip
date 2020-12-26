@@ -1,21 +1,19 @@
 package Controller;
 
 import Controller.Handler.MultiplayerControlThreadPerformEnemyAction;
+import Controller.Handler.SingleplayerControlThreadKiVsKi;
 import Gui_View.Main;
+import KI.Ki;
 import Model.Playground.EnemyPlayground;
-import Model.Playground.IEnemyPlayground;
 import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Ship.IShip;
-import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
 import Player.GameMode;
-import Player.Savegame;
 import Controller.Handler.GameShootEnemy;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -23,9 +21,7 @@ import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.logging.Handler;
 
 public class GamePlayground implements Initializable {
 
@@ -65,7 +61,13 @@ public class GamePlayground implements Initializable {
 
         // if ki is part of game, playgrounds are not created in placeShips -> done here
         initializeKiPlayground();
-
+        /**
+         * After playground is initialized the thread SingleplayerControlThreadKivsKi has to be started, if the Gamemode KivsKi is selected
+         */
+        if ( ActiveGameState.getModes() == GameMode.kiVsKi){
+            SingleplayerControlThreadKiVsKi singleplayerControlThreadKiVsKi = new SingleplayerControlThreadKiVsKi();
+            singleplayerControlThreadKiVsKi.start();
+        }
 
         // initialize the static variable groupEnemyPS -> used in MultiplayerControlThreadShootEnemy
         groupEnemyPS = groupEnemP;
@@ -220,7 +222,11 @@ public class GamePlayground implements Initializable {
 
             kiOwnPlayground.buildPlayground();
 
-            ArrayList<IShip> newShips = ActiveGameState.getKi().placeships(kiOwnPlayground);
+            //
+            ActiveGameState.setPlacementKi(new Ki());
+
+
+            ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(kiOwnPlayground);
             kiOwnPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
 
             for (IShip ship : newShips) {
@@ -240,13 +246,15 @@ public class GamePlayground implements Initializable {
 
             ourKiOwnPlayground.buildPlayground();
 
-            ArrayList<IShip> newShips = ActiveGameState.getKi().placeships(ourKiOwnPlayground);
+            ActiveGameState.setPlacementKi(new Ki());
+            ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(ourKiOwnPlayground);
             ourKiOwnPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
 
             for (IShip ship : newShips) {
                 ourKiOwnPlayground.isShipPlacementValid(ship.getPosStart(), ship.getPosEnd());
             }
         }
+
     }
 
 

@@ -29,7 +29,7 @@ public class SingleplayerControlThreadKiVsKi extends Thread {
 
                 System.out.println("Our Turn");
                try {
-                    sleep(100);
+                    sleep(ActiveGameState.getAiVelocity()*1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -78,7 +78,7 @@ public class SingleplayerControlThreadKiVsKi extends Thread {
 
                 System.out.println("Enemy Turn");
                 try {
-                    sleep(100);
+                    sleep(ActiveGameState.getAiVelocity()*1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

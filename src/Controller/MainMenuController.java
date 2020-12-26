@@ -172,7 +172,7 @@ public class MainMenuController implements Initializable {
     public Polygon rightBarMultiplayer_PolyClient;
     public Text rightBarMultiplayer_TextClient;
 
-    /** Right Bar Settings **/
+    /** Right Bar Settings/Options **/
 
 
     /**Intern Variables**/
@@ -744,6 +744,8 @@ public class MainMenuController implements Initializable {
         }
 
         setRightNotShown = !setRightNotShown;
+
+
     }
 
 
@@ -773,7 +775,12 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    public void showSetBar(boolean show){
-
+    public void showSetBar(boolean show) {
+        try{Parent gameOptions = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameOptions.fxml"));
+        Main.primaryStage.setScene(new Scene(gameOptions));
+        Main.primaryStage.show();}
+        catch(IOException e){
+            e.printStackTrace();
+        }
     }
 }

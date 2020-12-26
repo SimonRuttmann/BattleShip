@@ -10,9 +10,37 @@ import Network.*;
  */
 
 public class ActiveGameState {
+    public enum Language {english, german};
     public static boolean newView = false;
 
-    // Modes
+    private static int musicVolume = 50;
+    private static int aiVelocity = 3;
+    private static Language language = Language.english;
+
+    public static Language getLanguage() {
+        return language;
+    }
+
+    public static void setLanguage(Language language) {
+        ActiveGameState.language = language;
+    }
+
+    public static int getMusicVolume() {
+        return musicVolume;
+    }
+
+    public static void setMusicVolume(int musicVolume) {
+        ActiveGameState.musicVolume = musicVolume;
+    }
+
+    public static int getAiVelocity() {
+        return aiVelocity;
+    }
+
+    public static void setAiVelocity(int aiVelocity) {
+        ActiveGameState.aiVelocity = aiVelocity;
+    }
+// Modes
     /**
      *
      * Es gibt folgende Modi:

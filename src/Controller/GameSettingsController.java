@@ -132,7 +132,17 @@ public class GameSettingsController implements Initializable{
         setRadioButtonSettings();
 
         System.out.println(ActiveGameState.getModes());
-        if ( (ActiveGameState.getModes() == GameMode.playerVsKi) || ( ActiveGameState.getModes() == GameMode.playerVsRemote)) setOwnKiSelectionInvisible();
+        //if ( (ActiveGameState.getModes() == GameMode.playerVsKi) || ( ActiveGameState.getModes() == GameMode.playerVsRemote)) setOwnKiSelectionInvisible();
+        switch (ActiveGameState.getModes()){
+            case playerVsKi:        setOwnKiSelectionInvisible();
+                                    break;
+
+            case kiVsKi:            break;
+
+            case playerVsRemote:
+            case kiVsRemote:        setOwnKiSelectionInvisible();
+                                    setEnemyKiSelectionInvisible();
+        }
     }
 
     public void setRadioButtonSettings(){
@@ -216,6 +226,12 @@ public class GameSettingsController implements Initializable{
 
 
 
+    }
+
+    public void setEnemyKiSelectionInvisible(){
+        this.rB_difficultyEnemyNormal.setVisible(false);
+        this.rB_difficultyEnemyHard.setVisible(false);
+        this.selectDifficultyEnemyKIText.setVisible(false);
     }
 
     public void setOwnKiSelectionInvisible(){

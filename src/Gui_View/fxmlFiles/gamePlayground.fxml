@@ -19,8 +19,7 @@
          <children>
             <AnchorPane prefHeight="50.0">
                <children>
-                  <Button fx:id="saveGame" mnemonicParsing="false" onAction="#startSaveGame" text="Spiel speichern" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0" />
-                  <Button fx:id="cancleGame" mnemonicParsing="false" onAction="#cancleGameMethod" text="Spiel abbrechen" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                  <Button fx:id="cancleGame" mnemonicParsing="false" onAction="#cancleGameMethod" text="Speichern und Beenden" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
             <VBox VBox.vgrow="ALWAYS">

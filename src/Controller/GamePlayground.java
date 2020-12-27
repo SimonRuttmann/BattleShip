@@ -287,13 +287,5 @@ public class GamePlayground implements Initializable {
     //TODO Bei Singleplayer kein Problem, muss keine ID gesendet werden, aber multiplayer?
 
 //Wenn ein spielstand, von einem anderen geladen wird, bei denen wir als spieler spielen, müssen wir auch als spieler spielen, egal was vorher ausgewählt wurde, da dass unsesre ki nicht kann -> Hinweisnachricht wäre gut, falls wir ki ausgewählt haben
-    public void startSaveGame(ActionEvent actionEvent) {
-        long id = System.currentTimeMillis();
-        if ( ActiveGameState.isMultiplayer()){
 
-        }
-        else{
-
-        }
-    }
 }

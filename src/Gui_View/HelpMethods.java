@@ -54,7 +54,7 @@ public class HelpMethods {
     }
 
     // todo: evtl better, does work but really slow
-    /*public void backToMainMenu() {
+   /* public void backToMainMenu() {
         Parent mainMenu = null;
         try {
             mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu2.fxml"));
@@ -63,5 +63,7 @@ public class HelpMethods {
         }
         Main.primaryStage.setScene(new Scene(mainMenu));
         Main.primaryStage.show();
-    }*/
+    }
+    */
+
 }

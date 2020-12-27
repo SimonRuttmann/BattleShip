@@ -41,7 +41,7 @@ git rm --cached -r .savedGames
 
 
         //TODO old Scene
-        //Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu2.fxml"));
+        //Parent root = FXMLLoader.load(getClass().getResource("/OldView/MainMenu2.fxml"));
 
 
         // root.getStylesheets().add(getClass().getResource("Stylesheets/Radio.css").toExternalForm());

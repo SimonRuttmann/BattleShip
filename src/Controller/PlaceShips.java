@@ -9,7 +9,6 @@ import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +27,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -617,7 +615,7 @@ public class PlaceShips implements Initializable {
         // not be remvoed from the group is the gridPane -> no Label, no problem
         groupID.getChildren().removeAll(groupID.lookupAll(".label"));
 
-        ArrayList<IShip> newShips = ActiveGameState.getKi().placeships(ownPlayground);
+        ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(ownPlayground);
         ownPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
 
         for (IShip ship : newShips) {

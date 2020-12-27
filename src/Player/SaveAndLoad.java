@@ -65,7 +65,7 @@ public class SaveAndLoad {
                 ActiveGameState.setAmountShipSize3(e.amountShipSize3);
                 ActiveGameState.setAmountShipSize4(e.amountShipSize4);
                 ActiveGameState.setAmountShipSize5(e.amountShipSize5);
-                ActiveGameState.setKi(e.ki);
+                ActiveGameState.setEnemyKi(e.ki);
                 ActiveGameState.setSceneIsPlaceShips(e.sceneIsPlaceShips);
                 ActiveGameState.setSceneIsGamePlayground(e.sceneIsGamePlayground);
                 ActiveGameState.setDifficulty(e.difficulty);
@@ -88,7 +88,7 @@ public class SaveAndLoad {
                 ActiveGameState.getAmountShipSize3(),
                 ActiveGameState.getAmountShipSize4(),
                 ActiveGameState.getAmountShipSize5(),
-                ActiveGameState.getKi(),
+                ActiveGameState.getEnemyKi(),
                 ActiveGameState.isSceneIsPlaceShips(),
                 ActiveGameState.isSceneIsGamePlayground(),
                 ActiveGameState.getDifficulty(),

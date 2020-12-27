@@ -1,21 +1,21 @@
 package Controller;
 
+import Controller.Handler.MultiplayerControlThreadKiShootsEnemy;
 import Controller.Handler.MultiplayerControlThreadPerformEnemyAction;
+import Controller.Handler.SingleplayerControlThreadKiVsKi;
 import Gui_View.Main;
+import KI.Ki;
 import Model.Playground.EnemyPlayground;
-import Model.Playground.IEnemyPlayground;
 import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Ship.IShip;
-import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
 import Player.GameMode;
-import Player.Savegame;
 import Controller.Handler.GameShootEnemy;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -23,13 +23,12 @@ import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.logging.Handler;
 
 public class GamePlayground implements Initializable {
 
 
+    public Button saveGame;
     // import from FXML
     @FXML
     private Button cancleGame;
@@ -65,8 +64,28 @@ public class GamePlayground implements Initializable {
 
         // if ki is part of game, playgrounds are not created in placeShips -> done here
         initializeKiPlayground();
+        /**
+         * After playground is initialized the thread SingleplayerControlThreadKivsKi has to be started, if the Gamemode KivsKi is selected
+         */
+        if ( ActiveGameState.getModes() == GameMode.kiVsKi){
+            SingleplayerControlThreadKiVsKi singleplayerControlThreadKiVsKi = new SingleplayerControlThreadKiVsKi();
+            singleplayerControlThreadKiVsKi.start();
+        }
 
-
+        /**
+         * Gamemode kiVsRemote -> Start Perform enemy action, if we are Client ( enemy´s Turn )
+         *                      -> Start KI Shoots Enemy, if we are Server ( our Turn)
+         */
+        if ( ActiveGameState.getModes() == GameMode.kiVsRemote){
+            if ( !ActiveGameState.isAmIServer()){
+                MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
+                multiplayerControlThreadPerformEnemyAction.start();
+            }
+            else{
+                MultiplayerControlThreadKiShootsEnemy multiplayerControlThreadKiShootsEnemy = new MultiplayerControlThreadKiShootsEnemy();
+                multiplayerControlThreadKiShootsEnemy.start();
+            }
+        }
         // initialize the static variable groupEnemyPS -> used in MultiplayerControlThreadShootEnemy
         groupEnemyPS = groupEnemP;
 
@@ -170,7 +189,8 @@ public class GamePlayground implements Initializable {
 
         //Client -> Zuerst ist der Server dran -> Setze alle Labels im gegnerischen Spielfeld nicht klickbar
         // Starte den Perform Enemy Action Thread um auf die Eingaben des Servers zu reagieren -> Danach PingPong Prinzip
-        if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer()){
+        //TODO SIMON GAMEMODE.PLAYERVSREMOTE -> KI vs Remote wird woanders gestartet
+        if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer() && ActiveGameState.getModes() == GameMode.playerVsRemote){
             MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
@@ -220,7 +240,11 @@ public class GamePlayground implements Initializable {
 
             kiOwnPlayground.buildPlayground();
 
-            ArrayList<IShip> newShips = ActiveGameState.getKi().placeships(kiOwnPlayground);
+            //
+            ActiveGameState.setPlacementKi(new Ki());
+
+
+            ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(kiOwnPlayground);
             kiOwnPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
 
             for (IShip ship : newShips) {
@@ -240,13 +264,15 @@ public class GamePlayground implements Initializable {
 
             ourKiOwnPlayground.buildPlayground();
 
-            ArrayList<IShip> newShips = ActiveGameState.getKi().placeships(ourKiOwnPlayground);
+            ActiveGameState.setPlacementKi(new Ki());
+            ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(ourKiOwnPlayground);
             ourKiOwnPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
 
             for (IShip ship : newShips) {
                 ourKiOwnPlayground.isShipPlacementValid(ship.getPosStart(), ship.getPosEnd());
             }
         }
+
     }
 
 
@@ -254,5 +280,20 @@ public class GamePlayground implements Initializable {
     // when Button cancleGame is pressed - save or no saving?
     public void cancleGameMethod() {
         Gui_View.HelpMethods.closeProgrammSaveGame();
+    }
+
+    //TODO Button kann nur gedrückt werden, wenn der Spieler an der Reihe ist
+    //TODO "Vorschlag Netzwerkprotokol: Zumindest ein Spieler soll einen Namen eingeben können" -> Datei unter dem Namen speichern -> bei loadID, muss dennoch der richige Spielstand mit der ID geladen werden können
+    //TODO Bei Singleplayer kein Problem, muss keine ID gesendet werden, aber multiplayer?
+
+//Wenn ein spielstand, von einem anderen geladen wird, bei denen wir als spieler spielen, müssen wir auch als spieler spielen, egal was vorher ausgewählt wurde, da dass unsesre ki nicht kann -> Hinweisnachricht wäre gut, falls wir ki ausgewählt haben
+    public void startSaveGame(ActionEvent actionEvent) {
+        long id = System.currentTimeMillis();
+        if ( ActiveGameState.isMultiplayer()){
+
+        }
+        else{
+
+        }
     }
 }

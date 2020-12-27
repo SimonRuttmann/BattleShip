@@ -37,7 +37,7 @@ public class NewOrLoad implements Initializable {
     }
 
     public void loadOldGame() throws IOException {
-        Parent loadGame = FXMLLoader.load(getClass().getResource("/OldView/loadGame2.fxml"));
+        Parent loadGame = FXMLLoader.load(getClass().getResource("/OldView/loadGame.fxml"));
         Main.primaryStage.setScene(new Scene(loadGame));
         Main.primaryStage.show();
     }

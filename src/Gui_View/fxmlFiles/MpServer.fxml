@@ -63,11 +63,6 @@
                                           <Insets left="50.0" top="10.0" />
                                        </HBox.margin>
                                     </ProgressIndicator>
-                                    <Button mnemonicParsing="false" onAction="#dummySwitchScene" text="dummy">
-                                       <HBox.margin>
-                                          <Insets left="50.0" top="20.0" />
-                                       </HBox.margin>
-                                    </Button>
                                  </children>
                               </HBox>
                               <HBox prefHeight="97.0" prefWidth="962.0">

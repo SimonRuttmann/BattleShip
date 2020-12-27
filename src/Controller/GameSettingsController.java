@@ -3,6 +3,7 @@ package Controller;
 
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
+import KI.Ki;
 import Player.ActiveGameState;
 import Player.GameMode;
 import javafx.beans.property.IntegerProperty;
@@ -14,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
@@ -69,11 +71,18 @@ public class GameSettingsController implements Initializable{
     public Spinner<Integer> selectAmount4Ships;
     public Spinner<Integer> selectAmount5Ships;
     public Text sliderValueText;
+    public Button multiplayerLoadGame;
 
     /** External Handling**/
     public void backToMainMenu(ActionEvent actionEvent) throws IOException {
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
+        Main.primaryStage.show();
+    }
+
+    public void startLoadMultiplayerGame(ActionEvent actionEvent) throws IOException{
+        Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame.fxml"));
+        Main.primaryStage.setScene(new Scene(loadGame));
         Main.primaryStage.show();
     }
 
@@ -90,6 +99,8 @@ public class GameSettingsController implements Initializable{
         //Start MultiplayerControlThread if multiplayer mode selected
         //GameMode and multiplayer related flags are set by the Menu Scene
         //Client and Server socket are set by the Client, Server Scenes
+
+        //Hier sind wir der Host
         switch (ActiveGameState.getModes()){
             case playerVsRemote:
             case kiVsRemote:    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
@@ -99,12 +110,14 @@ public class GameSettingsController implements Initializable{
 
         //Set Scene if singleplayer mode is selected
         switch (ActiveGameState.getModes()){
-            case kiVsKi:        Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+            case kiVsKi:        ActiveGameState.setRunning(true);
+                                Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                                 Main.primaryStage.setScene(new Scene(gamePlayground));
                                 Main.primaryStage.show();
                                 break;
 
-            case playerVsKi:    Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+            case playerVsKi:    ActiveGameState.setRunning(true);
+                                Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
                                 Main.primaryStage.setScene(new Scene(placeShips));
                                 Main.primaryStage.show();
                                 break;
@@ -126,8 +139,24 @@ public class GameSettingsController implements Initializable{
         setValuesOfPlaygroundAndShip();
         setRadioButtonSettings();
 
+        //if (ActiveGameState.getModes() == GameMode.playerVsKi || ActiveGameState.getModes() == GameMode.kiVsKi) setMultiplayerLoadGameInvisible();
+
         System.out.println(ActiveGameState.getModes());
-        if ( (ActiveGameState.getModes() == GameMode.playerVsKi) || ( ActiveGameState.getModes() == GameMode.playerVsRemote)) setOwnKiSelectionInvisible();
+        //if ( (ActiveGameState.getModes() == GameMode.playerVsKi) || ( ActiveGameState.getModes() == GameMode.playerVsRemote)) setOwnKiSelectionInvisible();
+        switch (ActiveGameState.getModes()){
+            case playerVsKi:        setOwnKiSelectionInvisible();
+
+            case kiVsKi:            setMultiplayerLoadGameInvisible();
+                                    break;
+
+            case playerVsRemote:
+            case kiVsRemote:        setOwnKiSelectionInvisible();
+                                    setEnemyKiSelectionInvisible();
+        }
+    }
+
+    public void setMultiplayerLoadGameInvisible(){
+        this.multiplayerLoadGame.setVisible(false);
     }
 
     public void setRadioButtonSettings(){
@@ -211,6 +240,12 @@ public class GameSettingsController implements Initializable{
 
 
 
+    }
+
+    public void setEnemyKiSelectionInvisible(){
+        this.rB_difficultyEnemyNormal.setVisible(false);
+        this.rB_difficultyEnemyHard.setVisible(false);
+        this.selectDifficultyEnemyKIText.setVisible(false);
     }
 
     public void setOwnKiSelectionInvisible(){
@@ -306,6 +341,7 @@ public class GameSettingsController implements Initializable{
         headlines.add(this.selectDifficultyOwnKIText);
         headlines.add(this.sliderValueText);
 
+
         Color textColorHeadlines = new Color(0.8,0.8,0.8,1);
 
         for ( Text text : headlines ){
@@ -321,7 +357,8 @@ public class GameSettingsController implements Initializable{
         this.rB_difficultyOwnNormal.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         this.rB_difficultyOwnHard.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
 
-
+        //this.multiplayerLoadGame.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        //this.multiplayerLoadGame.setTextFill(textColorHeadlines);
     }
 
     public void setShipImages(){
@@ -343,5 +380,7 @@ public class GameSettingsController implements Initializable{
         this.labelShipSize5.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));
 
     }
+
+
 }
 

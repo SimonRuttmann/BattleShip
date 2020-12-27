@@ -7,6 +7,8 @@ import Player.ActiveGameState;
 import Player.GameMode;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -41,7 +43,9 @@ public class MainMenuController implements Initializable {
     public StackPane rightBar_Mult_SpSelectRole;
     public Polygon rightBarMultiplayer_PolySelectRole;
     public VBox rightBarMultiplayer_VBoxSelectRole;
-    public RadioButton rightBarMultiplayer_RbSelectKI;
+
+    public RadioButton rightBarMultiplayer_RbSelectKInormal;
+    public RadioButton rightBarMultiplayer_RbSelectKIhard;
 
     /**External Handling's**/
     //Singleplayer Player vs KI
@@ -87,9 +91,13 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setAmIServer(false);
         ActiveGameState.setYourTurn(false);
 
-        if (this.rightBarMultiplayer_RbSelectKI.isSelected()) {
+        if (this.rightBarMultiplayer_RbSelectKInormal.isSelected() || this.rightBarMultiplayer_RbSelectKIhard.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
             ActiveGameState.setOwnKi(new Ki());
+            if ( this.rightBarMultiplayer_RbSelectKInormal.isSelected())
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
+            else
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
         }
         else{
             ActiveGameState.setModes(GameMode.playerVsRemote);
@@ -105,9 +113,13 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setMultiplayer(true);
         ActiveGameState.setAmIServer(true);
         ActiveGameState.setYourTurn(true);
-        if (this.rightBarMultiplayer_RbSelectKI.isSelected()) {
+        if (this.rightBarMultiplayer_RbSelectKInormal.isSelected() || this.rightBarMultiplayer_RbSelectKIhard.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
             ActiveGameState.setOwnKi(new Ki());
+            if ( this.rightBarMultiplayer_RbSelectKInormal.isSelected())
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
+            else
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
         }
         else{
             ActiveGameState.setModes(GameMode.playerVsRemote);
@@ -594,13 +606,19 @@ public class MainMenuController implements Initializable {
                     180.0, 60.0,        //Unten rechts
                     -75.0, 60.0         //Unten links
             );
-
-
             polygon.setStroke(Color.color(1, 1, 1, 1));
             polygon.setEffect(new GaussianBlur());
 
         }
 
+        this.rightBarMultiplayer_PolySelectRole.getPoints().removeAll();
+        this.rightBarMultiplayer_PolySelectRole.getPoints().setAll(
+                -75.0, 0.0,         //Oben links
+                180.0, 0.0,         //Oben rechts
+                215.0, 40.0,        //Spitze
+                180.0, 80.0,        //Unten rechts
+                -75.0, 80.0         //Unten links
+        );
 
         //Adding effects to the Text and Polygons based on the properties of the StackPanes
         for (int i = 0; i < polygons.size(); i++){
@@ -674,10 +692,23 @@ public class MainMenuController implements Initializable {
         Color textColorRightBar = new Color(0.2, 0.2, 0.2, 1);
 
         //Radio Buttons
+        //Shadows are too big -> Events will trigger to far
 
-        this.rightBarMultiplayer_RbSelectKI.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
-        this.rightBarMultiplayer_RbSelectKI.setTextFill(textColorRightBar);
-        this.rightBarMultiplayer_RbSelectKI.setEffect(new DropShadow(30, Color.BLACK));
+        this.rightBarMultiplayer_RbSelectKInormal.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        this.rightBarMultiplayer_RbSelectKInormal.setTextFill(textColorRightBar);
+      //  this.rightBarMultiplayer_RbSelectKInormal.setEffect(new DropShadow(30, Color.BLACK));
+
+        this.rightBarMultiplayer_RbSelectKIhard.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        this.rightBarMultiplayer_RbSelectKIhard.setTextFill(textColorRightBar);
+     //   this.rightBarMultiplayer_RbSelectKIhard.setEffect(new DropShadow(30, Color.BLACK));
+
+        rightBarMultiplayer_RbSelectKInormal.setOnAction( event -> {
+           rightBarMultiplayer_RbSelectKIhard.setSelected(false);
+        });
+
+        rightBarMultiplayer_RbSelectKIhard.setOnAction( event -> {
+            rightBarMultiplayer_RbSelectKInormal.setSelected(false);
+        });
 
     }
 

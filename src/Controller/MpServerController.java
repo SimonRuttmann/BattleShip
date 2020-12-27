@@ -201,13 +201,5 @@ public class MpServerController implements Initializable {
     }
 
 
-    public void dummySwitchScene(ActionEvent actionEvent) throws IOException {
-        Parent scene;
-        scene = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
-
-
-        Main.primaryStage.setScene(new Scene(scene));
-        Main.primaryStage.show();
-    }
 
 }

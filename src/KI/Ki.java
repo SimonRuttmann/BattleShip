@@ -16,7 +16,7 @@ import java.util.Set;
 //Wäre whr sinnvoll die Ki in Klassen zu unterteilen, die Ki, bei der placeShips aufgerufen wird, ist die KI als  placementKi in ActiveGamestate gespeichert
 //Beim beschießen gibt es 2 instanzen, enemyKi und ownKi, welche im ActiveGameState auch als KI gespeichert sind, diese brauchen die getShot methode
 public class Ki implements IKi{
-
+    public enum Difficulty {normal, hard};
 
     /**
      * Bugfixed

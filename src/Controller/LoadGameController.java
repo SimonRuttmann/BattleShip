@@ -3,6 +3,7 @@ package Controller;
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
 import Player.ActiveGameState;
+import Player.GameMode;
 import Player.SaveAndLoad;
 import Player.Savegame;
 import javafx.animation.ScaleTransition;
@@ -55,9 +56,19 @@ public class LoadGameController implements Initializable {
 
 
     public void backToMainMenu(ActionEvent actionEvent) throws IOException {
-        Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
-        Main.primaryStage.setScene(new Scene(gameSettings));
-        Main.primaryStage.show();
+        switch (ActiveGameState.getModes()){
+            case playerVsKi:
+            case kiVsKi:            Parent mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                                    Main.primaryStage.setScene(new Scene(mainMenu));
+                                    Main.primaryStage.show();
+                                    break;
+
+            case playerVsRemote:
+            case kiVsRemote:        Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
+                                    Main.primaryStage.setScene(new Scene(gameSettings));
+                                    Main.primaryStage.show();
+        }
+
     }
 
     public void loadSelectedGame(ActionEvent actionEvent) throws IOException{
@@ -87,6 +98,9 @@ public class LoadGameController implements Initializable {
         setLineSettings();
         setRectangleSettings();
         startAnimation();
+
+        if ( ActiveGameState.getModes() == GameMode.kiVsRemote || ActiveGameState.getModes() == GameMode.playerVsRemote)
+            this.backButton.setText("Back to Settings");
 
     }
 

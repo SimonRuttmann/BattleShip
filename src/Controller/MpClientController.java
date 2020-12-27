@@ -208,17 +208,7 @@ public class MpClientController implements Initializable {
         this.anchorPane.setBackground(new Background(myBI));
     }
 
-    public void dummySceneSwitch(ActionEvent actionEvent) throws IOException {
-        Parent scene;
-        if ( ActiveGameState.getModes() == GameMode.playerVsRemote) {
-            scene = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
-        }
-        else{
-            scene = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-        }
-        Main.primaryStage.setScene(new Scene(scene));
-        Main.primaryStage.show();
-    }
+
 }
 
 

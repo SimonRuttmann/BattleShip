@@ -144,7 +144,25 @@ public class ActiveGameState {
     }
 
     private static int difficulty; //wählt die Schwierigkeit aus, 0 = normal, 1 = schwer
+    private static Ki.Difficulty ownKiDifficulty;//TODO einbinden, difficulty reicht hier bei 2 verschiedenen nicht aus
+    private static Ki.Difficulty enemyKiDifficulty;
     //TODO evtl enum
+
+    public static Ki.Difficulty getOwnKiDifficulty() {
+        return ownKiDifficulty;
+    }
+
+    public static void setOwnKiDifficulty(Ki.Difficulty ownKiDifficulty) {
+        ActiveGameState.ownKiDifficulty = ownKiDifficulty;
+    }
+
+    public static Ki.Difficulty getEnemyKiDifficulty() {
+        return enemyKiDifficulty;
+    }
+
+    public static void setEnemyKiDifficulty(Ki.Difficulty enemyKiDifficulty) {
+        ActiveGameState.enemyKiDifficulty = enemyKiDifficulty;
+    }
 
     // Game Variables
 // -> Gestrichen -> neuer Zugriff über ActiveGameState.getOwnPlayer.get[Own][Enemy]Playground

@@ -62,7 +62,7 @@ public class SingleplayerControlThreadKiVsKi extends Thread {
                     }
                         //TODO Yannick diplay Player(KI)'s Turn
                 }
-                //Enemy Turn expired
+                //Own Turn expired
                 else {
                     ActiveGameState.setYourTurn(false);
                     //Mark our enemy Playground

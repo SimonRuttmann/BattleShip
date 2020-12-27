@@ -106,10 +106,10 @@ public class GameOptionsController implements Initializable {
     }
 
     public void setValuesOfVelocitySlider(){
-        velocitySliderValueText.setText("3s");
+        velocitySliderValueText.setText("1s");
         selectAIVelocitySlider.setMin(0);
         selectAIVelocitySlider.setMax(10);
-        selectAIVelocitySlider.setValue(3);
+        selectAIVelocitySlider.setValue(1);
         this.selectAIVelocitySlider.setBlockIncrement(2);
 
         this.selectAIVelocitySlider.valueProperty().addListener(new ChangeListener<Number>(){

@@ -14,7 +14,7 @@ public class ActiveGameState {
     public static boolean newView = false;
 
     private static int musicVolume = 50;
-    private static int aiVelocity = 3;
+    private static int aiVelocity = 1;
     private static Language language = Language.english;
 
     public static Language getLanguage() {

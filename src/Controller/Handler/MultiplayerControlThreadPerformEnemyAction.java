@@ -5,6 +5,7 @@ import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
 import Player.ActiveGameState;
+import Player.GameMode;
 import Player.SaveAndLoad;
 import Player.Savegame;
 
@@ -124,6 +125,15 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 ActiveGameState.setRunning(false);
         }
     }
+        //TODO Kommentieren
+        //wenn ki vs Remote -> wieder den KI shoot Thread starten -> ping pong
+        if( ActiveGameState.getModes() == GameMode.kiVsRemote){
+            MultiplayerControlThreadKiShootsEnemy multiplayerControlThreadKiShootsEnemy = new MultiplayerControlThreadKiShootsEnemy();
+            multiplayerControlThreadKiShootsEnemy.start();
+            System.out.println( "Your turn sollte true sein: " + ActiveGameState.isYourTurn());
+            return;
+        }
+
         //5
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
         System.out.println( "Beende Multiplayer Perform Enemy Action ");

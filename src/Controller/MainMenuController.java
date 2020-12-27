@@ -46,8 +46,10 @@ public class MainMenuController implements Initializable {
     /**External Handling's**/
     //Singleplayer Player vs KI
     public void startPlayerVsKI(MouseEvent mouseEvent) throws IOException {
+        ActiveGameState.setYourTurn(true);
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.playerVsKi);
+        ActiveGameState.setEnemyKi(new Ki());
 
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
@@ -56,9 +58,11 @@ public class MainMenuController implements Initializable {
 
     //Singleplayer KI vs KI
     public void startKIvsKI(MouseEvent mouseEvent) throws IOException {
-
+        ActiveGameState.setYourTurn(true);
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.kiVsKi);
+        ActiveGameState.setOwnKi(new Ki());
+        ActiveGameState.setEnemyKi(new Ki());
 
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
@@ -85,6 +89,7 @@ public class MainMenuController implements Initializable {
 
         if (this.rightBarMultiplayer_RbSelectKI.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
+            ActiveGameState.setOwnKi(new Ki());
         }
         else{
             ActiveGameState.setModes(GameMode.playerVsRemote);
@@ -102,6 +107,7 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setYourTurn(true);
         if (this.rightBarMultiplayer_RbSelectKI.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
+            ActiveGameState.setOwnKi(new Ki());
         }
         else{
             ActiveGameState.setModes(GameMode.playerVsRemote);

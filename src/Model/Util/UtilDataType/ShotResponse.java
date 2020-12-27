@@ -12,6 +12,10 @@ public class ShotResponse {
     private boolean gameWin;
     private ArrayList<Point> impossiblePositions;
 
+    //Used by Ki, when communicating with remote
+    public ShotResponse(){
+    };
+
     //Constructor, when our Playground got hit
     public ShotResponse(boolean gameLost, boolean hit, boolean shipDestroyed) {
         this.gameLost = gameLost;
@@ -32,6 +36,14 @@ public class ShotResponse {
 
     public Label getLabel() {
         return label;
+    }
+
+    public void setHit(boolean hit) {
+        this.hit = hit;
+    }
+
+    public void setShipDestroyed(boolean shipDestroyed) {
+        this.shipDestroyed = shipDestroyed;
     }
 
     public boolean getAlignment() {

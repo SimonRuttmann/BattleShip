@@ -95,24 +95,20 @@ public class GameSettingsController implements Initializable{
         //Hier sind wir der Host
         switch (ActiveGameState.getModes()){
             case playerVsRemote:
-            case kiVsRemote:    ActiveGameState.setEnemyKi(new Ki());
-                                MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
+            case kiVsRemote:    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
                                 multiplayerControlThreadConfigCommunication.start();
                                 break;
         }
 
         //Set Scene if singleplayer mode is selected
         switch (ActiveGameState.getModes()){
-            case kiVsKi:        ActiveGameState.setOwnKi  (new Ki());
-                                ActiveGameState.setEnemyKi(new Ki());
-                                ActiveGameState.setRunning(true);
+            case kiVsKi:        ActiveGameState.setRunning(true);
                                 Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                                 Main.primaryStage.setScene(new Scene(gamePlayground));
                                 Main.primaryStage.show();
                                 break;
 
             case playerVsKi:    ActiveGameState.setRunning(true);
-                                ActiveGameState.setEnemyKi (new Ki());
                                 Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
                                 Main.primaryStage.setScene(new Scene(placeShips));
                                 Main.primaryStage.show();

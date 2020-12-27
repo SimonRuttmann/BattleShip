@@ -4,7 +4,10 @@ import Model.Playground.*;
 import Model.Ship.*;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
+import Network.CMD;
 import Player.ActiveGameState;
+import com.sun.nio.sctp.IllegalReceiveException;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
@@ -36,13 +39,17 @@ public class Ki implements IKi{
      * Eine kleine Änderung musste ich noch wegen dem return machen, da du die shoot-Methode bereits aufrufst, darf ich sie im Controller nicht nochmal aufrufen,
      * weshalb nun nicht der punkt, sondern das ergebnis (ShotResponse) des Aufrufs mit playground.shoot(punkt) übergeben wird
      *
-     * Codetechnisch/Logiktechnisch ist alles gleich geblieben, außer das zusätzlich noch geprüft wird, ob der Punkt, bei dem man schließen möchte schon als shotWater markiert wurde
+     * Codetechnisch/Logiktechnisch ist alles gleich geblieben, außer das zusätzlich noch geprüft wird, ob der Punkt, bei dem man schließen möchte schon als shotWater markiert wurde (dann darf man dort hin nicht schießen)
      *
      *
      * Das hattest du Teilweise schon drin, jedoch wird bei einer ArrayListe arrayList.contains(new Point(x,y)) immer false kommen, da referenzen überprüft werden und
      * intern nicht die equals-Methode (die wir btw garnicht haben :D).
      * Dafür hab ich die Methode isNextShotInPreviousList geschrieben, diese überprüft, ob es in der Liste schon einen ANDEREN Punkt (andere Referenz) gibt mit den gleichen
      * X und Y Koordinaten gibt
+     *
+     * Hinzugefügt:
+     * Kommunikationszeugs (2 Methoden), muss hier leider rein, damit ich die Ki auch für den Modus KI vs Remote verwenden kann
+     * Bei der PlaceShips, die RandomX, RandomY durch die Methode(RandomPointExceptSet) ersetzt. Die Methode holt sich nen Punkt aus der verbleibenden Menge an Punkten -> Führt sonst zu (nahezu) Endlosschleifen, wenn nur noch wenige Punkte vorhanden sind
      *
      */
 
@@ -510,8 +517,8 @@ private int debugg = 0;
         //die Ki besitzt die Schwierigkeit = normal
         if(ActiveGameState.getDifficulty() == 0){
             Point returnShot;
-            normaleKi(playground);
-
+            boolean success = normaleKi(playground);
+            if ( !success ) return null;
             return this.shotResponseFromKI;
             //TODO die normale KI unbedingt zuerst Testen sobald möglich !!
             // die Ki besitzt die Schwierigkeit = schwer
@@ -526,8 +533,9 @@ private int debugg = 0;
     protected Point firstHit;
     protected boolean startDestroy;
     protected Point normalKiShot;
+    private boolean needRandomLocation;
 
-    protected void normaleKi(IOwnPlayground playground){
+    protected boolean normaleKi(IOwnPlayground playground){
         ShotResponse answerofShot;
         int random_x;
         int random_y;
@@ -538,11 +546,15 @@ private int debugg = 0;
             do {
                 random_x = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
                 random_y = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
-            }while (isNextShotInPreviousList(random_x,random_y) /*checkArrayList(previousShots, new Point(random_x,random_y))*/); //TODO BUGFIX Kann hier nicht mit .contains(e) überprüft werden, da contains hier auf referenzen überprüft.
+            }while (isNextShotInPreviousList(random_x,random_y));
             System.out.println("first shoot call");
 
             Point currentShot = new Point(random_x, random_y);
-            answerofShot = playground.shoot(currentShot);
+
+            answerofShot = shootPlayground(currentShot, playground);
+            if ( shotResponseFromKI == null ) return false;
+
+
             this.shotResponseFromKI = answerofShot;
             shotResponseFromKI.setShotPosition(currentShot);
             previousShots.add(currentShot);
@@ -554,6 +566,7 @@ private int debugg = 0;
             if(answerofShot.isHit()){
                 destroyStatus = DestroyStatus.destroying;
                 nextLocation = NextLocation.nextTop;
+                needRandomLocation = true;
 
                 isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
                 firstHit = new Point(random_x,random_y); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert
@@ -568,14 +581,14 @@ private int debugg = 0;
             }
         }
 
-        else if(destroyStatus == DestroyStatus.destroying){ //TODO WAR VORHER IF DIESER GOTTVERDAMMTE HURENKACKSCHEISS HAT MICH 7H GEDAUERT SO EIN DRECK, WEIL ES NATÜRLICH NIE AUFFALLEN KANN, DA DIE KI BEI PLAYER VS KI MEHRFACH SCHIESSEN DARF, KANN ES JA AUCH GARNICHT AUFFALLEN, WENN DIE KI OHNEHIN MEHRFACH SCHIESSEN DARF, BEI KI VS KI IST ES ALLERDINGS MÜLL DA ALLE 1000MAL MAN DRAUFKOMMT, DAS REIN ZUFÄLLIG EINE POSITION NICHT RICHTIG PLAZIERT IST UND DESWEGEN DIE OWNPLAYGROUND SHOOT UND ENEMY PLAYGROUND SHOOT ABKACKT UND ENTSPRECHEND POSITIONEN DARUM FALSCH MARKIERT WERDEN UND IN DER GUI RANDOMMÄSSIG WIN ODER LOSE DRINSTEHT...... #Nooffense musste ich loswerden... ein fucking else
+        else if(destroyStatus == DestroyStatus.destroying){
 
-            destroyShip(firstHit,playground);
+            return destroyShip(firstHit, playground);
 
 
         }
 
-
+        return true;
     }
 
     //Alle Variablen die für die destroyShipNotonEdge gebraucht werden
@@ -592,161 +605,233 @@ private int debugg = 0;
     protected boolean isShipcomDestroyed;
     */
 
-    protected ArrayList<Point> shiptoDestroy = new ArrayList<>(); //TODO BUGFIX, war nicht initialisiert
+    protected ArrayList<Point> shiptoDestroy = new ArrayList<>();
+
+    //Kleine Erweiterung, damit die Ki nicht immer oben anfängt
+    public NextLocation getRandomLocation(){
+        ArrayList<NextLocation> nextLocationArrayList = new ArrayList<>();
+        nextLocationArrayList.add(NextLocation.nextTop);
+        nextLocationArrayList.add(NextLocation.nextBottom);
+        nextLocationArrayList.add(NextLocation.nextRight);
+        nextLocationArrayList.add(NextLocation.nextLeft);
+
+        Random random = new Random();
+        return nextLocationArrayList.get(   random.nextInt(nextLocationArrayList.size()-1)   );
+    }
+    //Normale Shoot Methode mit Communication zeugs
+    public ShotResponse shootPlayground(Point nextPositionToShoot, IOwnPlayground playground){
+        if ( !ActiveGameState.isMultiplayer()) {
+            shotResponseFromKI = playground.shoot(nextPositionToShoot);
+        }
+        else{
+            shotResponseFromKI = getShootOverCommunication(nextPositionToShoot);
+            if ( shotResponseFromKI == null ) return null;
+        }
+
+        shotResponseFromKI.setShotPosition(nextPositionToShoot);
+        return  shotResponseFromKI;
+
+    }
+
+    //communication zeugs
+    public ShotResponse getShootOverCommunication(Point posToShot){
+        String cmdParameter = (posToShot.getX()+1) + " " + (posToShot.getY()+1);
+        String[] cmdReceived;
+        if ( ActiveGameState.isAmIServer()){
+            ActiveGameState.getServer().sendCMD(CMD.shot, cmdParameter);
+            cmdReceived = ActiveGameState.getServer().getCMD();
+        }
+        else{
+            ActiveGameState.getClient().sendCMD(CMD.shot, cmdParameter);
+            cmdReceived = ActiveGameState.getClient().getCMD();
+        }
+
+        if ( cmdReceived[0].equals("timeout")){
+            return null;
+        }
+
+        if (! cmdReceived[0].equals("answer") ){
+            throw new IllegalReceiveException();
+        }
+        else{
+            ShotResponse shotResponse = new ShotResponse();
+            switch (Integer.parseInt(cmdReceived[1])){
+                case 0: shotResponse.setHit(false);
+                        shotResponse.setShipDestroyed(false);
+                        break;
+                case 1: shotResponse.setHit(true);
+                        shotResponse.setShipDestroyed(false);
+                        break;
+                case 2: shotResponse.setHit(true);
+                        shotResponse.setShipDestroyed(true);
+            }
+            return shotResponse;
+        }
+    }
 
     private int debug= 0;
 
     //TODO stand jz sollte die Ki zufällig ein Schiff finden und wenn gefunden auch zerstören (ohne große Taktik)
     //soll das gefundene Schiff zerstören
-    private void destroyShip(Point firstHit,IOwnPlayground playground ){
+    private boolean destroyShip(Point firstHit,IOwnPlayground playground ){
 
-
+        if (this.needRandomLocation) nextLocation = getRandomLocation();
+        this.needRandomLocation = false;
         System.out.println("Next Position to shoot: " + this.nextLocation + " rangeToShot: " + rangeToShot);
 
         Point nextPositionToShoot;
 
-        switch (this.nextLocation){
-            case nextTop:
-                nextPositionToShoot = new Point(firstHit.getX(), firstHit.getY() - rangeToShot);
-                if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
-                        &&  (nextPositionToShoot.getY() >= 0 )      ){
+        while (true) {
+            System.out.println( "while ture durchlauf"); //TODO Endlosschleife
+            System.out.println("Next Position to shoot: " + this.nextLocation + " rangeToShot: " + rangeToShot + "Schießursprung: " + firstHit.getX() + " " + firstHit.getY());
+            switch (this.nextLocation) {
+                case nextTop:
+                    nextPositionToShoot = new Point(firstHit.getX(), firstHit.getY() - rangeToShot);
+                    if ((!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()))
+                            && (nextPositionToShoot.getY() >= 0)) {
 
-                    //Schiessposition erlaubt
-                    previousShots.add(nextPositionToShoot);
-                    shotResponseFromKI = playground.shoot(nextPositionToShoot);
-                    shotResponseFromKI.setShotPosition(nextPositionToShoot);
-                    //Hit and Destroyed
-                    if(shotResponseFromKI.isShipDestroyed()){
-                        this.nextLocation = NextLocation.noDestination;
-                        this.rangeToShot = 1;
-                        this.destroyStatus = DestroyStatus.notFound;
+                        //Schiessposition erlaubt
+                        previousShots.add(nextPositionToShoot);
 
-                        shiptoDestroy.add(nextPositionToShoot);
-                        previousShots.addAll(surroundShipDots(shiptoDestroy));
+                        shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
+                        if ( shotResponseFromKI == null ) return false;
+
+                        //Hit and Destroyed
+                        if (shotResponseFromKI.isShipDestroyed()) {
+                            this.nextLocation = NextLocation.noDestination;
+                            this.rangeToShot = 1;
+                            this.destroyStatus = DestroyStatus.notFound;
+
+                            shiptoDestroy.add(nextPositionToShoot);
+                            previousShots.addAll(surroundShipDots(shiptoDestroy));
+                        }
+                        //Hit
+                        else if (shotResponseFromKI.isHit()) {
+                            this.nextLocation = NextLocation.nextTop;
+                            this.rangeToShot++;
+                        }
+                        //no Hit
+                        else {
+                            this.nextLocation = NextLocation.nextBottom;
+                            this.rangeToShot = 1;
+                        }
+
+                        //Leave the switch case, as we have already shot the enemy
+                        return true;
                     }
-                    //Hit
-                    else if ( shotResponseFromKI.isHit() ){
-                        this.nextLocation = NextLocation.nextTop;
-                        this.rangeToShot++;
+                    //Schiessposition nicht erlaubt, gehe in den nächsten case
+                    rangeToShot = 1;
+                case nextBottom:
+                    nextPositionToShoot = new Point(firstHit.getX(), firstHit.getY() + rangeToShot);
+                    if ((!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()))
+                            && (nextPositionToShoot.getY() < ActiveGameState.getPlaygroundSize())) {
+
+                        //Schiessposition erlaubt
+                        previousShots.add(nextPositionToShoot);
+                        shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
+                        if ( shotResponseFromKI == null ) return false;
+
+                        //Hit and Destroyed
+                        if (shotResponseFromKI.isShipDestroyed()) {
+                            this.nextLocation = NextLocation.noDestination;
+                            this.rangeToShot = 1;
+                            this.destroyStatus = DestroyStatus.notFound;
+
+                            shiptoDestroy.add(nextPositionToShoot);
+                            previousShots.addAll(surroundShipDots(shiptoDestroy));
+                        }
+                        //Hit
+                        else if (shotResponseFromKI.isHit()) {
+                            this.nextLocation = NextLocation.nextBottom;
+                            this.rangeToShot++;
+                        }
+                        //no Hit
+                        else {
+                            this.nextLocation = NextLocation.nextRight;
+                            this.rangeToShot = 1;
+                        }
+
+                        //Leave the switch case, as we have already shot the enemy
+                        return true;
                     }
-                    //no Hit
-                    else {
-                        this.nextLocation = NextLocation.nextBottom;
-                        this.rangeToShot = 1;
+                    //Schiessposition nicht erlaubt, gehe in den nächsten case
+                    rangeToShot = 1;
+                case nextRight:
+                    nextPositionToShoot = new Point(firstHit.getX() + rangeToShot, firstHit.getY());
+                    if ((!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()))
+                            && (nextPositionToShoot.getX() < ActiveGameState.getPlaygroundSize())) {
+
+                        //Schiessposition erlaubt
+                        previousShots.add(nextPositionToShoot);
+                        shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
+                        if ( shotResponseFromKI == null ) return false;
+
+                        //Hit and Destroyed
+                        if (shotResponseFromKI.isShipDestroyed()) {
+                            this.nextLocation = NextLocation.noDestination;
+                            this.rangeToShot = 1;
+                            this.destroyStatus = DestroyStatus.notFound;
+
+                            shiptoDestroy.add(nextPositionToShoot);
+                            previousShots.addAll(surroundShipDots(shiptoDestroy));
+                        }
+                        //Hit
+                        else if (shotResponseFromKI.isHit()) {
+                            this.nextLocation = NextLocation.nextRight;
+                            this.rangeToShot++;
+                        }
+                        //no Hit
+                        else {
+                            this.nextLocation = NextLocation.nextLeft;
+                            this.rangeToShot = 1;
+                        }
+
+                        //Leave the switch case, as we have already shot the enemy
+                        return true;
                     }
+                    //Schiessposition nicht erlaubt, gehe in den nächsten case
+                    rangeToShot = 1;
+                case nextLeft:
+                    nextPositionToShoot = new Point(firstHit.getX() - rangeToShot, firstHit.getY());
+                    if ((!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()))
+                            && (nextPositionToShoot.getX() >= 0)) {
 
-                    //Leave the switch case, as we have already shot the enemy
-                    break;
-                }
-                //Schiessposition nicht erlaubt, gehe in den nächsten case
-                rangeToShot = 1;
-            case nextBottom:
-                nextPositionToShoot = new Point(firstHit.getX(), firstHit.getY() + rangeToShot);
-                if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
-                        &&  (nextPositionToShoot.getY() < ActiveGameState.getPlaygroundSize() )      ){
+                        //Schiessposition erlaubt
+                        previousShots.add(nextPositionToShoot);
+                        shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
+                        if ( shotResponseFromKI == null ) return false;
 
-                    //Schiessposition erlaubt
-                    previousShots.add(nextPositionToShoot);
-                    shotResponseFromKI = playground.shoot(nextPositionToShoot);
-                    shotResponseFromKI.setShotPosition(nextPositionToShoot);
-                    //Hit and Destroyed
-                    if(shotResponseFromKI.isShipDestroyed()){
-                        this.nextLocation = NextLocation.noDestination;
-                        this.rangeToShot = 1;
-                        this.destroyStatus = DestroyStatus.notFound;
+                        //Hit and Destroyed
+                        if (shotResponseFromKI.isShipDestroyed()) {
+                            this.nextLocation = NextLocation.noDestination;
+                            this.rangeToShot = 1;
+                            this.destroyStatus = DestroyStatus.notFound;
 
-                        shiptoDestroy.add(nextPositionToShoot);
-                        previousShots.addAll(surroundShipDots(shiptoDestroy));
+                            shiptoDestroy.add(nextPositionToShoot);
+                            previousShots.addAll(surroundShipDots(shiptoDestroy));
+
+                        }
+                        //Hit
+                        else if (shotResponseFromKI.isHit()) {
+                            this.nextLocation = NextLocation.nextLeft;
+                            this.rangeToShot++;
+                            shiptoDestroy.add(nextPositionToShoot);
+                        }
+                        //no Hit
+                        else {
+                            System.out.println("Can't be, shoot at left and all other positions are cleared");
+                            this.nextLocation = NextLocation.nextTop;
+                            this.rangeToShot = 1;
+                        }
+
+                        //Leave the switch case, as we have already shot the enemy
+                        return true;
                     }
-                    //Hit
-                    else if ( shotResponseFromKI.isHit() ){
-                        this.nextLocation = NextLocation.nextBottom;
-                        this.rangeToShot++;
-                    }
-                    //no Hit
-                    else {
-                        this.nextLocation = NextLocation.nextRight;
-                        this.rangeToShot = 1;
-                    }
-
-                    //Leave the switch case, as we have already shot the enemy
-                    break;
-                }
-                //Schiessposition nicht erlaubt, gehe in den nächsten case
-                rangeToShot = 1;
-            case nextRight:
-                nextPositionToShoot = new Point(firstHit.getX() + rangeToShot, firstHit.getY());
-                if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
-                        &&  (nextPositionToShoot.getX() < ActiveGameState.getPlaygroundSize() )      ){
-
-                    //Schiessposition erlaubt
-                    previousShots.add(nextPositionToShoot);
-                    shotResponseFromKI = playground.shoot(nextPositionToShoot);
-                    shotResponseFromKI.setShotPosition(nextPositionToShoot);
-                    //Hit and Destroyed
-                    if(shotResponseFromKI.isShipDestroyed()){
-                        this.nextLocation = NextLocation.noDestination;
-                        this.rangeToShot = 1;
-                        this.destroyStatus = DestroyStatus.notFound;
-
-                        shiptoDestroy.add(nextPositionToShoot);
-                        previousShots.addAll(surroundShipDots(shiptoDestroy));
-                    }
-                    //Hit
-                    else if ( shotResponseFromKI.isHit() ){
-                        this.nextLocation = NextLocation.nextRight;
-                        this.rangeToShot++;
-                    }
-                    //no Hit
-                    else {
-                        this.nextLocation = NextLocation.nextLeft;
-                        this.rangeToShot = 1;
-                    }
-
-                    //Leave the switch case, as we have already shot the enemy
-                    break;
-                }
-                //Schiessposition nicht erlaubt, gehe in den nächsten case
-                rangeToShot = 1;
-            case nextLeft:
-                nextPositionToShoot = new Point(firstHit.getX() - rangeToShot, firstHit.getY());
-                if (        (!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()) )
-                        &&  (nextPositionToShoot.getX() >= 0 )      ) {
-
-                    //Schiessposition erlaubt
-                    previousShots.add(nextPositionToShoot);
-                    shotResponseFromKI = playground.shoot(nextPositionToShoot);
-                    shotResponseFromKI.setShotPosition(nextPositionToShoot);
-                    //Hit and Destroyed
-                    if(shotResponseFromKI.isShipDestroyed()){
-                        this.nextLocation = NextLocation.noDestination;
-                        this.rangeToShot = 1;
-                        this.destroyStatus = DestroyStatus.notFound;
-
-                        shiptoDestroy.add(nextPositionToShoot);
-                        previousShots.addAll(surroundShipDots(shiptoDestroy));
-
-                    }
-                    //Hit
-                    else if ( shotResponseFromKI.isHit() ){
-                        this.nextLocation = NextLocation.nextLeft;
-                        this.rangeToShot++;
-                        shiptoDestroy.add(nextPositionToShoot);
-                    }
-                    //no Hit
-                    else {
-                        System.out.println( "Can't be, shoot at left and all other positions are cleared");
-                        this.nextLocation = NextLocation.nextTop;
-                        this.rangeToShot = 1;
-                    }
-
-                    //Leave the switch case, as we have already shot the enemy
-                    break;
-                }
-                rangeToShot = 1;
-            default:
-                System.out.println( "No position found");
-
+                    rangeToShot = 1;
+                    //Notwendig, damit von oben aus alle Punkte wieder erreicht werden können
+                    //Bsp. Start at nextLeft -> NextLeft aber nicht möglich -> NextLeft -> NextLeft -> NextLeft -> Endlos
+                    this.nextLocation = NextLocation.nextTop;
+            }
         }
 
         //TODO die KI soll nicht systematisch um den firstHit herum schießen -> mit random arbeiten

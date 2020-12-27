@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.Handler.MultiplayerControlThreadKiShootsEnemy;
 import Controller.Handler.MultiplayerControlThreadPerformEnemyAction;
 import Controller.Handler.SingleplayerControlThreadKiVsKi;
 import Gui_View.Main;
@@ -69,6 +70,20 @@ public class GamePlayground implements Initializable {
             singleplayerControlThreadKiVsKi.start();
         }
 
+        /**
+         * Gamemode kiVsRemote -> Start Perform enemy action, if we are Client ( enemy´s Turn )
+         *                      -> Start KI Shoots Enemy, if we are Server ( our Turn)
+         */
+        if ( ActiveGameState.getModes() == GameMode.kiVsRemote){
+            if ( !ActiveGameState.isAmIServer()){
+                MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
+                multiplayerControlThreadPerformEnemyAction.start();
+            }
+            else{
+                MultiplayerControlThreadKiShootsEnemy multiplayerControlThreadKiShootsEnemy = new MultiplayerControlThreadKiShootsEnemy();
+                multiplayerControlThreadKiShootsEnemy.start();
+            }
+        }
         // initialize the static variable groupEnemyPS -> used in MultiplayerControlThreadShootEnemy
         groupEnemyPS = groupEnemP;
 
@@ -172,7 +187,8 @@ public class GamePlayground implements Initializable {
 
         //Client -> Zuerst ist der Server dran -> Setze alle Labels im gegnerischen Spielfeld nicht klickbar
         // Starte den Perform Enemy Action Thread um auf die Eingaben des Servers zu reagieren -> Danach PingPong Prinzip
-        if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer()){
+        //TODO SIMON GAMEMODE.PLAYERVSREMOTE -> KI vs Remote wird woanders gestartet
+        if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer() && ActiveGameState.getModes() == GameMode.playerVsRemote){
             MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();

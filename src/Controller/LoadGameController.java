@@ -8,6 +8,8 @@ import Player.SaveAndLoad;
 import Player.Savegame;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -112,9 +114,9 @@ public class LoadGameController implements Initializable {
         // dir is the folder that contains our saved game files - different for singleplayer and multiplayer
         File dir;
         if(ActiveGameState.isMultiplayer())
-            dir = new File(".savedGames");
+            dir = new File(".multiplayerGames");
         else
-            dir = new File(".savedGames");
+            dir = new File(".singleplayerGames");
 
         File[] savedGames = dir.listFiles((directory, filename) -> filename.endsWith(".json"));
         // add files to observable List and furthermore to gameList
@@ -144,38 +146,45 @@ public class LoadGameController implements Initializable {
                 // create context menu + function for its items
                 ContextMenu contextMenu = new ContextMenu();
 
-                // load -> changes scene to game, loads gamestats from saved game into gameObject
-                // -> gameObject into ???? todo
+                // load -> changes scene to game, loads game using SaveAndLoad.load()
                 MenuItem load = new MenuItem("Spielstand laden");
                 load.setOnAction(e -> {
-                    try {
-                        // loading .json file from memory: .savedGames
-                        System.out.println(cell.getItem()); //todo savegame not needed
+                            // loading .json file from memory: .savedGames
+                            System.out.println(cell.getItem());
 
-                        String temp = cell.getItem().toString();
-                        Savegame gameObject = SaveAndLoad.load(temp);
-                        // todo test if loading was successful -> not correct at the moment
-                        if (gameObject != null) {
-                            System.out.println("loading successful");
-                        }
-                        // load Savedgame object into ???????? todo
-                        // todo now we have a Savegameobject: gameObject -> todo -> load game
+                            // loads the game associated with the cell -> gameObject only used for control if loading was successfully
+                            String temp = cell.getItem().toString();
+                            Savegame gameObject = SaveAndLoad.load(temp);
+
+                            // test if loading was successfully todo Fehler beim Laden abfangen
+                            if (gameObject != null)
+                                System.out.println("loading successful");
+                            else
+                                System.out.println("loading failed");
 
 
-                        // Change scene to game Playground
-                        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-                        Main.primaryStage.setScene(new Scene(game));
-                        Main.primaryStage.show();
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                }); // todo evtl own thread
+                            // Change scene to game Playground
+                            Platform.runLater(() -> {
+                                Parent game = null;
+                                try {
+                                    game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                                assert game != null;
+                                Main.primaryStage.setScene(new Scene(game));
+                                Main.primaryStage.show();
+                            });
+                        });
 
-                // delete -> deltes game file from list and also from system
+                // delete -> deletes game file from list and system
                 MenuItem delete = new MenuItem("Spielstand löschen");
                 delete.setOnAction(e -> {
-                    System.out.println("Delete Item" + cell.getItem().toString()); // todo löschen funktioniert noch nicht
-                    gameList.getItems().remove(cell.getItem());
+                    System.out.println("Deleted Item: " + cell.getItem().toString());
+                    File game = cell.getItem();
+                    gameList.getItems().remove(game);
+                    if(!game.delete())
+                        System.out.println("Deleting file failed!");
                 });
                 contextMenu.getItems().addAll(load, delete);
 

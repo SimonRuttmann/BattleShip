@@ -18,7 +18,11 @@ public class SaveAndLoad {
         try{
             Gson gson = new Gson(); // create Gson instance
             // temp = chosen name of file: e.g. temp = "test" -> output Paths.get: .savedGames/test.json
-            Writer writer = Files.newBufferedWriter(Paths.get(".savedGames/"+temp+".json")); //create writer
+            Writer writer;
+            if(ActiveGameState.isMultiplayer())
+                writer = Files.newBufferedWriter(Paths.get(".multiplayerGames/"+temp+".json")); //create writer
+            else
+                writer = Files.newBufferedWriter(Paths.get(".singleplayerGames/"+temp+".json")); //create writer
 //getClass.getRessourceAsStream("/.savedGame")
             gson.toJson(o, writer);
 

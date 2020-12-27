@@ -23,10 +23,29 @@ public class ActiveGameState {
 
     public enum Language {english, german};
     public static boolean newView = false;
+    private static long loadId;
+
+    public static long getLoadId() {
+        return loadId;
+    }
+
+    public static void setLoadId(long loadId) {
+        ActiveGameState.loadId = loadId;
+    }
 
     private static int musicVolume = 50; //currently not in use
     private static int aiVelocity = 1;
     private static Language language = Language.english;
+
+    private static boolean loadGame = false;
+
+    public static boolean isLoadGame() {
+        return loadGame;
+    }
+
+    public static void setLoadGame(boolean loadGame) {
+        ActiveGameState.loadGame = loadGame;
+    }
 
     public static Language getLanguage() {
         return language;

@@ -2,6 +2,7 @@ package Controller.Handler;
 import Gui_View.Main;
 import Network.CMD;
 import Player.ActiveGameState;
+import Player.SaveAndLoad;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +10,10 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 
+
+
+//TODO S load .....
+//TODO C done
 
 /**
  * This thread will:
@@ -19,6 +24,8 @@ import java.io.IOException;
  *      3. Send the command "ships" with parameters
  *      4. Get the command "done"
  *
+ *      5. Send the command ready
+ *      6. Get the command ready
  * When we are Client:
  *      1. Get the command "size" and parameters
  *      2. Send the command "next"
@@ -41,38 +48,38 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
         if (ActiveGameState.isAmIServer()){
             ActiveGameState.setYourTurn(true);
+            String[] receivedCMD;
+            if (!ActiveGameState.isLoadGame()) {
+                ActiveGameState.getServer().sendCMD(CMD.size, Integer.toString(ActiveGameState.getPlaygroundSize()));
+                receivedCMD = ActiveGameState.getServer().getCMD();
+                switch (receivedCMD[0]) {
+                    case "next":
+                        break;
+                    case "timeout":
+                        ActiveGameState.getServer().closeConnection();
+                        ActiveGameState.setRunning(false);
+                        return;
+                    default:
+                        System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
+                        return;
+                }
 
-            ActiveGameState.getServer().sendCMD(CMD.size, Integer.toString(ActiveGameState.getPlaygroundSize()));
-            String[] receivedCMD = ActiveGameState.getServer().getCMD();
-            boolean valid = false;
-            switch  (receivedCMD[0]){
-                case "next":
-                    valid = true;
-                    break;
-                case "timeout":
-                    ActiveGameState.getServer().closeConnection();
-                    ActiveGameState.setRunning(false);
-                    break;
-                default:
-                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
-            }
 
-            if(!valid) return;
 
                 StringBuilder ships = new StringBuilder();
-                for ( int i = 0; i < ActiveGameState.getAmountShipSize2(); i++){
+                for (int i = 0; i < ActiveGameState.getAmountShipSize2(); i++) {
                     ships.append("2");
                     ships.append(" ");
                 }
-                for ( int i = 0; i < ActiveGameState.getAmountShipSize3(); i++){
+                for (int i = 0; i < ActiveGameState.getAmountShipSize3(); i++) {
                     ships.append("3");
                     ships.append(" ");
                 }
-                for ( int i = 0; i < ActiveGameState.getAmountShipSize4(); i++){
+                for (int i = 0; i < ActiveGameState.getAmountShipSize4(); i++) {
                     ships.append("4");
                     ships.append(" ");
                 }
-                for ( int i = 0; i < ActiveGameState.getAmountShipSize5(); i++){
+                for (int i = 0; i < ActiveGameState.getAmountShipSize5(); i++) {
                     ships.append("5");
                     ships.append(" ");
                 }
@@ -81,25 +88,59 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 //with CMD.ships:   ships 5 5 5 5 2 3 2 3
                 ActiveGameState.getServer().sendCMD(CMD.ships, ships.toString());
 
+            }
+            //Load Game
+            else{
+                ActiveGameState.getServer().sendCMD(CMD.load, String.valueOf(ActiveGameState.getLoadId()));
+                receivedCMD = ActiveGameState.getServer().getCMD();
+                switch (receivedCMD[0]) {
+                    case "next":
+                        break;
+                    case "timeout":
+                        ActiveGameState.getServer().closeConnection();
+                        ActiveGameState.setRunning(false);
+                        return;
+                    default:
+                        System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
+                        return;
+                }
 
+            }
+            //Get done
+            receivedCMD = ActiveGameState.getServer().getCMD();
 
-            receivedCMD =ActiveGameState.getServer().getCMD();
-            valid = false;
             switch  (receivedCMD[0]){
-                case "done":
-                    valid = true;
-                    break;
+                case "done": break;
                 case "timeout":
                     ActiveGameState.getServer().closeConnection();
                     ActiveGameState.setRunning(false);
-                    break;
+                    return;
                 default:
                     System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
+                    return;
             }
 
-            if (!valid) return;
-            System.out.println("Game Configurations successfully transmitted to Client.");
 
+
+            //send ready get ready
+            ActiveGameState.getServer().sendCMD(CMD.ready, "");
+            receivedCMD = ActiveGameState.getServer().getCMD();
+
+
+            switch (receivedCMD[0]){
+                case "ready": break;
+                case "timeout":
+                    ActiveGameState.getServer().closeConnection();
+                    ActiveGameState.setRunning(false);
+                    return;
+
+                default:
+                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
+                    return;
+            }
+
+
+            System.out.println("Game Configurations successfully transmitted to Client.");
 
         }
 
@@ -108,66 +149,93 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
         else{
             ActiveGameState.setYourTurn(false);
             String[] receivedCMD = ActiveGameState.getClient().getCMD();
-
-            boolean valid = false;
+            boolean load = false;
             switch  (receivedCMD[0]){
-                case "size":
-                    ActiveGameState.setPlaygroundSize(Integer.parseInt(receivedCMD[1]));
-                    valid = true;
-                    break;
-                case "timeout":
-                    ActiveGameState.getClient().closeConnection();
-                    ActiveGameState.setRunning(false);
-                    break;
+                case "size":    ActiveGameState.setPlaygroundSize(Integer.parseInt(receivedCMD[1]));
+                                break;
+
+                case "load":    SaveAndLoad.load(receivedCMD[1]);
+                                load = true;
+                                break;
+
+                case "timeout": ActiveGameState.getClient().closeConnection();
+                                ActiveGameState.setRunning(false);
+                                return;
                 default:
                     System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
+                    return;
             }
 
-            if(!valid) return;
-            ActiveGameState.getClient().sendCMD(CMD.next, "");
-            receivedCMD = ActiveGameState.getClient().getCMD();
+            if ( !load) {
+                ActiveGameState.getClient().sendCMD(CMD.next, "");
+                receivedCMD = ActiveGameState.getClient().getCMD();
 
-            valid = false;
-            switch (receivedCMD[0]){
-                case "ships":
-                    int getShip;
-                    int size2 = 0;
-                    int size3 = 0;
-                    int size4 = 0;
-                    int size5 = 0;
-                    for (int i = 1; i < receivedCMD.length; i++){
-                        getShip = Integer.parseInt(receivedCMD[i]);
-                        switch (getShip){
-                            case 2: size2++;
+
+                switch (receivedCMD[0]) {
+                    case "ships":
+                        int getShip;
+                        int size2 = 0;
+                        int size3 = 0;
+                        int size4 = 0;
+                        int size5 = 0;
+                        for (int i = 1; i < receivedCMD.length; i++) {
+                            getShip = Integer.parseInt(receivedCMD[i]);
+                            switch (getShip) {
+                                case 2:
+                                    size2++;
                                     break;
-                            case 3: size3++;
+                                case 3:
+                                    size3++;
                                     break;
-                            case 4: size4++;
+                                case 4:
+                                    size4++;
                                     break;
-                            case 5: size5++;
+                                case 5:
+                                    size5++;
                                     break;
-                            default:
-                                System.out.println("Unexpected Message from Server: " + receivedCMD[i]);
+                                default:
+                                    System.out.println("Unexpected Message from Server: " + receivedCMD[i]);
+                            }
                         }
-                    }
 
-                    ActiveGameState.setAmountShipSize2(size2);
-                    ActiveGameState.setAmountShipSize3(size3);
-                    ActiveGameState.setAmountShipSize4(size4);
-                    ActiveGameState.setAmountShipSize5(size5);
-                    ActiveGameState.setAmountOfShips( (size2 + size3 + size4 + size5) );
-                    valid = true;
-                    break;
-                case "timeout":
-                    ActiveGameState.getClient().closeConnection();
-                    ActiveGameState.setRunning(false);
-                    break;
-                default:
-                    System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
+                        ActiveGameState.setAmountShipSize2(size2);
+                        ActiveGameState.setAmountShipSize3(size3);
+                        ActiveGameState.setAmountShipSize4(size4);
+                        ActiveGameState.setAmountShipSize5(size5);
+                        ActiveGameState.setAmountOfShips((size2 + size3 + size4 + size5));
+                        break;
+                    case "timeout":
+                        ActiveGameState.getClient().closeConnection();
+                        ActiveGameState.setRunning(false);
+                        return;
+                    default:
+                        System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
+                        return;
+                }
             }
-            if(!valid) return;
 
             ActiveGameState.getClient().sendCMD(CMD.done, "");
+
+
+
+            //get ready, send ready
+            receivedCMD = ActiveGameState.getClient().getCMD();
+
+
+            switch (receivedCMD[0]){
+                case "ready": break;
+                case "timeout":
+                    ActiveGameState.getServer().closeConnection();
+                    ActiveGameState.setRunning(false);
+                    return;
+
+                default:
+                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
+                    return;
+            }
+
+            ActiveGameState.getClient().sendCMD(CMD.ready, "");
+
             System.out.println("Game Configurations from Server successfully transmitted.");
 
         }

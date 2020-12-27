@@ -76,6 +76,8 @@ public class LoadGameController implements Initializable {
         //Load Game here
         //KI vs KI soll / kann nicht geladen werden
         //vs Remote -> Verbindung bereits hergestellt (Game Settings Load aufruf) -> Comm Thread starten -> Load (noch zu implementieren)
+        ActiveGameState.setLoadGame(true);
+        ActiveGameState.setLoadId(234); //TODO
         switch( ActiveGameState.getModes()){
             case playerVsRemote:
             case kiVsRemote:    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();

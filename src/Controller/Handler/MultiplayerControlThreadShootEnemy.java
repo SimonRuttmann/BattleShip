@@ -8,6 +8,7 @@ import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
 import Player.ActiveGameState;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.Event;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -87,42 +88,42 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                     shipLabel.setLayoutX(headShipSunken.getLayoutX());
                     shipLabel.setLayoutY(headShipSunken.getLayoutY());
 
-                    //TODO Add sunken images
-                    if (horizontal) {
-                        switch (size) {
-                            case (2):
-                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));
-                                break;
-                            case (3):
-                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png"))));
-                                break;
-                            case (4):
-                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png"))));
-                                break;
-                            case (5):
-                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));
-                                break;
-                            default:
-                                System.out.println("Debug");
-                        }
-                    } else {
-                        switch (size) {
-                            case (2):
-                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiffVertical.png"))));
-                                break;
-                            case (3):
-                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiffVertical.png"))));
-                                break;
-                            case (4):
-                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiffVertical.png"))));
-                                break;
-                            case (5):
-                                shipLabel.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiffVertical.png"))));
-                                break;
-                            default:
-                                System.out.println("Debug");
-                        }
+
+                    int scale = ActiveGameState.getPlaygroundScale();
+                    ImageView image;
+                    String imageURL = "/Gui_View/images/";
+
+                    switch (size) {
+                        case (2):
+                            imageURL += "2";
+                            break;
+                        case (3):
+                            imageURL += "3";
+                            break;
+                        case (4):
+                            imageURL += "4";
+                            break;
+                        case (5):
+                            imageURL += "5";
+                            break;
+                        default:
+                            System.out.println("Debug");
                     }
+
+                    if (horizontal) {
+                        imageURL += "erSchiff.png"; //todo add sunken images
+                        image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
+                        image.fitWidthProperty().bind(new SimpleIntegerProperty(size * scale).asObject());
+                        image.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
+                    } else {
+                        imageURL += "erSchiffVertical.png"; //todo add sunken images
+                        image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
+                        image.fitWidthProperty().bind(new SimpleIntegerProperty(scale).asObject());
+                        image.fitHeightProperty().bind(new SimpleIntegerProperty(size * scale).asObject());
+                    }
+
+                    shipLabel.setGraphic(image);
+
                     Platform.runLater(() -> GamePlayground.getGroupEnemP().getChildren().add(shipLabel));
                 }
 

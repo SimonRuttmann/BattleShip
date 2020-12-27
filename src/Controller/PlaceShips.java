@@ -156,18 +156,7 @@ public class PlaceShips implements Initializable {
         //The scale of one Field,   Ship size 2 -> Image: | 30px | 30px |
         //                          Ship size 3 -> Image: | 30px | 30px | 30px |
         // scale is depended on playground size
-        int scale = 30;
-        if (5 <= gamesize && gamesize <= 10) {
-            scale = 45;
-        } else if (11 <= gamesize && gamesize <= 15) {
-            scale = 35;
-        } else if (16 <= gamesize && gamesize <= 20) {
-            scale = 25;
-        } else if (21 <= gamesize && gamesize <= 25) {
-            scale = 20;
-        } else if (26 <= gamesize && gamesize <= 30) {
-            scale = 15;
-        }
+        int scale = ActiveGameState.getPlaygroundScale();
 
 
         // finalscale is needed due to using scale in lambda expressions

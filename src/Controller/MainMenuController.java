@@ -189,6 +189,9 @@ public class MainMenuController implements Initializable {
     enum Selection {Singleplayer, Multiplayer, Settings}
     public Selection selection; //<- Shows, which right bar is now visible
 
+    //Instance needed because of garbage collector
+    private static MusicController music;
+    private static boolean playingMusic;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //KI needs to be added, to get functionality of KI Methods (place ships random, shoot enemy)
@@ -206,6 +209,14 @@ public class MainMenuController implements Initializable {
         setPolygonSettings(); //BOTH SIDES!
         startAnimationLeftSide();
 
+        //Music
+        if (!playingMusic) {
+            music = new MusicController();
+            music.playMusic();
+            playingMusic = true;
+            ActiveGameState.setMusicController(music);
+        }
+
         ActiveGameState.setSceneIsPlaceShips(false);
         // Close Request
         Main.primaryStage.setOnCloseRequest(e -> {
@@ -213,6 +224,7 @@ public class MainMenuController implements Initializable {
             e.consume();
             HelpMethods.closeProgramm();
         });
+
     }
 
     public void setRightBarInvisible(boolean invisible){

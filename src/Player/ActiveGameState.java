@@ -1,5 +1,6 @@
 package Player;
 
+import Controller.MusicController;
 import KI.Ki;
 import Model.Playground.*;
 import Network.*;
@@ -10,10 +11,20 @@ import Network.*;
  */
 
 public class ActiveGameState {
+    private static MusicController musicController;
+
+    public static MusicController getMusicController() {
+        return musicController;
+    }
+
+    public static void setMusicController(MusicController musicController) {
+        ActiveGameState.musicController = musicController;
+    }
+
     public enum Language {english, german};
     public static boolean newView = false;
 
-    private static int musicVolume = 50;
+    private static int musicVolume = 50; //currently not in use
     private static int aiVelocity = 1;
     private static Language language = Language.english;
 

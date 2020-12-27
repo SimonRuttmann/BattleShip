@@ -64,6 +64,7 @@ public class GameOptionsController implements Initializable {
 
     public void saveSettings(ActionEvent actionEvent) {
         ActiveGameState.setMusicVolume(selectMusicVolumeSlider.valueProperty().intValue());
+        ActiveGameState.getMusicController().setVolume(selectMusicVolumeSlider.valueProperty().intValue());
         ActiveGameState.setAiVelocity(selectAIVelocitySlider.valueProperty().intValue());
 
         if (rB_selectEnglish.isSelected()) ActiveGameState.setLanguage(ActiveGameState.Language.english);

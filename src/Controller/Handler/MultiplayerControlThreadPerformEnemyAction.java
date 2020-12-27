@@ -88,17 +88,22 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
 
                 //TODO Save And Load methods have to be adjusted
             case "save":
-                //TODO Yannick Save the game and CONTINUE playing, don't stop!
                 SaveAndLoad.save( cmdReceived[1]);
                 if (ActiveGameState.isAmIServer()) {
                     ActiveGameState.getServer().sendCMD(CMD.done, "");
+                    ActiveGameState.setRunning(false);
+                    ActiveGameState.getServer().closeConnection();                  //TODO beenden nach speichern
                 }
                 //We are the client
                 else {
                     ActiveGameState.getClient().sendCMD(CMD.done, "");
+                    ActiveGameState.setRunning(false);
+                    ActiveGameState.getClient().closeConnection();                  //TODO Beenden nach speichern
                 }
-                break;
-            case "load":
+
+                //break;
+                return;
+           /* case "load":                                                          //TODO
                 SaveAndLoad.load( cmdReceived[1]);
                 if (ActiveGameState.isAmIServer()) {
                     ActiveGameState.getServer().sendCMD(CMD.done, "");
@@ -107,7 +112,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 else {
                     ActiveGameState.getClient().sendCMD(CMD.done, "");
                 }
-                break;
+                break;*/
             case "next":
                 ActiveGameState.setYourTurn(true);
                 break;

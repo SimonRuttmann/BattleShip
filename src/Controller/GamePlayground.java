@@ -12,6 +12,7 @@ import Model.Ship.IShip;
 import Player.ActiveGameState;
 import Player.GameMode;
 import Controller.Handler.GameShootEnemy;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -27,6 +28,7 @@ import java.util.ResourceBundle;
 public class GamePlayground implements Initializable {
 
 
+    public Button saveGame;
     // import from FXML
     @FXML
     private Button cancleGame;
@@ -278,5 +280,20 @@ public class GamePlayground implements Initializable {
     // when Button cancleGame is pressed - save or no saving?
     public void cancleGameMethod() {
         Gui_View.HelpMethods.closeProgrammSaveGame();
+    }
+
+    //TODO Button kann nur gedrückt werden, wenn der Spieler an der Reihe ist
+    //TODO "Vorschlag Netzwerkprotokol: Zumindest ein Spieler soll einen Namen eingeben können" -> Datei unter dem Namen speichern -> bei loadID, muss dennoch der richige Spielstand mit der ID geladen werden können
+    //TODO Bei Singleplayer kein Problem, muss keine ID gesendet werden, aber multiplayer?
+
+//Wenn ein spielstand, von einem anderen geladen wird, bei denen wir als spieler spielen, müssen wir auch als spieler spielen, egal was vorher ausgewählt wurde, da dass unsesre ki nicht kann -> Hinweisnachricht wäre gut, falls wir ki ausgewählt haben
+    public void startSaveGame(ActionEvent actionEvent) {
+        long id = System.currentTimeMillis();
+        if ( ActiveGameState.isMultiplayer()){
+
+        }
+        else{
+
+        }
     }
 }

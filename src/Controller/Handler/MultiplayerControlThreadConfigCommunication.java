@@ -245,15 +245,18 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 try{
                     //Switch scene, depending on ki selection
                     switch (ActiveGameState.getModes()){
-                        case playerVsRemote: Parent placeShips =  FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
-                            Main.primaryStage.setScene(new Scene(placeShips));
-                            Main.primaryStage.show();
-                            break;
+                        case playerVsRemote:
+                                                if (!ActiveGameState.isLoadGame()) {
+                                                    Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+                                                    Main.primaryStage.setScene(new Scene(placeShips));
+                                                    Main.primaryStage.show();
+                                                    break;
+                                                }
 
-                        case kiVsRemote:     Parent gamePlayground =  FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-                            Main.primaryStage.setScene(new Scene(gamePlayground));
-                            Main.primaryStage.show();
-                            break;
+                        case kiVsRemote:            Parent gamePlayground =  FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                                                    Main.primaryStage.setScene(new Scene(gamePlayground));
+                                                    Main.primaryStage.show();
+                                                    break;
                     }
                 }catch(IOException e){
                     System.out.println("Couldn't load the Scene");

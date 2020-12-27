@@ -64,7 +64,7 @@ public class Ki implements IKi{
                                                                     //1. Schuss (treffer) nach unten -> rangeToShot wird auf 2 erhöht
                                                                     //2. Schuss (kein treffer) nach unten -> rangeToShot wird auf 1 gesetzt     und die position ist jetzt nextleft
                                                                     //...
-    ShotResponse shotResponseFromKI;
+    transient ShotResponse shotResponseFromKI;
 
 
     /**
@@ -673,7 +673,7 @@ private int debugg = 0;
 
     //TODO stand jz sollte die Ki zufällig ein Schiff finden und wenn gefunden auch zerstören (ohne große Taktik)
     //soll das gefundene Schiff zerstören
-    private boolean destroyShip(Point firstHit,IOwnPlayground playground ){
+    private boolean destroyShip(Point firstHit, IOwnPlayground playground){
 
         if (this.needRandomLocation) nextLocation = getRandomLocation();
         this.needRandomLocation = false;

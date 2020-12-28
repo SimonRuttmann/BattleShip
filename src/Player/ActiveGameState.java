@@ -11,6 +11,16 @@ import Network.*;
  */
 
 public class ActiveGameState {
+    private static boolean singLoad = true;
+
+    public static boolean isSingLoad() {
+        return singLoad;
+    }
+
+    public static void setSingLoad(boolean singLoad) {
+        ActiveGameState.singLoad = singLoad;
+    }
+
     private static MusicController musicController;
 
     public static MusicController getMusicController() {

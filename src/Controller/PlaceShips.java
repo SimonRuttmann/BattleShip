@@ -5,6 +5,7 @@ import Model.Playground.EnemyPlayground;
 import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Ship.IShip;
+import Model.Ship.Ship;
 import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
 import javafx.beans.binding.Bindings;

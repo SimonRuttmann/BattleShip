@@ -1,6 +1,11 @@
 package Player;
 
+import Model.Playground.EnemyPlayground;
+import Model.Playground.OwnPlayground;
+import Model.Ship.IShip;
+import Model.Util.IDrawable;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.Reader;
 import java.io.Writer;
@@ -16,9 +21,20 @@ public class SaveAndLoad {
             Savegame o = constructSaveGame();
 
         try{
-            Gson gson = new Gson(); // create Gson instance
+
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(IDrawable.class, new InterfaceAdapterForPlayground());
+            builder.registerTypeAdapter(IShip.class, new InterfaceAdapterForPlayground());
+            Gson gson = builder.create();
+          //  Gson gson = new Gson(); // create Gson instance
             // temp = chosen name of file: e.g. temp = "test" -> output Paths.get: .savedGames/test.json
-            Writer writer = Files.newBufferedWriter(Paths.get(".savedGames/"+temp+".json")); //create writer
+            Writer writer;
+            if (!ActiveGameState.isMultiplayer()) {
+                writer = Files.newBufferedWriter(Paths.get(".singleplayerGames/" + temp + ".json")); //create writer
+            }
+            else{
+                writer = Files.newBufferedWriter(Paths.get(".multiplayerGames/" + temp + ".json")); //create writer
+            }
 //getClass.getRessourceAsStream("/.savedGame")
             gson.toJson(o, writer);
 
@@ -34,7 +50,13 @@ public class SaveAndLoad {
     public static Savegame load(String temp){
 
         try {
-            Gson gson = new Gson(); // create Gson instance
+
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(IDrawable.class, new InterfaceAdapterForPlayground());
+            builder.registerTypeAdapter(IShip.class, new InterfaceAdapterForPlayground());
+            Gson gson = builder.create();
+
+           // Gson gson = new Gson(); // create Gson instance
             // temp = the complete path to the file that is intend to be loaded: e.g. temp = ".savedGames/test.json"
             Reader reader = Files.newBufferedReader(Paths.get(temp)); //create a reader
             Savegame e = gson.fromJson(reader, Savegame.class); // write File content to Savegame-Object e
@@ -76,10 +98,10 @@ public class SaveAndLoad {
     public static Savegame constructSaveGame(){
         return  new Savegame(   ActiveGameState.getModes(),
                 ActiveGameState.isOwnPlayerKi(),
-                ActiveGameState.getOwnPlayerIOwnPlayground(),
-                ActiveGameState.getOwnPlayerIEnemyPlayground(),
-                ActiveGameState.getEnemyPlayerOwnPlayground(),
-                ActiveGameState.getEnemyPlayerEnemyPlayground(),
+                (OwnPlayground)ActiveGameState.getOwnPlayerIOwnPlayground(),
+                (EnemyPlayground)ActiveGameState.getOwnPlayerIEnemyPlayground(),
+                (OwnPlayground)ActiveGameState.getEnemyPlayerOwnPlayground(),
+                (EnemyPlayground)ActiveGameState.getEnemyPlayerEnemyPlayground(),
                 ActiveGameState.isMultiplayer(),
                 ActiveGameState.getOwnPlayerName(),
                 ActiveGameState.getPlaygroundSize(),

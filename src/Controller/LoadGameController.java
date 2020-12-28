@@ -8,6 +8,7 @@ import Player.SaveAndLoad;
 import Player.Savegame;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -72,22 +73,48 @@ public class LoadGameController implements Initializable {
     }
 
     public void loadSelectedGame(ActionEvent actionEvent) throws IOException{
-        SaveAndLoad.load("NEED INPUT");
-        //Load Game here
-        //KI vs KI soll / kann nicht geladen werden
-        //vs Remote -> Verbindung bereits hergestellt (Game Settings Load aufruf) -> Comm Thread starten -> Load (noch zu implementieren)
-        ActiveGameState.setLoadGame(true);
-        ActiveGameState.setLoadId(234); //TODO
-        switch( ActiveGameState.getModes()){
-            case playerVsRemote:
-            case kiVsRemote:    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
-                                multiplayerControlThreadConfigCommunication.start();
-                                break;
-            case playerVsKi:    Parent playground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-                                Main.primaryStage.setScene(new Scene(playground));
-                                Main.primaryStage.show();
+        ObservableList<File> fileObservableList = this.gameList.getSelectionModel().getSelectedItems();
+        File fileToLoad  = fileObservableList.get(0); //As only one items is selected
+        String pathOfFile = fileToLoad.getPath();
+
+        Savegame loadedSavegame = SaveAndLoad.load(pathOfFile);
+        if ( loadedSavegame == null) {
+            System.out.println( "loading failed" );
+        }
+        else{
+            System.out.println( "loading successfull");
         }
 
+        //Singleplayergame -> Playground
+        if (ActiveGameState.isSingLoad() ){
+        Platform.runLater( () -> {
+                    Parent game = null;
+                    try {
+                        game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                    Main.primaryStage.setScene(new Scene(game));
+                    Main.primaryStage.show();
+
+                });
+        }
+        //Starting Multiplayer games by hosting a game
+        else{
+            Platform.runLater( () -> {
+                Parent game = null;
+                try {
+                    game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MpServer.fxml"));
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                Main.primaryStage.setScene(new Scene(game));
+                Main.primaryStage.show();
+
+            });
+        }
+        ActiveGameState.setLoadId(0);
+        ActiveGameState.setLoadGame(true);
     }
 
     @Override
@@ -112,9 +139,9 @@ public class LoadGameController implements Initializable {
         // dir is the folder that contains our saved game files - different for singleplayer and multiplayer
         File dir;
         if(ActiveGameState.isMultiplayer())
-            dir = new File(".savedGames");
+            dir = new File(".multiplayerGames");
         else
-            dir = new File(".savedGames");
+            dir = new File(".singleplayerGames");
 
         File[] savedGames = dir.listFiles((directory, filename) -> filename.endsWith(".json"));
         // add files to observable List and furthermore to gameList
@@ -144,38 +171,46 @@ public class LoadGameController implements Initializable {
                 // create context menu + function for its items
                 ContextMenu contextMenu = new ContextMenu();
 
-                // load -> changes scene to game, loads gamestats from saved game into gameObject
-                // -> gameObject into ???? todo
                 MenuItem load = new MenuItem("Spielstand laden");
                 load.setOnAction(e -> {
-                    try {
-                        // loading .json file from memory: .savedGames
-                        System.out.println(cell.getItem()); //todo savegame not needed
 
-                        String temp = cell.getItem().toString();
-                        Savegame gameObject = SaveAndLoad.load(temp);
-                        // todo test if loading was successful -> not correct at the moment
-                        if (gameObject != null) {
-                            System.out.println("loading successful");
+                    System.out.println(cell.getItem());
+
+                    String temp = cell.getItem().toString();
+                    Savegame gameObject = SaveAndLoad.load(temp);
+
+                    if (gameObject != null) {
+                        System.out.println("loading successful");
+                    }
+                    else{
+                        System.out.println("loading failed");
+                    }
+
+                    // Change scene to game Playground
+               /*     Platform.runLater( () -> {
+                        Parent game = null;
+                        try {
+                            game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
                         }
-                        // load Savedgame object into ???????? todo
-                        // todo now we have a Savegameobject: gameObject -> todo -> load game
-
-
-                        // Change scene to game Playground
-                        Parent game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                         Main.primaryStage.setScene(new Scene(game));
                         Main.primaryStage.show();
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                }); // todo evtl own thread
+*/
+                   // });
+
+
+                });
 
                 // delete -> deltes game file from list and also from system
                 MenuItem delete = new MenuItem("Spielstand löschen");
                 delete.setOnAction(e -> {
-                    System.out.println("Delete Item" + cell.getItem().toString()); // todo löschen funktioniert noch nicht
-                    gameList.getItems().remove(cell.getItem());
+                    System.out.println("Delete Item" + cell.getItem().toString());
+
+                    File game = cell.getItem();
+                    gameList.getItems().remove(game);
+                  //  gameList.getItems().remove(cell.getItem());
+                    if(!(game.delete())) System.out.println( "Couldn`t delete file");
                 });
                 contextMenu.getItems().addAll(load, delete);
 

@@ -1,8 +1,10 @@
 package Player;
 
 import KI.Ki;
+import Model.Playground.EnemyPlayground;
 import Model.Playground.IEnemyPlayground;
 import Model.Playground.IOwnPlayground;
+import Model.Playground.OwnPlayground;
 
 
 public class Savegame{
@@ -10,10 +12,10 @@ public class Savegame{
     public GameMode          modes;
     public boolean           OwnPlayerKi;
 
-    public IOwnPlayground    ownPlayerIOwnPlayground;
-    public IEnemyPlayground  ownPlayerIEnemyPlayground;
-    public IOwnPlayground    enemyPlayerOwnPlayground;
-    public IEnemyPlayground  enemyPlayerEnemyPlayground;
+    public OwnPlayground    ownPlayerIOwnPlayground;
+    public EnemyPlayground  ownPlayerIEnemyPlayground;
+    public OwnPlayground    enemyPlayerOwnPlayground;
+    public EnemyPlayground  enemyPlayerEnemyPlayground;
 
     public  boolean          multiplayer;
     public  String           ownPlayerName;
@@ -35,10 +37,10 @@ public class Savegame{
     public Savegame (
             GameMode modes,
             boolean OwnPlayerKi,
-            IOwnPlayground ownPlayerIOwnPlayground,
-            IEnemyPlayground ownPlayerIEnemyPlayground,
-            IOwnPlayground enemyPlayerOwnPlayground,
-            IEnemyPlayground enemyPlayerEnemyPlayground,
+            OwnPlayground ownPlayerIOwnPlayground,
+            EnemyPlayground ownPlayerIEnemyPlayground,
+            OwnPlayground enemyPlayerOwnPlayground,
+            EnemyPlayground enemyPlayerEnemyPlayground,
             boolean multiplayer,
             String ownPlayerName,
             int playgroundSize,

@@ -11,11 +11,22 @@ import Network.*;
  */
 
 public class ActiveGameState {
+    public enum Loading {singleplayer, multiplayer, noLoad}
     private static boolean singLoad = true;
 
+    public static Loading getLoading() {
+        return loading;
+    }
+
+    public static void setLoading(Loading loading) {
+        loading = loading;
+    }
+
+    private static Loading loading = Loading.noLoad;
     public static boolean isSingLoad() {
         return singLoad;
     }
+
 
     public static void setSingLoad(boolean singLoad) {
         ActiveGameState.singLoad = singLoad;

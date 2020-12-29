@@ -25,7 +25,8 @@ public class Savegame{
     public  int              amountShipSize3;
     public  int              amountShipSize4;
     public  int              amountShipSize5;
-    public  Ki               ki;
+    public  Ki               ownKi;
+    public  Ki               enemyKi;
 
     public boolean           sceneIsPlaceShips;
     public boolean           sceneIsGamePlayground;
@@ -49,7 +50,8 @@ public class Savegame{
             int amountShipSize3,
             int amountShipSize4,
             int amountShipSize5,
-            Ki ki,
+            Ki ownKi,
+            Ki enemyKi,
             boolean sceneIsPlaceShips,
             boolean sceneIsGamePlayground,
             int difficulty,
@@ -71,7 +73,8 @@ public class Savegame{
         this.amountShipSize3 = amountShipSize3;
         this.amountShipSize4 = amountShipSize4;
         this.amountShipSize5 = amountShipSize5;
-        this.ki = ki;
+        this.ownKi = ownKi;
+        this.enemyKi = enemyKi;
         this.sceneIsPlaceShips = sceneIsPlaceShips;
         this.sceneIsGamePlayground = sceneIsGamePlayground;
         this.difficulty = difficulty;

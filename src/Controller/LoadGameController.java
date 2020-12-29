@@ -71,7 +71,7 @@ public class LoadGameController implements Initializable {
         }
 
     }
-
+//TODO Load Singleplayer, MUltiplayer, none setzen
     public void loadSelectedGame(ActionEvent actionEvent) throws IOException{
         ObservableList<File> fileObservableList = this.gameList.getSelectionModel().getSelectedItems();
         File fileToLoad  = fileObservableList.get(0); //As only one items is selected
@@ -86,7 +86,7 @@ public class LoadGameController implements Initializable {
         }
 
         //Singleplayergame -> Playground
-        if (ActiveGameState.isSingLoad() ){
+        if (ActiveGameState.getLoading() == ActiveGameState.Loading.singleplayer ){
         Platform.runLater( () -> {
                     Parent game = null;
                     try {
@@ -100,7 +100,7 @@ public class LoadGameController implements Initializable {
                 });
         }
         //Starting Multiplayer games by hosting a game
-        else{
+        else if ( ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer){
             Platform.runLater( () -> {
                 Parent game = null;
                 try {
@@ -112,6 +112,9 @@ public class LoadGameController implements Initializable {
                 Main.primaryStage.show();
 
             });
+        }
+        else{
+            System.out.println( "Loading: Multiplayer or Singleplayer not selected at loading a game");
         }
         ActiveGameState.setLoadId(0);
         ActiveGameState.setLoadGame(true);

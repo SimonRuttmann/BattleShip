@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -121,7 +120,7 @@
                                                                 <Insets top="20.0" />
                                                             </VBox.margin>
                                                         </StackPane>
-                                                        <StackPane fx:id="rightBar_Sing_LoadPolyText" layoutX="10.0" layoutY="171.0" onMouseClicked="#startLoadGame">
+                                                        <StackPane fx:id="rightBar_Sing_LoadPolyText" layoutX="10.0" layoutY="171.0" onMouseClicked="#loadSinglGame">
                                                             <children>
                                                                 <Polygon fx:id="rightBarSinglplayer_PolyLoad" fill="DODGERBLUE" points="-273.3333740234375, 63.0, 91.0, -5.0, -273.3333740234375, -5.0" stroke="BLACK" strokeType="INSIDE" StackPane.alignment="TOP_LEFT">
                                                                     <StackPane.margin>
@@ -190,27 +189,18 @@
                                                                 <Insets top="20.0" />
                                                             </VBox.margin>
                                                         </StackPane>
-                                          <StackPane fx:id="rightBar_Mult_SpSelectRole" layoutX="10.0" layoutY="136.0">
+                                          <StackPane fx:id="rightBar_Mult_LoadPolyText" layoutX="10.0" layoutY="136.0" onMouseClicked="#loadMultGame">
                                              <children>
-                                                <Polygon fx:id="rightBarMultiplayer_PolySelectRole" fill="DODGERBLUE" points="-273.3333740234375, 63.0, 91.0, -5.0, -273.3333740234375, -5.0" stroke="BLACK" strokeType="INSIDE" StackPane.alignment="TOP_LEFT">
+                                                <Polygon fx:id="rightBarMultiplayer_PolyLoad" fill="DODGERBLUE" points="-273.3333740234375, 63.0, 91.0, -5.0, -273.3333740234375, -5.0" stroke="BLACK" strokeType="INSIDE" StackPane.alignment="TOP_LEFT">
                                                    <StackPane.margin>
                                                       <Insets />
                                                    </StackPane.margin>
                                                 </Polygon>
-                                                <VBox fx:id="rightBarMultiplayer_VBoxSelectRole" prefHeight="200.0" prefWidth="100.0">
-                                                   <children>
-                                                      <RadioButton fx:id="rightBarMultiplayer_RbSelectKInormal" mnemonicParsing="false" text="Let Normal KI play">
-                                                         <VBox.margin>
-                                                            <Insets left="30.0" top="8.0" />
-                                                         </VBox.margin>
-                                                      </RadioButton>
-                                                      <RadioButton fx:id="rightBarMultiplayer_RbSelectKIhard" mnemonicParsing="false" text="Let Hard KI play ">
-                                                         <VBox.margin>
-                                                            <Insets left="30.0" top="17.0" />
-                                                         </VBox.margin>
-                                                      </RadioButton>
-                                                   </children>
-                                                </VBox>
+                                                <Text fx:id="rightBarMultiplayer_TextLoad" strokeType="OUTSIDE" strokeWidth="0.0" text="Load Game" wrappingWidth="148.72265625" StackPane.alignment="CENTER_LEFT">
+                                                   <StackPane.margin>
+                                                      <Insets left="100.0" />
+                                                   </StackPane.margin>
+                                                </Text>
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="20.0" />

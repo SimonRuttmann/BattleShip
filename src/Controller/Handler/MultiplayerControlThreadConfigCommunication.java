@@ -49,7 +49,7 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
         if (ActiveGameState.isAmIServer()){
             ActiveGameState.setYourTurn(true);
             String[] receivedCMD;
-            if (!ActiveGameState.isLoadGame()) {
+            if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer)) {
                 ActiveGameState.getServer().sendCMD(CMD.size, Integer.toString(ActiveGameState.getPlaygroundSize()));
                 receivedCMD = ActiveGameState.getServer().getCMD();
                 switch (receivedCMD[0]) {
@@ -246,7 +246,8 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                     //Switch scene, depending on ki selection
                     switch (ActiveGameState.getModes()){
                         case playerVsRemote:
-                                                if (!ActiveGameState.isLoadGame()) {
+                                                //Wenn nicht laden und Spieler vs Remote-> place Ships..., wenn laden oder ki vs remote -> direkt gamePlayground
+                                                if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer)) {
                                                     Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
                                                     Main.primaryStage.setScene(new Scene(placeShips));
                                                     Main.primaryStage.show();

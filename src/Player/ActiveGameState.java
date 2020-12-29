@@ -12,7 +12,7 @@ import Network.*;
 
 public class ActiveGameState {
     public enum Loading {singleplayer, multiplayer, noLoad}
-    private static boolean singLoad = true;
+   // private static boolean singLoad = true;
 
     public static Loading getLoading() {
         return loading;
@@ -23,14 +23,15 @@ public class ActiveGameState {
     }
 
     private static Loading loading = Loading.noLoad;
-    public static boolean isSingLoad() {
+
+  /*  public static boolean isSingLoad() {
         return singLoad;
-    }
+    }*/
 
 
-    public static void setSingLoad(boolean singLoad) {
-        ActiveGameState.singLoad = singLoad;
-    }
+   // public static void setSingLoad(boolean singLoad) {
+  //      ActiveGameState.singLoad = singLoad;
+   // }
 
     private static MusicController musicController;
 
@@ -58,15 +59,15 @@ public class ActiveGameState {
     private static int aiVelocity = 1;
     private static Language language = Language.english;
 
-    private static boolean loadGame = false;
+    //private static boolean loadGame = false;
 
-    public static boolean isLoadGame() {
+   /* public static boolean isLoadGame() {
         return loadGame;
     }
-
-    public static void setLoadGame(boolean loadGame) {
+*/
+  /*  public static void setLoadGame(boolean loadGame) {
         ActiveGameState.loadGame = loadGame;
-    }
+    }*/
 
     public static Language getLanguage() {
         return language;

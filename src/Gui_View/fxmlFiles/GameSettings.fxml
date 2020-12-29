@@ -56,7 +56,7 @@
                               </HBox>
                                         <Slider fx:id="selectPlaygroundsizeSlider" prefHeight="30.0" prefWidth="450.0">
                                             <VBox.margin>
-                                                <Insets left="300.0" top="10.0" />
+                                                <Insets bottom="5.0" left="300.0" top="10.0" />
                                             </VBox.margin>
                                         </Slider>
                                         <HBox prefHeight="100.0" prefWidth="984.0">
@@ -120,44 +120,69 @@
                                                         <Insets top="50.0" />
                                                     </HBox.margin>
                                                 </VBox>
-                                                <VBox fx:id="vBox_KISettings" prefHeight="180.0" prefWidth="361.0">
-                                                    <children>
-                                                        <VBox fx:id="vBox_EnemyKi" prefHeight="200.0" prefWidth="100.0">
-                                                            <children>
-                                                                <Text fx:id="selectDifficultyEnemyKIText" strokeType="OUTSIDE" strokeWidth="0.0" text="Difficulty of Enemy Ki" wrappingWidth="253.375" />
-                                                                <RadioButton fx:id="rB_difficultyEnemyNormal" mnemonicParsing="false" text="Normal" textFill="#c8c8c8">
-                                                                    <VBox.margin>
-                                                                        <Insets top="15.0" />
-                                                                    </VBox.margin>
-                                                                </RadioButton>
-                                                                <RadioButton fx:id="rB_difficultyEnemyHard" mnemonicParsing="false" text="Hard" textFill="#c8c8c8">
-                                                                    <VBox.margin>
-                                                                        <Insets top="10.0" />
-                                                                    </VBox.margin>
-                                                                </RadioButton>
-                                                            </children>
-                                                        </VBox>
-                                                        <VBox fx:id="vBox_OwnKi" prefHeight="200.0" prefWidth="100.0">
-                                                            <children>
-                                                                <Text fx:id="selectDifficultyOwnKIText" strokeType="OUTSIDE" strokeWidth="0.0" text="Difficutly of Own Ki" wrappingWidth="266.60546875">
-                                                                    <VBox.margin>
-                                                                        <Insets top="30.0" />
-                                                                    </VBox.margin>
-                                                                </Text>
-                                                                <RadioButton fx:id="rB_difficultyOwnNormal" mnemonicParsing="false" text="Normal" textFill="#c8c8c8">
-                                                                    <VBox.margin>
-                                                                        <Insets top="15.0" />
-                                                                    </VBox.margin>
-                                                                </RadioButton>
-                                                                <RadioButton fx:id="rB_difficultyOwnHard" mnemonicParsing="false" text="Hard" textFill="#c8c8c8">
-                                                                    <VBox.margin>
-                                                                        <Insets top="10.0" />
-                                                                    </VBox.margin>
-                                                                </RadioButton>
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
-                                                </VBox>
+                                    <StackPane>
+                                       <HBox.margin>
+                                          <Insets top="30.0" />
+                                       </HBox.margin>
+                                       <children>
+                                          <VBox fx:id="host_selectRole" prefHeight="103.0" prefWidth="257.0">
+                                             <children>
+                                                <RadioButton fx:id="host_RbSelectKInormal" mnemonicParsing="false" prefHeight="17.0" prefWidth="240.0" text="Let Normal KI play" textFill="#c8c8c8">
+                                                   <VBox.margin>
+                                                      <Insets left="30.0" top="20.0" />
+                                                   </VBox.margin>
+                                                </RadioButton>
+                                                <RadioButton fx:id="host_RbSelectKIhard" mnemonicParsing="false" prefHeight="17.0" prefWidth="244.0" text="Let Hard KI play " textFill="#c8c8c8">
+                                                   <VBox.margin>
+                                                      <Insets left="30.0" top="20.0" />
+                                                   </VBox.margin>
+                                                </RadioButton>
+                                             </children>
+                                          </VBox>
+                                                      <VBox fx:id="vBox_KISettings" prefHeight="180.0" prefWidth="361.0">
+                                                          <children>
+                                                              <VBox fx:id="vBox_EnemyKi" prefHeight="200.0" prefWidth="100.0">
+                                                                  <children>
+                                                                      <Text fx:id="selectDifficultyEnemyKIText" strokeType="OUTSIDE" strokeWidth="0.0" text="Difficulty of Enemy Ki" wrappingWidth="253.375">
+                                                         <VBox.margin>
+                                                            <Insets />
+                                                         </VBox.margin>
+                                                      </Text>
+                                                                      <RadioButton fx:id="rB_difficultyEnemyNormal" mnemonicParsing="false" text="Normal" textFill="#c8c8c8">
+                                                                          <VBox.margin>
+                                                                              <Insets top="15.0" />
+                                                                          </VBox.margin>
+                                                                      </RadioButton>
+                                                                      <RadioButton fx:id="rB_difficultyEnemyHard" mnemonicParsing="false" text="Hard" textFill="#c8c8c8">
+                                                                          <VBox.margin>
+                                                                              <Insets top="10.0" />
+                                                                          </VBox.margin>
+                                                                      </RadioButton>
+                                                                  </children>
+                                                              </VBox>
+                                                              <VBox fx:id="vBox_OwnKi" prefHeight="200.0" prefWidth="100.0">
+                                                                  <children>
+                                                                      <Text fx:id="selectDifficultyOwnKIText" strokeType="OUTSIDE" strokeWidth="0.0" text="Difficutly of Own Ki" wrappingWidth="266.60546875">
+                                                                          <VBox.margin>
+                                                                              <Insets top="30.0" />
+                                                                          </VBox.margin>
+                                                                      </Text>
+                                                                      <RadioButton fx:id="rB_difficultyOwnNormal" mnemonicParsing="false" text="Normal" textFill="#c8c8c8">
+                                                                          <VBox.margin>
+                                                                              <Insets top="15.0" />
+                                                                          </VBox.margin>
+                                                                      </RadioButton>
+                                                                      <RadioButton fx:id="rB_difficultyOwnHard" mnemonicParsing="false" text="Hard" textFill="#c8c8c8">
+                                                                          <VBox.margin>
+                                                                              <Insets top="10.0" />
+                                                                          </VBox.margin>
+                                                                      </RadioButton>
+                                                                  </children>
+                                                              </VBox>
+                                                          </children>
+                                                      </VBox>
+                                       </children>
+                                    </StackPane>
                                             </children>
                                         </HBox>
                                         <HBox prefHeight="100.0" prefWidth="982.0">
@@ -167,14 +192,9 @@
                                                         <Insets left="200.0" top="20.0" />
                                                     </HBox.margin>
                                                 </Button>
-                                    <Button fx:id="multiplayerLoadGame" mnemonicParsing="false" onAction="#startLoadMultiplayerGame" prefHeight="50.0" prefWidth="120.0" text="Load Game">
-                                       <HBox.margin>
-                                          <Insets left="90.0" top="20.0" />
-                                       </HBox.margin>
-                                    </Button>
                                                 <Button fx:id="button_Start" mnemonicParsing="false" onAction="#startShipPlacement" prefHeight="50.0" prefWidth="120.0" text="Start">
                                                     <HBox.margin>
-                                                        <Insets left="90.0" top="20.0" />
+                                                        <Insets left="300.0" top="20.0" />
                                                     </HBox.margin>
                                                 </Button>
                                             </children>

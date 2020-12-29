@@ -57,20 +57,11 @@ public class LoadGameController implements Initializable {
 
 
     public void backToMainMenu(ActionEvent actionEvent) throws IOException {
-        switch (ActiveGameState.getModes()){
-            case playerVsKi:
-            case kiVsKi:            Parent mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
-                                    Main.primaryStage.setScene(new Scene(mainMenu));
-                                    Main.primaryStage.show();
-                                    break;
-
-            case playerVsRemote:
-            case kiVsRemote:        Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
-                                    Main.primaryStage.setScene(new Scene(gameSettings));
-                                    Main.primaryStage.show();
-        }
-
+        Parent mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+        Main.primaryStage.setScene(new Scene(mainMenu));
+        Main.primaryStage.show();
     }
+
 //TODO Load Singleplayer, MUltiplayer, none setzen
     public void loadSelectedGame(ActionEvent actionEvent) throws IOException{
         ObservableList<File> fileObservableList = this.gameList.getSelectionModel().getSelectedItems();
@@ -88,40 +79,44 @@ public class LoadGameController implements Initializable {
         //Singleplayergame -> Playground
         if (ActiveGameState.getLoading() == ActiveGameState.Loading.singleplayer ){
         Platform.runLater( () -> {
-                    Parent game = null;
+                    Parent game;
                     try {
                         game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                        Main.primaryStage.setScene(new Scene(game));
+                        Main.primaryStage.show();
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
-                    Main.primaryStage.setScene(new Scene(game));
-                    Main.primaryStage.show();
+
 
                 });
         }
         //Starting Multiplayer games by hosting a game
         else if ( ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer){
             Platform.runLater( () -> {
-                Parent game = null;
+                Parent game;
                 try {
                     game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MpServer.fxml"));
+                    Main.primaryStage.setScene(new Scene(game));
+                    Main.primaryStage.show();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
-                Main.primaryStage.setScene(new Scene(game));
-                Main.primaryStage.show();
+
 
             });
         }
         else{
             System.out.println( "Loading: Multiplayer or Singleplayer not selected at loading a game");
         }
-        ActiveGameState.setLoadId(0);
-        ActiveGameState.setLoadGame(true);
+        //TODO
+        //ActiveGameState.setLoadId(0);
+
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         setUpListView();
 
         setBackground();

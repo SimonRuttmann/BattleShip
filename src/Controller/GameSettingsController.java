@@ -74,6 +74,7 @@ public class GameSettingsController implements Initializable{
     public VBox host_selectRole;
     public RadioButton host_RbSelectKInormal;
     public RadioButton host_RbSelectKIhard;
+    public StackPane sP_KIselections;
 
 
     /** External Handling**/
@@ -167,20 +168,33 @@ public class GameSettingsController implements Initializable{
         //Multiplayer -> kein Modus gesetzt
 
         setRadioSettingsForMultiplayerSelection();
-        setMultiplayerSelectRoleInvisible();
+        //setMultiplayerSelectRoleInvisible();
 
         if (ActiveGameState.getModes() == GameMode.playerVsKi) setOwnKiSelectionInvisible();
 
+
+
         //TODO Neue selection einbauen mit Let Hard/Normal Ki play...
         if (ActiveGameState.isMultiplayer()) {
-            setEnemyKiSelectionInvisible();
-            setOwnKiSelectionInvisible();
-            setMultiplayerSelectRoleVisible();
+            //setEnemyKiSelectionInvisible();
+            //setOwnKiSelectionInvisible();
+            //setMultiplayerSelectRoleVisible();
+
+            disableSingleplayerKiSelection();
+        }
+        else{
+            disableHostKiSelection();
         }
         //Immer alles an, außer bei player vs ki
 
     }
 
+    public void disableHostKiSelection(){
+        sP_KIselections.getChildren().remove(host_selectRole);
+    }
+    public void disableSingleplayerKiSelection(){
+        sP_KIselections.getChildren().remove(vBox_KISettings);
+    }
 /*
 public VBox host_selectRole;
     public RadioButton host_RbSelectKInormal;
@@ -211,14 +225,16 @@ public VBox host_selectRole;
 
     }
 
+
+
     public void setMultiplayerSelectRoleVisible(){
         host_RbSelectKInormal.setVisible(true);
-        host_RbSelectKInormal.setVisible(true);
+        host_RbSelectKIhard.setVisible(true);
     }
 
     public void setMultiplayerSelectRoleInvisible(){
         host_RbSelectKInormal.setVisible(false);
-        host_RbSelectKInormal.setVisible(false);
+        host_RbSelectKIhard.setVisible(false);
     }
 
     public void setRadioButtonSettings(){

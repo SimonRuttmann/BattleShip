@@ -3,6 +3,7 @@ import Gui_View.Main;
 import Network.CMD;
 import Player.ActiveGameState;
 import Player.SaveAndLoad;
+import Player.Savegame;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,6 +32,9 @@ import java.io.IOException;
  *      2. Send the command "next"
  *      3. Get the command "ships" and parameters
  *      4. Send the command "done"
+ *
+ *      5. Get the command ready
+ *      6. Send the command ready
  *
  * In both cases:
  * The scene is set depending on the mode selected
@@ -91,10 +95,11 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
             }
             //Load Game
             else{
+
                 ActiveGameState.getServer().sendCMD(CMD.load, String.valueOf(ActiveGameState.getLoadId()));
-                receivedCMD = ActiveGameState.getServer().getCMD();
+               /* receivedCMD = ActiveGameState.getServer().getCMD();
                 switch (receivedCMD[0]) {
-                    case "next":
+                    case "done":
                         break;
                     case "timeout":
                         ActiveGameState.getServer().closeConnection();
@@ -103,7 +108,8 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                     default:
                         System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
                         return;
-                }
+                }*/
+
 
             }
             //Get done
@@ -154,8 +160,10 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 case "size":    ActiveGameState.setPlaygroundSize(Integer.parseInt(receivedCMD[1]));
                                 break;
 
-                case "load":    SaveAndLoad.load(receivedCMD[1]);
+                case "load":    Savegame savegame = SaveAndLoad.load(Long.parseLong(receivedCMD[1]));
+                                if ( savegame == null) return;//TODO YANNICK DISPLAY "Spiel konnte nicht geladen werden (whr weil der Client die Datei nicht mehr/ noch nie hatte)"
                                 load = true;
+                                ActiveGameState.setLoading(ActiveGameState.Loading.multiplayer);
                                 break;
 
                 case "timeout": ActiveGameState.getClient().closeConnection();
@@ -247,7 +255,7 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                     switch (ActiveGameState.getModes()){
                         case playerVsRemote:
                                                 //Wenn nicht laden und Spieler vs Remote-> place Ships..., wenn laden oder ki vs remote -> direkt gamePlayground
-                                                if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer)) {
+                                                if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ) {
                                                     Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
                                                     Main.primaryStage.setScene(new Scene(placeShips));
                                                     Main.primaryStage.show();

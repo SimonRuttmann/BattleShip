@@ -8,7 +8,7 @@ import Model.Playground.OwnPlayground;
 
 
 public class Savegame{
-
+    public long              id;
     public GameMode          modes;
     public boolean           OwnPlayerKi;
 
@@ -25,8 +25,8 @@ public class Savegame{
     public  int              amountShipSize3;
     public  int              amountShipSize4;
     public  int              amountShipSize5;
-    public  Ki               ownKi;
     public  Ki               enemyKi;
+    public  Ki               ownKi;
 
     public boolean           sceneIsPlaceShips;
     public boolean           sceneIsGamePlayground;
@@ -36,6 +36,7 @@ public class Savegame{
 
 
     public Savegame (
+            long id,
             GameMode modes,
             boolean OwnPlayerKi,
             OwnPlayground ownPlayerIOwnPlayground,
@@ -50,8 +51,8 @@ public class Savegame{
             int amountShipSize3,
             int amountShipSize4,
             int amountShipSize5,
+            Ki enemyKi,     //TODO Wichtig, GSON speichert null elemente nicht ab und verwendet einen properties construktor, wird ein Spiel ohne ownKI gestartet, wird die enemyKi zur ownKi und die enemyKi wird null! Diese Reihenfolge beibehalten!
             Ki ownKi,
-            Ki enemyKi,
             boolean sceneIsPlaceShips,
             boolean sceneIsGamePlayground,
             int difficulty,
@@ -59,6 +60,7 @@ public class Savegame{
             boolean yourTurn
             )
     {
+        this.id = id;
         this.modes = modes;
         this.OwnPlayerKi = OwnPlayerKi;
         this.ownPlayerIOwnPlayground = ownPlayerIOwnPlayground;
@@ -73,8 +75,8 @@ public class Savegame{
         this.amountShipSize3 = amountShipSize3;
         this.amountShipSize4 = amountShipSize4;
         this.amountShipSize5 = amountShipSize5;
-        this.ownKi = ownKi;
         this.enemyKi = enemyKi;
+        this.ownKi = ownKi;
         this.sceneIsPlaceShips = sceneIsPlaceShips;
         this.sceneIsGamePlayground = sceneIsGamePlayground;
         this.difficulty = difficulty;

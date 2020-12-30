@@ -13,9 +13,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class SaveAndLoad {
-//TODO Temp = Name bzw ID des Spielstandes... umbenennen
-    //TODO Es wird kein Objekt übergeben, diese intern von der ActiveGameState übertragen werden
-    public static boolean save(String temp){
+
+
+    public static boolean save(String nameOfSavegame, long id){
+        if ( SavegameLinker.writeLinker(nameOfSavegame, id) ) {
+            return save(nameOfSavegame);
+        }
+        return false;
+    }
+
+
+    public static boolean save(String nameOfSavegame){
         ///new Savegame(ActiveGameState.)
 
             Savegame o = constructSaveGame();
@@ -30,10 +38,10 @@ public class SaveAndLoad {
             // temp = chosen name of file: e.g. temp = "test" -> output Paths.get: .savedGames/test.json
             Writer writer;
             if (!ActiveGameState.isMultiplayer()) {
-                writer = Files.newBufferedWriter(Paths.get(".singleplayerGames/" + temp + ".json")); //create writer
+                writer = Files.newBufferedWriter(Paths.get(".singleplayerGames/" + nameOfSavegame + ".json")); //create writer
             }
             else{
-                writer = Files.newBufferedWriter(Paths.get(".multiplayerGames/" + temp + ".json")); //create writer
+                writer = Files.newBufferedWriter(Paths.get(".multiplayerGames/" + nameOfSavegame + ".json")); //create writer
             }
 //getClass.getRessourceAsStream("/.savedGame")
             gson.toJson(o, writer);
@@ -46,10 +54,30 @@ public class SaveAndLoad {
             return false;
         }
     }
-    //TODO return boolean
-    public static Savegame load(String temp){
+
+
+    public static Savegame load (long id){
+        String nameOfSavegame = SavegameLinker.readLinker(id);
+        return load(nameOfSavegame);
+    }
+
+
+
+    public static Savegame load (String nameOfSavegame){
 
         try {
+
+            System.out.println(nameOfSavegame);
+            if ( ActiveGameState.isMultiplayer() && !(nameOfSavegame.contains(".multiplayer"))){
+                nameOfSavegame = ".multiplayerGames\\" + nameOfSavegame + ".json";
+            }
+           // if ( ActiveGameState.isMultiplayer() && !(nameOfSavegame.contains(".multiplayer/"))){
+           //     nameOfSavegame = ".multiplayerGames/" + nameOfSavegame + ".json";
+           // }
+            //Singleplayer wird direkt der richtige pfad übergeben
+            //else{
+            //    nameOfSavegame = ".singleplayerGames/" + nameOfSavegame + ".json";
+            //}
 
             GsonBuilder builder = new GsonBuilder();
             builder.registerTypeAdapter(IDrawable.class, new InterfaceAdapterForPlayground());
@@ -58,7 +86,7 @@ public class SaveAndLoad {
 
            // Gson gson = new Gson(); // create Gson instance
             // temp = the complete path to the file that is intend to be loaded: e.g. temp = ".savedGames/test.json"
-            Reader reader = Files.newBufferedReader(Paths.get(temp)); //create a reader
+            Reader reader = Files.newBufferedReader(Paths.get(nameOfSavegame)); //create a reader
             Savegame e = gson.fromJson(reader, Savegame.class); // write File content to Savegame-Object e
             reader.close();
             setSavegameToActiveGameState(e);
@@ -69,10 +97,10 @@ public class SaveAndLoad {
             return null;
         }
 
-
     }
 
     public static void setSavegameToActiveGameState( Savegame e ){
+                ActiveGameState.setLoadId(e.id);
                 ActiveGameState.setModes(e.modes);
                 ActiveGameState.setOwnPlayerKi(e.OwnPlayerKi);
                 ActiveGameState.setOwnPlayerIOwnPlayground(e.ownPlayerIOwnPlayground);
@@ -87,8 +115,8 @@ public class SaveAndLoad {
                 ActiveGameState.setAmountShipSize3(e.amountShipSize3);
                 ActiveGameState.setAmountShipSize4(e.amountShipSize4);
                 ActiveGameState.setAmountShipSize5(e.amountShipSize5);
-                ActiveGameState.setOwnKi(e.ownKi);
                 ActiveGameState.setEnemyKi(e.enemyKi);
+                ActiveGameState.setOwnKi(e.ownKi);
                 ActiveGameState.setSceneIsPlaceShips(e.sceneIsPlaceShips);
                 ActiveGameState.setSceneIsGamePlayground(e.sceneIsGamePlayground);
                 ActiveGameState.setDifficulty(e.difficulty);
@@ -97,7 +125,9 @@ public class SaveAndLoad {
     }
 
     public static Savegame constructSaveGame(){
-        return  new Savegame(   ActiveGameState.getModes(),
+        return  new Savegame(
+                ActiveGameState.getLoadId(),
+                ActiveGameState.getModes(),
                 ActiveGameState.isOwnPlayerKi(),
                 (OwnPlayground)ActiveGameState.getOwnPlayerIOwnPlayground(),
                 (EnemyPlayground)ActiveGameState.getOwnPlayerIEnemyPlayground(),

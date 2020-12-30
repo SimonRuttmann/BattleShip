@@ -25,8 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,6 +34,7 @@ import java.util.ResourceBundle;
 
 public class PlaceShips implements Initializable {
 
+    public AnchorPane anchorPane;
     // connect everything to FXML
     @FXML
     private Label ownFieldLabel;
@@ -112,6 +112,16 @@ public class PlaceShips implements Initializable {
     Label fourShipLabel;
     Label fiveShipLabel;
 
+    //TODO Background gesetzt
+    public void setBackground(){
+
+        BackgroundImage myBI= new BackgroundImage(new Image(getClass().getResourceAsStream("/Gui_View/images/IngameBackground.jpg")),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        this.anchorPane.setBackground(new Background(myBI));
+    }
+    //TODO Background gesetzt
 
     /** initialize-method:
      * -----------------------------------------------------------------------------------------------------------------
@@ -127,6 +137,11 @@ public class PlaceShips implements Initializable {
      *----------------------------------------------------------------------------------------------------------------*/
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        //TODO Background gesetzt
+        setBackground();
+        //TODO Background gesetzt
+
         // basic initialization tasks ----------------------------------------------------------------------------------
         ActiveGameState.setSceneIsPlaceShips(true);
 

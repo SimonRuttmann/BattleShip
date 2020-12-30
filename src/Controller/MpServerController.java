@@ -87,9 +87,16 @@ public class MpServerController implements Initializable {
                         @Override
                         public void run() {
                             try {
-                                Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
-                                Main.primaryStage.setScene(new Scene(gameSettings));
-                                Main.primaryStage.show();
+
+                                if (ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer){
+                                    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
+                                    multiplayerControlThreadConfigCommunication.start();
+                                }
+                                else{
+                                    Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
+                                    Main.primaryStage.setScene(new Scene(gameSettings));
+                                    Main.primaryStage.show();
+                                }
                             }catch (IOException e){
                                 System.out.println( "Game settings Scene couldn't be loaded");
                             }

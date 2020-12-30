@@ -19,7 +19,7 @@ public class ActiveGameState {
     }
 
     public static void setLoading(Loading loading) {
-        loading = loading;
+        ActiveGameState.loading = loading;
     }
 
     private static Loading loading = Loading.noLoad;
@@ -143,8 +143,8 @@ public class ActiveGameState {
     private static int amountShipSize3;
     private static int amountShipSize4;
     private static int amountShipSize5;
-    private static Ki EnemyKi;
-    private static Ki OwnKi;
+    private static Ki EnemyKi = new Ki();
+    private static Ki OwnKi = new Ki();
     private static Ki placementKi;
 
     public static Ki getPlacementKi() {

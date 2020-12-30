@@ -1,6 +1,6 @@
 package Controller;
 
-//TODO Mulitplayer -> Selection KI -> Gamemode und Ki generieren, Schwierigkeit setzen
+
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
 import KI.Ki;
@@ -174,7 +174,7 @@ public class GameSettingsController implements Initializable{
 
 
 
-        //TODO Neue selection einbauen mit Let Hard/Normal Ki play...
+
         if (ActiveGameState.isMultiplayer()) {
             //setEnemyKiSelectionInvisible();
             //setOwnKiSelectionInvisible();

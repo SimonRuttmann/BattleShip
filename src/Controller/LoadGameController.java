@@ -2,10 +2,7 @@ package Controller;
 
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
-import Player.ActiveGameState;
-import Player.GameMode;
-import Player.SaveAndLoad;
-import Player.Savegame;
+import Player.*;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -126,9 +123,6 @@ public class LoadGameController implements Initializable {
         setRectangleSettings();
         startAnimation();
 
-        if ( ActiveGameState.getModes() == GameMode.kiVsRemote || ActiveGameState.getModes() == GameMode.playerVsRemote)
-            this.backButton.setText("Back to Settings");
-
     }
 
     public void setUpListView(){
@@ -204,6 +198,15 @@ public class LoadGameController implements Initializable {
                 MenuItem delete = new MenuItem("Spielstand löschen");
                 delete.setOnAction(e -> {
                     System.out.println("Delete Item" + cell.getItem().toString());
+
+                    //Remove linker in multiplayer savegames
+                    String fileNameToDelete = cell.getItem().toString();
+                    boolean linkerDeleted = true;
+                    if (ActiveGameState.isMultiplayer()){
+                        linkerDeleted = SavegameLinker.removeLinker(fileNameToDelete);
+                        if (!linkerDeleted) System.out.println("Exception thrown at removing linker to savegame name: " + fileNameToDelete);
+                    }
+
 
                     File game = cell.getItem();
                     gameList.getItems().remove(game);

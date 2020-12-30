@@ -60,7 +60,7 @@
                                             </VBox.margin>
                                             <children>
                                                 <Polygon fx:id="polySettings" fill="DODGERBLUE" points="-194.33334350585938, -17.0, 89.66665649414062, -91.0, -194.33334350585938, -91.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Text fx:id="textSettings" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" />
+                                                <Text fx:id="textSettings" strokeType="OUTSIDE" strokeWidth="0.0" text="Options" />
                                             </children>
                                         </StackPane>
                                         <StackPane fx:id="leftBar_QuitPolyText" onMouseClicked="#quitGameSelected">

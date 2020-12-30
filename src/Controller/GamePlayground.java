@@ -77,9 +77,13 @@ public class GamePlayground implements Initializable {
      *  ->
      *----------------------------------------------------------------------------------------------------------------*/
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
 
         initializeSaveGameBar();
+  
+    //todo make ship hits displayed on grid pane, not on labels > do it also in SinglePlayer
+    //todo set labels of own playground to ships -> MultiplayercontrolThreadGetShot?
 
         ActiveGameState.setSceneIsGamePlayground(true);
         ActiveGameState.setSceneIsPlaceShips(false);
@@ -123,18 +127,8 @@ public class GamePlayground implements Initializable {
         //The scale of one Field,   Ship size 2 -> Image: | 30px | 30px |
         //                          Ship size 3 -> Image: | 30px | 30px | 30px |
         // scale is depended on playground size
-        int scale = 30;
-        if (5 <= gamesize && gamesize <= 10) {
-            scale = 45;
-        } else if (11 <= gamesize && gamesize <= 15) {
-            scale = 35;
-        } else if (16 <= gamesize && gamesize <= 20) {
-            scale = 25;
-        } else if (21 <= gamesize && gamesize <= 25) {
-            scale = 20;
-        } else if (26 <= gamesize && gamesize <= 30) {
-            scale = 15;
-        }
+        int scale = ActiveGameState.getPlaygroundScale();
+
 
         // finalscale is needed due to using scale in lambda expressions
         final int finalscale = scale;
@@ -247,6 +241,7 @@ public class GamePlayground implements Initializable {
     public static Group getGroupEnemP(){
         return groupEnemyPS;
     }
+
 
 
     /***/

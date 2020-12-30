@@ -138,6 +138,7 @@ public class ActiveGameState {
     private static boolean multiplayer;  // true = multiplayer, false = singleplayer
     private static String ownPlayerName;    //todo not needed anymore
     private static int playgroundSize;   // between 5x5 - 30x30
+    private static int playgroundScale;  // set automatically by choosing playground size, only getter
     private static int amountOfShips;
     private static int amountShipSize2;
     private static int amountShipSize3;
@@ -255,10 +256,26 @@ public class ActiveGameState {
 
     /**
      * The size must be between 5 and 30
+     * setting the size will automatically set the scale for the view
      * @param playgroundSize the size of the playground
      */
     public static void setPlaygroundSize(int playgroundSize) {
         ActiveGameState.playgroundSize = playgroundSize;
+        if (5 <= playgroundSize && playgroundSize <= 10) {
+            ActiveGameState.playgroundScale = 45;
+        } else if (11 <= playgroundSize && playgroundSize <= 15) {
+            ActiveGameState.playgroundScale = 35;
+        } else if (16 <= playgroundSize && playgroundSize <= 20) {
+            ActiveGameState.playgroundScale = 25;
+        } else if (21 <= playgroundSize && playgroundSize <= 25) {
+            ActiveGameState.playgroundScale = 20;
+        } else if (26 <= playgroundSize && playgroundSize <= 30) {
+            ActiveGameState.playgroundScale = 15;
+        }
+    }
+
+    public static int getPlaygroundScale() {
+        return playgroundScale;
     }
 
     public static int getAmountOfShips() {

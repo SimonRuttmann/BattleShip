@@ -11,6 +11,28 @@ import Network.*;
  */
 
 public class ActiveGameState {
+    public enum Loading {singleplayer, multiplayer, noLoad}
+   // private static boolean singLoad = true;
+
+    public static Loading getLoading() {
+        return loading;
+    }
+
+    public static void setLoading(Loading loading) {
+        ActiveGameState.loading = loading;
+    }
+
+    private static Loading loading = Loading.noLoad;
+
+  /*  public static boolean isSingLoad() {
+        return singLoad;
+    }*/
+
+
+   // public static void setSingLoad(boolean singLoad) {
+  //      ActiveGameState.singLoad = singLoad;
+   // }
+
     private static MusicController musicController;
 
     public static MusicController getMusicController() {
@@ -37,15 +59,15 @@ public class ActiveGameState {
     private static int aiVelocity = 1;
     private static Language language = Language.english;
 
-    private static boolean loadGame = false;
+    //private static boolean loadGame = false;
 
-    public static boolean isLoadGame() {
+   /* public static boolean isLoadGame() {
         return loadGame;
     }
-
-    public static void setLoadGame(boolean loadGame) {
+*/
+  /*  public static void setLoadGame(boolean loadGame) {
         ActiveGameState.loadGame = loadGame;
-    }
+    }*/
 
     public static Language getLanguage() {
         return language;
@@ -122,8 +144,8 @@ public class ActiveGameState {
     private static int amountShipSize3;
     private static int amountShipSize4;
     private static int amountShipSize5;
-    private static Ki EnemyKi;
-    private static Ki OwnKi;
+    private static Ki EnemyKi = new Ki();
+    private static Ki OwnKi = new Ki();
     private static Ki placementKi;
 
     public static Ki getPlacementKi() {

@@ -23,7 +23,6 @@ public abstract class AbstactPlayground implements IPlayground{
         this.shipsplaced = ActiveGameState.getAmountOfShips();
     }
 
-
     @Override
     public void drawPlayground(){
         for ( int x = 0; x < this.playgroundsize; x++)

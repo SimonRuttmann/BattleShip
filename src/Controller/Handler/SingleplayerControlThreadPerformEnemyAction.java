@@ -2,7 +2,6 @@ package Controller.Handler;
 
 
 import Gui_View.HelpMethods;
-import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Player.ActiveGameState;
 
@@ -26,9 +25,13 @@ public class SingleplayerControlThreadPerformEnemyAction extends Thread{
             //Get the position, where the enemy wants to shoot
             //Point posToShoot = null;
             System.out.println( "Enemy Turn");
-
+            try {
+                sleep(ActiveGameState.getAiVelocity()*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             //ich übergebe der KI mein eigenes spielfeld, die KI beschießt damit mein eigenes Spielfeld
-            ShotResponse shotResponse = ActiveGameState.getKi().getShot(ActiveGameState.getOwnPlayerIOwnPlayground());
+            ShotResponse shotResponse = ActiveGameState.getEnemyKi().getShot(ActiveGameState.getOwnPlayerIOwnPlayground());
 
             //System.out.println( "Enemy is shooting at " + posToShoot.getX() + posToShoot.getY());
 

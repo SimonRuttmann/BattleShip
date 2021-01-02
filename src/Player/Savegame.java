@@ -1,19 +1,21 @@
 package Player;
 
 import KI.Ki;
+import Model.Playground.EnemyPlayground;
 import Model.Playground.IEnemyPlayground;
 import Model.Playground.IOwnPlayground;
+import Model.Playground.OwnPlayground;
 
 
 public class Savegame{
-
+    public long              id;
     public GameMode          modes;
     public boolean           OwnPlayerKi;
 
-    public IOwnPlayground    ownPlayerIOwnPlayground;
-    public IEnemyPlayground  ownPlayerIEnemyPlayground;
-    public IOwnPlayground    enemyPlayerOwnPlayground;
-    public IEnemyPlayground  enemyPlayerEnemyPlayground;
+    public OwnPlayground    ownPlayerIOwnPlayground;
+    public EnemyPlayground  ownPlayerIEnemyPlayground;
+    public OwnPlayground    enemyPlayerOwnPlayground;
+    public EnemyPlayground  enemyPlayerEnemyPlayground;
 
     public  boolean          multiplayer;
     public  String           ownPlayerName;
@@ -23,7 +25,8 @@ public class Savegame{
     public  int              amountShipSize3;
     public  int              amountShipSize4;
     public  int              amountShipSize5;
-    public  Ki               ki;
+    public  Ki               enemyKi;
+    public  Ki               ownKi;
 
     public boolean           sceneIsPlaceShips;
     public boolean           sceneIsGamePlayground;
@@ -33,12 +36,13 @@ public class Savegame{
 
 
     public Savegame (
+            long id,
             GameMode modes,
             boolean OwnPlayerKi,
-            IOwnPlayground ownPlayerIOwnPlayground,
-            IEnemyPlayground ownPlayerIEnemyPlayground,
-            IOwnPlayground enemyPlayerOwnPlayground,
-            IEnemyPlayground enemyPlayerEnemyPlayground,
+            OwnPlayground ownPlayerIOwnPlayground,
+            EnemyPlayground ownPlayerIEnemyPlayground,
+            OwnPlayground enemyPlayerOwnPlayground,
+            EnemyPlayground enemyPlayerEnemyPlayground,
             boolean multiplayer,
             String ownPlayerName,
             int playgroundSize,
@@ -47,7 +51,8 @@ public class Savegame{
             int amountShipSize3,
             int amountShipSize4,
             int amountShipSize5,
-            Ki ki,
+            Ki enemyKi,     //TODO Wichtig, GSON speichert null elemente nicht ab und verwendet einen properties construktor, wird ein Spiel ohne ownKI gestartet, wird die enemyKi zur ownKi und die enemyKi wird null! Diese Reihenfolge beibehalten!
+            Ki ownKi,
             boolean sceneIsPlaceShips,
             boolean sceneIsGamePlayground,
             int difficulty,
@@ -55,6 +60,7 @@ public class Savegame{
             boolean yourTurn
             )
     {
+        this.id = id;
         this.modes = modes;
         this.OwnPlayerKi = OwnPlayerKi;
         this.ownPlayerIOwnPlayground = ownPlayerIOwnPlayground;
@@ -69,7 +75,8 @@ public class Savegame{
         this.amountShipSize3 = amountShipSize3;
         this.amountShipSize4 = amountShipSize4;
         this.amountShipSize5 = amountShipSize5;
-        this.ki = ki;
+        this.enemyKi = enemyKi;
+        this.ownKi = ownKi;
         this.sceneIsPlaceShips = sceneIsPlaceShips;
         this.sceneIsGamePlayground = sceneIsGamePlayground;
         this.difficulty = difficulty;

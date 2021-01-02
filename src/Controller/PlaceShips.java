@@ -5,11 +5,11 @@ import Model.Playground.EnemyPlayground;
 import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Ship.IShip;
+import Model.Ship.Ship;
 import Model.Util.UtilDataType.Point;
 import Player.ActiveGameState;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,10 +25,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,6 +34,7 @@ import java.util.ResourceBundle;
 
 public class PlaceShips implements Initializable {
 
+    public AnchorPane anchorPane;
     // connect everything to FXML
     @FXML
     private Label ownFieldLabel;
@@ -113,6 +112,16 @@ public class PlaceShips implements Initializable {
     Label fourShipLabel;
     Label fiveShipLabel;
 
+    //TODO Background gesetzt
+    public void setBackground(){
+
+        BackgroundImage myBI= new BackgroundImage(new Image(getClass().getResourceAsStream("/Gui_View/images/IngameBackground.jpg")),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        this.anchorPane.setBackground(new Background(myBI));
+    }
+    //TODO Background gesetzt
 
     /** initialize-method:
      * -----------------------------------------------------------------------------------------------------------------
@@ -128,6 +137,11 @@ public class PlaceShips implements Initializable {
      *----------------------------------------------------------------------------------------------------------------*/
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        //TODO Background gesetzt
+        setBackground();
+        //TODO Background gesetzt
+
         // basic initialization tasks ----------------------------------------------------------------------------------
         ActiveGameState.setSceneIsPlaceShips(true);
 
@@ -158,18 +172,7 @@ public class PlaceShips implements Initializable {
         //The scale of one Field,   Ship size 2 -> Image: | 30px | 30px |
         //                          Ship size 3 -> Image: | 30px | 30px | 30px |
         // scale is depended on playground size
-        int scale = 30;
-        if (5 <= gamesize && gamesize <= 10) {
-            scale = 45;
-        } else if (11 <= gamesize && gamesize <= 15) {
-            scale = 35;
-        } else if (16 <= gamesize && gamesize <= 20) {
-            scale = 25;
-        } else if (21 <= gamesize && gamesize <= 25) {
-            scale = 20;
-        } else if (26 <= gamesize && gamesize <= 30) {
-            scale = 15;
-        }
+        int scale = ActiveGameState.getPlaygroundScale();
 
 
         // finalscale is needed due to using scale in lambda expressions
@@ -617,7 +620,7 @@ public class PlaceShips implements Initializable {
         // not be remvoed from the group is the gridPane -> no Label, no problem
         groupID.getChildren().removeAll(groupID.lookupAll(".label"));
 
-        ArrayList<IShip> newShips = ActiveGameState.getKi().placeships(ownPlayground);
+        ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(ownPlayground);
         ownPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
 
         for (IShip ship : newShips) {

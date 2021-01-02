@@ -1,5 +1,6 @@
 package Player;
 
+import Controller.MusicController;
 import KI.Ki;
 import Model.Playground.*;
 import Network.*;
@@ -10,9 +11,88 @@ import Network.*;
  */
 
 public class ActiveGameState {
-    public static boolean newView = false;
+    public enum Loading {singleplayer, multiplayer, noLoad}
+   // private static boolean singLoad = true;
 
-    // Modes
+    public static Loading getLoading() {
+        return loading;
+    }
+
+    public static void setLoading(Loading loading) {
+        ActiveGameState.loading = loading;
+    }
+
+    private static Loading loading = Loading.noLoad;
+
+  /*  public static boolean isSingLoad() {
+        return singLoad;
+    }*/
+
+
+   // public static void setSingLoad(boolean singLoad) {
+  //      ActiveGameState.singLoad = singLoad;
+   // }
+
+    private static MusicController musicController;
+
+    public static MusicController getMusicController() {
+        return musicController;
+    }
+
+    public static void setMusicController(MusicController musicController) {
+        ActiveGameState.musicController = musicController;
+    }
+
+    public enum Language {english, german};
+    public static boolean newView = false;
+    private static long loadId;
+
+    public static long getLoadId() {
+        return loadId;
+    }
+
+    public static void setLoadId(long loadId) {
+        ActiveGameState.loadId = loadId;
+    }
+
+    private static int musicVolume = 50; //currently not in use
+    private static int aiVelocity = 1;
+    private static Language language = Language.english;
+
+    //private static boolean loadGame = false;
+
+   /* public static boolean isLoadGame() {
+        return loadGame;
+    }
+*/
+  /*  public static void setLoadGame(boolean loadGame) {
+        ActiveGameState.loadGame = loadGame;
+    }*/
+
+    public static Language getLanguage() {
+        return language;
+    }
+
+    public static void setLanguage(Language language) {
+        ActiveGameState.language = language;
+    }
+
+    public static int getMusicVolume() {
+        return musicVolume;
+    }
+
+    public static void setMusicVolume(int musicVolume) {
+        ActiveGameState.musicVolume = musicVolume;
+    }
+
+    public static int getAiVelocity() {
+        return aiVelocity;
+    }
+
+    public static void setAiVelocity(int aiVelocity) {
+        ActiveGameState.aiVelocity = aiVelocity;
+    }
+// Modes
     /**
      *
      * Es gibt folgende Modi:
@@ -58,12 +138,31 @@ public class ActiveGameState {
     private static boolean multiplayer;  // true = multiplayer, false = singleplayer
     private static String ownPlayerName;    //todo not needed anymore
     private static int playgroundSize;   // between 5x5 - 30x30
+    private static int playgroundScale;  // set automatically by choosing playground size, only getter
     private static int amountOfShips;
     private static int amountShipSize2;
     private static int amountShipSize3;
     private static int amountShipSize4;
     private static int amountShipSize5;
-    private static Ki ki;
+    private static Ki EnemyKi = new Ki();
+    private static Ki OwnKi = new Ki();
+    private static Ki placementKi;
+
+    public static Ki getPlacementKi() {
+        return placementKi;
+    }
+
+    public static void setPlacementKi(Ki placementKi) {
+        ActiveGameState.placementKi = placementKi;
+    }
+
+    public static Ki getOwnKi() {
+        return OwnKi;
+    }
+
+    public static void setOwnKi(Ki ownKi) {
+        OwnKi = ownKi;
+    }
 
     private static boolean sceneIsPlaceShips;
 
@@ -87,7 +186,25 @@ public class ActiveGameState {
     }
 
     private static int difficulty; //wählt die Schwierigkeit aus, 0 = normal, 1 = schwer
+    private static Ki.Difficulty ownKiDifficulty;//TODO einbinden, difficulty reicht hier bei 2 verschiedenen nicht aus
+    private static Ki.Difficulty enemyKiDifficulty;
     //TODO evtl enum
+
+    public static Ki.Difficulty getOwnKiDifficulty() {
+        return ownKiDifficulty;
+    }
+
+    public static void setOwnKiDifficulty(Ki.Difficulty ownKiDifficulty) {
+        ActiveGameState.ownKiDifficulty = ownKiDifficulty;
+    }
+
+    public static Ki.Difficulty getEnemyKiDifficulty() {
+        return enemyKiDifficulty;
+    }
+
+    public static void setEnemyKiDifficulty(Ki.Difficulty enemyKiDifficulty) {
+        ActiveGameState.enemyKiDifficulty = enemyKiDifficulty;
+    }
 
     // Game Variables
 // -> Gestrichen -> neuer Zugriff über ActiveGameState.getOwnPlayer.get[Own][Enemy]Playground
@@ -139,10 +256,26 @@ public class ActiveGameState {
 
     /**
      * The size must be between 5 and 30
+     * setting the size will automatically set the scale for the view
      * @param playgroundSize the size of the playground
      */
     public static void setPlaygroundSize(int playgroundSize) {
         ActiveGameState.playgroundSize = playgroundSize;
+        if (5 <= playgroundSize && playgroundSize <= 10) {
+            ActiveGameState.playgroundScale = 45;
+        } else if (11 <= playgroundSize && playgroundSize <= 15) {
+            ActiveGameState.playgroundScale = 35;
+        } else if (16 <= playgroundSize && playgroundSize <= 20) {
+            ActiveGameState.playgroundScale = 25;
+        } else if (21 <= playgroundSize && playgroundSize <= 25) {
+            ActiveGameState.playgroundScale = 20;
+        } else if (26 <= playgroundSize && playgroundSize <= 30) {
+            ActiveGameState.playgroundScale = 15;
+        }
+    }
+
+    public static int getPlaygroundScale() {
+        return playgroundScale;
     }
 
     public static int getAmountOfShips() {
@@ -180,8 +313,8 @@ public class ActiveGameState {
         ActiveGameState.amountShipSize5 = amountShipSize5;
     }
 
-    public static Ki getKi() { return ki; }
-    public static void setKi(Ki ki) { ActiveGameState.ki = ki; }
+    public static Ki getEnemyKi() { return EnemyKi; }
+    public static void setEnemyKi(Ki enemyKi) { ActiveGameState.EnemyKi = enemyKi; }
 
     public static boolean isSceneIsPlaceShips() {return sceneIsPlaceShips;};
     public static void setSceneIsPlaceShips(boolean sceneIsPlaceShips) {ActiveGameState.sceneIsPlaceShips = sceneIsPlaceShips;};

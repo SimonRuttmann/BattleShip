@@ -65,7 +65,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
 
 
     }
-
+    //TODO Bug wenn man ein schiff nach oben zerstört, tritt nur manchmal auf, whr auch der Fehler für KIvsKI modus, zeichnet nicht alle positionen, sondern nur die oberste und findet die unteren position nicht
     //Muss sich Schiffe gegnerische Schiffe merken können um unmögliche Felder als Wasser zu markieren, soweit sie noch nicht beschossenes Wasser sind
     //Muss zudem die gegnerisch versunkenen Schiffe zählen um ein gewonnenes Spiel auszugeben
     /**
@@ -96,6 +96,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
      */
     @Override
     public ShotResponse shoot(Point pos_shot, int answer) {
+        System.out.println( "shoot mit: "+ pos_shot.getX() + pos_shot.getY());
         //Kein Treffer!
         boolean shipHit = false;
         boolean shipSunken = false;
@@ -211,15 +212,15 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
                 int count = 4;
 
 
-                //  _
-                //  _
-                //  _
-                //  _
-                //  Y
-                //  _
-                //  _
-                //  _
-                //  _
+                //  _ 0
+                //  _ 1
+                //  _ 2
+                //  _ 3
+                //  Y 4
+                //  _ 5
+                //  _ 6
+                //  _ 7
+                //  _ 8
 
                 boolean hit = true;
 
@@ -245,7 +246,8 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
                 while (hit) {
                     //Spielfeld wrid durch i nach unten überschritten
                     if ( currY >= playgroundsize|| currY < 0 || count < 0 || count > 8) break;
-                    if (Field[currY][shotY] instanceof ShipPart) {
+
+                    if (Field[shotX][currY] instanceof ShipPart) {
                         destroyedShip[count] = new Point(shotX, currY);
                         count++;
                         currY++;

@@ -80,6 +80,7 @@ public class GamePlayground implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
 
+        setLanguage();
         initializeSaveGameBar();
   
     //todo make ship hits displayed on grid pane, not on labels > do it also in SinglePlayer
@@ -216,6 +217,19 @@ public class GamePlayground implements Initializable {
 
         // setting the background image
         setBackground();
+    }
+
+    public void setLanguage(){
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            buttonShowSaveBar.setText("Spiel speichern");
+            saveGameText.setText("Geben sie den Namen des Spielstandes ein");
+            saveAndCloseButton.setText("Speichern und Schließen");
+        }
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            buttonShowSaveBar.setText("Save Game");
+            saveGameText.setText("Enter the save name here");
+            saveAndCloseButton.setText("Save and Close");
+        }
     }
 
     // Group -> Add Label (localX, localY, Schiffslabel)

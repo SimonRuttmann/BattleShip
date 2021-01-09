@@ -60,6 +60,7 @@ public class MpServerController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setLanguage();
         setBackground();
         setTextSettings();
         setTitleSettings();
@@ -68,6 +69,21 @@ public class MpServerController implements Initializable {
         startAnimation();
         offerConnection();
 
+    }
+
+    public void setLanguage(){
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            title.setText("Spiel Hosten");
+            textShowIP.setText("Deine IP Adresse:");
+            textWaiting.setText("Warten auf den Client");
+            button_backToMainMenu.setText("Zurück zum Hauptmenü");
+        }
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            title.setText("Hosting Game");
+            textShowIP.setText("Your IP Adress:");
+            textWaiting.setText("Waiting for Client");
+            button_backToMainMenu.setText("Back to Main Menu");
+        }
     }
 
     //TODO Scenenwechsel -> Game Settings -> Game Settings Beendet -> Start MultiplayerControlThreadConfigCommunication

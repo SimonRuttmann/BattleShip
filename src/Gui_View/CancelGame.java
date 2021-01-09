@@ -2,6 +2,7 @@
 
 package Gui_View;
 
+import Player.NetworkLogger;
 import Player.SaveAndLoad;
 import Player.Savegame;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ public class CancelGame {
         Button yes = new Button("Ja");
         yes.setOnAction(e -> {
             exit.close();
+            NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
         Button no = new Button("Nein");
@@ -64,7 +66,7 @@ public class CancelGame {
         saveGame.setOnAction(e -> {
             //todo get current Gamestats into Savegame Object -> gamemode in Dateiname - Multiplayer vs Singeplayer
 
-            String time = new SimpleDateFormat("MM.dd.yyyy HH mm ss").format(Calendar.getInstance().getTime());
+            String time = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
             String temp = "Spiel am  " + time; // todo besserer Name
             if(SaveAndLoad.save(temp))
                 save.setScene(success);
@@ -74,6 +76,7 @@ public class CancelGame {
         Button noSave = new Button("Beenden ohne Speichern");
         noSave.setOnAction(e -> {
             save.close();
+            NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
 
@@ -89,6 +92,7 @@ public class CancelGame {
         Button endGame = new Button("Spiel beenden"); // todo: eventuell rückkehr ins startmenü: not so easy
         endGame.setOnAction(e -> {
             save.close();
+            NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
         /* todo evlt

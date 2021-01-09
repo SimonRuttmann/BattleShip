@@ -3,6 +3,7 @@ package OldView;
 import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Player.ActiveGameState;
+import Player.NetworkLogger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -54,6 +55,7 @@ public class MainMenu2 implements Initializable {    //todo: ordentliche Namen f
 
     public void endGame(){
         // close primary Stage
+        NetworkLogger.terminateLogging();
         Main.primaryStage.close();
     }
 }

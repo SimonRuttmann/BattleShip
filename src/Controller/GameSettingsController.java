@@ -150,6 +150,7 @@ public class GameSettingsController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Game Settings");
+        setLanguage();
         setBackground();
         setTextSettings();
         setTitleSettings();
@@ -187,6 +188,35 @@ public class GameSettingsController implements Initializable{
         }
         //Immer alles an, außer bei player vs ki
 
+    }
+
+    public void setLanguage(){
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            title.setText("Spieleinstellungen");
+            selectPlaygroundsizeText.setText("Wähle die Spielfeldgröße");
+            selectAmountOfShipsText.setText("Wählen sie die Anzahl der Schiffe aus");
+            selectDifficultyEnemyKIText.setText("Schwierigkeit der gegenerischen KI");
+            selectDifficultyOwnKIText.setText("Schwierigkeit der eigenen Ki");
+            button_backToMainMenu.setText("Zurück zum Hauptmenü");
+            button_Start.setText("Start");
+            rB_difficultyEnemyNormal.setText("Ki auf dem Level normal");
+            rB_difficultyEnemyHard.setText("Ki auf dem Level schwer");
+            rB_difficultyOwnNormal.setText("Ki auf dem Level normal");
+            rB_difficultyOwnHard.setText("Ki auf dem Level schwer");
+        }
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            title.setText("Game Settings");
+            selectPlaygroundsizeText.setText("Select Playgroundsize");
+            selectAmountOfShipsText.setText("Select the amount of ships");
+            selectDifficultyEnemyKIText.setText("Difficulty of Enemy Ki");
+            selectDifficultyOwnKIText.setText("Difficulty of Own Ki");
+            button_backToMainMenu.setText("Back to Main Menu");
+            button_Start.setText("Start");
+            rB_difficultyEnemyNormal.setText("Let Normal Ki play");
+            rB_difficultyEnemyHard.setText("Let Hard Ki play");
+            rB_difficultyOwnNormal.setText("Let Normal Ki play");
+            rB_difficultyOwnHard.setText("Let Hard Ki play");
+        }
     }
 
     public void disableHostKiSelection(){

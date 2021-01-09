@@ -70,6 +70,7 @@ public class GameOptionsController implements Initializable {
         if (rB_selectEnglish.isSelected()) ActiveGameState.setLanguage(ActiveGameState.Language.english);
         else ActiveGameState.setLanguage(ActiveGameState.Language.german);
 
+        setLanguage();
     }
 
 
@@ -77,6 +78,7 @@ public class GameOptionsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Game Options");
+        setLanguage();
         setBackground();
         setTextSettings();
         setTitleSettings();
@@ -87,6 +89,30 @@ public class GameOptionsController implements Initializable {
         setValuesOfMusicSlider();
         setValuesOfVelocitySlider();
 
+    }
+
+    public void setLanguage(){
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            rB_selectEnglish.setText("Englisch");
+            title.setText("Optionen");
+            selectMusicVolumeText.setText("Musiklautstärke");
+            selectAIVelocityText.setText("KI Geschwindigkeit");
+            languageText.setText("Sprache");
+            rB_selectGerman.setText("Deutsch");
+            button_saveSettings.setText("Einstellungen sichern");
+            button_backToMainMenu.setText("Zurück zum Hauptmenü");
+
+        }
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            rB_selectEnglish.setText("English");
+            title.setText("Game Options");
+            selectMusicVolumeText.setText("Music Volume");
+            selectAIVelocityText.setText("AI velocity");
+            languageText.setText("Language");
+            rB_selectGerman.setText("German");
+            button_saveSettings.setText("Save Settings");
+            button_backToMainMenu.setText("Back to Main Menu");
+        }
     }
 
     public void setValuesOfMusicSlider(){

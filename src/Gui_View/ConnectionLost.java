@@ -1,5 +1,6 @@
 package Gui_View;
 
+import Player.NetworkLogger;
 import Player.SaveAndLoad;
 import Player.Savegame;
 import javafx.geometry.Pos;
@@ -33,6 +34,7 @@ public class ConnectionLost {
         });
         endGame.setOnAction(event -> {
             lost.close();
+            NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
 

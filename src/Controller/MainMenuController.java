@@ -5,15 +5,13 @@ import Gui_View.Main;
 import KI.Ki;
 import Player.ActiveGameState;
 import Player.GameMode;
+import Player.NetworkLogger;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.RadioButton;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -30,6 +28,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
+
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.Effect;
 import javafx.scene.text.Text;
@@ -38,7 +38,7 @@ import javafx.scene.text.Text;
 
 
 public class MainMenuController implements Initializable {
-
+    public static final Logger logMainMenuController = Logger.getLogger("parent.MMC");
 
     //blic StackPane rightBar_Mult_SpSelectRole;
     //public Polygon rightBarMultiplayer_PolySelectRole;
@@ -49,6 +49,38 @@ public class MainMenuController implements Initializable {
     public StackPane rightBar_Mult_LoadPolyText;
     public Polygon rightBarMultiplayer_PolyLoad;
     public Text rightBarMultiplayer_TextLoad;
+
+    public void setLanguage(){
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            rightBarMultiplayer_TextLoad.setText("Spiel laden");
+            textSingleplayer.setText("Einzelspieler");
+            textMultiplayer.setText("Mehrspieler");
+            textSettings.setText("Optionen");
+            textQuitGame.setText("Spiel verlassen");
+            rightBarMultiplayer_TextClient.setText("Client");
+            rightBarMultiplayer_TextHost.setText("Host");
+            rightBarSinglplayer_TextKIVsKI.setText("KI vs. KI");
+            rightBarSinglplayer_TextPlayerVsKI.setText("Spieler vs. KI");
+            rightBarMultiplayer_TextHost.setText("Host");
+            rightBarMultiplayer_TextClient.setText("Client");
+            rightBarSinglplayer_TextLoad.setText("Spiel laden");
+
+        }
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            rightBarMultiplayer_TextLoad.setText("Load Game");
+            textSingleplayer.setText("Singleplayer");
+            textMultiplayer.setText("Multiplayer");
+            textSettings.setText("Options");
+            textQuitGame.setText("Quit Game");
+            rightBarMultiplayer_TextClient.setText("Client");
+            rightBarMultiplayer_TextHost.setText("Host");
+            rightBarSinglplayer_TextKIVsKI.setText("AI vs. AI");
+            rightBarSinglplayer_TextPlayerVsKI.setText("Player vs. AI");
+            rightBarMultiplayer_TextHost.setText("Host");
+            rightBarMultiplayer_TextClient.setText("Client");
+            rightBarSinglplayer_TextLoad.setText("Load Game");
+        }
+    }
 
     /**External Handling's**/
     //Singleplayer Player vs KI
@@ -151,6 +183,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void quitGameSelected(MouseEvent mouseEvent) {
+        NetworkLogger.terminateLogging();
         Main.primaryStage.close();
     }
 
@@ -227,9 +260,8 @@ public class MainMenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //KI needs to be added, to get functionality of KI Methods (place ships random, shoot enemy)
+        setLanguage();
         ActiveGameState.setPlacementKi(new Ki());
-
-        System.out.println("Main Menu");
         setBackground();
         //setRightBarInvisible(true);
         setRightBarSingleplayerInvisible(true);

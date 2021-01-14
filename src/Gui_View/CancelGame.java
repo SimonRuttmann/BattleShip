@@ -1,7 +1,6 @@
-// todo: richtig Speichern mit Robin - evtl sogar mit success, Styling
-
 package Gui_View;
 
+import Player.ActiveGameState;
 import Player.SaveAndLoad;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -9,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -20,7 +20,7 @@ import java.util.Calendar;
 
 public class CancelGame {
 
-    static Scene choose, success;
+    static Scene choose, save, success;
     static int width = 300;
     static int height = 100;
 
@@ -55,25 +55,19 @@ public class CancelGame {
     }
 
 
+
     public static void save() {
-        Stage save = new Stage();
-        save.initModality(Modality.APPLICATION_MODAL);
+        Stage saveStage = new Stage();
+        saveStage.initModality(Modality.APPLICATION_MODAL);
 
         // Scene 1 - save or don't save
         Button saveGame = new Button("Spiel speichern");
         saveGame.setOnAction(e -> {
-            //todo get current Gamestats into Savegame Object -> gamemode in Dateiname - Multiplayer vs Singeplayer
-
-            String time = new SimpleDateFormat("MM.dd.yyyy HH mm ss").format(Calendar.getInstance().getTime());
-            String temp = "Spiel am  " + time; // todo besserer Name
-            if(SaveAndLoad.save(temp))
-                save.setScene(success);
-            //else
-            //    save.setScene(failure);//todo create scene failure
+            saveStage.setScene(save);
         });
         Button noSave = new Button("Beenden ohne Speichern");
         noSave.setOnAction(e -> {
-            save.close();
+            saveStage.close();
             Main.primaryStage.close();
         });
 
@@ -84,11 +78,79 @@ public class CancelGame {
         choose.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
 
 
-        // Scene 2 - successfully saved
-        Label successfull = new Label("Speichern erfolgreich!"); // todo: wir gehen aktuell davon aus, das Speichern immer erfolgreich
+
+        // Scene 2 - enter name for saveGame
+        // Label + Button
+        TextField textField = new TextField();
+        textField.setPromptText("Speichernamen eingeben");
+        textField.setMaxWidth(250);
+        Button saveAndMain = new Button("Speichern");
+        saveAndMain.setDisable(true);
+
+        // saveAndMain is only clickable, when save name is valid
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            //The name the user put in -> Create a file with this text as name
+            String savegamename = textField.getText();
+
+            //Check for not allowed characters -> no File creation possible
+            char[] notAllowedCharacters = {'\\','/',':','!','?','*','"','|','<','>'};
+            for ( char character : notAllowedCharacters){
+                if (savegamename.contains(String.valueOf(character)) || savegamename.isEmpty()) {
+                    saveAndMain.setDisable(true);
+                    return;
+                }
+            }
+            saveAndMain.setDisable(false);
+        });
+
+
+
+        saveAndMain.setOnAction(event -> {
+
+            //todo this is copied from game Playground
+            //Create an ID and save it to the ActiveGameState, necessary for loading (Savegame will contain the load id by loading)
+            long id = System.currentTimeMillis();
+            ActiveGameState.setLoadId(id);
+
+            //The name the user put in -> Create a file with this text as name
+            String savegamename = textField.getText();
+
+
+            boolean saveSuccess;
+            //Save the game with ID, when multiplayer is selected
+            if (ActiveGameState.isMultiplayer()) {
+                saveSuccess = SaveAndLoad.save(savegamename, id);
+            }
+            else{
+                saveSuccess = SaveAndLoad.save(savegamename);
+            }
+
+
+            if(saveSuccess){
+                saveStage.setScene(success);
+                //TODO YANNICK Display -> Spiel wurde gespeichert -> Zum Hauptmenü zurückkehren (Am besten anch 3-5 sekunden, kein button benötigt) Dabei alle Threads beenden (interrupt)
+
+            }
+            else {
+                //TODO LoggingNetwork Level SEVERE -> Error at saving
+            }
+        });
+
+        VBox textAndButton = new VBox(15);
+        textAndButton.getChildren().addAll(textField, saveAndMain);
+        textAndButton.setAlignment(Pos.CENTER);
+
+        save = new Scene(textAndButton, width, height);
+        save.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
+
+
+
+        // Scene 3 - successfully saved
+        Label successfull = new Label("Speichern erfolgreich!");
         Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(e -> {
-            save.close();
+            saveStage.close();
             Main.primaryStage.close();
         });
         Button backToMainManu = new Button("Hauptmenü");
@@ -97,7 +159,7 @@ public class CancelGame {
             try {
                 mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
-                save.close();
+                saveStage.close();
                 Main.primaryStage.show();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -115,9 +177,9 @@ public class CancelGame {
         success = new Scene(layout2, width, height);
         success.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
 
-        save.setScene(choose);
-        HelpMethods.alignStageCenter(save, width, height);
-        save.setResizable(false);
-        save.showAndWait();
+        saveStage.setScene(choose);
+        HelpMethods.alignStageCenter(saveStage, width, height);
+        saveStage.setResizable(false);
+        saveStage.showAndWait();
     }
 }

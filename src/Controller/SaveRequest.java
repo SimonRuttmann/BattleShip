@@ -35,8 +35,11 @@ public class SaveRequest {
 
         // Label + Button
         Label remoteSaveRequest = new Label("Speicheranfrage vom Spielpartner!");
-        TextField textField = new TextField("Speichername eingeben");
+        TextField textField = new TextField();
+        textField.setPromptText("Speichernamen eingeben");
+        textField.setMaxWidth(250);
         Button saveAndMain = new Button("Speichern & Hauptmenü");
+        saveAndMain.setDisable(true);
 
         // saveAndMain is only clickable, when save name is valid
         textField.textProperty().addListener((observable, oldValue, newValue) -> {

@@ -16,7 +16,8 @@ import java.util.Set;
 //Wäre whr sinnvoll die Ki in Klassen zu unterteilen, die Ki, bei der placeShips aufgerufen wird, ist die KI als  placementKi in ActiveGamestate gespeichert
 //Beim beschießen gibt es 2 instanzen, enemyKi und ownKi, welche im ActiveGameState auch als KI gespeichert sind, diese brauchen die getShot methode
 public class Ki implements IKi{
-    public enum Difficulty {normal, hard}
+    public enum Difficulty {undefined, normal, hard}
+
 
     /**
      * Bugfixed
@@ -81,8 +82,9 @@ public class Ki implements IKi{
     }
 
     protected int Playgroundsize;
-
-    public Ki(){
+    private final Difficulty difficulty;
+    public Ki(Ki.Difficulty difficulty){
+        this.difficulty = difficulty;
         Playgroundsize = ActiveGameState.getPlaygroundSize();
     }
 
@@ -500,25 +502,32 @@ private int debugg = 0;
 
 
     //erstellt zufällig eine int zahl in einer vorgegebenen range also von bis
+    //min ausgeschlossen, max eingeschlossen
     private static int getRandomInt(int min, int max) {
         if (min >= max) {
             throw new IllegalArgumentException("max must be greater than min in KI");
         }
         Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
+        return r.nextInt((max - min) ) + min;
+        //r.nextInt( size - 0 ) + 0
+        // r.nextInt (size)
     }
 
+    //min 5
+    //max 10
+    // ->11
 
     //gibt einen Punkt zurück
     @Override
     public ShotResponse getShot(IOwnPlayground playground) {
+        System.out.println("Schwierigkeitsgrad: " + this.difficulty);
         //die Ki besitzt die Schwierigkeit = normal
-        if(ActiveGameState.getDifficulty() == 0){
+        if(this.difficulty == Difficulty.normal){
             boolean success = normaleKi(playground);
             if ( !success ) return null;
             return this.shotResponseFromKI;
         }
-        if(ActiveGameState.getDifficulty() == 1){
+        if(this.difficulty == Difficulty.hard){
             boolean success = schwereKi(playground);
             if ( !success ) return null;
             return this.shotResponseFromKI;
@@ -598,7 +607,7 @@ private int debugg = 0;
 
             Point currentShot = hardKiShot();
 
-            answerofShot = shootPlayground(currentShot, playground);
+            answerofShot = shootPlayground(currentShot, playground);    //TODO curentShot index out of bound Exception Point: -2 6
             if ( shotResponseFromKI == null ) return false;
 
 
@@ -641,8 +650,8 @@ private int debugg = 0;
     /*
     Variabls for hardKIshot- Method
      */
-    private ArrayList<Point> takticalDots = new ArrayList();
-    private int timesOfShootingAPointInTacticalDotsArray = 0;
+    private ArrayList<Point> takticalDots = new ArrayList<>();
+
     private boolean searchAnewShip = true;
     private Point hardKiShot(){
 
@@ -654,10 +663,16 @@ private int debugg = 0;
                 for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
                     if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
                         takticalDots.add(new Point(x,y));
+                        //DEBUG
+                        System.out.println( "Pos in taktical Dots");
+                        for(Point point: takticalDots){
+                            System.out.println( point.getX() +" " +  point.getY());
+                        }
+                        //DEBUG
                     }
                 }
             }
-            timesOfShootingAPointInTacticalDotsArray = 0;
+
             searchAnewShip = false;
         }
         if(searchAnewShip && ShipsWithSize4 != 0){
@@ -669,7 +684,7 @@ private int debugg = 0;
                     }
                 }
             }
-            timesOfShootingAPointInTacticalDotsArray = 0;
+
             searchAnewShip = false;
         }
         if(searchAnewShip && ShipsWithSize3 != 0){
@@ -681,7 +696,7 @@ private int debugg = 0;
                     }
                 }
             }
-            timesOfShootingAPointInTacticalDotsArray = 0;
+
             searchAnewShip = false;
         }
         if(searchAnewShip && ShipsWithSize2 != 0){
@@ -693,15 +708,14 @@ private int debugg = 0;
                     }
                 }
             }
-            timesOfShootingAPointInTacticalDotsArray = 0;
+
             searchAnewShip = false;
         }
-
-        int randy = getRandomInt(0, takticalDots.size() - timesOfShootingAPointInTacticalDotsArray);
+        int randy = getRandomInt(0, takticalDots.size() ) ; //max 0 -> size war 0 -> ArrayListe leer
         Point newShot = takticalDots.get(randy);
         //remove shifts any subsequent elements to the left
         takticalDots.remove(randy);
-        timesOfShootingAPointInTacticalDotsArray++;
+
         return newShot;
     }
 
@@ -729,6 +743,10 @@ private int debugg = 0;
 
 
     private boolean checkIfTacticMakesSense(Point p, int size){
+        //Point is not in the playground
+        if ( !( p.getX() >= 0 && p.getX() < ActiveGameState.getPlaygroundSize() &&
+                p.getY() >= 0 && p.getY() < ActiveGameState.getPlaygroundSize()) ) return false;
+
         int spaceCountHorizontal = 0;
         int spaceCountVertical = 0;
 

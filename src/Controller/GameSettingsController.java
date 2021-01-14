@@ -94,11 +94,12 @@ public class GameSettingsController implements Initializable{
     public void setGameModeAndKi(){
         if (this.host_RbSelectKInormal.isSelected() || this.host_RbSelectKIhard.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
-            ActiveGameState.setOwnKi(new Ki());
             if (this.host_RbSelectKInormal.isSelected())
                 ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
             else
                 ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
+
+            ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
         } else {
             ActiveGameState.setModes(GameMode.playerVsRemote);
         }
@@ -107,6 +108,8 @@ public class GameSettingsController implements Initializable{
 
 
     public void startShipPlacement(ActionEvent actionEvent) throws IOException{
+
+
         //Set the selected Settings to ActiveGameState
         ActiveGameState.setPlaygroundSize(this.selectPlaygroundsizeSlider.valueProperty().intValue());
         ActiveGameState.setAmountShipSize2(selectAmount2Ships.getValue());
@@ -128,20 +131,45 @@ public class GameSettingsController implements Initializable{
             MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
             multiplayerControlThreadConfigCommunication.start();
         }
+        //Singleplayer
+        else {
 
-        //Set Scene if singleplayer mode is selected
-        switch (ActiveGameState.getModes()){
-            case kiVsKi:        ActiveGameState.setRunning(true);
-                                Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-                                Main.primaryStage.setScene(new Scene(gamePlayground));
-                                Main.primaryStage.show();
-                                break;
+            if (this.rB_difficultyOwnNormal.isSelected()){
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
+            }
+            if (this.rB_difficultyOwnHard.isSelected()){
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
+            }
+            if (this.rB_difficultyEnemyNormal.isSelected()){
+                ActiveGameState.setEnemyKiDifficulty(Ki.Difficulty.normal);
+            }
+            if (this.rB_difficultyEnemyHard.isSelected()){
+                ActiveGameState.setEnemyKiDifficulty(Ki.Difficulty.hard);
+            }
 
-            case playerVsKi:    ActiveGameState.setRunning(true);
-                                Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
-                                Main.primaryStage.setScene(new Scene(placeShips));
-                                Main.primaryStage.show();
-                                break;
+            //Set Scene if singleplayer mode is selected
+            switch (ActiveGameState.getModes()) {
+                case kiVsKi:
+
+                    ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
+                    ActiveGameState.setEnemyKi(new Ki ( ActiveGameState.getEnemyKiDifficulty()));
+
+                    ActiveGameState.setRunning(true);
+                    Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                    Main.primaryStage.setScene(new Scene(gamePlayground));
+                    Main.primaryStage.show();
+                    break;
+
+                case playerVsKi:
+
+                    ActiveGameState.setEnemyKi(new Ki(ActiveGameState.getEnemyKiDifficulty()));
+
+                    ActiveGameState.setRunning(true);
+                    Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+                    Main.primaryStage.setScene(new Scene(placeShips));
+                    Main.primaryStage.show();
+                    break;
+            }
         }
 
     }

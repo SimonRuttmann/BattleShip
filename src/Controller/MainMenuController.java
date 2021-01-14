@@ -56,7 +56,7 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setYourTurn(true);
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.playerVsKi);
-        ActiveGameState.setEnemyKi(new Ki());
+        ActiveGameState.setEnemyKi(new Ki(ActiveGameState.getEnemyKiDifficulty()));
 
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
@@ -68,8 +68,8 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setYourTurn(true);
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.kiVsKi);
-        ActiveGameState.setOwnKi(new Ki());
-        ActiveGameState.setEnemyKi(new Ki());
+        /*ActiveGameState.setOwnKi(new Ki());
+        ActiveGameState.setEnemyKi(new Ki());*/
 
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
@@ -226,8 +226,10 @@ public class MainMenuController implements Initializable {
     private static boolean playingMusic;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println(ActiveGameState.getLanguage());
+
         //KI needs to be added, to get functionality of KI Methods (place ships random, shoot enemy)
-        ActiveGameState.setPlacementKi(new Ki());
+        ActiveGameState.setPlacementKi(new Ki(Ki.Difficulty.undefined));
 
         System.out.println("Main Menu");
         setBackground();

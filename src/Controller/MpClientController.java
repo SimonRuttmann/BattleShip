@@ -64,7 +64,7 @@ public class MpClientController implements Initializable {
     public void setGameModeAndKi(){
         if (this.client_RbSelectKInormal.isSelected() || this.client_RbSelectKIhard.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
-            ActiveGameState.setOwnKi(new Ki());
+            ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
             if (this.client_RbSelectKInormal.isSelected())
                 ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
             else

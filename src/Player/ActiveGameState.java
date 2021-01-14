@@ -144,8 +144,8 @@ public class ActiveGameState {
     private static int amountShipSize3;
     private static int amountShipSize4;
     private static int amountShipSize5;
-    private static Ki EnemyKi = new Ki();
-    private static Ki OwnKi = new Ki();
+    private static Ki EnemyKi = new Ki(Ki.Difficulty.undefined);
+    private static Ki OwnKi = new Ki(Ki.Difficulty.undefined);
     private static Ki placementKi;
 
     public static Ki getPlacementKi() {
@@ -177,7 +177,7 @@ public class ActiveGameState {
 
     private static boolean sceneIsGamePlayground = false;
 
-    public static int getDifficulty() {
+   /* public static int getDifficulty() {
         return difficulty;
     }
 
@@ -186,6 +186,7 @@ public class ActiveGameState {
     }
 
     private static int difficulty; //wählt die Schwierigkeit aus, 0 = normal, 1 = schwer
+    */
     private static Ki.Difficulty ownKiDifficulty;//TODO einbinden, difficulty reicht hier bei 2 verschiedenen nicht aus
     private static Ki.Difficulty enemyKiDifficulty;
     //TODO evtl enum

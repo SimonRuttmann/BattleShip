@@ -2,10 +2,7 @@ package Controller;
 
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
-import Player.ActiveGameState;
-import Player.GameMode;
-import Player.SaveAndLoad;
-import Player.Savegame;
+import Player.*;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -58,42 +55,66 @@ public class LoadGameController implements Initializable {
 
 
     public void backToMainMenu(ActionEvent actionEvent) throws IOException {
-        switch (ActiveGameState.getModes()){
-            case playerVsKi:
-            case kiVsKi:            Parent mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
-                                    Main.primaryStage.setScene(new Scene(mainMenu));
-                                    Main.primaryStage.show();
-                                    break;
-
-            case playerVsRemote:
-            case kiVsRemote:        Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
-                                    Main.primaryStage.setScene(new Scene(gameSettings));
-                                    Main.primaryStage.show();
-        }
-
+        Parent mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+        Main.primaryStage.setScene(new Scene(mainMenu));
+        Main.primaryStage.show();
     }
 
+//TODO Load Singleplayer, MUltiplayer, none setzen
     public void loadSelectedGame(ActionEvent actionEvent) throws IOException{
-        SaveAndLoad.load("NEED INPUT");
-        //Load Game here
-        //KI vs KI soll / kann nicht geladen werden
-        //vs Remote -> Verbindung bereits hergestellt (Game Settings Load aufruf) -> Comm Thread starten -> Load (noch zu implementieren)
-        ActiveGameState.setLoadGame(true);
-        ActiveGameState.setLoadId(234); //TODO
-        switch( ActiveGameState.getModes()){
-            case playerVsRemote:
-            case kiVsRemote:    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
-                                multiplayerControlThreadConfigCommunication.start();
-                                break;
-            case playerVsKi:    Parent playground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-                                Main.primaryStage.setScene(new Scene(playground));
-                                Main.primaryStage.show();
+        ObservableList<File> fileObservableList = this.gameList.getSelectionModel().getSelectedItems();
+        File fileToLoad  = fileObservableList.get(0); //As only one items is selected
+        String pathOfFile = fileToLoad.getPath();
+
+        Savegame loadedSavegame = SaveAndLoad.load(pathOfFile);
+        if ( loadedSavegame == null) {
+            System.out.println( "loading failed" );
         }
+        else{
+            System.out.println( "loading successfull");
+        }
+
+        //Singleplayergame -> Playground
+        if (ActiveGameState.getLoading() == ActiveGameState.Loading.singleplayer ){
+        Platform.runLater( () -> {
+                    Parent game;
+                    try {
+                        game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                        Main.primaryStage.setScene(new Scene(game));
+                        Main.primaryStage.show();
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+
+
+                });
+        }
+        //Starting Multiplayer games by hosting a game
+        else if ( ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer){
+            Platform.runLater( () -> {
+                Parent game;
+                try {
+                    game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MpServer.fxml"));
+                    Main.primaryStage.setScene(new Scene(game));
+                    Main.primaryStage.show();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+
+
+            });
+        }
+        else{
+            System.out.println( "Loading: Multiplayer or Singleplayer not selected at loading a game");
+        }
+        //TODO
+        //ActiveGameState.setLoadId(0);
 
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         setUpListView();
 
         setBackground();
@@ -102,9 +123,6 @@ public class LoadGameController implements Initializable {
         setLineSettings();
         setRectangleSettings();
         startAnimation();
-
-        if ( ActiveGameState.getModes() == GameMode.kiVsRemote || ActiveGameState.getModes() == GameMode.playerVsRemote)
-            this.backButton.setText("Back to Settings");
 
     }
 
@@ -149,42 +167,53 @@ public class LoadGameController implements Initializable {
                 // load -> changes scene to game, loads game using SaveAndLoad.load()
                 MenuItem load = new MenuItem("Spielstand laden");
                 load.setOnAction(e -> {
-                            // loading .json file from memory: .savedGames
-                            System.out.println(cell.getItem());
 
-                            // loads the game associated with the cell -> gameObject only used for control if loading was successfully
-                            String temp = cell.getItem().toString();
-                            Savegame gameObject = SaveAndLoad.load(temp);
+                    System.out.println(cell.getItem());
 
-                            // test if loading was successfully todo Fehler beim Laden abfangen
-                            if (gameObject != null)
-                                System.out.println("loading successful");
-                            else
-                                System.out.println("loading failed");
+                    String temp = cell.getItem().toString();
+                    Savegame gameObject = SaveAndLoad.load(temp);
+
+                    if (gameObject != null) {
+                        System.out.println("loading successful");
+                    }
+                    else{
+                        System.out.println("loading failed");
+                    }
+
+                    // Change scene to game Playground
+               /*     Platform.runLater( () -> {
+                        Parent game = null;
+                        try {
+                            game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
+                        Main.primaryStage.setScene(new Scene(game));
+                        Main.primaryStage.show();
+*/
+                   // });
 
 
-                            // Change scene to game Playground
-                            Platform.runLater(() -> {
-                                Parent game = null;
-                                try {
-                                    game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-                                } catch (IOException ioException) {
-                                    ioException.printStackTrace();
-                                }
-                                assert game != null;
-                                Main.primaryStage.setScene(new Scene(game));
-                                Main.primaryStage.show();
-                            });
-                        });
+                });
 
-                // delete -> deletes game file from list and system
+                // delete -> deltes game file from list and also from system
                 MenuItem delete = new MenuItem("Spielstand löschen");
                 delete.setOnAction(e -> {
-                    System.out.println("Deleted Item: " + cell.getItem().toString());
+                    System.out.println("Delete Item" + cell.getItem().toString());
+
+                    //Remove linker in multiplayer savegames
+                    String fileNameToDelete = cell.getItem().toString();
+                    boolean linkerDeleted = true;
+                    if (ActiveGameState.isMultiplayer()){
+                        linkerDeleted = SavegameLinker.removeLinker(fileNameToDelete);
+                        if (!linkerDeleted) System.out.println("Exception thrown at removing linker to savegame name: " + fileNameToDelete);
+                    }
+
+
                     File game = cell.getItem();
                     gameList.getItems().remove(game);
-                    if(!game.delete())
-                        System.out.println("Deleting file failed!");
+                  //  gameList.getItems().remove(cell.getItem());
+                    if(!(game.delete())) System.out.println( "Couldn`t delete file");
                 });
                 contextMenu.getItems().addAll(load, delete);
 

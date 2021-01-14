@@ -3,6 +3,7 @@ package Controller;
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.HelpMethods;
 import Gui_View.Main;
+import KI.Ki;
 import Network.Client;
 import Player.ActiveGameState;
 import Player.GameMode;
@@ -14,10 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
@@ -51,7 +49,9 @@ public class MpClientController implements Initializable {
     public Label infoLabel;
 
     public static Label infoLabelS;
-
+    public RadioButton client_RbSelectKInormal;
+    public VBox client_selectRole;
+    public RadioButton client_RbSelectKIhard;
 
 
     public void backToMainMenu(ActionEvent actionEvent) throws IOException {
@@ -61,7 +61,27 @@ public class MpClientController implements Initializable {
     }
 
 
+    public void setGameModeAndKi(){
+        if (this.client_RbSelectKInormal.isSelected() || this.client_RbSelectKIhard.isSelected()) {
+            ActiveGameState.setModes(GameMode.kiVsRemote);
+            if (this.client_RbSelectKInormal.isSelected()){
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
+                ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
+            }
+            else {
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
+                ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
+            }
+        } else {
+            ActiveGameState.setModes(GameMode.playerVsRemote);
+        }
+    }
+
+
     public void connect(ActionEvent actionEvent) {
+
+        setGameModeAndKi();
+
         ActiveGameState.setAmIServer(false);
         loadingIndicator.setVisible(true);
         button_Start.setVisible(false);
@@ -109,9 +129,38 @@ public class MpClientController implements Initializable {
         setLineSettings();
         setRectangleSettings();
         setInfoLabelInvisible(true);
+        setRadioButtonSettings();
         startAnimation();
 
     }
+
+
+
+    public void setRadioButtonSettings(){
+        Color rB_color = new Color(0.8, 0.8, 0.8, 1);
+
+        //Radio Buttons
+        //Shadows are too big -> Events will trigger to far
+
+        this.client_RbSelectKInormal.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        this.client_RbSelectKInormal.setTextFill(rB_color);
+        //  this.rightBarMultiplayer_RbSelectKInormal.setEffect(new DropShadow(30, Color.BLACK));
+
+        this.client_RbSelectKIhard.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        this.client_RbSelectKIhard.setTextFill(rB_color);
+        //   this.rightBarMultiplayer_RbSelectKIhard.setEffect(new DropShadow(30, Color.BLACK));
+
+        client_RbSelectKInormal.setOnAction( event -> {
+            client_RbSelectKIhard.setSelected(false);
+        });
+
+        client_RbSelectKIhard.setOnAction( event -> {
+            client_RbSelectKInormal.setSelected(false);
+        });
+
+    }
+
+
 
 
     public void setInfoLabelInvisible(boolean invisible){

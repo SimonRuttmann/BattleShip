@@ -40,12 +40,15 @@ import javafx.scene.text.Text;
 public class MainMenuController implements Initializable {
 
 
-    public StackPane rightBar_Mult_SpSelectRole;
-    public Polygon rightBarMultiplayer_PolySelectRole;
-    public VBox rightBarMultiplayer_VBoxSelectRole;
+    //blic StackPane rightBar_Mult_SpSelectRole;
+    //public Polygon rightBarMultiplayer_PolySelectRole;
+    //public VBox rightBarMultiplayer_VBoxSelectRole;
 
-    public RadioButton rightBarMultiplayer_RbSelectKInormal;
-    public RadioButton rightBarMultiplayer_RbSelectKIhard;
+    //public RadioButton rightBarMultiplayer_RbSelectKInormal;
+    //public RadioButton rightBarMultiplayer_RbSelectKIhard;
+    public StackPane rightBar_Mult_LoadPolyText;
+    public Polygon rightBarMultiplayer_PolyLoad;
+    public Text rightBarMultiplayer_TextLoad;
 
     /**External Handling's**/
     //Singleplayer Player vs KI
@@ -53,7 +56,7 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setYourTurn(true);
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.playerVsKi);
-        ActiveGameState.setEnemyKi(new Ki());
+        ActiveGameState.setEnemyKi(new Ki(ActiveGameState.getEnemyKiDifficulty()));
 
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
@@ -65,8 +68,8 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setYourTurn(true);
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.kiVsKi);
-        ActiveGameState.setOwnKi(new Ki());
-        ActiveGameState.setEnemyKi(new Ki());
+        /*ActiveGameState.setOwnKi(new Ki());
+        ActiveGameState.setEnemyKi(new Ki());*/
 
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
@@ -74,11 +77,26 @@ public class MainMenuController implements Initializable {
     }
 
     //Singleplayer Load Game
-    public void startLoadGame(MouseEvent mouseEvent) throws IOException{
-
+    public void loadSinglGame(MouseEvent mouseEvent) throws IOException{
+        ActiveGameState.setLoading(ActiveGameState.Loading.singleplayer);
         ActiveGameState.setMultiplayer(false);
         ActiveGameState.setModes(GameMode.playerVsKi);
 
+        System.out.println(ActiveGameState.getLoading());
+
+        Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame.fxml"));
+        Main.primaryStage.setScene(new Scene(loadGame));
+        Main.primaryStage.show();
+    }
+
+    //Multiplayer Load Game
+    public void loadMultGame(MouseEvent mouseEvent) throws IOException{
+        ActiveGameState.setLoading(ActiveGameState.Loading.multiplayer);
+        ActiveGameState.setMultiplayer(true);
+        ActiveGameState.setAmIServer(true);
+
+        System.out.println(ActiveGameState.getLoading());
+        
         Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame.fxml"));
         Main.primaryStage.setScene(new Scene(loadGame));
         Main.primaryStage.show();
@@ -91,7 +109,9 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setAmIServer(false);
         ActiveGameState.setYourTurn(false);
 
-        if (this.rightBarMultiplayer_RbSelectKInormal.isSelected() || this.rightBarMultiplayer_RbSelectKIhard.isSelected()) {
+
+        //Alte version ->GameMode für Multiplayer wird in GameSettings(Host) und MPClient (Client) festgelegt
+      /*  if (this.rightBarMultiplayer_RbSelectKInormal.isSelected() || this.rightBarMultiplayer_RbSelectKIhard.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
             ActiveGameState.setOwnKi(new Ki());
             if ( this.rightBarMultiplayer_RbSelectKInormal.isSelected())
@@ -101,7 +121,7 @@ public class MainMenuController implements Initializable {
         }
         else{
             ActiveGameState.setModes(GameMode.playerVsRemote);
-        }
+        }*/
         Parent mpJoin = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MpClient.fxml")); //mpJoin alt
         Main.primaryStage.setScene(new Scene(mpJoin));
         Main.primaryStage.show();
@@ -113,7 +133,7 @@ public class MainMenuController implements Initializable {
         ActiveGameState.setMultiplayer(true);
         ActiveGameState.setAmIServer(true);
         ActiveGameState.setYourTurn(true);
-        if (this.rightBarMultiplayer_RbSelectKInormal.isSelected() || this.rightBarMultiplayer_RbSelectKIhard.isSelected()) {
+  /*      if (this.rightBarMultiplayer_RbSelectKInormal.isSelected() || this.rightBarMultiplayer_RbSelectKIhard.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
             ActiveGameState.setOwnKi(new Ki());
             if ( this.rightBarMultiplayer_RbSelectKInormal.isSelected())
@@ -123,7 +143,7 @@ public class MainMenuController implements Initializable {
         }
         else{
             ActiveGameState.setModes(GameMode.playerVsRemote);
-        }
+        }*/
 
         Parent mpHost = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MpServer.fxml"));
         Main.primaryStage.setScene(new Scene(mpHost));
@@ -206,8 +226,10 @@ public class MainMenuController implements Initializable {
     private static boolean playingMusic;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println(ActiveGameState.getLanguage());
+
         //KI needs to be added, to get functionality of KI Methods (place ships random, shoot enemy)
-        ActiveGameState.setPlacementKi(new Ki());
+        ActiveGameState.setPlacementKi(new Ki(Ki.Difficulty.undefined));
 
         System.out.println("Main Menu");
         setBackground();
@@ -216,7 +238,7 @@ public class MainMenuController implements Initializable {
         setRightBarMultiplayerInvisible(true);
         setTextSettings();
         setTitleSettings();
-        setRadioButtonSettings();
+     //   setRadioButtonSettings();
         setLineSettings();
         setPolygonSettings(); //BOTH SIDES!
         startAnimationLeftSide();
@@ -495,7 +517,7 @@ public class MainMenuController implements Initializable {
         //Die StackPanes
         this.rightBar_Mult_HostPolyText.setTranslateX(from);
         this.rightBar_Mult_ClientPolyText.setTranslateX(from);
-        this.rightBar_Mult_SpSelectRole.setTranslateX(from);
+        this.rightBar_Mult_LoadPolyText.setTranslateX(from);
 
 
         //Notwendiges Rechteck, damit die Items erst angezeigt werden, wenn sie durch die Linie hindurchgehen
@@ -508,8 +530,8 @@ public class MainMenuController implements Initializable {
         this.rightBar_Mult_ClientPolyText.setClip(clip);
 
         clip = new Rectangle(300,100);
-        clip.translateXProperty().bind(rightBar_Mult_SpSelectRole.translateXProperty().negate());
-        this.rightBar_Mult_SpSelectRole.setClip(clip);
+        clip.translateXProperty().bind(rightBar_Mult_LoadPolyText.translateXProperty().negate());
+        this.rightBar_Mult_LoadPolyText.setClip(clip);
 
 
         //-> After the right line is drawn
@@ -525,7 +547,7 @@ public class MainMenuController implements Initializable {
             slideElements.setToX(0);
             slideElements.play();
 
-            slideElements = new TranslateTransition(Duration.seconds(1+1.3*slideSpeed), this.rightBar_Mult_SpSelectRole);
+            slideElements = new TranslateTransition(Duration.seconds(1+1.3*slideSpeed), this.rightBar_Mult_LoadPolyText);
             slideElements.setToX(0);
             slideElements.play();
 
@@ -557,7 +579,7 @@ public class MainMenuController implements Initializable {
         //Multiplayer
         polygons.add(rightBarMultplayer_PolyHost);
         polygons.add(rightBarMultiplayer_PolyClient);
-        polygons.add(rightBarMultiplayer_PolySelectRole);
+        polygons.add(rightBarMultiplayer_PolyLoad);
 
         //Text
         //Left Side
@@ -566,6 +588,7 @@ public class MainMenuController implements Initializable {
         texts.add(textMultiplayer);
         texts.add(textSettings);
         texts.add(textQuitGame);
+
         //Right Side
         //Singleplayer
         texts.add(rightBarSinglplayer_TextPlayerVsKI);
@@ -575,6 +598,7 @@ public class MainMenuController implements Initializable {
         //Multiplayer
         texts.add(rightBarMultiplayer_TextHost);
         texts.add(rightBarMultiplayer_TextClient);
+        texts.add(rightBarMultiplayer_TextLoad);
 
 
         //The StackPane contains the Text and the Polygon
@@ -594,7 +618,7 @@ public class MainMenuController implements Initializable {
         //Multiplayer
         stackPanes.add(rightBar_Mult_HostPolyText);
         stackPanes.add(rightBar_Mult_ClientPolyText);
-        stackPanes.add(rightBar_Mult_SpSelectRole);
+        stackPanes.add(rightBar_Mult_LoadPolyText);
 
         for(Polygon polygon : polygons) {
             //Draw the Polygons right, for any reason it is not allowed to do in the scene builder...
@@ -611,14 +635,14 @@ public class MainMenuController implements Initializable {
 
         }
 
-        this.rightBarMultiplayer_PolySelectRole.getPoints().removeAll();
+        /*this.rightBarMultiplayer_PolySelectRole.getPoints().removeAll();
         this.rightBarMultiplayer_PolySelectRole.getPoints().setAll(
                 -75.0, 0.0,         //Oben links
                 180.0, 0.0,         //Oben rechts
                 215.0, 40.0,        //Spitze
                 180.0, 80.0,        //Unten rechts
                 -75.0, 80.0         //Unten links
-        );
+        );*/
 
         //Adding effects to the Text and Polygons based on the properties of the StackPanes
         for (int i = 0; i < polygons.size(); i++){
@@ -630,7 +654,7 @@ public class MainMenuController implements Initializable {
                             .otherwise(Color.color(1, 1, 1, 0.7))
             );
 
-            if (i == 9) break;  // Role selection has no text
+            /*if (i == 9) break;  // Role selection has no text*/
             //Text effects
             texts.get(i).effectProperty().bind(
                     Bindings.when(stackPanes.get(i).hoverProperty())
@@ -673,6 +697,7 @@ public class MainMenuController implements Initializable {
         //Multiplayer
         rightBarText.add(this.rightBarMultiplayer_TextHost);
         rightBarText.add(this.rightBarMultiplayer_TextClient);
+        rightBarText.add(this.rightBarMultiplayer_TextLoad);
 
 
         Color textColorRightBar = new Color(0.2, 0.2, 0.2, 1);
@@ -688,7 +713,7 @@ public class MainMenuController implements Initializable {
 
     }
 
-    public void setRadioButtonSettings(){
+    /*public void setRadioButtonSettings(){
         Color textColorRightBar = new Color(0.2, 0.2, 0.2, 1);
 
         //Radio Buttons
@@ -710,7 +735,7 @@ public class MainMenuController implements Initializable {
             rightBarMultiplayer_RbSelectKInormal.setSelected(false);
         });
 
-    }
+    }*/
 
 
     public void singleplayerSelected(MouseEvent mouseEvent) {

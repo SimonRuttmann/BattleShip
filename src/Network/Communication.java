@@ -83,6 +83,7 @@ public abstract class Communication implements ICommunication{
             System.out.println( "The received Data is not valid");
             return null;
     //TODO SocketTimoutException Read timed out -> bei .readLine();
+            //TODO SocketException Connection Reset
         }
         //Exception handling
         //In those cases the handler´s, calling this method need the command timeout

@@ -16,7 +16,8 @@ import java.util.Set;
 //Wäre whr sinnvoll die Ki in Klassen zu unterteilen, die Ki, bei der placeShips aufgerufen wird, ist die KI als  placementKi in ActiveGamestate gespeichert
 //Beim beschießen gibt es 2 instanzen, enemyKi und ownKi, welche im ActiveGameState auch als KI gespeichert sind, diese brauchen die getShot methode
 public class Ki implements IKi{
-    public enum Difficulty {normal, hard};
+    public enum Difficulty {undefined, normal, hard}
+
 
     /**
      * Bugfixed
@@ -81,8 +82,9 @@ public class Ki implements IKi{
     }
 
     protected int Playgroundsize;
-
-    public Ki(){
+    private final Difficulty difficulty;
+    public Ki(Ki.Difficulty difficulty){
+        this.difficulty = difficulty;
         Playgroundsize = ActiveGameState.getPlaygroundSize();
     }
 
@@ -290,7 +292,6 @@ private int debugg = 0;
             kiShips.add(ship);
         }
 
-        //TODO PLaygroubndsize ist von 0 bis playgroundsize - 1, kann sein dass dabei noch irgendwo ein fehler auftreten kann
         /*Ablauf:
         1. Zufälliger Punkt wird erstellt und ein dazu eine gültige und passende Ausrichtung des Schiffs
         2. Die Schiffspunkte werden in eine Arrayliste gespeichert
@@ -401,7 +402,6 @@ private int debugg = 0;
 
         /*Prüft für den random Punkt, ob das Ship von ihm aus ins Feld Passt und eine zufällige richtung, wird in 20 versuchen kein Ergebnis gefunden, wird in der
         do -while-Schleife in der placeships- Methode ein neuer zufälliger Punkt erstellt  und für diesen dann diese Überprüfung erneut gemacht*/
-        //TODO abchecken wie die Playgroundgröße vorgegeben ist, dann eventl die vergleiche < <= und so anpasssen
     protected int getPlacementStyle(Point p, int size, int playgrounds, ArrayList<Point> list){
         int style;
         int count = 0;
@@ -502,28 +502,35 @@ private int debugg = 0;
 
 
     //erstellt zufällig eine int zahl in einer vorgegebenen range also von bis
+    //min ausgeschlossen, max eingeschlossen
     private static int getRandomInt(int min, int max) {
         if (min >= max) {
             throw new IllegalArgumentException("max must be greater than min in KI");
         }
         Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
+        return r.nextInt((max - min) ) + min;
+        //r.nextInt( size - 0 ) + 0
+        // r.nextInt (size)
     }
 
+    //min 5
+    //max 10
+    // ->11
 
     //gibt einen Punkt zurück
     @Override
     public ShotResponse getShot(IOwnPlayground playground) {
+        System.out.println("Schwierigkeitsgrad: " + this.difficulty);
         //die Ki besitzt die Schwierigkeit = normal
-        if(ActiveGameState.getDifficulty() == 0){
-            Point returnShot;
+        if(this.difficulty == Difficulty.normal){
             boolean success = normaleKi(playground);
             if ( !success ) return null;
             return this.shotResponseFromKI;
-            //TODO die normale KI unbedingt zuerst Testen sobald möglich !!
-            // die Ki besitzt die Schwierigkeit = schwer
-        }else{
-            //TODO schwere KI
+        }
+        if(this.difficulty == Difficulty.hard){
+            boolean success = schwereKi(playground);
+            if ( !success ) return null;
+            return this.shotResponseFromKI;
         }
         return null;
     }
@@ -589,6 +596,199 @@ private int debugg = 0;
         }
 
         return true;
+    }
+    protected boolean schwereKi(IOwnPlayground playground){
+        ShotResponse answerofShot;
+
+        //wird beim ersten Aufruf betreten, da der Default Wert von isHitFlag = false ist
+        if(this.destroyStatus == DestroyStatus.notFound){
+
+            System.out.println("first shoot call");
+
+            Point currentShot = hardKiShot();
+
+            answerofShot = shootPlayground(currentShot, playground);    //TODO curentShot index out of bound Exception Point: -2 6
+            if ( shotResponseFromKI == null ) return false;
+
+
+            this.shotResponseFromKI = answerofShot;
+            shotResponseFromKI.setShotPosition(currentShot);
+            previousShots.add(currentShot);
+
+
+            System.out.println(currentShot.getX());
+            System.out.println(currentShot.getY());
+
+            if(answerofShot.isHit()){
+                destroyStatus = DestroyStatus.destroying;
+                nextLocation = NextLocation.nextTop;
+                needRandomLocation = true;
+
+                isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
+                firstHit = new Point(currentShot.getX(), currentShot.getY()); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert
+                previousShots.add(new Point(currentShot.getX(), currentShot.getY()));//der Punkt wird gespeichert
+                startDestroy = true;
+
+            }
+            else{
+                this.destroyStatus = DestroyStatus.notFound;
+                //previousShots.add(new Point(random_x, random_y)); //es ist kein Treffer und der Punkt wird gespeichert und zuückgegeben
+
+            }
+        }
+
+        else if(destroyStatus == DestroyStatus.destroying){
+
+            return destroyShip(firstHit, playground);
+
+
+        }
+
+        return true;
+    }
+
+    /*
+    Variabls for hardKIshot- Method
+     */
+    private ArrayList<Point> takticalDots = new ArrayList<>();
+
+    private boolean searchAnewShip = true;
+    private Point hardKiShot(){
+
+        //fill Search-Array-List with every Dot that makes sense to shoot except the ones that are already shot
+        int searchedShip;
+        if(searchAnewShip && ShipsWithSize5 != 0){
+            searchedShip = 5;
+            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
+                for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
+                    if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
+                        takticalDots.add(new Point(x,y));
+                        //DEBUG
+                        System.out.println( "Pos in taktical Dots");
+                        for(Point point: takticalDots){
+                            System.out.println( point.getX() +" " +  point.getY());
+                        }
+                        //DEBUG
+                    }
+                }
+            }
+
+            searchAnewShip = false;
+        }
+        if(searchAnewShip && ShipsWithSize4 != 0){
+            searchedShip = 4;
+            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
+                for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
+                    if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
+                        takticalDots.add(new Point(x,y));
+                    }
+                }
+            }
+
+            searchAnewShip = false;
+        }
+        if(searchAnewShip && ShipsWithSize3 != 0){
+            searchedShip = 3;
+            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
+                for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
+                    if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
+                        takticalDots.add(new Point(x,y));
+                    }
+                }
+            }
+
+            searchAnewShip = false;
+        }
+        if(searchAnewShip && ShipsWithSize2 != 0){
+            searchedShip = 2;
+            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
+                for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
+                    if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
+                        takticalDots.add(new Point(x,y));
+                    }
+                }
+            }
+
+            searchAnewShip = false;
+        }
+        int randy = getRandomInt(0, takticalDots.size() ) ; //max 0 -> size war 0 -> ArrayListe leer
+        Point newShot = takticalDots.get(randy);
+        //remove shifts any subsequent elements to the left
+        takticalDots.remove(randy);
+
+        return newShot;
+    }
+
+    private int ShipsWithSize5 = ActiveGameState.getAmountShipSize5();
+    private int ShipsWithSize4 = ActiveGameState.getAmountShipSize4();
+    private int ShipsWithSize3 = ActiveGameState.getAmountShipSize3();
+    private int ShipsWithSize2 = ActiveGameState.getAmountShipSize2();
+
+    private void incrementDestroyedShipFromTotalShipList(int shipSize){
+        switch(shipSize){
+            case 5:
+                ShipsWithSize5--;
+                break;
+            case 4:
+                ShipsWithSize4--;
+                break;
+            case 3:
+                ShipsWithSize3--;
+                break;
+            case 2:
+                ShipsWithSize2--;
+                break;
+        }
+    }
+
+
+    private boolean checkIfTacticMakesSense(Point p, int size){
+        //Point is not in the playground
+        if ( !( p.getX() >= 0 && p.getX() < ActiveGameState.getPlaygroundSize() &&
+                p.getY() >= 0 && p.getY() < ActiveGameState.getPlaygroundSize()) ) return false;
+
+        int spaceCountHorizontal = 0;
+        int spaceCountVertical = 0;
+
+        //check if there is space = shipLength - 1 in any direction
+
+            //right
+            for(int i = 1; i<size; i++){
+                if(!isNextShotInPreviousList(p.getX() + i , p.getY())){
+                    spaceCountVertical++;
+                }else{
+                    break;
+                }
+            }
+
+            //left
+            for(int i = 1; i<size; i++){
+                if(isNextShotInPreviousList(p.getX() - i , p.getY() )){
+                    spaceCountVertical++;
+                }else{
+                    break;
+                }
+            }
+
+            //bot
+            for(int i = 0; i<size; i++){
+                if(isNextShotInPreviousList(p.getX()  , p.getY() + i )){
+                    spaceCountHorizontal++;
+                }else{
+                    break;
+                }
+            }
+
+            //top
+            for(int i = 0; i<size; i++){
+                if(isNextShotInPreviousList(p.getX() , p.getY()  - i )){
+                    spaceCountHorizontal++;
+                }else{
+                    break;
+                }
+            }
+
+        return spaceCountHorizontal >= size - 1 || spaceCountVertical >= size - 1;
     }
 
     //Alle Variablen die für die destroyShipNotonEdge gebraucht werden
@@ -671,7 +871,7 @@ private int debugg = 0;
 
     private int debug= 0;
 
-    //TODO stand jz sollte die Ki zufällig ein Schiff finden und wenn gefunden auch zerstören (ohne große Taktik)
+    //TODO abchecken ob es möglich ist diese Methode für die normale und die schwere KI aufzurufen ! evtl kollidiert etwas durch "erneut spielen -> gedrückt" während das spiel läuft
     //soll das gefundene Schiff zerstören
     private boolean destroyShip(Point firstHit, IOwnPlayground playground){
 
@@ -682,7 +882,7 @@ private int debugg = 0;
         Point nextPositionToShoot;
 
         while (true) {
-            System.out.println( "while ture durchlauf"); //TODO Endlosschleife
+            System.out.println( "while true durchlauf"); //TODO Endlosschleife
             System.out.println("Next Position to shoot: " + this.nextLocation + " rangeToShot: " + rangeToShot + "Schießursprung: " + firstHit.getX() + " " + firstHit.getY());
             switch (this.nextLocation) {
                 case nextTop:
@@ -701,6 +901,11 @@ private int debugg = 0;
                             this.nextLocation = NextLocation.noDestination;
                             this.rangeToShot = 1;
                             this.destroyStatus = DestroyStatus.notFound;
+
+                            //Part für schwere Ki todo muss überall and diesen Stellen eingefügt werden
+                            incrementDestroyedShipFromTotalShipList(shotResponseFromKI.getSizeOfSunkenShip());
+                            searchAnewShip = true;
+                            takticalDots.clear();
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
@@ -737,6 +942,12 @@ private int debugg = 0;
                             this.rangeToShot = 1;
                             this.destroyStatus = DestroyStatus.notFound;
 
+                            //Part für schwere Ki todo muss überall and diesen Stellen eingefügt werden
+                            //diesen Part in eigene Methode auslagern
+                            incrementDestroyedShipFromTotalShipList(shotResponseFromKI.getSizeOfSunkenShip());
+                            searchAnewShip = true;
+                            takticalDots.clear();
+
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
                         }
@@ -747,7 +958,9 @@ private int debugg = 0;
                         }
                         //no Hit
                         else {
-                            this.nextLocation = NextLocation.nextRight;
+                            //TODO wenn schiff nach unten beschossen wird bis es nicht mehr getroffen wird, dann muss nach oben und nicht nach rechts geschossen werden
+                            //TODO habe daher hier nextTop anstatt nextRight eingefügt
+                            this.nextLocation = NextLocation.nextTop;
                             this.rangeToShot = 1;
                         }
 
@@ -771,6 +984,11 @@ private int debugg = 0;
                             this.nextLocation = NextLocation.noDestination;
                             this.rangeToShot = 1;
                             this.destroyStatus = DestroyStatus.notFound;
+
+                            //Part für schwere Ki todo muss überall and diesen Stellen eingefügt werden
+                            incrementDestroyedShipFromTotalShipList(shotResponseFromKI.getSizeOfSunkenShip());
+                            searchAnewShip = true;
+                            takticalDots.clear();
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
@@ -807,6 +1025,11 @@ private int debugg = 0;
                             this.rangeToShot = 1;
                             this.destroyStatus = DestroyStatus.notFound;
 
+                            //Part für schwere Ki todo muss überall and diesen Stellen eingefügt werden
+                            incrementDestroyedShipFromTotalShipList(shotResponseFromKI.getSizeOfSunkenShip());
+                            searchAnewShip = true;
+                            takticalDots.clear();
+
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
 
@@ -834,7 +1057,6 @@ private int debugg = 0;
             }
         }
 
-        //TODO die KI soll nicht systematisch um den firstHit herum schießen -> mit random arbeiten
         //es wird vom firstHit aus nach oben geschossen, wenn der Rand erreicht ist und das Schiff nicht zerstört, dann wird nach unten vom firstHit aus geschossen bis es zerstört ist
         //wird ein leeres Feld beim beschießen der Felder nach oben getroffen, wird nach unten geschossen bis das Schiffzerstört ist
 

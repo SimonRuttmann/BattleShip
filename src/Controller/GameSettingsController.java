@@ -71,7 +71,11 @@ public class GameSettingsController implements Initializable{
     public Spinner<Integer> selectAmount4Ships;
     public Spinner<Integer> selectAmount5Ships;
     public Text sliderValueText;
-    public Button multiplayerLoadGame;
+    public VBox host_selectRole;
+    public RadioButton host_RbSelectKInormal;
+    public RadioButton host_RbSelectKIhard;
+    public StackPane sP_KIselections;
+
 
     /** External Handling**/
     public void backToMainMenu(ActionEvent actionEvent) throws IOException {
@@ -80,13 +84,32 @@ public class GameSettingsController implements Initializable{
         Main.primaryStage.show();
     }
 
-    public void startLoadMultiplayerGame(ActionEvent actionEvent) throws IOException{
+/*    public void startLoadMultiplayerGame(ActionEvent actionEvent) throws IOException{
         Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame.fxml"));
         Main.primaryStage.setScene(new Scene(loadGame));
         Main.primaryStage.show();
+    }*/
+
+
+    public void setGameModeAndKi(){
+        if (this.host_RbSelectKInormal.isSelected() || this.host_RbSelectKIhard.isSelected()) {
+            ActiveGameState.setModes(GameMode.kiVsRemote);
+            if (this.host_RbSelectKInormal.isSelected())
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
+            else
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
+
+            ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
+        } else {
+            ActiveGameState.setModes(GameMode.playerVsRemote);
+        }
     }
 
+
+
     public void startShipPlacement(ActionEvent actionEvent) throws IOException{
+
+
         //Set the selected Settings to ActiveGameState
         ActiveGameState.setPlaygroundSize(this.selectPlaygroundsizeSlider.valueProperty().intValue());
         ActiveGameState.setAmountShipSize2(selectAmount2Ships.getValue());
@@ -100,27 +123,53 @@ public class GameSettingsController implements Initializable{
         //GameMode and multiplayer related flags are set by the Menu Scene
         //Client and Server socket are set by the Client, Server Scenes
 
-        //Hier sind wir der Host
-        switch (ActiveGameState.getModes()){
-            case playerVsRemote:
-            case kiVsRemote:    MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
-                                multiplayerControlThreadConfigCommunication.start();
-                                break;
+        //Hier sind wir der Host -> Thread zeigt neue Szene
+        if (ActiveGameState.isMultiplayer()){
+
+            setGameModeAndKi();
+
+            MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
+            multiplayerControlThreadConfigCommunication.start();
         }
+        //Singleplayer
+        else {
 
-        //Set Scene if singleplayer mode is selected
-        switch (ActiveGameState.getModes()){
-            case kiVsKi:        ActiveGameState.setRunning(true);
-                                Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-                                Main.primaryStage.setScene(new Scene(gamePlayground));
-                                Main.primaryStage.show();
-                                break;
+            if (this.rB_difficultyOwnNormal.isSelected()){
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
+            }
+            if (this.rB_difficultyOwnHard.isSelected()){
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
+            }
+            if (this.rB_difficultyEnemyNormal.isSelected()){
+                ActiveGameState.setEnemyKiDifficulty(Ki.Difficulty.normal);
+            }
+            if (this.rB_difficultyEnemyHard.isSelected()){
+                ActiveGameState.setEnemyKiDifficulty(Ki.Difficulty.hard);
+            }
 
-            case playerVsKi:    ActiveGameState.setRunning(true);
-                                Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
-                                Main.primaryStage.setScene(new Scene(placeShips));
-                                Main.primaryStage.show();
-                                break;
+            //Set Scene if singleplayer mode is selected
+            switch (ActiveGameState.getModes()) {
+                case kiVsKi:
+
+                    ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
+                    ActiveGameState.setEnemyKi(new Ki ( ActiveGameState.getEnemyKiDifficulty()));
+
+                    ActiveGameState.setRunning(true);
+                    Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                    Main.primaryStage.setScene(new Scene(gamePlayground));
+                    Main.primaryStage.show();
+                    break;
+
+                case playerVsKi:
+
+                    ActiveGameState.setEnemyKi(new Ki(ActiveGameState.getEnemyKiDifficulty()));
+
+                    ActiveGameState.setRunning(true);
+                    Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+                    Main.primaryStage.setScene(new Scene(placeShips));
+                    Main.primaryStage.show();
+                    break;
+            }
         }
 
     }
@@ -141,22 +190,79 @@ public class GameSettingsController implements Initializable{
 
         //if (ActiveGameState.getModes() == GameMode.playerVsKi || ActiveGameState.getModes() == GameMode.kiVsKi) setMultiplayerLoadGameInvisible();
 
-        System.out.println(ActiveGameState.getModes());
+        //System.out.println(ActiveGameState.getModes()); Modus liegt hier beim Multiplayer noch nicht fest
         //if ( (ActiveGameState.getModes() == GameMode.playerVsKi) || ( ActiveGameState.getModes() == GameMode.playerVsRemote)) setOwnKiSelectionInvisible();
-        switch (ActiveGameState.getModes()){
-            case playerVsKi:        setOwnKiSelectionInvisible();
+        //Modes:    Hier ist nur der host bei multiplayer -> player vs Ki -> Own ki invisible, kivs ki nichts invisible
+        //Multiplayer -> kein Modus gesetzt
 
-            case kiVsKi:            setMultiplayerLoadGameInvisible();
-                                    break;
+        setRadioSettingsForMultiplayerSelection();
+        //setMultiplayerSelectRoleInvisible();
 
-            case playerVsRemote:
-            case kiVsRemote:        setOwnKiSelectionInvisible();
-                                    setEnemyKiSelectionInvisible();
+        if (ActiveGameState.getModes() == GameMode.playerVsKi) setOwnKiSelectionInvisible();
+
+
+
+
+        if (ActiveGameState.isMultiplayer()) {
+            //setEnemyKiSelectionInvisible();
+            //setOwnKiSelectionInvisible();
+            //setMultiplayerSelectRoleVisible();
+
+            disableSingleplayerKiSelection();
         }
+        else{
+            disableHostKiSelection();
+        }
+        //Immer alles an, außer bei player vs ki
+
     }
 
-    public void setMultiplayerLoadGameInvisible(){
-        this.multiplayerLoadGame.setVisible(false);
+    public void disableHostKiSelection(){
+        sP_KIselections.getChildren().remove(host_selectRole);
+    }
+    public void disableSingleplayerKiSelection(){
+        sP_KIselections.getChildren().remove(vBox_KISettings);
+    }
+/*
+public VBox host_selectRole;
+    public RadioButton host_RbSelectKInormal;
+    public RadioButton host_RbSelectKIhard;
+ */
+
+    public void setRadioSettingsForMultiplayerSelection(){
+        Color rB_color = new Color(0.8, 0.8, 0.8, 1);
+
+        //Radio Buttons
+        //Shadows are too big -> Events will trigger to far
+
+        this.host_RbSelectKInormal.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        this.host_RbSelectKInormal.setTextFill(rB_color);
+        //  this.rightBarMultiplayer_RbSelectKInormal.setEffect(new DropShadow(30, Color.BLACK));
+
+        this.host_RbSelectKIhard.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        this.host_RbSelectKIhard.setTextFill(rB_color);
+        //   this.rightBarMultiplayer_RbSelectKIhard.setEffect(new DropShadow(30, Color.BLACK));
+
+        host_RbSelectKInormal.setOnAction( event -> {
+            host_RbSelectKIhard.setSelected(false);
+        });
+
+        host_RbSelectKIhard.setOnAction( event -> {
+            host_RbSelectKInormal.setSelected(false);
+        });
+
+    }
+
+
+
+    public void setMultiplayerSelectRoleVisible(){
+        host_RbSelectKInormal.setVisible(true);
+        host_RbSelectKIhard.setVisible(true);
+    }
+
+    public void setMultiplayerSelectRoleInvisible(){
+        host_RbSelectKInormal.setVisible(false);
+        host_RbSelectKIhard.setVisible(false);
     }
 
     public void setRadioButtonSettings(){

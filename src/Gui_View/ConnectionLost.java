@@ -1,8 +1,8 @@
 package Gui_View;
 
-import Player.SaveAndLoad;
-import Player.Savegame;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,8 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.io.IOException;
 
 public class ConnectionLost {
 
@@ -24,13 +23,21 @@ public class ConnectionLost {
         Stage lost = new Stage();
         lost.initModality(Modality.APPLICATION_MODAL);
 
-        // todo implement funktion + speicheranfrage ?
+
         Label showError = new Label("Verbindung verloren");
         Button backToStart = new Button("Hauptmenü");
-        Button endGame = new Button("Spiel beenden");
         backToStart.setOnAction(event -> {
-            // todo -> go back. how??? static???
+            Parent mainMenu = null;
+            try {
+                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                Main.primaryStage.setScene(new Scene(mainMenu));
+                lost.close();
+                Main.primaryStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
+        Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(event -> {
             lost.close();
             Main.primaryStage.close();

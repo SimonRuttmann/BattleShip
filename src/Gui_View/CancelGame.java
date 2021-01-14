@@ -3,10 +3,9 @@
 package Gui_View;
 
 import Player.SaveAndLoad;
-import Player.Savegame;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -55,6 +54,7 @@ public class CancelGame {
         exit.showAndWait();
     }
 
+
     public static void save() {
         Stage save = new Stage();
         save.initModality(Modality.APPLICATION_MODAL);
@@ -86,21 +86,32 @@ public class CancelGame {
 
         // Scene 2 - successfully saved
         Label successfull = new Label("Speichern erfolgreich!"); // todo: wir gehen aktuell davon aus, das Speichern immer erfolgreich
-        Button endGame = new Button("Spiel beenden"); // todo: eventuell rückkehr ins startmenü: not so easy
+        Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(e -> {
             save.close();
             Main.primaryStage.close();
         });
-        /* todo evlt
-        Button backToMainManu = new Button("Zurück ins Hauptmenü");
-        backToMainManu.setOnAction(e -> {
-            HelpMethods backto = new HelpMethods();
-            backto.backToMainMenu();
-        });*/
+        Button backToMainManu = new Button("Hauptmenü");
+        backToMainManu.setOnAction(event -> {
+            Parent mainMenu = null;
+            try {
+                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                Main.primaryStage.setScene(new Scene(mainMenu));
+                save.close();
+                Main.primaryStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        HBox buttons = new HBox(15);
+        buttons.getChildren().addAll(backToMainManu, endGame);
+        buttons.setAlignment(Pos.CENTER);
 
         VBox layout2 = new VBox(15);
-        layout2.getChildren().addAll(successfull, endGame);
+        layout2.getChildren().addAll(successfull, buttons);
         layout2.setAlignment(Pos.CENTER);
+
         success = new Scene(layout2, width, height);
         success.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
 

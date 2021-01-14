@@ -259,7 +259,7 @@ public class GamePlayground implements Initializable {
             kiOwnPlayground.buildPlayground();
 
             //
-            ActiveGameState.setPlacementKi(new Ki());
+            ActiveGameState.setPlacementKi(new Ki(Ki.Difficulty.undefined));
 
 
             ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(kiOwnPlayground);
@@ -282,7 +282,7 @@ public class GamePlayground implements Initializable {
 
             ourKiOwnPlayground.buildPlayground();
 
-            ActiveGameState.setPlacementKi(new Ki());
+            ActiveGameState.setPlacementKi(new Ki(Ki.Difficulty.undefined));
             ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(ourKiOwnPlayground);
             ourKiOwnPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
 

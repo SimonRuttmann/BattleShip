@@ -1,5 +1,7 @@
 package Network;
 
+import Gui_View.HelpMethods;
+
 import java.net.*;
 import java.io.*;
 import java.util.Arrays;
@@ -7,17 +9,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Server extends Communication implements IServer{
+    public enum ConnectionStatus {Connected, Timeout, ManualClose, ioException}
     public static final Logger logServer = Logger.getLogger("parent.server");
     private ServerSocket server;
-
+    private Socket server_connected;
     /**
      * Constructor of the server, the port is set up to 500000
+     * Timeout time is set to 1 min
      */
     public Server ( ) {
         try {
 
             server = new ServerSocket(50000);
-            server.setSoTimeout(600000); //1min keine Antwort vom Client -> beendet sich selber
+            server.setSoTimeout(60000); //1min keine Antwort vom Client -> beendet sich selber
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -30,9 +34,11 @@ public class Server extends Communication implements IServer{
      */
     @Override
     public void closeConnection(){
+
         if (server != null) {
             try {
                 server.close();
+                if ( server_connected != null ) server_connected.close();
                 this.setConnected(false);
                 this.closeReaderWriter();
                 logServer.log(Level.INFO, "Serversocket closed!");
@@ -79,14 +85,14 @@ public class Server extends Communication implements IServer{
     }
 
     @Override
-    public boolean startSeverConnection(){
+    public Server.ConnectionStatus startSeverConnection(){
 
         try {
             System.out.println("Waiting for Client");
-            Socket server_connected  = server.accept();
+            Socket server_connected  = server.accept(); //Server bietet 1ne Min lang verbindung an
             server_connected.setSoTimeout(60000);
             System.out.println("Connection from Server to Client established");
-
+            this.server_connected = server_connected;
             //Set up input and output reader reading/writing form the in-/output stream of the socket
             //Set them up as buffered reader to read and write lines instead of bytes
             this.setInputReader(new BufferedReader(new InputStreamReader(server_connected.getInputStream())));
@@ -95,10 +101,22 @@ public class Server extends Communication implements IServer{
 
 
             this.setConnected(true);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            return ConnectionStatus.Connected;
+        }
+
+        //This exception occurs, when no socket connected to the server for 1 min
+        catch (SocketTimeoutException e){
+            return ConnectionStatus.Timeout;
+        }
+        //This exception is thrown by closing the server,
+        //if the server.accept() didn`t already connection the remote socket
+        //No actions are needed for handling
+        catch (SocketException e){
+            return ConnectionStatus.ManualClose;
+        }
+        //All other standard IO Exception cases
+        catch (IOException e) {
+            return ConnectionStatus.ioException;
         }
     }
 }

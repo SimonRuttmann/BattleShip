@@ -50,7 +50,8 @@ public class MpServerController implements Initializable {
     public AnchorPane anchorPane;
 
     public void backToMainMenu(ActionEvent actionEvent) throws IOException {
-        if ( ActiveGameState.isRunning()) ActiveGameState.getServer().closeConnection();
+        //if ( ActiveGameState.isRunning()) ActiveGameState.getServer().closeConnection();
+        ActiveGameState.getServer().closeConnection();
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
         Main.primaryStage.show();
@@ -68,7 +69,6 @@ public class MpServerController implements Initializable {
         setRectangleSettings();
         startAnimation();
         offerConnection();
-
     }
 
     public void setLanguage(){
@@ -90,14 +90,15 @@ public class MpServerController implements Initializable {
     public void offerConnection(){
         IServer server = new Server();
         textToShowIP.setText(" " + server.getIPAddress());
-
+        ActiveGameState.setServer(server);
         // new Thread for Connecting
         Thread offerConnection = new Thread(new Runnable() {
             @Override
             public void run() {
                 System.out.println("Connection offered - waiting for paring");
-                if (server.startSeverConnection()) {
-                    ActiveGameState.setServer(server);
+                Server.ConnectionStatus connectionStatus = server.startSeverConnection();
+                if (connectionStatus== Server.ConnectionStatus.Connected) {
+                 //   ActiveGameState.setServer(server);
                     ActiveGameState.setRunning(true);
                     Platform.runLater(new Runnable() {
                         @Override
@@ -120,8 +121,12 @@ public class MpServerController implements Initializable {
                     });
 
                 } else {
-                    System.out.println("Connection could not be established");
-                    HelpMethods.connectionFailed();
+                    switch (connectionStatus){
+                        case ManualClose:   break;
+                        case Timeout:
+                        case ioException:   HelpMethods.connectionFailed();
+
+                    }
                 }
 
             }

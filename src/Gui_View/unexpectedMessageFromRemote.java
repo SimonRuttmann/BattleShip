@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class unexceptedMessageFromRemote {
+public class unexpectedMessageFromRemote {
 
     static Scene wrongMessage;
     static int width = 300;
@@ -32,7 +32,7 @@ public class unexceptedMessageFromRemote {
         backToStart.setOnAction(event -> {
             Parent mainMenu = null;
             try {
-                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 unexceptedMessage.close();
                 Main.primaryStage.show();

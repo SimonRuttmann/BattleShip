@@ -26,7 +26,7 @@ public class SaveRequest {
     static int width = 300;
     static int height = 100;
 
-    public static void display() {
+    public static void display(long id) {
 
         Stage saveRequest = new Stage();
         saveRequest.initModality(Modality.APPLICATION_MODAL);
@@ -64,7 +64,6 @@ public class SaveRequest {
 
             //todo this is copied from game Playground
             //Create an ID and save it to the ActiveGameState, necessary for loading (Savegame will contain the load id by loading)
-            long id = System.currentTimeMillis();
             ActiveGameState.setLoadId(id);
 
             //The name the user put in -> Create a file with this text as name

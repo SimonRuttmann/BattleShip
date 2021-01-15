@@ -183,6 +183,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void quitGameSelected(MouseEvent mouseEvent) {
+        ActiveGameState.setLogging(false);
         NetworkLogger.terminateLogging();
         Main.primaryStage.close();
     }

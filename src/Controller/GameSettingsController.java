@@ -79,6 +79,9 @@ public class GameSettingsController implements Initializable{
 
     /** External Handling**/
     public void backToMainMenu(ActionEvent actionEvent) throws IOException {
+        //Close server connection in mode player vs remote or ki vs remote, if the player decided to go move back to the menu
+        if (ActiveGameState.getServer() != null) ActiveGameState.getServer().closeConnection();
+
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
         Main.primaryStage.show();

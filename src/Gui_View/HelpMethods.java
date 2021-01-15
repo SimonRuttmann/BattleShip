@@ -46,7 +46,9 @@ public class HelpMethods {
     }
 
     // save request -> remote wants to save
+
     public static void saveRequest(long id) { Platform.runLater( () -> SaveRequest.display(id));}
+
 
     // load request -> remote wants to load, but no matching file
     public static void noGameFile() { Platform.runLater(noMatchingSavedGame::display);}

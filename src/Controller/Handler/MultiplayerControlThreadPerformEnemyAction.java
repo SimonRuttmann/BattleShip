@@ -88,7 +88,6 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
 
                 //TODO Save And Load methods have to be adjusted
             case "save":
-                SaveAndLoad.save( cmdReceived[1]);
                 if (ActiveGameState.isAmIServer()) {
                     ActiveGameState.getServer().sendCMD(CMD.done, "");
                     ActiveGameState.setRunning(false);
@@ -100,8 +99,8 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                     ActiveGameState.setRunning(false);
                     ActiveGameState.getClient().closeConnection();                  //TODO Beenden nach speichern
                 }
-
-                //break;
+                //Saving game and return
+                HelpMethods.saveRequest(Long.parseLong(cmdReceived[1]));
                 return;
            /* case "load":                                                          //TODO
                 SaveAndLoad.load( cmdReceived[1]);
@@ -114,20 +113,32 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 }
                 break;*/
             case "next":
-                ActiveGameState.setYourTurn(true);
-                break;
+                                ActiveGameState.setYourTurn(true);
+                                break;
             case "timeout":
-                if (ActiveGameState.isAmIServer()) {
-                    ActiveGameState.getServer().closeConnection();
-                } else {
-                    ActiveGameState.getClient().closeConnection();
-                }
-                ActiveGameState.setRunning(false);
-                break;
-                //TODO Yannick POPUP für Timeout setzen
+                                HelpMethods.connectionLost();
+                                if (ActiveGameState.isAmIServer()) {
+                                    ActiveGameState.getServer().closeConnection();
+                                }
+                                else {
+                                    ActiveGameState.getClient().closeConnection();
+                                }
+                                ActiveGameState.setRunning(false);
+                                return;
+
             default:
-                System.out.println("Unexpected message from connection partner");
-                ActiveGameState.setRunning(false);
+                                HelpMethods.unexceptedMessage();
+                                if (ActiveGameState.isAmIServer()) {
+                                    ActiveGameState.getServer().closeConnection();
+                                }
+                                else {
+                                    ActiveGameState.getClient().closeConnection();
+                                }
+                                ActiveGameState.setRunning(false);
+
+                                System.out.println("Unexpected message from connection partner");
+                                ActiveGameState.setRunning(false);
+                                return;
         }
     }
         //TODO Kommentieren

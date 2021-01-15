@@ -5,6 +5,7 @@ import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Player.ActiveGameState;
 import Player.NetworkLogger;
+
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -38,7 +39,9 @@ public class ConnectionLost {
         backToMainMenu.setOnAction(event -> {
             Parent mainMenu;
             try {
+
                 HelpMethods.closeMPSockets();
+
                 mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 lost.close();

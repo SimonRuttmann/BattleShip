@@ -28,8 +28,7 @@ git rm --cached -r .savedGames
     public static Stage primaryStage;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    CancelGame cancelGame = new CancelGame();
-    WinLose winLose = new WinLose();
+
 
     public static void main(String[] args) {
         try {

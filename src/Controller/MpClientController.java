@@ -94,7 +94,7 @@ public class MpClientController implements Initializable {
                 System.out.println("Searching for Host");
 
                 ActiveGameState.setClient(new Client(textfieldIP.getText()));
-                ActiveGameState.setRunning(true);
+               // ActiveGameState.setRunning(true);
 
                 if (ActiveGameState.isRunning()) {
 

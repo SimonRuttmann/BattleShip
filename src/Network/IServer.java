@@ -16,8 +16,11 @@ public interface IServer extends ICommunication{
 
     /**
      * Server accepts attempting connections and creates Reader and Writers
-     * @return State of Connection, returns true if the server connected and false if an timeout occured
+     * @return Connected:    The server connected to the client
+     *         Timeout:      No connection for 1 min
+     *         ManualClose:  The connection offer from server got canceled manual
+     *         ioException:  IOException appeared
      */
-    boolean startSeverConnection();
+    Server.ConnectionStatus startSeverConnection();
 
 }

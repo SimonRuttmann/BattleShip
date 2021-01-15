@@ -5,6 +5,8 @@ import KI.Ki;
 import Model.Playground.*;
 import Network.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -13,10 +15,14 @@ import java.util.logging.Logger;
  */
 
 public class ActiveGameState {
+
+    public static Thread loggingThread;
+    public static BufferedReader loggingReader;
+
     public static final Logger logActiveGamesState = Logger.getLogger(Logger.class.getName());
     public enum Loading {singleplayer, multiplayer, noLoad}
 
-   // private static boolean singLoad = true;
+
 
     public static Loading getLoading() {
         return loading;
@@ -27,7 +33,16 @@ public class ActiveGameState {
     }
 
     private static Loading loading = Loading.noLoad;
+    private static volatile boolean logging = true;
 
+
+    public static boolean isLogging() {
+        return logging;
+    }
+
+    public static void setLogging(boolean logging){
+        ActiveGameState.logging = logging;
+    }
   /*  public static boolean isSingLoad() {
         return singLoad;
     }*/
@@ -136,7 +151,7 @@ public class ActiveGameState {
         ActiveGameState.running = running;
     }
 
-    private static boolean running;
+    private static volatile boolean running;
 
     // Game Configuration
     private static boolean multiplayer;  // true = multiplayer, false = singleplayer

@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +32,7 @@ import java.util.logging.Logger;
  *    -> if the user has saved over the playgroundGui it only gives the possibility to head back to Main Menu or Exit
  *       the game
  */
+
 public class CancelGame {
 
     static Scene choose, save, success;
@@ -49,9 +51,16 @@ public class CancelGame {
         Label label = new Label();
         Button yes = new Button();
         yes.setOnAction(e -> {
+
             HelpMethods.closeMPSockets();
+
             exit.close();
+
+
+
             NetworkLogger.terminateLogging();
+            ActiveGameState.setLogging(false);
+           // System.exit(0);
             Main.primaryStage.close();
         });
         Button no = new Button();
@@ -105,6 +114,7 @@ public class CancelGame {
         saveGame.setOnAction(e -> saveStage.setScene(save));
         noSave.setOnAction(e -> {
             HelpMethods.closeMPSockets();
+
             saveStage.close();
             NetworkLogger.terminateLogging();
 
@@ -185,13 +195,19 @@ public class CancelGame {
         Button endGame = new Button();
         Button backToMainManu = new Button();
         endGame.setOnAction(e -> {
+
             HelpMethods.closeMPSockets();
             saveStage.close();
+            ActiveGameState.setLogging(false);
             NetworkLogger.terminateLogging();
+
             Main.primaryStage.close();
+           
         });
         backToMainManu.setOnAction(event -> {
+
             HelpMethods.closeMPSockets();
+
             Parent mainMenu;
             try {
                 mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));

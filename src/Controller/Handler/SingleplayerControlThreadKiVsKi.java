@@ -23,9 +23,10 @@ public class SingleplayerControlThreadKiVsKi extends Thread {
     @Override
     public void run() {
         while (ActiveGameState.isRunning()) {
+            System.out.println( "RUNNING = " + ActiveGameState.isRunning());
             ActiveGameState.getEnemyPlayerOwnPlayground().drawPlayground();
             //Own KI turn
-            while (ActiveGameState.isYourTurn()) {
+            while (ActiveGameState.isYourTurn() && ActiveGameState.isRunning()) {
 
                 System.out.println("Our Turn");
                try {
@@ -74,7 +75,7 @@ public class SingleplayerControlThreadKiVsKi extends Thread {
             //Own KI turn end
 
             //Enemy KI turn
-            while (!ActiveGameState.isYourTurn()) {
+            while (!ActiveGameState.isYourTurn() && ActiveGameState.isRunning()) {
 
                 System.out.println("Enemy Turn");
                 try {

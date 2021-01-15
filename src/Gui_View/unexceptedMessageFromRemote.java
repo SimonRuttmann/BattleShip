@@ -13,34 +13,39 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class ConnectionFailed {
+public class unexceptedMessageFromRemote {
 
-    static Scene conFailed;
+    static Scene wrongMessage;
     static int width = 300;
     static int height = 100;
 
     public static void display() {
-        Stage failed = new Stage();
-        failed.initModality(Modality.APPLICATION_MODAL);
 
-        Label showError = new Label("Verbindungsaufbau fehlgeschlagen");
+        Stage unexceptedMessage = new Stage();
+        unexceptedMessage.initModality(Modality.APPLICATION_MODAL);
+
+
+        // Label + Button
+        Label showError = new Label("Unerwartete Nachricht vom Spielpartner");
         Button backToStart = new Button("Hauptmenü");
-        Button endGame = new Button("Spiel beenden");
+
         backToStart.setOnAction(event -> {
             Parent mainMenu = null;
             try {
                 mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
-                failed.close();
+                unexceptedMessage.close();
                 Main.primaryStage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+        Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(event -> {
-            failed.close();
+            unexceptedMessage.close();
             Main.primaryStage.close();
         });
+
 
         HBox buttons = new HBox(15);
         buttons.getChildren().addAll(backToStart, endGame);
@@ -50,13 +55,12 @@ public class ConnectionFailed {
         layout1.getChildren().addAll(showError, buttons);
         layout1.setAlignment(Pos.CENTER);
 
+        wrongMessage = new Scene(layout1, width, height);
+        wrongMessage.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
 
-        conFailed = new Scene(layout1, width, height);
-        conFailed.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
-
-        failed.setScene(conFailed);
-        HelpMethods.alignStageCenter(failed, width, height);
-        failed.setResizable(false);
-        failed.showAndWait();
+        unexceptedMessage.setScene(wrongMessage);
+        HelpMethods.alignStageCenter(unexceptedMessage, width, height);
+        unexceptedMessage.setResizable(false);
+        unexceptedMessage.showAndWait();
     }
 }

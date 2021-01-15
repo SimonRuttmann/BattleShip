@@ -214,6 +214,25 @@ public class GamePlayground implements Initializable {
         }
 
 
+        // saveAndCloseButton is only clickable, when save name is valid
+        this.saveAndCloseButton.setDisable(true);
+        this.saveGameText.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            //The name the user put in -> Create a file with this text as name
+            String savegamename = this.saveGameText.getText();
+
+            //Check for not allowed characters -> no File creation possible
+            char[] notAllowedCharacters = {'\\', '/', ':', '!', '?', '*', '"', '|', '<', '>'};
+            for (char character : notAllowedCharacters) {
+                if (savegamename.contains(String.valueOf(character)) || savegamename.isEmpty()) {
+                    saveAndCloseButton.setDisable(true);
+                    return;
+                }
+            }
+            saveAndCloseButton.setDisable(false);
+        });
+
+
         // setting the background image
         setBackground();
     }
@@ -297,6 +316,7 @@ public class GamePlayground implements Initializable {
 
     //Save Handling
 
+    // button is only enabled, when name in text field is valid save name
     public void saveAndCloseGame(ActionEvent actionEvent){
 
         //Create an ID and save it to the ActiveGameState, necessary for loading (Savegame will contain the load id by loading)
@@ -306,11 +326,6 @@ public class GamePlayground implements Initializable {
         //The name the user put in -> Create a file with this text as name
         String savegamename = this.saveGameText.getText();
 
-        //Check for not allowed characters -> no File creation possible
-        char[] notAllowedCharacters = {'\\','/',':','!','?','*','"','|','<','>'};
-        for ( char character : notAllowedCharacters){
-            if (savegamename.contains( String.valueOf(character) )  || savegamename.isEmpty()  ) return; //TODO YANNICK Display not allowed (kein Popup, Popups sind für unerwartete nachrichten gedacht.)
-        }                                                                                                //TODO Am besten den Button nur dann enablen, wenn keines dieser sonderzeichen enthalten ist
 
         boolean saveSuccess;
         //Save the game with ID, when multiplayer is selected

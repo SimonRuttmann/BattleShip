@@ -2,15 +2,11 @@
 
 package Gui_View;
 
+import Controller.SaveRequest;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class HelpMethods {
 
@@ -41,6 +37,13 @@ public class HelpMethods {
     public static void connectionLost() {
         Platform.runLater(ConnectionLost::display);
     }
+
+    // save request -> remote wants to save
+    public static void saveRequest() { Platform.runLater(SaveRequest::display);}
+
+
+    // unexpectecd message from remote
+    public static void unexceptedMessage() {Platform.runLater(unexceptedMessageFromRemote::display);}
 
     // win or lose - new game or exit
     public static void winOrLose(boolean win) {

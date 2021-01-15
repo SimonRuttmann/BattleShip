@@ -39,11 +39,11 @@ public class HelpMethods {
     }
 
     // save request -> remote wants to save
-    public static void saveRequest() { Platform.runLater(SaveRequest::display);}
+    public static void saveRequest(long id) { Platform.runLater(SaveRequest::display);}
 
 
     // unexpectecd message from remote
-    public static void unexceptedMessage() {Platform.runLater(unexceptedMessageFromRemote::display);}
+    public static void unexceptedMessage() {Platform.runLater(unexpectedMessageFromRemote::display);}
 
     // win or lose - new game or exit
     public static void winOrLose(boolean win) {

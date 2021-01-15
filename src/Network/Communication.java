@@ -72,20 +72,28 @@ public abstract class Communication implements ICommunication{
     public String[] getCMD() {
         if (!connected) return null;
         System.out.println( "Connected ist true");
+        String[] timeout = new String[1];
+        timeout[0] = "timeout";
         try {
+
 
             String cmd = inputReader.readLine();
             System.out.println( "inputReader liest:" + cmd);
 
+
             //Check if the data received is valid
-            if(validDataReceived(cmd)){
+            if(cmd != null && validDataReceived(cmd)){
                 //If the data is valid, return the split command
                 String[] cmdSplit = cmd.split(" ");
                 cmdSplit[0] = cmdSplit[0].toLowerCase();
                 return cmdSplit;
             }
+            if (cmd == null) return timeout;
+
             System.out.println( "The received Data is not valid");
-            return null;
+            String[] invalid = new String[1];
+            invalid[0] = "invalid";
+            return invalid;
     //TODO SocketTimoutException Read timed out -> bei .readLine();
             //TODO SocketException Connection Reset
         }
@@ -96,31 +104,27 @@ public abstract class Communication implements ICommunication{
         //after 1 min (time set up) the readerLine() method will throw an
         //SocketTimeoutException
         catch( SocketTimeoutException e){
-            e.printStackTrace();
+
             System.out.println("Socket Timout Exception at reading the next command");
 
-            String[] timeout = new String[1];
-            timeout[0] = "timeout";
             return timeout;
         }
 
         catch(SocketException e){
-            e.printStackTrace();
+
             System.out.println("Connection reset");
-            String[] timeout = new String[1];
-            timeout[0] = "timeout";
+
             return timeout;
         }
 
         catch (IOException e) {
-            e.printStackTrace();
+
             System.out.println("IO Exception at reading the next command");
 
-            String[] timeout = new String[1];
-            timeout[0] = "timeout";
             return timeout;
 
         }
+
 
     }
 
@@ -232,8 +236,8 @@ public abstract class Communication implements ICommunication{
         try {
             this.inputReader.close();
             this.outputWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NullPointerException e) {
+            //e.printStackTrace();
             System.out.println("Reader and Writer cant be closed!");
         }
     }

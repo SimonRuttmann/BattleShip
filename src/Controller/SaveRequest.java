@@ -2,11 +2,9 @@ package Controller;
 
 import Gui_View.HelpMethods;
 import Gui_View.Main;
-import Gui_View.unexceptedMessageFromRemote;
+import Gui_View.unexpectedMessageFromRemote;
 import Player.ActiveGameState;
 import Player.SaveAndLoad;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -83,7 +81,7 @@ public class SaveRequest {
             if(saveSuccess){
                 Parent mainMenu = null;
                 try {
-                    mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                    mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                     Main.primaryStage.setScene(new Scene(mainMenu));
                     saveRequest.close();
                     Main.primaryStage.show();

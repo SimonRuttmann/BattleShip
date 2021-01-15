@@ -1,7 +1,6 @@
 package Gui_View;
 
 import Player.NetworkLogger;
-import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -32,7 +31,7 @@ public class ConnectionFailed {
         backToStart.setOnAction(event -> {
             Parent mainMenu = null;
             try {
-                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 failed.close();
                 Main.primaryStage.show();

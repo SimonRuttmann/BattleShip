@@ -1,4 +1,5 @@
 package Controller.Handler;
+import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Network.CMD;
 import Player.ActiveGameState;
@@ -57,15 +58,17 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 ActiveGameState.getServer().sendCMD(CMD.size, Integer.toString(ActiveGameState.getPlaygroundSize()));
                 receivedCMD = ActiveGameState.getServer().getCMD();
                 switch (receivedCMD[0]) {
-                    case "next":
-                        break;
-                    case "timeout":
-                        ActiveGameState.getServer().closeConnection();
-                        ActiveGameState.setRunning(false);
-                        return;
-                    default:
-                        System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
-                        return;
+                    case "next":        break;
+                    case "timeout":     HelpMethods.connectionLost();
+                                        ActiveGameState.getServer().closeConnection();
+                                        ActiveGameState.setRunning(false);
+                                        return;
+
+                    default:            HelpMethods.unexceptedMessage();
+                                        ActiveGameState.getServer().closeConnection();
+                                        ActiveGameState.setRunning(false);
+                                        System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
+                                        return;
                 }
 
 
@@ -117,13 +120,16 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
             switch  (receivedCMD[0]){
                 case "done": break;
-                case "timeout":
-                    ActiveGameState.getServer().closeConnection();
-                    ActiveGameState.setRunning(false);
-                    return;
-                default:
-                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
-                    return;
+                case "timeout":     HelpMethods.connectionLost();
+                                    ActiveGameState.getServer().closeConnection();
+                                    ActiveGameState.setRunning(false);
+                                    return;
+
+                default:            HelpMethods.unexceptedMessage();
+                                    ActiveGameState.getServer().closeConnection();
+                                    ActiveGameState.setRunning(false);
+                                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
+                                    return;
             }
 
 
@@ -135,14 +141,15 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
             switch (receivedCMD[0]){
                 case "ready": break;
-                case "timeout":
-                    ActiveGameState.getServer().closeConnection();
-                    ActiveGameState.setRunning(false);
-                    return;
-
-                default:
-                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
-                    return;
+                case "timeout":     HelpMethods.connectionLost();
+                                    ActiveGameState.getServer().closeConnection();
+                                    ActiveGameState.setRunning(false);
+                                    return;
+                default:            HelpMethods.unexceptedMessage();
+                                    ActiveGameState.getServer().closeConnection();
+                                    ActiveGameState.setRunning(false);
+                                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
+                                    return;
             }
 
 
@@ -166,12 +173,16 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                                 ActiveGameState.setLoading(ActiveGameState.Loading.multiplayer);
                                 break;
 
-                case "timeout": ActiveGameState.getClient().closeConnection();
+                case "timeout": HelpMethods.connectionLost();
+                                ActiveGameState.getClient().closeConnection();
                                 ActiveGameState.setRunning(false);
                                 return;
                 default:
-                    System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
-                    return;
+                                HelpMethods.unexceptedMessage();
+                                ActiveGameState.getClient().closeConnection();
+                                ActiveGameState.setRunning(false);
+                                System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
+                                return;
             }
 
             if ( !load) {
@@ -189,18 +200,10 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                         for (int i = 1; i < receivedCMD.length; i++) {
                             getShip = Integer.parseInt(receivedCMD[i]);
                             switch (getShip) {
-                                case 2:
-                                    size2++;
-                                    break;
-                                case 3:
-                                    size3++;
-                                    break;
-                                case 4:
-                                    size4++;
-                                    break;
-                                case 5:
-                                    size5++;
-                                    break;
+                                case 2:     size2++;    break;
+                                case 3:     size3++;    break;
+                                case 4:     size4++;    break;
+                                case 5:     size5++;    break;
                                 default:
                                     System.out.println("Unexpected Message from Server: " + receivedCMD[i]);
                             }
@@ -212,13 +215,16 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                         ActiveGameState.setAmountShipSize5(size5);
                         ActiveGameState.setAmountOfShips((size2 + size3 + size4 + size5));
                         break;
-                    case "timeout":
-                        ActiveGameState.getClient().closeConnection();
-                        ActiveGameState.setRunning(false);
-                        return;
+                    case "timeout":     HelpMethods.connectionLost();
+                                        ActiveGameState.getClient().closeConnection();
+                                        ActiveGameState.setRunning(false);
+                                        return;
                     default:
-                        System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
-                        return;
+                                        HelpMethods.unexceptedMessage();
+                                        ActiveGameState.getClient().closeConnection();
+                                        ActiveGameState.setRunning(false);
+                                        System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
+                                        return;
                 }
             }
 
@@ -232,14 +238,16 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
             switch (receivedCMD[0]){
                 case "ready": break;
-                case "timeout":
-                    ActiveGameState.getServer().closeConnection();
-                    ActiveGameState.setRunning(false);
-                    return;
+                case "timeout": HelpMethods.connectionLost();
+                                ActiveGameState.getClient().closeConnection();
+                                ActiveGameState.setRunning(false);
+                                return;
 
-                default:
-                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
-                    return;
+                default:        HelpMethods.unexceptedMessage();
+                                ActiveGameState.getClient().closeConnection();
+                                ActiveGameState.setRunning(false);
+                                System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
+                                return;
             }
 
             ActiveGameState.getClient().sendCMD(CMD.ready, "");

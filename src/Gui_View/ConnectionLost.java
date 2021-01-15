@@ -2,8 +2,6 @@ package Gui_View;
 
 
 import Player.NetworkLogger;
-import Player.SaveAndLoad;
-import Player.Savegame;
 
 import javafx.fxml.FXMLLoader;
 
@@ -35,7 +33,7 @@ public class ConnectionLost {
         backToStart.setOnAction(event -> {
             Parent mainMenu = null;
             try {
-                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 lost.close();
                 Main.primaryStage.show();

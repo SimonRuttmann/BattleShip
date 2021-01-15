@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="OldView.MpJoin">
+   <children>
+      <AnchorPane minHeight="-Infinity" prefHeight="40.0">
+         <children>
+            <Button fx:id="backButton" layoutX="34.0" layoutY="12.0" mnemonicParsing="false" onAction="#backToLastScene" text="Zurück" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+         </children>
+      </AnchorPane>
+      <VBox alignment="CENTER" spacing="15.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label text="Spiel beitreten">
+               <font>
+                  <Font size="35.0" />
+               </font>
+            </Label>
+            <Label text="Die IP erfährst du vom Host" />
+            <Pane />
+            <HBox alignment="CENTER">
+               <children>
+                  <VBox alignment="CENTER_RIGHT" spacing="12.0">
+                     <children>
+                        <Label text="Gib deinen Namen ein:" />
+                        <Label text="Geb die IP des Hosts ein:" />
+                     </children>
+                  </VBox>
+                  <Pane prefWidth="10.0" />
+                  <VBox alignment="CENTER_LEFT" spacing="3.0">
+                     <children>
+                        <TextField fx:id="playerName" />
+                        <TextField fx:id="hostIP" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="45.0">
+               <children>
+                  <StackPane>
+                     <children>
+                        <Button fx:id="connectButton" mnemonicParsing="false" onAction="#connect" text="Connect">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </Button>
+                        <ProgressIndicator fx:id="loadingIndicator" maxHeight="40.0" visible="false" />
+                     </children>
+                  </StackPane>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <AnchorPane minHeight="-Infinity" prefHeight="40.0" />
+   </children>
+</VBox>

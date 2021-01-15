@@ -3,11 +3,16 @@ package Network;
 import java.net.*;
 import java.io.*;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server extends Communication implements IServer{
-
+    public static final Logger logServer = Logger.getLogger("parent.server");
     private ServerSocket server;
 
+    /**
+     * Constructor of the server, the port is set up to 500000
+     */
     public Server ( ) {
         try {
 
@@ -20,6 +25,9 @@ public class Server extends Communication implements IServer{
 
     }
 
+    /**
+     * Closes the client or sever socket and the associated writers and readers
+     */
     @Override
     public void closeConnection(){
         if (server != null) {
@@ -27,9 +35,11 @@ public class Server extends Communication implements IServer{
                 server.close();
                 this.setConnected(false);
                 this.closeReaderWriter();
+                logServer.log(Level.INFO, "Serversocket closed!");
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Serversocket konnte nicht geschlossen werden");
+                logServer.log(Level.INFO,"Serversocket failed to close!");
             }
         }
     }
@@ -74,10 +84,11 @@ public class Server extends Communication implements IServer{
         try {
             System.out.println("Waiting for Client");
             Socket server_connected  = server.accept();
+            server_connected.setSoTimeout(60000);
             System.out.println("Connection from Server to Client established");
-            // Ein- und Ausgabestrom des Sockets ermitteln
-            // und als BufferedReader bzw. Writer verpacken
-            // (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
+
+            //Set up input and output reader reading/writing form the in-/output stream of the socket
+            //Set them up as buffered reader to read and write lines instead of bytes
             this.setInputReader(new BufferedReader(new InputStreamReader(server_connected.getInputStream())));
 
             this.setOutputWriter(new BufferedWriter (new OutputStreamWriter(server_connected.getOutputStream())));
@@ -90,9 +101,4 @@ public class Server extends Communication implements IServer{
             return false;
         }
     }
-
-
-
-
-
 }

@@ -1,8 +1,8 @@
 package Model.Util.UtilDataType;
 
 public class Point {
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
 
     public Point(int x, int y){
         this.x = x;
@@ -15,5 +15,10 @@ public class Point {
 
     public int getY() {
         return y;
+    }
+
+    public void setLocation(int i, int i1) {
+        this.x = i;
+        this.y = i1;
     }
 }

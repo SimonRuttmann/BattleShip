@@ -1,6 +1,12 @@
 package Gui_View;
 
+
+import Player.NetworkLogger;
+import Player.SaveAndLoad;
+import Player.Savegame;
+
 import javafx.fxml.FXMLLoader;
+
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -40,6 +46,7 @@ public class ConnectionLost {
         Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(event -> {
             lost.close();
+            NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
 

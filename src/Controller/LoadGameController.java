@@ -114,7 +114,7 @@ public class LoadGameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        setLanguage();
         setUpListView();
 
         setBackground();
@@ -124,6 +124,19 @@ public class LoadGameController implements Initializable {
         setRectangleSettings();
         startAnimation();
 
+    }
+
+    public void setLanguage(){
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            title.setText("Spieleinstellungen");
+            loadGameButton.setText("Spiel laden");
+            backButton.setText("Zurück zum Hauptmenü");
+        }
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            title.setText("Game Settings");
+            loadGameButton.setText("Load Game");
+            backButton.setText("Back to Main Menu");
+        }
     }
 
     public void setUpListView(){

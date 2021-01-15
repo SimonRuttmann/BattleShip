@@ -1,6 +1,9 @@
 package Gui_View;
 
+
+import Player.NetworkLogger;
 import Player.ActiveGameState;
+
 import Player.SaveAndLoad;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -32,6 +35,7 @@ public class CancelGame {
         Button yes = new Button("Ja");
         yes.setOnAction(e -> {
             exit.close();
+            NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
         Button no = new Button("Nein");
@@ -63,11 +67,14 @@ public class CancelGame {
         // Scene 1 - save or don't save
         Button saveGame = new Button("Spiel speichern");
         saveGame.setOnAction(e -> {
+
             saveStage.setScene(save);
         });
         Button noSave = new Button("Beenden ohne Speichern");
         noSave.setOnAction(e -> {
             saveStage.close();
+            NetworkLogger.terminateLogging();
+
             Main.primaryStage.close();
         });
 
@@ -150,7 +157,10 @@ public class CancelGame {
         Label successfull = new Label("Speichern erfolgreich!");
         Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(e -> {
-            saveStage.close();
+
+            save.close();
+            NetworkLogger.terminateLogging();
+
             Main.primaryStage.close();
         });
         Button backToMainManu = new Button("Hauptmenü");

@@ -5,13 +5,17 @@ import KI.Ki;
 import Model.Playground.*;
 import Network.*;
 
+import java.util.logging.Logger;
+
 /**
  * - used as cache to give controllers access to gameConfig and active Objects
  * - saving based on this class -> only necessary information are saved
  */
 
 public class ActiveGameState {
+    public static final Logger logActiveGamesState = Logger.getLogger(Logger.class.getName());
     public enum Loading {singleplayer, multiplayer, noLoad}
+
    // private static boolean singLoad = true;
 
     public static Loading getLoading() {

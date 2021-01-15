@@ -75,6 +75,10 @@ public class PlaceShips implements Initializable {
     @FXML
     private Button rotate90;
     @FXML
+    private Button randomPlacement;
+    @FXML
+    private Button resetPlacement;
+    @FXML
     private Button readyButton;
     @FXML
     private Group groupID;
@@ -137,6 +141,7 @@ public class PlaceShips implements Initializable {
      *----------------------------------------------------------------------------------------------------------------*/
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setLanguage();
 
         //TODO Background gesetzt
         setBackground();
@@ -582,7 +587,27 @@ public class PlaceShips implements Initializable {
         // end of making the labels on the right hand side of the playground draggable ---------------------------------
     }
     // end of initialize-method ----------------------------------------------------------------------------------------
+    public void setLanguage(){
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            readyButton.setText("Bereit");
+            xOfx2Ships.setText("(x/x platziert)");
+            xOfx3Ships.setText("(x/x platziert)");
+            xOfx4Ships.setText("(x/x platziert)");
+            xOfx5Ships.setText("(x/x platziert)");
+            randomPlacement.setText("Zufällig platzieren");
+            resetPlacement.setText("Zurücksetzen");
 
+        }
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            readyButton.setText("Ready");
+            xOfx2Ships.setText("(x/x placed)");
+            xOfx3Ships.setText("(x/x placed)");
+            xOfx4Ships.setText("(x/x placed)");
+            xOfx5Ships.setText("(x/x placed)");
+            randomPlacement.setText("random placement");
+            resetPlacement.setText("Reset");
+        }
+    }
 
 
     /** rotate ship button:

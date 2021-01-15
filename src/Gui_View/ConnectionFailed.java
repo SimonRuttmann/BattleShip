@@ -1,5 +1,8 @@
 package Gui_View;
 
+import Player.NetworkLogger;
+import javafx.fxml.FXML;
+
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -39,6 +42,7 @@ public class ConnectionFailed {
         });
         endGame.setOnAction(event -> {
             failed.close();
+            NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
 

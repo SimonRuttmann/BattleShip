@@ -3,6 +3,7 @@
 
 package Gui_View;
 
+import Player.NetworkLogger;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,6 +31,7 @@ public class WinLose {
         Button end = new Button("Spiel beenden");
         end.setOnAction(e -> {
             winLose.close();
+            NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
 

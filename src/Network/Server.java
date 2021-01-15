@@ -3,9 +3,11 @@ package Network;
 import java.net.*;
 import java.io.*;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server extends Communication implements IServer{
-
+    public static final Logger logServer = Logger.getLogger("parent.server");
     private ServerSocket server;
 
     /**
@@ -33,9 +35,11 @@ public class Server extends Communication implements IServer{
                 server.close();
                 this.setConnected(false);
                 this.closeReaderWriter();
+                logServer.log(Level.INFO, "Serversocket closed!");
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Serversocket konnte nicht geschlossen werden");
+                logServer.log(Level.INFO,"Serversocket failed to close!");
             }
         }
     }

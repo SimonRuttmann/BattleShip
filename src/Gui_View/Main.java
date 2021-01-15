@@ -5,11 +5,14 @@
 package Gui_View;
 
 import Player.ActiveGameState;
+import Player.NetworkLogger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+
+import java.io.IOException;
 
 public class Main extends Application {
 /*
@@ -27,8 +30,15 @@ git rm --cached -r .savedGames
     WinLose winLose = new WinLose();
 
     public static void main(String[] args) {
-            launch(args);
+        try {
+            NetworkLogger networklogger = new NetworkLogger();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        launch(args);
     }
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {

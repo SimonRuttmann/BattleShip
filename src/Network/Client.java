@@ -1,12 +1,15 @@
 package Network;
 
+import Player.NetworkLogger;
+
 import java.io.*;
 
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Client extends Communication {
-
+public class Client extends Communication  {
+    public static final Logger logClient = Logger.getLogger("parent.client");
     private Socket client;
 
     /**
@@ -28,9 +31,10 @@ public class Client extends Communication {
             this.setInputReader(new BufferedReader(new InputStreamReader(client.getInputStream())));
 
             this.setOutputWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())));
-
+            logClient.log(Level.INFO,"Client connected to Server.");
         } catch (IOException e) {
             e.printStackTrace();
+            logClient.log(Level.SEVERE,"Failed to connect to Server.");
         }
 
     }
@@ -45,10 +49,12 @@ public class Client extends Communication {
                 client.close();
                 this.setConnected(false);
                 this.closeReaderWriter();
+                logClient.log(Level.INFO,"Client connection closed!");
 
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Client konnte nicht geschlossen werden");
+                logClient.log(Level.SEVERE,"Failed to close Client connection");
             }
         }
     }

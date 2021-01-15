@@ -1,11 +1,15 @@
 package Network;
 
 
+import Player.NetworkLogger;
+
 import java.io.*;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.logging.Logger;
 
 public abstract class Communication implements ICommunication{
+    public static final Logger logCommunciation = Logger.getLogger("parent.communication");
 
     private boolean connected = false;
     private BufferedReader inputReader;

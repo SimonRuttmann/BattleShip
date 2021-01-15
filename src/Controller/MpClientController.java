@@ -122,7 +122,7 @@ public class MpClientController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         infoLabelS = infoLabel; //Necessary to access infoLabel in Thread
-
+        setLanguage();
         setBackground();
         setTextSettings();
         setTitleSettings();
@@ -132,6 +132,23 @@ public class MpClientController implements Initializable {
         setRadioButtonSettings();
         startAnimation();
 
+    }
+
+    public void setLanguage(){
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            title.setText("Spiel beitreten");
+            textInsertIP.setText("Geben sie die IP des Hosts ein:");
+            infoLabel.setText("Die Verbindung wurde hergestellt. Warten sie bis der Host die Einstellungen eingestellt hat.");
+            button_backToMainMenu.setText("Zurück zum Hauptmenü");
+            button_Start.setText("Start");
+        }
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            title.setText("Join Game");
+            textInsertIP.setText("Insert IP of Host:");
+            infoLabel.setText("Connection established. Wait until the host has set the settings");
+            button_backToMainMenu.setText("Back to Main Menu");
+            button_Start.setText("Start");
+        }
     }
 
 

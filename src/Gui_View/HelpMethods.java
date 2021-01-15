@@ -1,13 +1,20 @@
-// todo add stylesheets to classes
+// todo add style to all pop-up windows
 
 package Gui_View;
 
 import Controller.SaveRequest;
+import Gui_View.PopUpWindows.*;
+import Player.ActiveGameState;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+
+/** HelpMethods contains useful methods that are used in different places:
+ *  method to align a Stage in the center of a screen, methods to create pop-up-windows that inform the user about
+ *  different states of the game and a method that tries to close a MP SERVER/CLIENT SOCKET
+ */
 public class HelpMethods {
 
     // method to align the stage in center of the screen
@@ -18,12 +25,12 @@ public class HelpMethods {
         stage.setY((bounds.getHeight() - height) / 2);
     }
 
-    // do you really want to exit the Game?
+    // Pop-Up: do you really want to exit the Game? - all scenes except GamePlayground
     public static void closeProgramm() {
         CancelGame.exit();
     }
 
-    // do you really want to exit the Game - special for in-game: with saving
+    // Pop-Up: do you really want to exit the Game - special for in-game: with saving - only in GamePlayground
     public static void closeProgrammSaveGame() {
         CancelGame.save();
     }
@@ -41,32 +48,25 @@ public class HelpMethods {
     // save request -> remote wants to save
     public static void saveRequest() { Platform.runLater(SaveRequest::display);}
 
+    // load request -> remote wants to load, but no matching file
+    public static void noGameFile() { Platform.runLater(noMatchingSavedGame::display);}
 
     // unexpectecd message from remote
-    public static void unexceptedMessage() {Platform.runLater(unexceptedMessageFromRemote::display);}
+    public static void unexceptedMessage() {Platform.runLater(unexpectedMessageFromRemote::display);}
 
     // win or lose - new game or exit
     public static void winOrLose(boolean win) {
         Platform.runLater(() -> WinLose.display(win));
-        //todo -> only one is showed: when won - no response from client??
-        // when client wins: both displayed,
-        // when server wins: game does not stop for server, only for client - abfrage needed if all ships sunk in main??
-        // @Yannick @Simon Fehler finden
-
-        // todo beim popup -> systemleiste ausblenden -> soll nicht schließbar sein
     }
 
-    // todo: evtl better, does work but really slow
-   /* public void backToMainMenu() {
-        Parent mainMenu = null;
-        try {
-            mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu2.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
+    // method that closes MP SERVER/CLIENT SOCKETS - if there are existing ones
+    public static void closeMPSockets() {
+        if(ActiveGameState.isMultiplayer()){
+            if (ActiveGameState.isAmIServer()) {
+                ActiveGameState.getServer().closeConnection();
+            } else {
+                ActiveGameState.getClient().closeConnection();
+            }
         }
-        Main.primaryStage.setScene(new Scene(mainMenu));
-        Main.primaryStage.show();
     }
-    */
-
 }

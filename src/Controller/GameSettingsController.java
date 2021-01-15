@@ -227,10 +227,10 @@ public class GameSettingsController implements Initializable{
             selectDifficultyOwnKIText.setText("Schwierigkeit der eigenen Ki");
             button_backToMainMenu.setText("Zurück zum Hauptmenü");
             button_Start.setText("Start");
-            rB_difficultyEnemyNormal.setText("Ki auf dem Level normal");
-            rB_difficultyEnemyHard.setText("Ki auf dem Level schwer");
-            rB_difficultyOwnNormal.setText("Ki auf dem Level normal");
-            rB_difficultyOwnHard.setText("Ki auf dem Level schwer");
+            rB_difficultyEnemyNormal.setText("normal");
+            rB_difficultyEnemyHard.setText("schwer");
+            rB_difficultyOwnNormal.setText("normal");
+            rB_difficultyOwnHard.setText("schwer");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
             title.setText("Game Settings");
@@ -240,10 +240,10 @@ public class GameSettingsController implements Initializable{
             selectDifficultyOwnKIText.setText("Difficulty of Own Ki");
             button_backToMainMenu.setText("Back to Main Menu");
             button_Start.setText("Start");
-            rB_difficultyEnemyNormal.setText("Let Normal Ki play");
-            rB_difficultyEnemyHard.setText("Let Hard Ki play");
-            rB_difficultyOwnNormal.setText("Let Normal Ki play");
-            rB_difficultyOwnHard.setText("Let Hard Ki play");
+            rB_difficultyEnemyNormal.setText("normal");
+            rB_difficultyEnemyHard.setText("hard");
+            rB_difficultyOwnNormal.setText("normal");
+            rB_difficultyOwnHard.setText("hard");
         }
     }
 

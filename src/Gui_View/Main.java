@@ -4,6 +4,8 @@
 
 package Gui_View;
 
+import Gui_View.PopUpWindows.CancelGame;
+import Gui_View.PopUpWindows.WinLose;
 import Player.ActiveGameState;
 import Player.NetworkLogger;
 import javafx.application.Application;

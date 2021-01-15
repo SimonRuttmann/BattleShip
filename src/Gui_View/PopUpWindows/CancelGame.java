@@ -1,6 +1,8 @@
-package Gui_View;
+package Gui_View.PopUpWindows;
 
 
+import Gui_View.HelpMethods;
+import Gui_View.Main;
 import Player.NetworkLogger;
 import Player.ActiveGameState;
 
@@ -16,32 +18,43 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+
+/** CancelGame creates Pop-Ups that are displayed when the user clicks on the red "Exit-Button" of the window:
+ *  - a normal Pop-Up that is displayed in every Scene of the Game except the GamePlayground Scene. This one does only
+ *    ask if the user is sure if he is sure to close the game
+ *  - a extra Pop-Up that is only displayed when the current Scene is the GamePlayground Scene. This Pop-Up asks, if the
+ *    user wants to quit with or without saving and if so, gives the ability to enter a name for the saved file.
+ */
 public class CancelGame {
 
     static Scene choose, save, success;
     static int width = 300;
     static int height = 100;
 
+
+    /** a normal Pop-Up that is displayed in every Scene of the Game except the GamePlayground Scene. This one does only
+     *  ask if the user is sure if he is sure to close the game
+     */
     public static void exit() {
         Stage exit = new Stage();
         exit.initModality(Modality.APPLICATION_MODAL);
 
-        Label label = new Label("Wollen Sie das Spiel wirklich beenden?");
-        Button yes = new Button("Ja");
+
+        Label label = new Label();
+        Button yes = new Button();
         yes.setOnAction(e -> {
+            HelpMethods.closeMPSockets();
             exit.close();
             NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
-        Button no = new Button("Nein");
-        no.setOnAction(e -> {
-            exit.close();
-        });
+        Button no = new Button();
+        no.setOnAction(e -> exit.close());
+
 
         VBox exitBox = new VBox(15);
         HBox yesNo = new HBox(15);
@@ -51,27 +64,43 @@ public class CancelGame {
         exitBox.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(exitBox, width, height);
-        exit.setScene(scene);
         scene.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
         HelpMethods.alignStageCenter(exit, width, height);
+
+
+        // language settings
+        if(ActiveGameState.getLanguage() == ActiveGameState.Language.english) {
+            label.setText("Do you really want to exit the game?");
+            yes.setText("Yes");
+            no.setText("No");
+        } else {
+            label.setText("Wollen Sie das Spiel wirklich beenden?");
+            yes.setText("Ja");
+            no.setText("Nein");
+        }
+
+
+        exit.setScene(scene);
         exit.setResizable(false);
         exit.showAndWait();
     }
 
 
 
+    /** a extra Pop-Up that is only displayed when the current Scene is the GamePlayground Scene. This Pop-Up asks, if the
+     *  user wants to quit with or without saving and if so, gives the ability to enter a name for the saved file.
+     */
     public static void save() {
         Stage saveStage = new Stage();
         saveStage.initModality(Modality.APPLICATION_MODAL);
 
-        // Scene 1 - save or don't save
-        Button saveGame = new Button("Spiel speichern");
-        saveGame.setOnAction(e -> {
 
-            saveStage.setScene(save);
-        });
-        Button noSave = new Button("Beenden ohne Speichern");
+        // Scene 1 - asks the user: save or don't save?
+        Button saveGame = new Button();
+        Button noSave = new Button();
+        saveGame.setOnAction(e -> saveStage.setScene(save));
         noSave.setOnAction(e -> {
+            HelpMethods.closeMPSockets();
             saveStage.close();
             NetworkLogger.terminateLogging();
 
@@ -86,15 +115,14 @@ public class CancelGame {
 
 
 
-        // Scene 2 - enter name for saveGame
+        // Scene 2 - appears when user wants to save - enter name for saveGame
         // Label + Button
         TextField textField = new TextField();
-        textField.setPromptText("Speichernamen eingeben");
         textField.setMaxWidth(250);
-        Button saveAndMain = new Button("Speichern");
-        saveAndMain.setDisable(true);
+        Button confirmSave = new Button();
+        confirmSave.setDisable(true);
 
-        // saveAndMain is only clickable, when save name is valid
+        // confirmSave is only clickable, when save name is valid
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
 
             //The name the user put in -> Create a file with this text as name
@@ -104,16 +132,14 @@ public class CancelGame {
             char[] notAllowedCharacters = {'\\','/',':','!','?','*','"','|','<','>'};
             for ( char character : notAllowedCharacters){
                 if (savegamename.contains(String.valueOf(character)) || savegamename.isEmpty()) {
-                    saveAndMain.setDisable(true);
+                    confirmSave.setDisable(true);
                     return;
                 }
             }
-            saveAndMain.setDisable(false);
+            confirmSave.setDisable(false);
         });
 
-
-
-        saveAndMain.setOnAction(event -> {
+        confirmSave.setOnAction(event -> {
 
             //todo this is copied from game Playground
             //Create an ID and save it to the ActiveGameState, necessary for loading (Savegame will contain the load id by loading)
@@ -134,18 +160,16 @@ public class CancelGame {
             }
 
 
-            if(saveSuccess){
+            if(saveSuccess)
                 saveStage.setScene(success);
-                //TODO YANNICK Display -> Spiel wurde gespeichert -> Zum Hauptmenü zurückkehren (Am besten anch 3-5 sekunden, kein button benötigt) Dabei alle Threads beenden (interrupt)
-
-            }
             else {
-                //TODO LoggingNetwork Level SEVERE -> Error at saving
+                final Logger logClient = Logger.getLogger("parent.client");
+                logClient.log(Level.SEVERE,"Error at Saving.");
             }
         });
 
         VBox textAndButton = new VBox(15);
-        textAndButton.getChildren().addAll(textField, saveAndMain);
+        textAndButton.getChildren().addAll(textField, confirmSave);
         textAndButton.setAlignment(Pos.CENTER);
 
         save = new Scene(textAndButton, width, height);
@@ -154,20 +178,20 @@ public class CancelGame {
 
 
         // Scene 3 - successfully saved
-        Label successfull = new Label("Speichern erfolgreich!");
-        Button endGame = new Button("Spiel beenden");
+        Label successfull = new Label();
+        Button endGame = new Button();
+        Button backToMainManu = new Button();
         endGame.setOnAction(e -> {
-
-            save.close();
+            HelpMethods.closeMPSockets();
+            saveStage.close();
             NetworkLogger.terminateLogging();
-
             Main.primaryStage.close();
         });
-        Button backToMainManu = new Button("Hauptmenü");
         backToMainManu.setOnAction(event -> {
-            Parent mainMenu = null;
+            HelpMethods.closeMPSockets();
+            Parent mainMenu;
             try {
-                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 saveStage.close();
                 Main.primaryStage.show();
@@ -186,6 +210,27 @@ public class CancelGame {
 
         success = new Scene(layout2, width, height);
         success.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
+
+
+        // language settings
+        if(ActiveGameState.getLanguage() == ActiveGameState.Language.english) {
+            saveGame.setText("save game");
+            noSave.setText("exit without saving");
+            textField.setPromptText("enter file name");
+            confirmSave.setText("Save");
+            successfull.setText("saving successfull");
+            endGame.setText("exit game");
+            backToMainManu.setText("Main Menu");
+        } else {
+            saveGame.setText("Spiel speichern");
+            noSave.setText("Beenden ohne Speichern");
+            textField.setPromptText("Dateinamen eingeben");
+            confirmSave.setText("Speichern");
+            successfull.setText("Speichern erfolgreich");
+            endGame.setText("Spiel beenden");
+            backToMainManu.setText("Hauptmenü");
+        }
+
 
         saveStage.setScene(choose);
         HelpMethods.alignStageCenter(saveStage, width, height);

@@ -2,11 +2,9 @@ package Controller;
 
 import Gui_View.HelpMethods;
 import Gui_View.Main;
-import Gui_View.unexceptedMessageFromRemote;
+import Gui_View.PopUpWindows.unexpectedMessageFromRemote;
 import Player.ActiveGameState;
 import Player.SaveAndLoad;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -18,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -32,6 +31,8 @@ public class SaveRequest {
         Stage saveRequest = new Stage();
         saveRequest.initModality(Modality.APPLICATION_MODAL);
 
+        // kein Stage Style -> kann nicht abgebrochen werden
+        saveRequest.initStyle(StageStyle.UNDECORATED);
 
         // Label + Button
         Label remoteSaveRequest = new Label("Speicheranfrage vom Spielpartner!");
@@ -83,7 +84,7 @@ public class SaveRequest {
             if(saveSuccess){
                 Parent mainMenu = null;
                 try {
-                    mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                    mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                     Main.primaryStage.setScene(new Scene(mainMenu));
                     saveRequest.close();
                     Main.primaryStage.show();

@@ -1,8 +1,9 @@
-package Gui_View;
+package Gui_View.PopUpWindows;
 
+import Gui_View.HelpMethods;
+import Gui_View.Main;
+import Player.ActiveGameState;
 import Player.NetworkLogger;
-import javafx.fxml.FXML;
-
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -16,6 +17,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/** ConnectionFailed creates a PopUp that informs the user that it was not possible to establish a connection with the
+ *  remote partner and lets him choose whether he wants to go back to the Main Menu oder Exit the Game
+ */
 public class ConnectionFailed {
 
     static Scene conFailed;
@@ -26,13 +30,14 @@ public class ConnectionFailed {
         Stage failed = new Stage();
         failed.initModality(Modality.APPLICATION_MODAL);
 
-        Label showError = new Label("Verbindungsaufbau fehlgeschlagen");
-        Button backToStart = new Button("Hauptmenü");
-        Button endGame = new Button("Spiel beenden");
-        backToStart.setOnAction(event -> {
-            Parent mainMenu = null;
+        Label showError = new Label();
+        Button backToMainMenu = new Button();
+        Button endGame = new Button();
+        backToMainMenu.setOnAction(event -> {
+            HelpMethods.closeMPSockets();
+            Parent mainMenu;
             try {
-                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 failed.close();
                 Main.primaryStage.show();
@@ -41,13 +46,14 @@ public class ConnectionFailed {
             }
         });
         endGame.setOnAction(event -> {
+            HelpMethods.closeMPSockets();
             failed.close();
             NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
 
         HBox buttons = new HBox(15);
-        buttons.getChildren().addAll(backToStart, endGame);
+        buttons.getChildren().addAll(backToMainMenu, endGame);
         buttons.setAlignment(Pos.CENTER);
 
         VBox layout1 = new VBox(15);
@@ -58,8 +64,21 @@ public class ConnectionFailed {
         conFailed = new Scene(layout1, width, height);
         conFailed.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
 
-        failed.setScene(conFailed);
+
+        // language settings
+        if(ActiveGameState.getLanguage() == ActiveGameState.Language.english) {
+            showError.setText("establishing connection failed");
+            backToMainMenu.setText("Main Menu");
+            endGame.setText("Exit Game");
+        } else {
+            showError.setText("Verbindungsaufbau fehlgeschlagen");
+            backToMainMenu.setText("Hauptmenü");
+            endGame.setText("Spiel beenden");
+        }
+
+
         HelpMethods.alignStageCenter(failed, width, height);
+        failed.setScene(conFailed);
         failed.setResizable(false);
         failed.showAndWait();
     }

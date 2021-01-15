@@ -136,18 +136,22 @@ public class MpClientController implements Initializable {
 
     public void setLanguage(){
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
-            title.setText("Spiel beitreten");
-            textInsertIP.setText("Geben sie die IP des Hosts ein:");
-            infoLabel.setText("Die Verbindung wurde hergestellt. Warten sie bis der Host die Einstellungen eingestellt hat.");
-            button_backToMainMenu.setText("Zurück zum Hauptmenü");
-            button_Start.setText("Start");
+            title.setText("MIT SERVER VERBINDEN");
+            textInsertIP.setText("IP des Hosts eingeben: ");
+            button_backToMainMenu.setText("Hauptmenü");
+            button_Start.setText("Verbinden");
+            this.infoLabel.setText("Die Verbindung wurde hergestellt. Warten sie bis der Host die Einstellungen eingestellt hat.");
+            client_RbSelectKInormal.setText("normale KI spielen lassen");
+            client_RbSelectKIhard.setText("schwere KI spielen lassen");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
-            title.setText("Join Game");
-            textInsertIP.setText("Insert IP of Host:");
-            infoLabel.setText("Connection established. Wait until the host has set the settings");
+            title.setText("C O N N E C T I O N");
+            textInsertIP.setText("Insert Host IP-Address:");
+            this.infoLabel.setText("Connection established. Wait until the host has set the settings");
             button_backToMainMenu.setText("Back to Main Menu");
-            button_Start.setText("Start");
+            button_Start.setText("Connect");
+            client_RbSelectKInormal.setText("let normal KI play");
+            client_RbSelectKIhard.setText("let hard KI play");
         }
     }
 
@@ -273,8 +277,6 @@ public class MpClientController implements Initializable {
 
         this.anchorPane.setBackground(new Background(myBI));
     }
-
-
 }
 
 

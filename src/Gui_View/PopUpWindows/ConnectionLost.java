@@ -1,12 +1,11 @@
-package Gui_View;
+package Gui_View.PopUpWindows;
 
 
+import Gui_View.HelpMethods;
+import Gui_View.Main;
+import Player.ActiveGameState;
 import Player.NetworkLogger;
-import Player.SaveAndLoad;
-import Player.Savegame;
-
 import javafx.fxml.FXMLLoader;
-
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,9 +15,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
+
+/** ConnectionLost creates a PopUp that informs the user that the connection to the remote partner was lost and lets him
+ *  choose whether he wants to go back to the Main Menu oder Exit the Game
+ */
 public class ConnectionLost {
 
     static Scene conLost;
@@ -30,12 +32,14 @@ public class ConnectionLost {
         lost.initModality(Modality.APPLICATION_MODAL);
 
 
-        Label showError = new Label("Verbindung verloren");
-        Button backToStart = new Button("Hauptmenü");
-        backToStart.setOnAction(event -> {
-            Parent mainMenu = null;
+        Label showError = new Label();
+        Button backToMainMenu = new Button();
+        Button endGame = new Button();
+        backToMainMenu.setOnAction(event -> {
+            Parent mainMenu;
             try {
-                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                HelpMethods.closeMPSockets();
+                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 lost.close();
                 Main.primaryStage.show();
@@ -43,15 +47,16 @@ public class ConnectionLost {
                 e.printStackTrace();
             }
         });
-        Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(event -> {
+            HelpMethods.closeMPSockets();
             lost.close();
             NetworkLogger.terminateLogging();
             Main.primaryStage.close();
         });
 
+
         HBox buttons = new HBox(15);
-        buttons.getChildren().addAll(backToStart, endGame);
+        buttons.getChildren().addAll(backToMainMenu, endGame);
         buttons.setAlignment(Pos.CENTER);
 
         VBox layout1 = new VBox(15);
@@ -61,6 +66,19 @@ public class ConnectionLost {
 
         conLost = new Scene(layout1, width, height);
         conLost.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
+
+
+        // language settings
+        if(ActiveGameState.getLanguage() == ActiveGameState.Language.english) {
+            showError.setText("connection lost");
+            backToMainMenu.setText("Main Menu");
+            endGame.setText("Exit Game");
+        } else {
+            showError.setText("Verbindung verloren");
+            backToMainMenu.setText("Hauptmenü");
+            endGame.setText("Spiel beenden");
+        }
+
 
         lost.setScene(conLost);
         HelpMethods.alignStageCenter(lost, width, height);

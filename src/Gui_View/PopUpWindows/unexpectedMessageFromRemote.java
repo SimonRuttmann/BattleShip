@@ -1,5 +1,8 @@
-package Gui_View;
+package Gui_View.PopUpWindows;
 
+import Gui_View.HelpMethods;
+import Gui_View.Main;
+import Player.ActiveGameState;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -10,10 +13,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
-public class unexceptedMessageFromRemote {
+
+/** unexpectedMessageFromRemote informs the user that there was an unexpected message send by the remote
+ *  -> failure of remote programm
+ *  -> user can go back to Main Menu or Exit the Game
+ */
+public class unexpectedMessageFromRemote {
 
     static Scene wrongMessage;
     static int width = 300;
@@ -26,29 +33,32 @@ public class unexceptedMessageFromRemote {
 
 
         // Label + Button
-        Label showError = new Label("Unerwartete Nachricht vom Spielpartner");
-        Button backToStart = new Button("Hauptmenü");
+        Label showError = new Label();
+        Button backToMainMenu = new Button();
 
-        backToStart.setOnAction(event -> {
-            Parent mainMenu = null;
+        backToMainMenu.setOnAction(event -> {
+            Parent mainMenu;
             try {
-                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                HelpMethods.closeMPSockets();
+                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 unexceptedMessage.close();
                 Main.primaryStage.show();
             } catch (IOException e) {
+                HelpMethods.closeMPSockets();
                 e.printStackTrace();
             }
         });
-        Button endGame = new Button("Spiel beenden");
+        Button endGame = new Button();
         endGame.setOnAction(event -> {
+            HelpMethods.closeMPSockets();
             unexceptedMessage.close();
             Main.primaryStage.close();
         });
 
 
         HBox buttons = new HBox(15);
-        buttons.getChildren().addAll(backToStart, endGame);
+        buttons.getChildren().addAll(backToMainMenu, endGame);
         buttons.setAlignment(Pos.CENTER);
 
         VBox layout1 = new VBox(15);
@@ -57,6 +67,19 @@ public class unexceptedMessageFromRemote {
 
         wrongMessage = new Scene(layout1, width, height);
         wrongMessage.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
+
+
+        // language settings
+        if(ActiveGameState.getLanguage() == ActiveGameState.Language.english) {
+            showError.setText("unexpected message from remote");
+            endGame.setText("exit game");
+            backToMainMenu.setText("Main Menu");
+        } else {
+            showError.setText("Unerwartete Nachricht vom Spielpartner");
+            endGame.setText("Spiel beenden");
+            backToMainMenu.setText("Hauptmenü");
+        }
+
 
         unexceptedMessage.setScene(wrongMessage);
         HelpMethods.alignStageCenter(unexceptedMessage, width, height);

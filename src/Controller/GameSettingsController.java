@@ -94,11 +94,12 @@ public class GameSettingsController implements Initializable{
     public void setGameModeAndKi(){
         if (this.host_RbSelectKInormal.isSelected() || this.host_RbSelectKIhard.isSelected()) {
             ActiveGameState.setModes(GameMode.kiVsRemote);
-            ActiveGameState.setOwnKi(new Ki());
             if (this.host_RbSelectKInormal.isSelected())
                 ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
             else
                 ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
+
+            ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
         } else {
             ActiveGameState.setModes(GameMode.playerVsRemote);
         }
@@ -107,6 +108,8 @@ public class GameSettingsController implements Initializable{
 
 
     public void startShipPlacement(ActionEvent actionEvent) throws IOException{
+
+
         //Set the selected Settings to ActiveGameState
         ActiveGameState.setPlaygroundSize(this.selectPlaygroundsizeSlider.valueProperty().intValue());
         ActiveGameState.setAmountShipSize2(selectAmount2Ships.getValue());
@@ -128,20 +131,45 @@ public class GameSettingsController implements Initializable{
             MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
             multiplayerControlThreadConfigCommunication.start();
         }
+        //Singleplayer
+        else {
 
-        //Set Scene if singleplayer mode is selected
-        switch (ActiveGameState.getModes()){
-            case kiVsKi:        ActiveGameState.setRunning(true);
-                                Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-                                Main.primaryStage.setScene(new Scene(gamePlayground));
-                                Main.primaryStage.show();
-                                break;
+            if (this.rB_difficultyOwnNormal.isSelected()){
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
+            }
+            if (this.rB_difficultyOwnHard.isSelected()){
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
+            }
+            if (this.rB_difficultyEnemyNormal.isSelected()){
+                ActiveGameState.setEnemyKiDifficulty(Ki.Difficulty.normal);
+            }
+            if (this.rB_difficultyEnemyHard.isSelected()){
+                ActiveGameState.setEnemyKiDifficulty(Ki.Difficulty.hard);
+            }
 
-            case playerVsKi:    ActiveGameState.setRunning(true);
-                                Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
-                                Main.primaryStage.setScene(new Scene(placeShips));
-                                Main.primaryStage.show();
-                                break;
+            //Set Scene if singleplayer mode is selected
+            switch (ActiveGameState.getModes()) {
+                case kiVsKi:
+
+                    ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
+                    ActiveGameState.setEnemyKi(new Ki ( ActiveGameState.getEnemyKiDifficulty()));
+
+                    ActiveGameState.setRunning(true);
+                    Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                    Main.primaryStage.setScene(new Scene(gamePlayground));
+                    Main.primaryStage.show();
+                    break;
+
+                case playerVsKi:
+
+                    ActiveGameState.setEnemyKi(new Ki(ActiveGameState.getEnemyKiDifficulty()));
+
+                    ActiveGameState.setRunning(true);
+                    Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
+                    Main.primaryStage.setScene(new Scene(placeShips));
+                    Main.primaryStage.show();
+                    break;
+            }
         }
 
     }
@@ -471,21 +499,34 @@ public VBox host_selectRole;
 
     public void setShipImages(){
 
-        int scale = 20;
+        int scale = 30;
 
         // Sets the prefSize depending on the size of the ship
         // Loads the Image for the Ship's
         this.labelShipSize2.setPrefSize(2 * scale, scale);
-        this.labelShipSize2.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png"))));
+        ImageView image2 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/2erSchiff.png")));
+        image2.fitWidthProperty().bind(new SimpleIntegerProperty(2 * scale).asObject());
+        image2.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
+        this.labelShipSize2.setGraphic(image2);
+
 
         this.labelShipSize3.setPrefSize(3 * scale, scale);
-        this.labelShipSize3.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png"))));
+        ImageView image3 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/3erSchiff.png")));
+        image3.fitWidthProperty().bind(new SimpleIntegerProperty(3 * scale).asObject());
+        image3.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
+        this.labelShipSize3.setGraphic(image3);
 
         this.labelShipSize4.setPrefSize(4 * scale, scale);
-        this.labelShipSize4.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png"))));
+        ImageView image4 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png")));
+        image4.fitWidthProperty().bind(new SimpleIntegerProperty(4 * scale).asObject());
+        image4.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
+        this.labelShipSize4.setGraphic(image4);
 
         this.labelShipSize5.setPrefSize(5 * scale, scale);
-        this.labelShipSize5.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png"))));
+        ImageView image5 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png")));
+        image5.fitWidthProperty().bind(new SimpleIntegerProperty(5 * scale).asObject());
+        image5.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
+        this.labelShipSize5.setGraphic(image5);
 
     }
 

@@ -119,7 +119,8 @@ public class SaveAndLoad {
                 ActiveGameState.setOwnKi(e.ownKi);
                 ActiveGameState.setSceneIsPlaceShips(e.sceneIsPlaceShips);
                 ActiveGameState.setSceneIsGamePlayground(e.sceneIsGamePlayground);
-                ActiveGameState.setDifficulty(e.difficulty);
+                ActiveGameState.setEnemyKiDifficulty(e.enemyDifficulty);
+                ActiveGameState.setOwnKiDifficulty(e.ownDifficulty);
                 ActiveGameState.setSelfOrKi(e.selfOrKi);
                 ActiveGameState.setYourTurn(e.yourTurn);
     }
@@ -145,7 +146,8 @@ public class SaveAndLoad {
                 ActiveGameState.getOwnKi(),
                 ActiveGameState.isSceneIsPlaceShips(),
                 ActiveGameState.isSceneIsGamePlayground(),
-                ActiveGameState.getDifficulty(),
+                ActiveGameState.getEnemyKiDifficulty(),
+                ActiveGameState.getOwnKiDifficulty(),
                 ActiveGameState.isSelfOrKi(),
                 ActiveGameState.isYourTurn()
         );

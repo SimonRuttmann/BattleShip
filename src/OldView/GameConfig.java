@@ -89,7 +89,7 @@ public class GameConfig implements Initializable {
         ActiveGameState.setAmountShipSize5(number5Ships.getValue());
 
         // ki must be initialized
-        ActiveGameState.setEnemyKi(new Ki());
+       // ActiveGameState.setEnemyKi(new Ki());
 
         // todo Simon -> neuer Thread : wenn Server -> send cmd ships 222 333 44 ... to client
 

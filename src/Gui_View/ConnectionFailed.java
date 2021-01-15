@@ -2,6 +2,7 @@ package Gui_View;
 
 import Player.NetworkLogger;
 import javafx.fxml.FXML;
+
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -12,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class ConnectionFailed {
 
@@ -27,7 +30,15 @@ public class ConnectionFailed {
         Button backToStart = new Button("Hauptmenü");
         Button endGame = new Button("Spiel beenden");
         backToStart.setOnAction(event -> {
-            // todo -> go back. how??? static???
+            Parent mainMenu = null;
+            try {
+                mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                Main.primaryStage.setScene(new Scene(mainMenu));
+                failed.close();
+                Main.primaryStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
         endGame.setOnAction(event -> {
             failed.close();

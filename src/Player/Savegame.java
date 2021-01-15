@@ -30,7 +30,8 @@ public class Savegame{
 
     public boolean           sceneIsPlaceShips;
     public boolean           sceneIsGamePlayground;
-    public int               difficulty;
+    public Ki.Difficulty     enemyDifficulty;
+    public Ki.Difficulty     ownDifficulty;
     public boolean           selfOrKi;
     public boolean           yourTurn;
 
@@ -55,7 +56,8 @@ public class Savegame{
             Ki ownKi,
             boolean sceneIsPlaceShips,
             boolean sceneIsGamePlayground,
-            int difficulty,
+            Ki.Difficulty enemyDifficulty,
+            Ki.Difficulty ownDifficulty,
             boolean selfOrKi,
             boolean yourTurn
             )
@@ -79,7 +81,8 @@ public class Savegame{
         this.ownKi = ownKi;
         this.sceneIsPlaceShips = sceneIsPlaceShips;
         this.sceneIsGamePlayground = sceneIsGamePlayground;
-        this.difficulty = difficulty;
+        this.enemyDifficulty = enemyDifficulty;
+        this.ownDifficulty = ownDifficulty;
         this.selfOrKi = selfOrKi;
         this.yourTurn = yourTurn;
     }

@@ -70,7 +70,9 @@ public class GameOptionsController implements Initializable {
         if (rB_selectEnglish.isSelected()) ActiveGameState.setLanguage(ActiveGameState.Language.english);
         else ActiveGameState.setLanguage(ActiveGameState.Language.german);
 
+
         setLanguage();
+
     }
 
 

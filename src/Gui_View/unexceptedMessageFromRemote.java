@@ -1,12 +1,6 @@
 package Gui_View;
 
-
-import Player.NetworkLogger;
-import Player.SaveAndLoad;
-import Player.Savegame;
-
 import javafx.fxml.FXMLLoader;
-
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,25 +13,28 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class ConnectionLost {
+public class unexceptedMessageFromRemote {
 
-    static Scene conLost;
+    static Scene wrongMessage;
     static int width = 300;
     static int height = 100;
 
     public static void display() {
-        Stage lost = new Stage();
-        lost.initModality(Modality.APPLICATION_MODAL);
+
+        Stage unexceptedMessage = new Stage();
+        unexceptedMessage.initModality(Modality.APPLICATION_MODAL);
 
 
-        Label showError = new Label("Verbindung verloren");
+        // Label + Button
+        Label showError = new Label("Unerwartete Nachricht vom Spielpartner");
         Button backToStart = new Button("Hauptmenü");
+
         backToStart.setOnAction(event -> {
             Parent mainMenu = null;
             try {
                 mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
-                lost.close();
+                unexceptedMessage.close();
                 Main.primaryStage.show();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -45,10 +42,10 @@ public class ConnectionLost {
         });
         Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(event -> {
-            lost.close();
-            NetworkLogger.terminateLogging();
+            unexceptedMessage.close();
             Main.primaryStage.close();
         });
+
 
         HBox buttons = new HBox(15);
         buttons.getChildren().addAll(backToStart, endGame);
@@ -58,13 +55,12 @@ public class ConnectionLost {
         layout1.getChildren().addAll(showError, buttons);
         layout1.setAlignment(Pos.CENTER);
 
+        wrongMessage = new Scene(layout1, width, height);
+        wrongMessage.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
 
-        conLost = new Scene(layout1, width, height);
-        conLost.getStylesheets().add("/Gui_View/Stylesheets/DefaultTheme.css");
-
-        lost.setScene(conLost);
-        HelpMethods.alignStageCenter(lost, width, height);
-        lost.setResizable(false);
-        lost.showAndWait();
+        unexceptedMessage.setScene(wrongMessage);
+        HelpMethods.alignStageCenter(unexceptedMessage, width, height);
+        unexceptedMessage.setResizable(false);
+        unexceptedMessage.showAndWait();
     }
 }

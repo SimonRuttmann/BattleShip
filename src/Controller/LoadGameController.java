@@ -6,6 +6,7 @@ import Player.*;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -176,6 +177,7 @@ public class LoadGameController implements Initializable {
                 // create context menu + function for its items
                 ContextMenu contextMenu = new ContextMenu();
 
+                // load -> changes scene to game, loads game using SaveAndLoad.load()
                 MenuItem load = new MenuItem("Spielstand laden");
                 load.setOnAction(e -> {
 

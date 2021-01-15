@@ -45,6 +45,7 @@ git rm --cached -r .savedGames
         Main.primaryStage = primaryStage;
 
 
+
         //TODO new Scene
         Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
         ActiveGameState.newView = true;

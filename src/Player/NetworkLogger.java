@@ -18,6 +18,8 @@ public class NetworkLogger {
         Logger logger = Logger.getLogger("parent");
         logger.setUseParentHandlers(false);
         FileHandler fileHandler = new FileHandler("src/Logs/log.txt", true);
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+
         fileHandler.setFormatter(new Formatter() {
             @Override
             public String format(LogRecord record) {
@@ -28,7 +30,18 @@ public class NetworkLogger {
 
             }
         });
+        consoleHandler.setFormatter(new Formatter() {
+            @Override
+            public String format(LogRecord record) {
+                SimpleDateFormat DateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
+                Date a = new Date(record.getMillis());
+                //String logLines = a + " [ " + record.getLevel() + " ] " + "[ " + record.getClass() + " ] " + "[ " + record.getSourceMethodName() + " ] " + this.formatMessage(record);
+                return a + " [ " + record.getLevel() + " ] " + "[ " + record.getClass() + " ] " + "[ " + record.getSourceMethodName() + " ] " + this.formatMessage(record) + '\n';
+
+            }
+        });
         logger.addHandler(fileHandler);
+        logger.addHandler(consoleHandler);
         logger.log(Level.INFO,"Es lebt!");
 
     }

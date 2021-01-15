@@ -10,29 +10,20 @@ import Model.Playground.EnemyPlayground;
 import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Ship.IShip;
-import Model.Ship.Ship;
 import Player.ActiveGameState;
 import Player.GameMode;
 import Controller.Handler.GameShootEnemy;
 import Player.SaveAndLoad;
-import Player.Savegame;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -40,15 +31,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+
 
 public class GamePlayground implements Initializable {
-
-
-
 
     // import from FXML
     @FXML
@@ -121,7 +113,7 @@ public class GamePlayground implements Initializable {
         //prevent the player from closing the game accidentally -> should be asked wether he wants to save or hard quit
         Main.primaryStage.setOnCloseRequest(e -> {
             e.consume();
-            Gui_View.HelpMethods.closeProgrammSaveGame();
+            Gui_View.HelpMethods.closeProgrammSaveGame(false);
         });
 
 
@@ -241,12 +233,12 @@ public class GamePlayground implements Initializable {
     public void setLanguage(){
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
             buttonShowSaveBar.setText("Spiel speichern");
-            saveGameText.setText("Geben sie den Namen des Spielstandes ein");
+            saveGameText.setPromptText("Geben sie den Namen des Spielstandes ein");
             saveAndCloseButton.setText("Speichern und Schließen");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
             buttonShowSaveBar.setText("Save Game");
-            saveGameText.setText("Enter the save name here");
+            saveGameText.setPromptText("Enter the save name here");
             saveAndCloseButton.setText("Save and Close");
         }
     }
@@ -351,21 +343,11 @@ public class GamePlayground implements Initializable {
         }
 
         if ( saveSuccess ) {
-            System.out.println( "Game saved ");
-            Platform.runLater( () -> {
-                try {
-                    Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
-                    Main.primaryStage.setScene(new Scene(gameSettings));
-                    Main.primaryStage.show();
-                }
-                catch ( Exception e){
-                    e.printStackTrace();
-                }
-            });
-            //TODO YANNICK Display -> Spiel wurde gespeichert -> Zum Hauptmenü zurückkehren (Am besten anch 3-5 sekunden, kein button benötigt) Dabei alle Threads beenden (interrupt)
+            HelpMethods.closeProgrammSaveGame(true);
         }
         else{
-            //TODO LoggingNetwork Level SEVERE -> Error at saving
+            final Logger logClient = Logger.getLogger("parent.client");
+            logClient.log(Level.SEVERE,"Error at Saving.");
         }
 
     }
@@ -382,7 +364,7 @@ public class GamePlayground implements Initializable {
     public TextField saveGameText;
     private boolean saveBarShown = false;
 
-    public void showSaveBar(ActionEvent actionEvent) {
+    public void showSaveBar() {
 
         if (!saveBarShown) {
             hideSaveGameBar(false);

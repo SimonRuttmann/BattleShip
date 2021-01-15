@@ -50,3 +50,6 @@ Fri Jan 15 17:43:57 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <i
 Fri Jan 15 17:44:17 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
 Fri Jan 15 17:47:04 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
 Fri Jan 15 22:13:20 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Fri Jan 15 22:24:39 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Fri Jan 15 22:38:42 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Fri Jan 15 22:39:55 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!

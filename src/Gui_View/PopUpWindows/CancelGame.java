@@ -28,6 +28,8 @@ import java.util.logging.Logger;
  *    ask if the user is sure if he is sure to close the game
  *  - a extra Pop-Up that is only displayed when the current Scene is the GamePlayground Scene. This Pop-Up asks, if the
  *    user wants to quit with or without saving and if so, gives the ability to enter a name for the saved file.
+ *    -> if the user has saved over the playgroundGui it only gives the possibility to head back to Main Menu or Exit
+ *       the game
  */
 public class CancelGame {
 
@@ -89,8 +91,10 @@ public class CancelGame {
 
     /** a extra Pop-Up that is only displayed when the current Scene is the GamePlayground Scene. This Pop-Up asks, if the
      *  user wants to quit with or without saving and if so, gives the ability to enter a name for the saved file.
+     *
+     *  This pop-up also appears when the game is saved over the playground gui, but then only screen3 is displayed
      */
-    public static void save() {
+    public static void save(boolean alreadySaved) {
         Stage saveStage = new Stage();
         saveStage.initModality(Modality.APPLICATION_MODAL);
 
@@ -141,7 +145,6 @@ public class CancelGame {
 
         confirmSave.setOnAction(event -> {
 
-            //todo this is copied from game Playground
             //Create an ID and save it to the ActiveGameState, necessary for loading (Savegame will contain the load id by loading)
             long id = System.currentTimeMillis();
             ActiveGameState.setLoadId(id);
@@ -200,6 +203,7 @@ public class CancelGame {
             }
         });
 
+
         HBox buttons = new HBox(15);
         buttons.getChildren().addAll(backToMainManu, endGame);
         buttons.setAlignment(Pos.CENTER);
@@ -232,7 +236,10 @@ public class CancelGame {
         }
 
 
-        saveStage.setScene(choose);
+        if(alreadySaved)
+            saveStage.setScene(success);
+        else
+            saveStage.setScene(choose);
         HelpMethods.alignStageCenter(saveStage, width, height);
         saveStage.setResizable(false);
         saveStage.showAndWait();

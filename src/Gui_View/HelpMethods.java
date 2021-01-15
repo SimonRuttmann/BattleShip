@@ -31,8 +31,8 @@ public class HelpMethods {
     }
 
     // Pop-Up: do you really want to exit the Game - special for in-game: with saving - only in GamePlayground
-    public static void closeProgrammSaveGame() {
-        CancelGame.save();
+    public static void closeProgrammSaveGame(boolean alreadySaved) {
+        CancelGame.save(alreadySaved);
     }
 
     // connectionFailed

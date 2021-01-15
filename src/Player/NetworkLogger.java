@@ -2,6 +2,7 @@ package Player;
 
 import Controller.Handler.LoggingThread;
 
+import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,7 +15,9 @@ public class NetworkLogger {
 
     public NetworkLogger() throws IOException{
         LoggingThread loggingThread = new LoggingThread("loggingThread");
+        ActiveGameState.loggingThread = loggingThread;
         loggingThread.start();
+
         Logger logger = Logger.getLogger("parent");
         logger.setUseParentHandlers(false);
         FileHandler fileHandler = new FileHandler("src/Logs/log.txt", true);
@@ -54,6 +57,23 @@ public class NetworkLogger {
         for (java.util.logging.Handler filehandler : logger.getHandlers()){
             filehandler.close();
         }
+
+        try {
+            ActiveGameState.loggingReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+      /*  System.out.println("Try to interrupt");
+        ActiveGameState.loggingThread.interrupt();
+        System.out.println("Interupted");
+       try {
+            ActiveGameState.loggingReader.close();
+           System.out.println("Closed Reader");
+            System.in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 }
 

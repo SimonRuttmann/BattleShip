@@ -34,8 +34,16 @@ public class CancelGame {
         Label label = new Label("Wollen Sie das Spiel wirklich beenden?");
         Button yes = new Button("Ja");
         yes.setOnAction(e -> {
+
+            ActiveGameState.setRunning(false);
+            System.out.println("RUNNING IN EXIT = \n\n\n\n\n\n\n\n\n\n\n\n\n\n" + ActiveGameState.isRunning());
             exit.close();
+
+
+
             NetworkLogger.terminateLogging();
+            ActiveGameState.setLogging(false);
+           // System.exit(0);
             Main.primaryStage.close();
         });
         Button no = new Button("Nein");
@@ -67,11 +75,12 @@ public class CancelGame {
         // Scene 1 - save or don't save
         Button saveGame = new Button("Spiel speichern");
         saveGame.setOnAction(e -> {
-
+            ActiveGameState.setRunning(false);
             saveStage.setScene(save);
         });
         Button noSave = new Button("Beenden ohne Speichern");
         noSave.setOnAction(e -> {
+            ActiveGameState.setRunning(false);
             saveStage.close();
             NetworkLogger.terminateLogging();
 
@@ -158,14 +167,18 @@ public class CancelGame {
         Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(e -> {
 
-            save.close();
+
+            saveStage.close();
+
             NetworkLogger.terminateLogging();
+            ActiveGameState.setLogging(false);
 
             Main.primaryStage.close();
+            System.exit(0);
         });
         Button backToMainManu = new Button("Hauptmenü");
         backToMainManu.setOnAction(event -> {
-            Parent mainMenu = null;
+            Parent mainMenu;
             try {
                 mainMenu = FXMLLoader.load(unexceptedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));

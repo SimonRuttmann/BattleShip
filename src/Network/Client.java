@@ -1,10 +1,15 @@
 package Network;
 
+import Gui_View.HelpMethods;
+import Player.ActiveGameState;
 import Player.NetworkLogger;
 
 import java.io.*;
 
+import java.net.ConnectException;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,9 +36,15 @@ public class Client extends Communication  {
             this.setInputReader(new BufferedReader(new InputStreamReader(client.getInputStream())));
 
             this.setOutputWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())));
-            logClient.log(Level.INFO,"Client connected to Server.");
+            ActiveGameState.setRunning(true);
+            logClient.log(Level.INFO, "Client connected to Server.");
+        } catch (UnknownHostException | ConnectException e){
+            //TODO Host is now known
+            ActiveGameState.setRunning(false);
+            HelpMethods.connectionFailed();
         } catch (IOException e) {
             e.printStackTrace();
+            ActiveGameState.setRunning(false);
             logClient.log(Level.SEVERE,"Failed to connect to Server.");
         }
 

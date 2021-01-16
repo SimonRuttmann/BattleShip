@@ -121,3 +121,28 @@ Sat Jan 16 19:15:10 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ st
 Sat Jan 16 19:15:35 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ startSeverConnection ] Connection from Server to Client established
 Sat Jan 16 19:17:03 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
 Sat Jan 16 19:17:05 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 19:18:53 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Sat Jan 16 19:20:54 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Sat Jan 16 19:21:11 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ startSeverConnection ] Connection from Server to Client established
+Sat Jan 16 19:22:16 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 19:22:40 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ startSeverConnection ] Connection from Server to Client established
+Sat Jan 16 19:23:36 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 19:24:04 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 19:25:12 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Sat Jan 16 19:27:11 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Sat Jan 16 19:28:06 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ startSeverConnection ] Connection from Server to Client established
+Sat Jan 16 19:29:25 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 19:29:49 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Sat Jan 16 19:30:18 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ startSeverConnection ] Connection from Server to Client established
+Sat Jan 16 19:31:16 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 19:31:21 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 19:32:00 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Sat Jan 16 19:32:30 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ startSeverConnection ] Connection from Server to Client established
+Sat Jan 16 19:33:33 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 19:34:15 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ startSeverConnection ] Connection from Server to Client established
+Sat Jan 16 19:37:42 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 19:41:27 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Sat Jan 16 19:42:07 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Client connected to Server.
+Sat Jan 16 19:43:13 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Client connection closed!
+Sat Jan 16 19:43:41 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Client connection closed!
+Sat Jan 16 19:43:43 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Client connection closed!

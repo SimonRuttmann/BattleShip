@@ -542,7 +542,7 @@ private int debugg = 0;
     protected Point normalKiShot;
     private boolean needRandomLocation;
 
-    protected boolean normaleKi(IOwnPlayground playground){
+    protected boolean normaleKi(IOwnPlayground playground){ //TODO Christian, hängst sich bei SAVE and LOAD manchmal auf
         ShotResponse answerofShot;
         int random_x;
         int random_y;

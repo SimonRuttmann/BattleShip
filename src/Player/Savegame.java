@@ -11,7 +11,6 @@ public class Savegame{
     public long              id;
     public GameMode          modes;
     public boolean           OwnPlayerKi;
-
     public OwnPlayground    ownPlayerIOwnPlayground;
     public EnemyPlayground  ownPlayerIEnemyPlayground;
     public OwnPlayground    enemyPlayerOwnPlayground;

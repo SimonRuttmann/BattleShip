@@ -108,6 +108,7 @@ public class GamePlayground implements Initializable {
             ActiveGameState.getEnemyPlayerOwnPlayground().buildPlayground();
             if ( ActiveGameState.getEnemyPlayerOwnPlayground() != null)
             ActiveGameState.getEnemyPlayerOwnPlayground().buildPlayground();
+
         }
             /**
              * After playground is initialized the thread SingleplayerControlThreadKivsKi has to be started, if the Gamemode KivsKi is selected
@@ -219,6 +220,14 @@ public class GamePlayground implements Initializable {
         ActiveGameState.getOwnPlayerIEnemyPlayground().setLabels(enemyFieldArray);
         ActiveGameState.getOwnPlayerIEnemyPlayground().drawPlayground();
 
+
+        //Necessary for instant update of the playground
+        if (ActiveGameState.getModes() == GameMode.playerVsRemote || ActiveGameState.getModes() == GameMode.playerVsKi) {
+            ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
+            ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
+        }
+
+        //TODO AKTUALISIERE GENAU HIER DIE GUI FÜR DIE SHIP LABELS NICHT WEITER OBEN UND NCHT WEITER UNTEN!
 
         //
 

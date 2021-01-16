@@ -147,6 +147,8 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
     }
         //TODO Kommentieren
         //wenn ki vs Remote -> wieder den KI shoot Thread starten -> ping pong
+        System.out.println(ActiveGameState.getModes());
+
         if( ActiveGameState.getModes() == GameMode.kiVsRemote){
             MultiplayerControlThreadKiShootsEnemy multiplayerControlThreadKiShootsEnemy = new MultiplayerControlThreadKiShootsEnemy();
             multiplayerControlThreadKiShootsEnemy.start();

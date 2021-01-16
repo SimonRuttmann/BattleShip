@@ -43,17 +43,22 @@ import java.io.IOException;
  * ki       -> playground scene
  *
  * Send/received parameters are either received or stored form the ActiveGameState.java
+ * load  s
+ * done  c
+ * ready s
+ * ready c
  */
 public class MultiplayerControlThreadConfigCommunication extends Thread{
     @Override
     public void run(){
         System.out.println("Multiplayer Control Thread Config Communication");
-
+        System.out.println("An der Reihe: " + ActiveGameState.isYourTurn());
         //Server
 
         if (ActiveGameState.isAmIServer()){
 
-            if ( ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ActiveGameState.setLoadWithNext(ActiveGameState.isYourTurn());
+
+            if ( ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ActiveGameState.setLoadWithNext(!ActiveGameState.isYourTurn());
 
             ActiveGameState.setYourTurn(true);
             String[] receivedCMD;

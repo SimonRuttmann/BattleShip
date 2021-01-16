@@ -187,7 +187,7 @@ public class GameSettingsController implements Initializable{
         setTitleSettings();
         setLineSettings();
         setRectangleSettings();
-        setShipImages();
+        setShipImages();            //TODO Yannicks Bilder verursachen, das der Slider nicht mehr geht
         startAnimation();
         setValuesOfPlaygroundAndShip();
         setRadioButtonSettings();

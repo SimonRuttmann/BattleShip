@@ -41,7 +41,7 @@ public class Client extends Communication  {
         } catch (UnknownHostException | ConnectException e){
             //TODO Host is now known
             ActiveGameState.setRunning(false);
-            HelpMethods.connectionFailed();
+            //HelpMethods.connectionFailed();
         } catch (IOException e) {
             e.printStackTrace();
             ActiveGameState.setRunning(false);

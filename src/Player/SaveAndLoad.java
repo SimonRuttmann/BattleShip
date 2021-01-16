@@ -58,6 +58,7 @@ public class SaveAndLoad {
 
     public static Savegame load (long id){
         String nameOfSavegame = SavegameLinker.readLinker(id);
+        System.out.println("Found the name of the savegame: "+ nameOfSavegame+ "ReferredID: " + id);
         return load(nameOfSavegame);
     }
 
@@ -86,6 +87,7 @@ public class SaveAndLoad {
 
            // Gson gson = new Gson(); // create Gson instance
             // temp = the complete path to the file that is intend to be loaded: e.g. temp = ".savedGames/test.json"
+            System.out.println(nameOfSavegame);
             Reader reader = Files.newBufferedReader(Paths.get(nameOfSavegame)); //create a reader
             Savegame e = gson.fromJson(reader, Savegame.class); // write File content to Savegame-Object e
             reader.close();

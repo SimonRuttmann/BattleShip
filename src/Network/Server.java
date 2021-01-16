@@ -43,9 +43,7 @@ public class Server extends Communication implements IServer{
                 this.closeReaderWriter();
                 logServer.log(Level.INFO, "Serversocket closed!");
             } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("Serversocket konnte nicht geschlossen werden");
-                logServer.log(Level.INFO,"Serversocket failed to close!");
+                logServer.log(Level.SEVERE,"Serversocket failed to close!");
             }
         }
     }
@@ -62,7 +60,7 @@ public class Server extends Communication implements IServer{
           return ips;
       }
       catch(UnknownHostException e){
-          e.printStackTrace();
+          logServer.log(Level.SEVERE, "Connection over datagrammSocket impossible, no IP can be shown");
           return null;
       }
     }
@@ -78,7 +76,7 @@ public class Server extends Communication implements IServer{
             socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
             ip = socket.getLocalAddress().getHostAddress();
         } catch (UnknownHostException | SocketException e) {
-            e.printStackTrace();
+            logServer.log(Level.SEVERE, "Connection over datagrammSocket impossible, no IP can be shown");
             return null;
         }
         return ip;
@@ -91,7 +89,8 @@ public class Server extends Communication implements IServer{
             System.out.println("Waiting for Client");
             Socket server_connected  = server.accept(); //Server bietet 1ne Min lang verbindung an
             server_connected.setSoTimeout(60000);
-            System.out.println("Connection from Server to Client established");
+          //  System.out.println("Connection from Server to Client established");
+            logServer.log(Level.INFO, "Connection from Server to Client established");
             this.server_connected = server_connected;
             //Set up input and output reader reading/writing form the in-/output stream of the socket
             //Set them up as buffered reader to read and write lines instead of bytes
@@ -106,16 +105,19 @@ public class Server extends Communication implements IServer{
 
         //This exception occurs, when no socket connected to the server for 1 min
         catch (SocketTimeoutException e){
+            logServer.log(Level.INFO, "Timeout at offering connection");
             return ConnectionStatus.Timeout;
         }
         //This exception is thrown by closing the server,
         //if the server.accept() didn`t already connection the remote socket
         //No actions are needed for handling
         catch (SocketException e){
+            logServer.log(Level.INFO, "Manual close at offering connection");
             return ConnectionStatus.ManualClose;
         }
         //All other standard IO Exception cases
         catch (IOException e) {
+            logServer.log(Level.SEVERE, "IOException by offering connection");
             return ConnectionStatus.ioException;
         }
     }

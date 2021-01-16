@@ -21,7 +21,7 @@ public class Water implements IDrawable {
         // Wasser = keine Grafik
       
       //TODO Erstmal mit, und später ohne Testen -> wenns ohne geht rausschmeisen -> (setGraphic wurde nicht in jedem Fall in der Gui angezeigt) -> Whr löschen
-        this.label.setGraphic(null);
+        //this.label.setGraphic(null);
         Platform.runLater(() -> {
             //Das ist für die PlaceShips Scene
             if (!validShipPlacementMarker && ActiveGameState.isSceneIsPlaceShips()) {

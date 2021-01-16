@@ -70,7 +70,7 @@ public class SaveAndLoad {
 
             System.out.println(nameOfSavegame);
             if ( ActiveGameState.isMultiplayer() && !(nameOfSavegame.contains(".multiplayer"))){
-                nameOfSavegame = ".multiplayerGames\\" + nameOfSavegame + ".json";
+                nameOfSavegame = ".multiplayerGames/" + nameOfSavegame + ".json";
             }
            // if ( ActiveGameState.isMultiplayer() && !(nameOfSavegame.contains(".multiplayer/"))){
            //     nameOfSavegame = ".multiplayerGames/" + nameOfSavegame + ".json";

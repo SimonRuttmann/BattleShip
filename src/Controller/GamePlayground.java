@@ -83,7 +83,10 @@ public class GamePlayground implements Initializable {
 
         setLanguage();
         initializeSaveGameBar();
-  
+
+
+
+
     //todo make ship hits displayed on grid pane, not on labels > do it also in SinglePlayer
     //todo set labels of own playground to ships -> MultiplayercontrolThreadGetShot?
 
@@ -94,6 +97,17 @@ public class GamePlayground implements Initializable {
             // if ki is part of game, playgrounds are not created in placeShips -> done here
             initializeKiPlayground();
 
+        } //initialize Playgrounds after loading with build
+        else{
+            System.out.println("Build im Laden Ausgeführt");
+            ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
+            ActiveGameState.getOwnPlayerIEnemyPlayground().buildPlayground();
+
+
+            if ( ActiveGameState.getEnemyPlayerOwnPlayground() != null)
+            ActiveGameState.getEnemyPlayerOwnPlayground().buildPlayground();
+            if ( ActiveGameState.getEnemyPlayerOwnPlayground() != null)
+            ActiveGameState.getEnemyPlayerOwnPlayground().buildPlayground();
         }
             /**
              * After playground is initialized the thread SingleplayerControlThreadKivsKi has to be started, if the Gamemode KivsKi is selected
@@ -217,10 +231,10 @@ public class GamePlayground implements Initializable {
 
         //Client starts Control Enemy Action
         if (! ActiveGameState.isAmIServer() && ActiveGameState.getModes() == GameMode.playerVsRemote){
-            MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
-            multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
             setSaveAndCloseButtonNonClickable();
+            MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
+            multiplayerControlThreadPerformEnemyAction.start();
         }
 
         //TODO !SIMON!
@@ -229,10 +243,10 @@ public class GamePlayground implements Initializable {
         //Server starts Control Enemy Action, when we Load with a game, where the enemy´s turn is present
         //In all other cases, no Threads have to be started, as the user is starting the shootThread by clicking the Labels
         if (ActiveGameState.isAmIServer() && ActiveGameState.isLoadWithNext() && ActiveGameState.getModes() == GameMode.playerVsRemote){
-            MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
-            multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
             setSaveAndCloseButtonNonClickable();
+            MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
+            multiplayerControlThreadPerformEnemyAction.start();
         }
 
 

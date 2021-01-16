@@ -26,6 +26,9 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
     public void run() {
 
         System.out.println( "Starte Multiplayer Perform Enemy Action");
+        System.out.println("Your Turn: " + ActiveGameState.isYourTurn() + "sollte false sein. Running: " + ActiveGameState.isRunning() + "sollte true sein.");
+        //Your Turn ist genau dann true, wenn geladen wird und der Client an der Reihe war
+        ActiveGameState.setYourTurn(false);
         while( !ActiveGameState.isYourTurn() && ActiveGameState.isRunning()) {
 
         //1
@@ -152,8 +155,11 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
         }
 
         //5
+        System.out.println("Enable playground");
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
+        ActiveGameState.getOwnPlayerIEnemyPlayground().drawPlayground();
         GamePlayground.setSaveAndCloseButtonClickable();
+        System.out.println("should be enabled");
         System.out.println( "Beende Multiplayer Perform Enemy Action ");
     }
 }

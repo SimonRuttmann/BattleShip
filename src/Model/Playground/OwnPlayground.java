@@ -77,10 +77,16 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
         //Hit
         if (Field[pos_shot.getX()][pos_shot.getY()] instanceof ShipPart){
 
+            System.out.println("Shoot Own playground methode -> Hit");;
+
             //Decrease Hit Points of the Ship
             ShipPart hitShipPart = (ShipPart)Field[pos_shot.getX()][pos_shot.getY()];
+            System.out.println("Erhaltenes Schiffsteil " + hitShipPart);
             IShip hitShip = hitShipPart.getOwner();
+            System.out.println("Erhaltener Owner: " + hitShipPart.getOwner());
+            System.out.println("HitPoints des Schiffs vor reduzeirung" + hitShip.gethitPoints());
             hitShip.sethitPoints( hitShip.gethitPoints() -1 );
+            System.out.println("HitPoints des Schiff nach reduzieung" + hitShip.gethitPoints());
 
             //Mark shipPart as destroyed
             hitShipPart.setPart("Destroyed");
@@ -438,7 +444,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
             //    Field[point.getX()][point.getY()] = new ShipPart("start vertical", ship);
             //}
 
-
+        System.out.println( "Schiff hinzugefügt");
             //Insert Ship parts
             //Ship vertical
             if (xStart == xEnd) {

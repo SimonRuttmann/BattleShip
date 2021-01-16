@@ -21,7 +21,7 @@ public class LoggingThread extends Thread{
     }
     public void run() {
 
-            System.out.println("Geben sie das Logging Level ein. Standart ist ALL.");
+            System.out.println("Geben sie das Logging Level ein. Standard ist ALL.");
 
             final Socket s;
          //   s = new Socket("localhost", 49999);
@@ -45,7 +45,7 @@ public class LoggingThread extends Thread{
                             NetworkLogger.setLevel(Level.CONFIG);
                             break;
                         case "FINE":
-                            NetworkLogger.setLevel(Level.FINE);
+                            NetworkLogger.setLevel(Level.FINE);     //genau ausgabe
                             break;
                         case "FINER":
                             NetworkLogger.setLevel(Level.FINER);
@@ -54,16 +54,16 @@ public class LoggingThread extends Thread{
                             NetworkLogger.setLevel(Level.FINEST);
                             break;
                         case "INFO":
-                            NetworkLogger.setLevel(Level.INFO);
+                            NetworkLogger.setLevel(Level.INFO);     //standard ausgabe
                             break;
                         case "OFF":
                             NetworkLogger.setLevel(Level.OFF);
                             break;
                         case "SEVERE":
-                            NetworkLogger.setLevel(Level.SEVERE);
+                            NetworkLogger.setLevel(Level.SEVERE);   //Ausgabe von nicht behandelbaren Fehlern
                             break;
                         case "WARNING":
-                            NetworkLogger.setLevel(Level.WARNING);
+                            NetworkLogger.setLevel(Level.WARNING);  //Ausgabe von behandelten Fehlern
                             break;
                         case "Close":
                             reader.close();

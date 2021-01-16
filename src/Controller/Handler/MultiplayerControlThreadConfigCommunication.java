@@ -11,7 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 //TODO S load .....
@@ -49,20 +50,24 @@ import java.io.IOException;
  * ready c
  */
 public class MultiplayerControlThreadConfigCommunication extends Thread{
+    public static final Logger configCommunicationThread = Logger.getLogger("parent.MultiplayerControlThreadConfigCommunication");
     @Override
     public void run(){
-        System.out.println("Multiplayer Control Thread Config Communication");
-        System.out.println("An der Reihe: " + ActiveGameState.isYourTurn());
+
+        configCommunicationThread.log(Level.INFO, "Multiplayer Control Thread Config Communication");
+        configCommunicationThread.log(Level.FINE, "Players turn: " + ActiveGameState.isYourTurn());
+
         //Server
 
         if (ActiveGameState.isAmIServer()){
-
+            configCommunicationThread.log(Level.FINE, "Server sends configuration");
             System.out.println(ActiveGameState.getLoading());
             if ( ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ActiveGameState.setLoadWithNext(!ActiveGameState.isYourTurn());
 
             ActiveGameState.setYourTurn(true);
             String[] receivedCMD;
             if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer)) {
+                configCommunicationThread.log(Level.FINE, "Send player's set configuration");
                 ActiveGameState.getServer().sendCMD(CMD.size, Integer.toString(ActiveGameState.getPlaygroundSize()));
                 receivedCMD = ActiveGameState.getServer().getCMD();
                 switch (receivedCMD[0]) {
@@ -75,7 +80,6 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                     default:            HelpMethods.unexceptedMessage();
                                         ActiveGameState.getServer().closeConnection();
                                         ActiveGameState.setRunning(false);
-                                        System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
                                         return;
                 }
 
@@ -106,7 +110,7 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
             }
             //Load Game
             else{
-
+                configCommunicationThread.log(Level.FINE, "Send loaded configuration");
                 ActiveGameState.getServer().sendCMD(CMD.load, String.valueOf(ActiveGameState.getLoadId()));
                /* receivedCMD = ActiveGameState.getServer().getCMD();
                 switch (receivedCMD[0]) {
@@ -135,7 +139,6 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 default:            HelpMethods.unexceptedMessage();
                                     ActiveGameState.getServer().closeConnection();
                                     ActiveGameState.setRunning(false);
-                                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
                                     return;
             }
 
@@ -155,16 +158,15 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 default:            HelpMethods.unexceptedMessage();
                                     ActiveGameState.getServer().closeConnection();
                                     ActiveGameState.setRunning(false);
-                                    System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
                                     return;
             }
 
-
-            System.out.println("Game Configurations successfully transmitted to Client.");
+            configCommunicationThread.log(Level.INFO, "Game Configurations successfully transmitted to Client.");
 
             //Send next, as we loaded a game where the enemy turn is active
             if (ActiveGameState.isLoadWithNext()){
                 ActiveGameState.getServer().sendCMD(CMD.next,"");
+                configCommunicationThread.log(Level.FINE, "Game is loaded and the client turn is active");
             }
 
         }
@@ -220,8 +222,10 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                                 case 3:     size3++;    break;
                                 case 4:     size4++;    break;
                                 case 5:     size5++;    break;
-                                default:
-                                    System.out.println("Unexpected Message from Server: " + receivedCMD[i]);
+                                default:        HelpMethods.unexceptedMessage();
+                                                ActiveGameState.getClient().closeConnection();
+                                                ActiveGameState.setRunning(false);
+                                                return;
                             }
                         }
 
@@ -239,14 +243,11 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                                         HelpMethods.unexceptedMessage();
                                         ActiveGameState.getClient().closeConnection();
                                         ActiveGameState.setRunning(false);
-                                        System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
                                         return;
                 }
             }
 
             ActiveGameState.getClient().sendCMD(CMD.done, "");
-
-
 
             //get ready, send ready
             receivedCMD = ActiveGameState.getClient().getCMD();
@@ -262,13 +263,12 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 default:        HelpMethods.unexceptedMessage();
                                 ActiveGameState.getClient().closeConnection();
                                 ActiveGameState.setRunning(false);
-                                System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
                                 return;
             }
 
             ActiveGameState.getClient().sendCMD(CMD.ready, "");
 
-            System.out.println("Game Configurations from Server successfully transmitted.");
+            configCommunicationThread.log(Level.INFO, "Game Configurations successfully transmitted to Server.");
 
         }
 
@@ -280,19 +280,21 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                         case playerVsRemote:
                                                 //Wenn nicht laden und Spieler vs Remote-> place Ships..., wenn laden oder ki vs remote -> direkt gamePlayground
                                                 if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ) {
+                                                    configCommunicationThread.log(Level.INFO, "Switching Scene to Place Ships");
                                                     Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
                                                     Main.primaryStage.setScene(new Scene(placeShips));
                                                     Main.primaryStage.show();
                                                     break;
                                                 }
 
-                        case kiVsRemote:            Parent gamePlayground =  FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+                        case kiVsRemote:            configCommunicationThread.log(Level.INFO, "Switching Scene to Game Playground.");
+                                                    Parent gamePlayground =  FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                                                     Main.primaryStage.setScene(new Scene(gamePlayground));
                                                     Main.primaryStage.show();
                                                     break;
                     }
                 }catch(IOException e){
-                    System.out.println("Couldn't load the Scene");
+                    configCommunicationThread.log(Level.SEVERE, "IO Exception at loading Scene");
                 }
             });
         }

@@ -24,7 +24,7 @@ public class Server extends Communication implements IServer{
             server.setSoTimeout(60000); //1min keine Antwort vom Client -> beendet sich selber
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logServer.log(Level.SEVERE,"IO Exception at creating the server socket");
         }
 
     }
@@ -100,12 +100,13 @@ public class Server extends Communication implements IServer{
 
 
             this.setConnected(true);
+            logServer.log(Level.FINE,"Reader set and connected set to true");
             return ConnectionStatus.Connected;
         }
 
         //This exception occurs, when no socket connected to the server for 1 min
         catch (SocketTimeoutException e){
-            logServer.log(Level.INFO, "Timeout at offering connection");
+            logServer.log(Level.WARNING, "Timeout at offering connection");
             return ConnectionStatus.Timeout;
         }
         //This exception is thrown by closing the server,

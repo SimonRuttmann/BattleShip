@@ -39,11 +39,10 @@ public class Client extends Communication  {
             ActiveGameState.setRunning(true);
             logClient.log(Level.INFO, "Client connected to Server.");
         } catch (UnknownHostException | ConnectException e){
-            //TODO Host is now known
+            logClient.log(Level.WARNING, "Client socket received an connection exception");
             ActiveGameState.setRunning(false);
             //HelpMethods.connectionFailed();
         } catch (IOException e) {
-            e.printStackTrace();
             ActiveGameState.setRunning(false);
             logClient.log(Level.SEVERE,"Failed to connect to Server.");
         }
@@ -63,8 +62,6 @@ public class Client extends Communication  {
                 logClient.log(Level.INFO,"Client connection closed!");
 
             } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("Client konnte nicht geschlossen werden");
                 logClient.log(Level.SEVERE,"Failed to close Client connection");
             }
         }

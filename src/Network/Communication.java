@@ -6,6 +6,7 @@ import Player.NetworkLogger;
 import java.io.*;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class Communication implements ICommunication{
@@ -46,8 +47,7 @@ public abstract class Communication implements ICommunication{
 
         if (!connected) return;
         try {
-            System.out.println( "Von Communication: Sende Befehl: " );
-            System.out.println( String.format("%s%n",sendCMD));
+            logCommunciation.log(Level.INFO,"Send CMD " +  String.format("%s%n",sendCMD));
 
             //Necessary to write the command and a new line
             outputWriter.write(String.format("%s%n",sendCMD));
@@ -58,8 +58,7 @@ public abstract class Communication implements ICommunication{
             outputWriter.flush();
 
         } catch (IOException e) {
-            System.out.println("Error while writing!" + sendCMD);
-            e.printStackTrace();
+            logCommunciation.log(Level.SEVERE,"Error while writing!" + sendCMD);
         }
     }
 
@@ -71,15 +70,15 @@ public abstract class Communication implements ICommunication{
     @Override
     public String[] getCMD() {
         if (!connected) return null;
-        System.out.println( "Connected ist true");
+        logCommunciation.log(Level.FINE,"Connection status is true");
+
         String[] timeout = new String[1];
         timeout[0] = "timeout";
         try {
 
 
             String cmd = inputReader.readLine();
-            System.out.println( "inputReader liest:" + cmd);
-
+            logCommunciation.log(Level.INFO,"Socket receives: " + cmd);
 
             //Check if the data received is valid
             if(cmd != null && validDataReceived(cmd)){
@@ -88,9 +87,12 @@ public abstract class Communication implements ICommunication{
                 cmdSplit[0] = cmdSplit[0].toLowerCase();
                 return cmdSplit;
             }
-            if (cmd == null) return timeout;
+            if (cmd == null) {
+                logCommunciation.log(Level.WARNING,"Remote sent null, planned timeout occurred");
+                return timeout;
+            }
 
-            System.out.println( "The received Data is not valid");
+            logCommunciation.log(Level.WARNING,"The received cmd: " + cmd + "is not valid");
             String[] invalid = new String[1];
             invalid[0] = "invalid";
             return invalid;
@@ -105,22 +107,19 @@ public abstract class Communication implements ICommunication{
         //SocketTimeoutException
         catch( SocketTimeoutException e){
 
-            System.out.println("Socket Timout Exception at reading the next command");
-
+            logCommunciation.log(Level.WARNING,"Socket Timout Exception at reading the next command");
             return timeout;
         }
 
         catch(SocketException e){
 
-            System.out.println("Connection reset");
-
+            logCommunciation.log(Level.WARNING,"Connection reset");
             return timeout;
         }
 
         catch (IOException e) {
 
-            System.out.println("IO Exception at reading the next command");
-
+            logCommunciation.log(Level.SEVERE,"IO Eception at reading the next command");
             return timeout;
 
         }
@@ -237,8 +236,7 @@ public abstract class Communication implements ICommunication{
             this.inputReader.close();
             this.outputWriter.close();
         } catch (IOException | NullPointerException e) {
-            //e.printStackTrace();
-            System.out.println("Reader and Writer cant be closed!");
+            logCommunciation.log(Level.FINE,"Reader and Writer can`t be closed");
         }
     }
 

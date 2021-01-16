@@ -29,7 +29,7 @@ public class NetworkLogger {
                 SimpleDateFormat DateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
                 Date a = new Date(record.getMillis());
                 //String logLines = a + " [ " + record.getLevel() + " ] " + "[ " + record.getClass() + " ] " + "[ " + record.getSourceMethodName() + " ] " + this.formatMessage(record);
-                return a + " [ " + record.getLevel() + " ] " + "[ " + record.getClass() + " ] " + "[ " + record.getSourceMethodName() + " ] " + this.formatMessage(record) + '\n';
+                return a + " [ " + record.getLevel() + " ] " + "[ " + record.getSourceClassName() + " ] " + "[ " + record.getSourceMethodName() + " ] " + this.formatMessage(record) + '\n';
 
             }
         });
@@ -39,13 +39,13 @@ public class NetworkLogger {
                 SimpleDateFormat DateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
                 Date a = new Date(record.getMillis());
                 //String logLines = a + " [ " + record.getLevel() + " ] " + "[ " + record.getClass() + " ] " + "[ " + record.getSourceMethodName() + " ] " + this.formatMessage(record);
-                return a + " [ " + record.getLevel() + " ] " + "[ " + record.getClass() + " ] " + "[ " + record.getSourceMethodName() + " ] " + this.formatMessage(record) + '\n';
+                return a + " [ " + record.getLevel() + " ] " + "[ " + record.getSourceClassName() + " ] " + "[ " + record.getSourceMethodName() + " ] " + this.formatMessage(record) + '\n';
 
             }
         });
         logger.addHandler(fileHandler);
         logger.addHandler(consoleHandler);
-        logger.log(Level.INFO,"Es lebt!");
+        logger.log(Level.INFO,"Logging started");
 
     }
 

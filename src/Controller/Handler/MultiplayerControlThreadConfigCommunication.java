@@ -52,6 +52,9 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
         //Server
 
         if (ActiveGameState.isAmIServer()){
+
+            if ( ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ActiveGameState.setLoadWithNext(ActiveGameState.isYourTurn());
+
             ActiveGameState.setYourTurn(true);
             String[] receivedCMD;
             if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer)) {
@@ -112,7 +115,6 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                         System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
                         return;
                 }*/
-
 
             }
             //Get done

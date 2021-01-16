@@ -1,2 +1,1 @@
-Sat Jan 16 01:14:03 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
-Sat Jan 16 01:23:04 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+

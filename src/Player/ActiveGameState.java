@@ -20,9 +20,18 @@ public class ActiveGameState {
     public static BufferedReader loggingReader;
 
     public static final Logger logActiveGamesState = Logger.getLogger(Logger.class.getName());
+
+    public static boolean isLoadWithNext() {
+        return loadWithNext;
+    }
+
+    public static void setLoadWithNext(boolean loadWithNext) {
+        ActiveGameState.loadWithNext = loadWithNext;
+    }
+
     public enum Loading {singleplayer, multiplayer, noLoad}
 
-
+    private static boolean loadWithNext = false;
 
     public static Loading getLoading() {
         return loading;

@@ -10,6 +10,7 @@ import Model.Playground.EnemyPlayground;
 import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Ship.IShip;
+import Network.CMD;
 import Player.ActiveGameState;
 import Player.GameMode;
 import Controller.Handler.GameShootEnemy;
@@ -81,31 +82,42 @@ public class GamePlayground implements Initializable {
         ActiveGameState.setSceneIsGamePlayground(true);
         ActiveGameState.setSceneIsPlaceShips(false);
 
+        if (ActiveGameState.getLoading() == ActiveGameState.Loading.noLoad) {
+            // if ki is part of game, playgrounds are not created in placeShips -> done here
+            initializeKiPlayground();
 
-        // if ki is part of game, playgrounds are not created in placeShips -> done here
-        initializeKiPlayground();
-        /**
-         * After playground is initialized the thread SingleplayerControlThreadKivsKi has to be started, if the Gamemode KivsKi is selected
-         */
-        if ( ActiveGameState.getModes() == GameMode.kiVsKi){
-            SingleplayerControlThreadKiVsKi singleplayerControlThreadKiVsKi = new SingleplayerControlThreadKiVsKi();
-            singleplayerControlThreadKiVsKi.start();
         }
+            /**
+             * After playground is initialized the thread SingleplayerControlThreadKivsKi has to be started, if the Gamemode KivsKi is selected
+             */
+            if (ActiveGameState.getModes() == GameMode.kiVsKi) {
+                SingleplayerControlThreadKiVsKi singleplayerControlThreadKiVsKi = new SingleplayerControlThreadKiVsKi();
+                singleplayerControlThreadKiVsKi.start();
+            }
 
-        /**
-         * Gamemode kiVsRemote -> Start Perform enemy action, if we are Client ( enemy´s Turn )
-         *                      -> Start KI Shoots Enemy, if we are Server ( our Turn)
-         */
-        if ( ActiveGameState.getModes() == GameMode.kiVsRemote){
-            if ( !ActiveGameState.isAmIServer()){
-                MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
-                multiplayerControlThreadPerformEnemyAction.start();
+            /**
+             * Gamemode kiVsRemote -> Start Perform enemy action, if we are Client ( enemy´s Turn )
+             *                      -> Start KI Shoots Enemy, if we are Server ( our Turn)
+             */
+            //TODO !SIMON!-> Wir laden Spiel mit unserer KI -> Abfragen ob wir an der Reihe sind
+            if (ActiveGameState.getModes() == GameMode.kiVsRemote) {
+                if (!ActiveGameState.isAmIServer()) {
+                    MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
+                    multiplayerControlThreadPerformEnemyAction.start();
+                } else {
+
+                    if(ActiveGameState.isLoadWithNext()){
+                        ActiveGameState.getServer().sendCMD(CMD.next, "");
+                        MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
+                        multiplayerControlThreadPerformEnemyAction.start();
+                    }
+                    else {
+                        MultiplayerControlThreadKiShootsEnemy multiplayerControlThreadKiShootsEnemy = new MultiplayerControlThreadKiShootsEnemy();
+                        multiplayerControlThreadKiShootsEnemy.start();
+                    }
+                }
             }
-            else{
-                MultiplayerControlThreadKiShootsEnemy multiplayerControlThreadKiShootsEnemy = new MultiplayerControlThreadKiShootsEnemy();
-                multiplayerControlThreadKiShootsEnemy.start();
-            }
-        }
+
         // initialize the static variable groupEnemyPS -> used in MultiplayerControlThreadShootEnemy
         groupEnemyPS = groupEnemP;
 
@@ -193,7 +205,21 @@ public class GamePlayground implements Initializable {
         //Client -> Zuerst ist der Server dran -> Setze alle Labels im gegnerischen Spielfeld nicht klickbar
         // Starte den Perform Enemy Action Thread um auf die Eingaben des Servers zu reagieren -> Danach PingPong Prinzip
         //TODO SIMON GAMEMODE.PLAYERVSREMOTE -> KI vs Remote wird woanders gestartet
+
+
+
+
         if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer() && ActiveGameState.getModes() == GameMode.playerVsRemote){
+            MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
+            multiplayerControlThreadPerformEnemyAction.start();
+            ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
+        }
+
+        //TODO !SIMON!
+        //TODO -> player vs Remote -> Spieler kann klicken wenn er Host ist, als Client immer hier ausführen
+        //TODO NEUER Fall -> Spieler hat geladen und ist NICHT an der Reihe -> Muss SendCMD -> NExt -> Start MultiplayerControlThreadPerformEnemyAction
+        if (ActiveGameState.isMultiplayer() && ActiveGameState.isAmIServer() && ActiveGameState.isLoadWithNext() && ActiveGameState.getModes() == GameMode.playerVsRemote){
+            ActiveGameState.getServer().sendCMD(CMD.next,"");
             MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
@@ -313,6 +339,13 @@ public class GamePlayground implements Initializable {
 
 //***************************************************************** SAVE GAME BAR *******************************************************************************************************************************************************************************************************************
 
+    //TODO: 1. ChangeListener auf Textfield, wie in SaveRequest
+    //TODO: 2. Button nur drückbar, wenn man selbst an der Reihe ist
+    //TODO: 3. Wenn Button gedrückt -> Alle Labels nonClickable setzten
+    //TODO: 4. ActiveGamestate-> getServer/Client -> SendCMD save
+    // -> Besser 5 und 6 überspringen und direkt Spiel beenden -> Nach done würde ohnehin beendet werden
+    //TODO: 5. ActiveGamestate-> getServer/Client -> getBefehl done
+    //TODO: 6. Beende das Spiel
     //Save Handling
 
     // button is only enabled, when name in text field is valid save name

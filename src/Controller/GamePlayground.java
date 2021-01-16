@@ -462,8 +462,10 @@ public class GamePlayground implements Initializable {
         this.sP_RectangleAndElements.setVisible(!hide);
         //KI games shouldn't be saved
         if(ActiveGameState.getModes() == GameMode.kiVsKi || ActiveGameState.getModes() == GameMode.kiVsRemote) {
+            this.lineLeftSide.setVisible(false);
             this.sP_RectangleAndElements.setVisible(false);
             this.saveAndCloseButton.setVisible(false);
+            this.buttonShowSaveBar.setVisible(false);
         }
     }
 

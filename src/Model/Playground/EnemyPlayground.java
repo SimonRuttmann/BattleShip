@@ -5,8 +5,11 @@ import Model.Util.ShotWater;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Model.Util.Water;
+import Player.ActiveGameState;
+import Player.GameMode;
 import javafx.scene.control.Label;
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 
@@ -125,6 +128,9 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart(true);                              //--------------------- Ship Sunk ------------------------//
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
             Field[pos_shot.getX()][pos_shot.getY()].draw();
+
+            //Only Display Labels as disabled, when the the player has to shoot
+            if (ActiveGameState.getModes() == GameMode.playerVsKi || ActiveGameState.getModes() == GameMode.playerVsRemote)
             Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();
 
             //finde heraus wie das schiff stand
@@ -299,6 +305,9 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart( true);
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
             Field[pos_shot.getX()][pos_shot.getY()].draw();
+
+            //Only Display Labels as disabled, when the the player has to shoot
+            if (ActiveGameState.getModes() == GameMode.playerVsKi || ActiveGameState.getModes() == GameMode.playerVsRemote)
             Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();
             return new ShotResponse(false);
         }
@@ -310,6 +319,9 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             Field[pos_shot.getX()][pos_shot.getY()] = new ShotWater();
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
             Field[pos_shot.getX()][pos_shot.getY()].draw();
+
+            //Only Display Labels as disabled, when the the player has to shoot
+            if (ActiveGameState.getModes() == GameMode.playerVsKi || ActiveGameState.getModes() == GameMode.playerVsRemote)
             Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();
             return new ShotResponse(false);
         }
@@ -388,7 +400,11 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             Label label = Field[x][y].getLabel();
             Field[x][y] = new ShotWater();
             Field[x][y].setLabel(label);
+
+            //Only Display Labels as disabled, when the the player has to shoot
+            if (ActiveGameState.getModes() == GameMode.playerVsKi || ActiveGameState.getModes() == GameMode.playerVsRemote)
             Field[x][y].setLabelNonClickable();
+
             Field[x][y].draw();
             impossiblePositions.add(new Point(x,y));
         }

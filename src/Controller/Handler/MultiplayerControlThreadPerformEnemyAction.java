@@ -100,7 +100,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                     ActiveGameState.getClient().closeConnection();                  //TODO Beenden nach speichern
                 }
                 //Saving game and return
-                HelpMethods.saveRequest(Long.parseLong(cmdReceived[1]));
+                HelpMethods.saveRequest(Long.parseLong(cmdReceived[1]), false);
                 return;
            /* case "load":                                                          //TODO
                 SaveAndLoad.load( cmdReceived[1]);

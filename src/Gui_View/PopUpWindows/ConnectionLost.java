@@ -42,7 +42,7 @@ public class ConnectionLost {
 
                 HelpMethods.closeMPSockets();
 
-                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                mainMenu = FXMLLoader.load(ConnectionLost.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 lost.close();
                 Main.primaryStage.show();

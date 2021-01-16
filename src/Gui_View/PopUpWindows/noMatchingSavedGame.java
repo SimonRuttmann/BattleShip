@@ -39,7 +39,7 @@ public class noMatchingSavedGame {
             Parent mainMenu;
             try {
                 HelpMethods.closeMPSockets();
-                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                mainMenu = FXMLLoader.load(noMatchingSavedGame.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 noMatchingSavedGameFile.close();
                 Main.primaryStage.show();

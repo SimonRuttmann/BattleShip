@@ -19,15 +19,22 @@ public class MultiplayerControlThreadKiShootsEnemy extends Thread{
 
             ShotResponse shotResponse = ActiveGameState.getOwnKi().getShot(ActiveGameState.getEnemyPlayerOwnPlayground());
 
+
+
             //Timeout oder anderer Fehler
-            if ( shotResponse == null){
-                if ( ActiveGameState.isAmIServer()){
-                    ActiveGameState.getServer().closeConnection();
-                }
-                else{
-                    ActiveGameState.getClient().closeConnection();
-                }
+            if ( shotResponse.isUnhandled()){
+
+                //Sockets schließen
+                if ( ActiveGameState.isAmIServer()) { ActiveGameState.getServer().closeConnection(); }
+                else { ActiveGameState.getClient().closeConnection(); }
+
                 ActiveGameState.setRunning(false);
+
+                if(shotResponse.getUnhandledCMD().equals("timeout")){ HelpMethods.connectionLost(); }
+                else{
+                    System.out.println("Unexpected Message from Remote: " + shotResponse.getUnhandledCMD());
+                    HelpMethods.unexceptedMessage();
+                }
                 break;
             }
 

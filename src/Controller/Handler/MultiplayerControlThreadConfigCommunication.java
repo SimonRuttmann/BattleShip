@@ -157,6 +157,11 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
             System.out.println("Game Configurations successfully transmitted to Client.");
 
+            //Send next, as we loaded a game where the enemy turn is active
+            if (ActiveGameState.isLoadWithNext()){
+                ActiveGameState.getServer().sendCMD(CMD.next,"");
+            }
+
         }
 
         //Client

@@ -113,7 +113,6 @@ public class GamePlayground implements Initializable {
                 } else {
 
                     if(ActiveGameState.isLoadWithNext()){
-                        ActiveGameState.getServer().sendCMD(CMD.next, "");
                         MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
                         multiplayerControlThreadPerformEnemyAction.start();
                     }
@@ -225,7 +224,6 @@ public class GamePlayground implements Initializable {
         //TODO -> player vs Remote -> Spieler kann klicken wenn er Host ist, als Client immer hier ausführen
         //TODO NEUER Fall -> Spieler hat geladen und ist NICHT an der Reihe -> Muss SendCMD -> NExt -> Start MultiplayerControlThreadPerformEnemyAction
         if (ActiveGameState.isMultiplayer() && ActiveGameState.isAmIServer() && ActiveGameState.isLoadWithNext() && ActiveGameState.getModes() == GameMode.playerVsRemote){
-            ActiveGameState.getServer().sendCMD(CMD.next,"");
             MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();

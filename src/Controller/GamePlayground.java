@@ -352,9 +352,6 @@ public class GamePlayground implements Initializable {
 
 //***************************************************************** SAVE GAME BAR *******************************************************************************************************************************************************************************************************************
 
-    //TODO: 2. Button nur drückbar, wenn man selbst an der Reihe ist        LSG: Savegame invisible
-    //TODO: 4. ActiveGamestate-> getServer/Client -> SendCMD save
-
 
     //called with all setLabelsClickable/NonClickable
     public static void setSaveAndCloseButtonNonClickable() {
@@ -381,6 +378,12 @@ public class GamePlayground implements Initializable {
         //Save the game with ID, when multiplayer is selected
         if (ActiveGameState.isMultiplayer()) {
             saveSuccess = SaveAndLoad.save(savegamename, id);
+            if (ActiveGameState.isAmIServer()){
+                ActiveGameState.getServer().sendCMD(CMD.save, String.valueOf(id));
+            }
+            else{
+                ActiveGameState.getClient().sendCMD(CMD.save, String.valueOf(id));
+            }
         }
         else{
             saveSuccess = SaveAndLoad.save(savegamename);

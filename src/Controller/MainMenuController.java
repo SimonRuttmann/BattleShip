@@ -288,6 +288,7 @@ public class MainMenuController implements Initializable {
             ActiveGameState.setMusicController(music);
         }
 
+        ActiveGameState.setLoading(ActiveGameState.Loading.noLoad);
         ActiveGameState.setSceneIsPlaceShips(false);
         // Close Request
         Main.primaryStage.setOnCloseRequest(e -> {

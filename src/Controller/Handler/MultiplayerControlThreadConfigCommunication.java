@@ -179,7 +179,8 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 case "size":    ActiveGameState.setPlaygroundSize(Integer.parseInt(receivedCMD[1]));
                                 break;
 
-                case "load":    Savegame savegame = SaveAndLoad.load(Long.parseLong(receivedCMD[1]));
+                case "load":    ActiveGameState.setLoading(ActiveGameState.Loading.multiplayer);
+                                Savegame savegame = SaveAndLoad.load(Long.parseLong(receivedCMD[1]));
                                 if ( savegame == null) {
                                     HelpMethods.noGameFile();
                                     return;

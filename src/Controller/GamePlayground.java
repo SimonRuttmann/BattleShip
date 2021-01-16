@@ -213,8 +213,8 @@ public class GamePlayground implements Initializable {
 
 
 
-
-        if ( ActiveGameState.isMultiplayer() && ! ActiveGameState.isAmIServer() && ActiveGameState.getModes() == GameMode.playerVsRemote){
+        //Client starts Control Enemy Action
+        if (! ActiveGameState.isAmIServer() && ActiveGameState.getModes() == GameMode.playerVsRemote){
             MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
@@ -223,7 +223,9 @@ public class GamePlayground implements Initializable {
         //TODO !SIMON!
         //TODO -> player vs Remote -> Spieler kann klicken wenn er Host ist, als Client immer hier ausführen
         //TODO NEUER Fall -> Spieler hat geladen und ist NICHT an der Reihe -> Muss SendCMD -> NExt -> Start MultiplayerControlThreadPerformEnemyAction
-        if (ActiveGameState.isMultiplayer() && ActiveGameState.isAmIServer() && ActiveGameState.isLoadWithNext() && ActiveGameState.getModes() == GameMode.playerVsRemote){
+        //Server starts Control Enemy Action, when we Load with a game, where the enemy´s turn is present
+        //In all other cases, no Threads have to be started, as the user is starting the shootThread by clicking the Labels
+        if (ActiveGameState.isAmIServer() && ActiveGameState.isLoadWithNext() && ActiveGameState.getModes() == GameMode.playerVsRemote){
             MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();

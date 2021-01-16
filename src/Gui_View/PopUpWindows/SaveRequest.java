@@ -3,8 +3,6 @@ package Gui_View.PopUpWindows;
 import Gui_View.HelpMethods;
 import Gui_View.Main;
 
-import Gui_View.PopUpWindows.CancelGame;
-
 import Player.ActiveGameState;
 import Player.NetworkLogger;
 import Player.SaveAndLoad;
@@ -127,7 +125,7 @@ public class SaveRequest {
 
             Parent mainMenu;
             try {
-                mainMenu = FXMLLoader.load(CancelGame.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                mainMenu = FXMLLoader.load(SaveRequest.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 saveRequest.close();
                 Main.primaryStage.show();

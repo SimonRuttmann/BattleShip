@@ -57,7 +57,7 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
         if (ActiveGameState.isAmIServer()){
 
-
+            System.out.println(ActiveGameState.getLoading());
             if ( ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ActiveGameState.setLoadWithNext(!ActiveGameState.isYourTurn());
 
             ActiveGameState.setYourTurn(true);

@@ -122,7 +122,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
             //Labelaustausch und neues zerstörtes Schiffsteil nicht klickbar machen
 
             Label label = Field[pos_shot.getX()][pos_shot.getY()].getLabel();
-            Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart("Destroyed", true);                              //--------------------- Ship Sunk ------------------------//
+            Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart(true);                              //--------------------- Ship Sunk ------------------------//
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
             Field[pos_shot.getX()][pos_shot.getY()].draw();
             Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();
@@ -296,7 +296,7 @@ public class EnemyPlayground extends AbstactPlayground implements IEnemyPlaygrou
            //Change the Object to an ShipPart with shot status
             Label label = Field[pos_shot.getX()][pos_shot.getY()].getLabel();
             //Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart("Destroyed", null);
-            Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart("Destroyed", true);
+            Field[pos_shot.getX()][pos_shot.getY()] = new ShipPart( true);
             Field[pos_shot.getX()][pos_shot.getY()].setLabel(label);
             Field[pos_shot.getX()][pos_shot.getY()].draw();
             Field[pos_shot.getX()][pos_shot.getY()].setLabelNonClickable();

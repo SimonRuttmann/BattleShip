@@ -9,23 +9,28 @@ import javafx.scene.image.ImageView;
 public class ShipPart implements IDrawable{
 
     private transient Label label;
-    private String part;
     private IShip owner = null;
     private boolean shot;
     private boolean validShipPlacementMarker = true;
 
     //ShipsParts in our Field have an associated Ship
-    public ShipPart(String part, IShip owner) {
-        this.part = part;
+    public ShipPart(IShip owner) {
         this.owner = owner;
     }
 
-    //ShipParts on the enemy Field don't have an associated Ship, but can be marked as shot immediately
-    public ShipPart(String part, boolean shot) {
-        this.part = part;
+    public ShipPart(IShip owner, boolean shot){
+        this.owner = owner;
         this.shot = shot;
     }
 
+    //ShipParts on the enemy Field don't have an associated Ship, but can be marked as shot immediately
+    public ShipPart(boolean shot) {
+        this.shot = shot;
+    }
+
+    public boolean isShot (){
+        return this.shot;
+    }
     public void setShot (boolean shot){
         this.shot = shot;
     }
@@ -66,9 +71,7 @@ public class ShipPart implements IDrawable{
         return owner;
     }
 
-    public void setPart(String part) {
-        this.part = part;
-    }
+
 
     @Override
     public void draw() {

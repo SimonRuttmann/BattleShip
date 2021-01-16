@@ -89,9 +89,8 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
             System.out.println("HitPoints des Schiff nach reduzieung" + hitShip.gethitPoints());
 
             //Mark shipPart as destroyed
-            hitShipPart.setPart("Destroyed");
             hitShipPart.setShot(true);
-            hitShipPart.setLabelNonClickable();
+            //hitShipPart.setLabelNonClickable();
             hitShipPart.draw();
 
             //Ship sunken
@@ -448,19 +447,24 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
             //Insert Ship parts
             //Ship vertical
             if (xStart == xEnd) {
-                Field[xStart][yStart] = new ShipPart("start vertical", ship);
-                Field[xStart][yEnd] = new ShipPart("end vertical", ship);
-                for (int i = yStart+1; i < yEnd; i++) {
-                    Field[xStart][i] = new ShipPart("middle vertical", ship);
+                for ( int i = yStart; i <= yEnd; i++)
+                if ( Field[xStart][i] instanceof ShipPart && ((ShipPart)Field[xStart][i]).isShot()){
+                    Field[xStart][i] = new ShipPart(ship, true);
+                }
+                else{
+                    Field[xStart][i] = new ShipPart(ship, false);
                 }
             }
             //Ship horizontal
             else {
-                Field[xStart][yStart] = new ShipPart("start horizontal", ship);
-                Field[xEnd][yStart] = new ShipPart("end horizontal", ship);
-                for (int i = xStart+1; i < xEnd; i++) {
-                    Field[i][yStart] = new ShipPart("middle horizontal", ship);
-                }
+                for ( int i = xStart; i <= xEnd; i++)
+                    if ( Field[i][yStart] instanceof ShipPart && ((ShipPart)Field[i][yStart]).isShot()){
+                        Field[i][yStart] = new ShipPart(ship, true);
+                    }
+                    else{
+                        Field[i][yStart] = new ShipPart(ship, false);
+                    }
+
             }
 
 

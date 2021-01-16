@@ -524,12 +524,12 @@ private int debugg = 0;
         //die Ki besitzt die Schwierigkeit = normal
         if(this.difficulty == Difficulty.normal){
             boolean success = normaleKi(playground);
-            if ( !success ) return null;
+            if ( !success ) return shotResponseFromKI;
             return this.shotResponseFromKI;
         }
         if(this.difficulty == Difficulty.hard){
             boolean success = schwereKi(playground);
-            if ( !success ) return null;
+            if ( !success ) return shotResponseFromKI;
             return this.shotResponseFromKI;
         }
         return null;
@@ -559,7 +559,7 @@ private int debugg = 0;
             Point currentShot = new Point(random_x, random_y);
 
             answerofShot = shootPlayground(currentShot, playground);
-            if ( shotResponseFromKI == null ) return false;
+            if ( shotResponseFromKI.isUnhandled() ) return false;
 
 
             this.shotResponseFromKI = answerofShot;
@@ -608,7 +608,7 @@ private int debugg = 0;
             Point currentShot = hardKiShot();
 
             answerofShot = shootPlayground(currentShot, playground);    //TODO curentShot index out of bound Exception Point: -2 6
-            if ( shotResponseFromKI == null ) return false;
+            if ( shotResponseFromKI.isUnhandled()) return false;
 
 
             this.shotResponseFromKI = answerofShot;
@@ -825,7 +825,7 @@ private int debugg = 0;
         }
         else{
             shotResponseFromKI = getShootOverCommunication(nextPositionToShoot);
-            if ( shotResponseFromKI == null ) return null;
+            if ( shotResponseFromKI.isUnhandled() ) return shotResponseFromKI;
         }
 
         shotResponseFromKI.setShotPosition(nextPositionToShoot);
@@ -834,6 +834,15 @@ private int debugg = 0;
     }
 
     //communication zeugs
+    //Muss zusätzlich den Erhaltenen Befehl abspeichern
+
+    /**
+     * Send shot, and receives a command
+     * @param posToShot The position to shot at
+     * @return ShotResponse, with the information: hit and destroyed when unhandled is false
+     *         When unhandled is false, the shotResponseObject contains the received CMD and the shotResponse Object has to be returned
+     *         The unhandled shotResponseObject will get handled at the MultiplayerControlThreadKiShootsEnemy
+     */
     public ShotResponse getShootOverCommunication(Point posToShot){
         String cmdParameter = (posToShot.getX()+1) + " " + (posToShot.getY()+1);
         String[] cmdReceived;
@@ -846,27 +855,25 @@ private int debugg = 0;
             cmdReceived = ActiveGameState.getClient().getCMD();
         }
 
-        if ( cmdReceived[0].equals("timeout")){
-            return null;
-        }
-
-        if (! cmdReceived[0].equals("answer") ){
-            throw new IllegalReceiveException();
-        }
-        else{
+        if ("answer".equals(cmdReceived[0])) {
             ShotResponse shotResponse = new ShotResponse();
-            switch (Integer.parseInt(cmdReceived[1])){
-                case 0: shotResponse.setHit(false);
-                        shotResponse.setShipDestroyed(false);
-                        break;
-                case 1: shotResponse.setHit(true);
-                        shotResponse.setShipDestroyed(false);
-                        break;
-                case 2: shotResponse.setHit(true);
-                        shotResponse.setShipDestroyed(true);
+            switch (Integer.parseInt(cmdReceived[1])) {
+                case 0:
+                            shotResponse.setHit(false);
+                            shotResponse.setShipDestroyed(false);
+                            break;
+                case 1:
+                            shotResponse.setHit(true);
+                            shotResponse.setShipDestroyed(false);
+                            break;
+                case 2:
+                            shotResponse.setHit(true);
+                            shotResponse.setShipDestroyed(true);
             }
             return shotResponse;
         }
+        return new ShotResponse(true, cmdReceived[0]);
+
     }
 
     private int debug= 0;
@@ -894,7 +901,7 @@ private int debugg = 0;
                         previousShots.add(nextPositionToShoot);
 
                         shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
-                        if ( shotResponseFromKI == null ) return false;
+                        if ( shotResponseFromKI.isUnhandled() ) return false;
 
                         //Hit and Destroyed
                         if (shotResponseFromKI.isShipDestroyed()) {
@@ -934,7 +941,7 @@ private int debugg = 0;
                         //Schiessposition erlaubt
                         previousShots.add(nextPositionToShoot);
                         shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
-                        if ( shotResponseFromKI == null ) return false;
+                        if ( shotResponseFromKI.isUnhandled() ) return false;
 
                         //Hit and Destroyed
                         if (shotResponseFromKI.isShipDestroyed()) {
@@ -977,7 +984,7 @@ private int debugg = 0;
                         //Schiessposition erlaubt
                         previousShots.add(nextPositionToShoot);
                         shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
-                        if ( shotResponseFromKI == null ) return false;
+                        if ( shotResponseFromKI.isUnhandled() ) return false;
 
                         //Hit and Destroyed
                         if (shotResponseFromKI.isShipDestroyed()) {
@@ -1017,7 +1024,7 @@ private int debugg = 0;
                         //Schiessposition erlaubt
                         previousShots.add(nextPositionToShoot);
                         shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
-                        if ( shotResponseFromKI == null ) return false;
+                        if ( shotResponseFromKI.isUnhandled() ) return false;
 
                         //Hit and Destroyed
                         if (shotResponseFromKI.isShipDestroyed()) {

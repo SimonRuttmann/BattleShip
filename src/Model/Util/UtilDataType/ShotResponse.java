@@ -16,6 +16,11 @@ public class ShotResponse {
     public ShotResponse(){
     };
 
+    public ShotResponse (boolean unhandled, String unhandledCMD){
+        this.unhandled = unhandled;
+        this.unhandledCMD = unhandledCMD;
+    }
+
     //Constructor, when our Playground got hit
     public ShotResponse(boolean gameLost, boolean hit, boolean shipDestroyed) {
         this.gameLost = gameLost;
@@ -29,6 +34,17 @@ public class ShotResponse {
     }
 
     //Constructor, when we hit the enemy´s Playground and we sunk a ship
+
+    public String getUnhandledCMD() {
+        return unhandledCMD;
+    }
+
+    public boolean isUnhandled() {
+        return unhandled;
+    }
+
+    private String unhandledCMD;
+    private boolean unhandled;
 
 
     private Label label;

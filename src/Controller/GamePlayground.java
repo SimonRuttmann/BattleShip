@@ -110,13 +110,6 @@ public class GamePlayground implements Initializable {
         groupEnemyPS = groupEnemP;
 
 
-        //prevent the player from closing the game accidentally -> should be asked wether he wants to save or hard quit
-        Main.primaryStage.setOnCloseRequest(e -> {
-            e.consume();
-            Gui_View.HelpMethods.closeProgrammSaveGame(false);
-        });
-
-
         //The scale of one Field,   Ship size 2 -> Image: | 30px | 30px |
         //                          Ship size 3 -> Image: | 30px | 30px | 30px |
         // scale is depended on playground size
@@ -343,7 +336,7 @@ public class GamePlayground implements Initializable {
         }
 
         if ( saveSuccess ) {
-            HelpMethods.closeProgrammSaveGame(true);
+            HelpMethods.saveRequest(0,true);
         }
         else{
             final Logger logClient = Logger.getLogger("parent.client");

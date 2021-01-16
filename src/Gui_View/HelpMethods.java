@@ -2,7 +2,7 @@
 
 package Gui_View;
 
-import Controller.SaveRequest;
+import Gui_View.PopUpWindows.SaveRequest;
 import Gui_View.PopUpWindows.*;
 import Player.ActiveGameState;
 import javafx.application.Platform;
@@ -30,11 +30,6 @@ public class HelpMethods {
         CancelGame.exit();
     }
 
-    // Pop-Up: do you really want to exit the Game - special for in-game: with saving - only in GamePlayground
-    public static void closeProgrammSaveGame(boolean alreadySaved) {
-        CancelGame.save(alreadySaved);
-    }
-
     // connectionFailed
     public static void connectionFailed() {
         Platform.runLater(ConnectionFailed::display);
@@ -46,8 +41,7 @@ public class HelpMethods {
     }
 
     // save request -> remote wants to save
-
-    public static void saveRequest(long id) { Platform.runLater( () -> SaveRequest.display(id));}
+    public static void saveRequest(long id, boolean alreadySaved) { Platform.runLater( () -> SaveRequest.display(id, alreadySaved));}
 
 
     // load request -> remote wants to load, but no matching file

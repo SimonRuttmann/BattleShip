@@ -38,7 +38,7 @@ public class ConnectionFailed {
             HelpMethods.closeMPSockets();
             Parent mainMenu;
             try {
-                mainMenu = FXMLLoader.load(unexpectedMessageFromRemote.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
+                mainMenu = FXMLLoader.load(ConnectionFailed.class.getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
                 Main.primaryStage.setScene(new Scene(mainMenu));
                 failed.close();
                 Main.primaryStage.show();

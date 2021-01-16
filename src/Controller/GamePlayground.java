@@ -15,8 +15,13 @@ import Player.ActiveGameState;
 import Player.GameMode;
 import Controller.Handler.GameShootEnemy;
 import Player.SaveAndLoad;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,6 +39,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -226,7 +232,10 @@ public class GamePlayground implements Initializable {
         }
 
 
-        // saveAndCloseButton is only clickable, when save name is valid
+
+
+
+        // saveAndCloseButton is only clickable, when save name is valid AND not our Turn
         this.saveAndCloseButton.setDisable(true);
         this.saveGameText.textProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -236,7 +245,7 @@ public class GamePlayground implements Initializable {
             //Check for not allowed characters -> no File creation possible
             char[] notAllowedCharacters = {'\\', '/', ':', '!', '?', '*', '"', '|', '<', '>'};
             for (char character : notAllowedCharacters) {
-                if (savegamename.contains(String.valueOf(character)) || savegamename.isEmpty()) {
+                if (savegamename.contains(String.valueOf(character)) || savegamename.isEmpty() || !ActiveGameState.isYourTurn()) {
                     saveAndCloseButton.setDisable(true);
                     return;
                 }
@@ -339,13 +348,11 @@ public class GamePlayground implements Initializable {
 
 //***************************************************************** SAVE GAME BAR *******************************************************************************************************************************************************************************************************************
 
-    //TODO: 1. ChangeListener auf Textfield, wie in SaveRequest
-    //TODO: 2. Button nur drückbar, wenn man selbst an der Reihe ist
-    //TODO: 3. Wenn Button gedrückt -> Alle Labels nonClickable setzten
+    //TODO: 2. Button nur drückbar, wenn man selbst an der Reihe ist        LSG: Savegame invisible
     //TODO: 4. ActiveGamestate-> getServer/Client -> SendCMD save
-    // -> Besser 5 und 6 überspringen und direkt Spiel beenden -> Nach done würde ohnehin beendet werden
-    //TODO: 5. ActiveGamestate-> getServer/Client -> getBefehl done
-    //TODO: 6. Beende das Spiel
+
+
+
     //Save Handling
 
     // button is only enabled, when name in text field is valid save name

@@ -170,7 +170,10 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                                 break;
 
                 case "load":    Savegame savegame = SaveAndLoad.load(Long.parseLong(receivedCMD[1]));
-                                if ( savegame == null) return;//TODO YANNICK DISPLAY "Spiel konnte nicht geladen werden (whr weil der Client die Datei nicht mehr/ noch nie hatte)"
+                                if ( savegame == null) {
+                                    HelpMethods.noGameFile();
+                                    return;
+                                }
                                 load = true;
                                 ActiveGameState.setLoading(ActiveGameState.Loading.multiplayer);
                                 break;

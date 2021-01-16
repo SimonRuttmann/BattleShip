@@ -1,5 +1,6 @@
 package Controller.Handler;
 
+import Controller.GamePlayground;
 import Gui_View.HelpMethods;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
@@ -29,7 +30,7 @@ public class SingleplayerControlThreadShootEnemy extends Thread{
     public void run(){
         //1.
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
-
+        GamePlayground.setSaveAndCloseButtonNonClickable();
         //2.
         int xPos = GridPane.getColumnIndex((Label) event.getSource());
         int yPos = GridPane.getRowIndex((Label) event.getSource());
@@ -65,6 +66,7 @@ public class SingleplayerControlThreadShootEnemy extends Thread{
             //TODO Yannick Display Player's Turn
 
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
+            GamePlayground.setSaveAndCloseButtonClickable();
         }
         // 5 b) Enemy turn started
         else{

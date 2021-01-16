@@ -6,3 +6,5 @@ Sat Jan 16 01:54:53 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ cl
 Sat Jan 16 10:47:12 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
 Sat Jan 16 10:47:58 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
 Sat Jan 16 10:47:58 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!
+Sat Jan 16 10:50:31 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ <init> ] Es lebt!
+Sat Jan 16 10:51:26 CET 2021 [ INFO ] [ class java.util.logging.LogRecord ] [ closeConnection ] Serversocket closed!

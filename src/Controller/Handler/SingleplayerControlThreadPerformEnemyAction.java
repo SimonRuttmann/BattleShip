@@ -1,6 +1,7 @@
 package Controller.Handler;
 
 
+import Controller.GamePlayground;
 import Gui_View.HelpMethods;
 import Model.Util.UtilDataType.ShotResponse;
 import Player.ActiveGameState;
@@ -62,6 +63,7 @@ public class SingleplayerControlThreadPerformEnemyAction extends Thread{
         }
 
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
+        GamePlayground.setSaveAndCloseButtonClickable();
     }
 
 }

@@ -1,5 +1,6 @@
 package Controller.Handler;
 
+import Controller.GamePlayground;
 import Gui_View.HelpMethods;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
@@ -152,6 +153,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
 
         //5
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
+        GamePlayground.setSaveAndCloseButtonClickable();
         System.out.println( "Beende Multiplayer Perform Enemy Action ");
     }
 }

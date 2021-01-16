@@ -37,6 +37,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import netscape.security.UserTarget;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -218,6 +220,7 @@ public class GamePlayground implements Initializable {
             MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
+            setSaveAndCloseButtonNonClickable();
         }
 
         //TODO !SIMON!
@@ -229,6 +232,7 @@ public class GamePlayground implements Initializable {
             MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
+            setSaveAndCloseButtonNonClickable();
         }
 
 
@@ -352,7 +356,14 @@ public class GamePlayground implements Initializable {
     //TODO: 4. ActiveGamestate-> getServer/Client -> SendCMD save
 
 
+    //called with all setLabelsClickable/NonClickable
+    public static void setSaveAndCloseButtonNonClickable() {
+        GamePlayground.staticSaveAndCloseButton.setDisable(true);
+    }
 
+    public static void setSaveAndCloseButtonClickable() {
+        GamePlayground.staticSaveAndCloseButton.setDisable(false);
+    }
     //Save Handling
 
     // button is only enabled, when name in text field is valid save name
@@ -385,8 +396,10 @@ public class GamePlayground implements Initializable {
 
     }
 
-
-
+    public void setStaticSaveAndCloseButton(){
+        staticSaveAndCloseButton = this.saveAndCloseButton;
+    }
+    public static Button staticSaveAndCloseButton;
 
     public Button saveAndCloseButton;
     public Button buttonShowSaveBar;
@@ -415,7 +428,7 @@ public class GamePlayground implements Initializable {
         setLineSettings();
         hideSaveGameBar(true);
         this.lineLeftSide.setScaleY(0);
-
+        this.setStaticSaveAndCloseButton();
     }
 
 

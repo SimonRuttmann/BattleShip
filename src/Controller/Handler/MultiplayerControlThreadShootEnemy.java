@@ -39,6 +39,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         System.out.println( "Starte Multiplayer Shoot Enemy ");
         //1.
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
+        GamePlayground.setSaveAndCloseButtonNonClickable();
         //2. and 3.
         int xPos = GridPane.getColumnIndex((Label) event.getSource());
         int yPos = GridPane.getRowIndex((Label) event.getSource());
@@ -169,6 +170,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
             //If the answer was 1 or 2, we enable the Labels (player can click/shoot again) and end the thread
             if (cmdReceived[0].equals("answer") && (Integer.parseInt(cmdReceived[1]) == 1 || Integer.parseInt(cmdReceived[1]) == 2)) {
                 enemyPlayground.setAllWaterFieldsClickable();
+                GamePlayground.setSaveAndCloseButtonClickable();
                 System.out.println( "Der Spieler ist nochmal dran, da er etwas getroffen hat");
             }
             //TODO Yannick Display Your Turn

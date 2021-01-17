@@ -10,6 +10,9 @@ import Player.GameMode;
 import Player.SaveAndLoad;
 import Player.Savegame;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * This thread will:
  *
@@ -19,15 +22,17 @@ import Player.Savegame;
  *      3. Send the command next/done if necessary
  *      4. Set YourTurn true if enemyTurn is expired
  *
- *  5. If it is the Player's turn again, set the water fields on the enemy playground clickable
+ *  5. If it is the Player's turn again, set SaveButton (if Player is involved) and the water fields on the enemy playground clickable
  */
 public class MultiplayerControlThreadPerformEnemyAction extends Thread{
+    public static final Logger logMultiplayerControlThreadPerformEnemyAction = Logger.getLogger("parent.MultiplayerControlThreadPerformEnemyAction");
+
     @Override
     public void run() {
 
-        System.out.println( "Starte Multiplayer Perform Enemy Action");
-        System.out.println("Your Turn: " + ActiveGameState.isYourTurn() + "sollte false sein. Running: " + ActiveGameState.isRunning() + "sollte true sein.");
-        //Your Turn ist genau dann true, wenn geladen wird und der Client an der Reihe war
+        logMultiplayerControlThreadPerformEnemyAction.log(Level.FINE, "Starting Multiplayer Perform Enemy Action Thread");
+
+        //Your Turn can be true, when the game is loaded by server and the client turn didn`t expire
         ActiveGameState.setYourTurn(false);
         while( !ActiveGameState.isYourTurn() && ActiveGameState.isRunning()) {
 
@@ -42,7 +47,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
         else {
             cmdReceived = ActiveGameState.getClient().getCMD();
         }
-            System.out.println( "Received the Command " + cmdReceived );
+
         //2,3,4
         String answerToEnemyAction;
 
@@ -54,6 +59,8 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
 
                     //Game ended, send the finish command, to enable the client to execute
                     //and close the reader, writer and sockets
+
+                    logMultiplayerControlThreadPerformEnemyAction.log(Level.INFO, "Lost game against remote");
                     if(ActiveGameState.isAmIServer()){
                         ActiveGameState.getServer().sendCMD(CMD.answer, "2");
                         ActiveGameState.getServer().closeConnection();
@@ -64,7 +71,6 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                     }
 
                     HelpMethods.winOrLose(false);
-                    System.out.println("Game lost");
                 }
                 if (shotResponse.isShipDestroyed()) {
                     answerToEnemyAction = "2";
@@ -90,36 +96,26 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                 }
                 break;
 
-                //TODO Save And Load methods have to be adjusted
             case "save":
+                logMultiplayerControlThreadPerformEnemyAction.log(Level.INFO, "Remote requested saving, sending done and close connection");
                 if (ActiveGameState.isAmIServer()) {
                     ActiveGameState.getServer().sendCMD(CMD.done, "");
                     ActiveGameState.setRunning(false);
-                    ActiveGameState.getServer().closeConnection();                  //TODO beenden nach speichern
+                    ActiveGameState.getServer().closeConnection();
                 }
                 //We are the client
                 else {
                     ActiveGameState.getClient().sendCMD(CMD.done, "");
                     ActiveGameState.setRunning(false);
-                    ActiveGameState.getClient().closeConnection();                  //TODO Beenden nach speichern
+                    ActiveGameState.getClient().closeConnection();
                 }
                 //Saving game and return
                 HelpMethods.saveRequest(Long.parseLong(cmdReceived[1]), false);
                 return;
-           /* case "load":                                                          //TODO
-                SaveAndLoad.load( cmdReceived[1]);
-                if (ActiveGameState.isAmIServer()) {
-                    ActiveGameState.getServer().sendCMD(CMD.done, "");
-                }
-                //We are the client
-                else {
-                    ActiveGameState.getClient().sendCMD(CMD.done, "");
-                }
-                break;*/
             case "next":
                                 ActiveGameState.setYourTurn(true);
                                 break;
-            case "timeout":
+            case "timeout":     logMultiplayerControlThreadPerformEnemyAction.log(Level.WARNING, "Timeout appeared, closing connection");
                                 HelpMethods.connectionLost();
                                 if (ActiveGameState.isAmIServer()) {
                                     ActiveGameState.getServer().closeConnection();
@@ -130,7 +126,7 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                                 ActiveGameState.setRunning(false);
                                 return;
 
-            default:
+            default:            logMultiplayerControlThreadPerformEnemyAction.log(Level.WARNING, "UnexpectedMessage, closing connection");
                                 HelpMethods.unexceptedMessage();
                                 if (ActiveGameState.isAmIServer()) {
                                     ActiveGameState.getServer().closeConnection();
@@ -140,28 +136,30 @@ public class MultiplayerControlThreadPerformEnemyAction extends Thread{
                                 }
                                 ActiveGameState.setRunning(false);
 
-                                System.out.println("Unexpected message from connection partner");
                                 ActiveGameState.setRunning(false);
                                 return;
         }
     }
-        //TODO Kommentieren
-        //wenn ki vs Remote -> wieder den KI shoot Thread starten -> ping pong
-        System.out.println(ActiveGameState.getModes());
 
+
+        logMultiplayerControlThreadPerformEnemyAction.log(Level.FINE, "GameMode at leaving the Perform Enemy Action Thread" + ActiveGameState.getModes());
+
+        //In the Mode Ki vs Remote the KI Shoots Enemy Thread is called.
         if( ActiveGameState.getModes() == GameMode.kiVsRemote){
             MultiplayerControlThreadKiShootsEnemy multiplayerControlThreadKiShootsEnemy = new MultiplayerControlThreadKiShootsEnemy();
             multiplayerControlThreadKiShootsEnemy.start();
-            System.out.println( "Your turn sollte true sein: " + ActiveGameState.isYourTurn());
             return;
         }
 
         //5
-        System.out.println("Enable playground");
+        //When the player plays, the labels and the save button will be enabled
+        logMultiplayerControlThreadPerformEnemyAction.log(Level.FINE, "Enable Playground");
+
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
         ActiveGameState.getOwnPlayerIEnemyPlayground().drawPlayground();
         GamePlayground.setSaveAndCloseButtonClickable();
-        System.out.println("should be enabled");
-        System.out.println( "Beende Multiplayer Perform Enemy Action ");
+
+        logMultiplayerControlThreadPerformEnemyAction.log(Level.FINE, "Leaving Multiplayer Perform Enemy Action");
+
     }
 }

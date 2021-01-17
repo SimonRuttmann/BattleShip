@@ -5,33 +5,43 @@ import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
 import Player.ActiveGameState;
 
-public class MultiplayerControlThreadKiShootsEnemy extends Thread{
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * TODO
+ */
+public class MultiplayerControlThreadKiShootsEnemy extends Thread{
+    public static final Logger logMultiplayerControlThreadKiShootsEnemy = Logger.getLogger("parent.MultiplayerControlThreadKiShootsEnemy");
     @Override
     public void run(){
         while (ActiveGameState.isYourTurn() && ActiveGameState.isRunning()){
             try {
+                logMultiplayerControlThreadKiShootsEnemy.log(Level.FINE, "Waiting" +ActiveGameState.getAiVelocity() + "seconds till next shot");
                 sleep(ActiveGameState.getAiVelocity()*1000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logMultiplayerControlThreadKiShootsEnemy.log(Level.SEVERE, "Thread interrupted by waiting");
             }
-            //System.out.println(ActiveGameState.getOwnKi());
 
+            logMultiplayerControlThreadKiShootsEnemy.log(Level.FINE, "Calling (own) KI shoot, Difficulty: " + ActiveGameState.getOwnKiDifficulty());
             ShotResponse shotResponse = ActiveGameState.getOwnKi().getShot(ActiveGameState.getEnemyPlayerOwnPlayground());
 
 
-
-            //Timeout oder anderer Fehler
+            //KI received an unhandled command
             if ( shotResponse.isUnhandled()){
 
-                //Sockets schließen
+                //close connection
                 if ( ActiveGameState.isAmIServer()) { ActiveGameState.getServer().closeConnection(); }
                 else { ActiveGameState.getClient().closeConnection(); }
 
                 ActiveGameState.setRunning(false);
 
-                if(shotResponse.getUnhandledCMD().equals("timeout")){ HelpMethods.connectionLost(); }
+                if(shotResponse.getUnhandledCMD().equals("timeout")){
+                    logMultiplayerControlThreadKiShootsEnemy.log(Level.WARNING, "Timeout appeared, closing connection");
+                    HelpMethods.connectionLost();
+                }
                 else{
+                    logMultiplayerControlThreadKiShootsEnemy.log(Level.WARNING, "UnexpectedMessage, closing connection");
                     System.out.println("Unexpected Message from Remote: " + shotResponse.getUnhandledCMD());
                     HelpMethods.unexceptedMessage();
                 }
@@ -39,7 +49,7 @@ public class MultiplayerControlThreadKiShootsEnemy extends Thread{
             }
 
             //The Ki lost the game, so the player won the game
-           ShotResponse shotResponseFromOwnEnemyPlayground;
+            ShotResponse shotResponseFromOwnEnemyPlayground;
             if (shotResponse.isHit()) {
                 //Player is allowed to shoot again
                 ActiveGameState.setYourTurn(true);
@@ -47,6 +57,7 @@ public class MultiplayerControlThreadKiShootsEnemy extends Thread{
                 if (shotResponse.isShipDestroyed()) {
                     shotResponseFromOwnEnemyPlayground = ActiveGameState.getOwnPlayerIEnemyPlayground().shoot(shotResponse.getShotPosition(), 2);
                     if ( shotResponseFromOwnEnemyPlayground.isGameWin() ){
+                        logMultiplayerControlThreadKiShootsEnemy.log(Level.INFO, "Game against KI won");
                         HelpMethods.winOrLose(true);
                         ActiveGameState.setRunning(false);
                         break;
@@ -56,14 +67,18 @@ public class MultiplayerControlThreadKiShootsEnemy extends Thread{
                 else {
                     ActiveGameState.getOwnPlayerIEnemyPlayground().shoot(shotResponse.getShotPosition(), 1);
                 }
-                //TODO Yannick diplay Player(KI)'s Turn
+                logMultiplayerControlThreadKiShootsEnemy.log(Level.FINE, "Turn: Own");
+                HelpMethods.displayTurn(true);
             }
             //Our Turn expired
             else {
                 ActiveGameState.setYourTurn(false);
+
                 //Mark our enemy Playground
                 ActiveGameState.getOwnPlayerIEnemyPlayground().shoot(shotResponse.getShotPosition(),0);
-                //TODO Yannick display Enemy(KI)´s Turn
+
+                logMultiplayerControlThreadKiShootsEnemy.log(Level.FINE, "Turn: Remote");
+                HelpMethods.displayTurn(false);
             }
 
 

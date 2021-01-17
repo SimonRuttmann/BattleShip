@@ -36,7 +36,7 @@ public abstract class AbstactPlayground implements IPlayground{
             }
         }
 
-        for (int y = 0; y < this.playgroundsize; y++){
+        /*for (int y = 0; y < this.playgroundsize; y++){
             System.out.println();
             for ( int x = 0; x < this.playgroundsize; x++){
                 if (Field[x][y] instanceof ShipPart){
@@ -46,7 +46,7 @@ public abstract class AbstactPlayground implements IPlayground{
                     System.out.print( "N   ");
                 }
             }
-        }
+        }*/
     }
 
 

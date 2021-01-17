@@ -16,10 +16,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *  This thread will:
- *          1. disable all Labels on enemy playground
+ *          1. disable the saveButton and all Labels on enemy playground
  *          2. send the client/server a message containing all necessary information
  *          3. wait for an answer from the client/server
  *          4. perform all necessary actions depending on the report from client/server
@@ -33,10 +35,12 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         this.event = event;
     }
 
+    public static final Logger logMultiplayerControlThreadShootEnemy = Logger.getLogger("parent.MultiplayerControlThreadShootEnemy");
     @Override
     public void run() {
 
-        System.out.println( "Starte Multiplayer Shoot Enemy ");
+        logMultiplayerControlThreadShootEnemy.log(Level.FINE, "Starting Multiplayer Shoot Enemy Thread");
+
         //1.
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
         GamePlayground.setSaveAndCloseButtonNonClickable();
@@ -64,9 +68,6 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
             ActiveGameState.getClient().sendCMD(CMD.shot, cmdParameter);
             cmdReceived = ActiveGameState.getClient().getCMD();
         }
-
-        System.out.println( "Sende shot " + cmdParameter);
-        System.out.println( "Erhalte " + Arrays.toString(cmdReceived));
 
         //4 determine the response and act depending on it
         IEnemyPlayground enemyPlayground = ActiveGameState.getOwnPlayerIEnemyPlayground();
@@ -135,7 +136,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                 {
                     ActiveGameState.setRunning(false);
                     HelpMethods. winOrLose(true);
-                    System.out.println("Game won");
+                    logMultiplayerControlThreadShootEnemy.log(Level.INFO, "Player won against remote, closing connection");
                     if(ActiveGameState.isAmIServer()){
                         ActiveGameState.getServer().closeConnection();
                     }
@@ -146,6 +147,7 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                 break;
 
             case "timeout":
+                logMultiplayerControlThreadShootEnemy.log(Level.WARNING, "Timeout appeared, closing connection");
                 if ( ActiveGameState.isAmIServer()){
                     ActiveGameState.getServer().closeConnection();
                 }
@@ -153,11 +155,13 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                     ActiveGameState.getClient().closeConnection();
                 }
                 ActiveGameState.setRunning(false);
-                break;
-                //TODO Yannick POPUP für Timeout setzen
+                HelpMethods.connectionLost();
+                return;
+
             default:
-                System.out.println("Unexpected message from connection partner");
+                logMultiplayerControlThreadShootEnemy.log(Level.WARNING, "UnexpectedMessage, closing connection");
                 ActiveGameState.setRunning(false);
+                return;
         }
 
         System.out.println( "Ein durchgang Durchgang von Shoot Enemy abgeschlossen");
@@ -171,14 +175,15 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
             if (cmdReceived[0].equals("answer") && (Integer.parseInt(cmdReceived[1]) == 1 || Integer.parseInt(cmdReceived[1]) == 2)) {
                 enemyPlayground.setAllWaterFieldsClickable();
                 GamePlayground.setSaveAndCloseButtonClickable();
-                System.out.println( "Der Spieler ist nochmal dran, da er etwas getroffen hat");
+                HelpMethods.displayTurn(true);
+                logMultiplayerControlThreadShootEnemy.log(Level.FINE, "Player hit something, his turn didn`t expire");
             }
-            //TODO Yannick Display Your Turn
 
             //If the answer was 0, its the enemy´s turn, so we end the current thread and start the getShot thread
             if (cmdReceived[0].equals("answer") && Integer.parseInt(cmdReceived[1]) == 0) {
                 ActiveGameState.setYourTurn(false);
-                System.out.println( " DIE ANTWORT WAR 0 -> Start den Multiplayer Controll Thread");
+                logMultiplayerControlThreadShootEnemy.log(Level.FINE,"Player didn´t hit something, turn expired");
+                HelpMethods.displayTurn(false);
                 //Send next to maintain the Ping-Pong methodology
                 //We are the server
                 if (ActiveGameState.isAmIServer()) {
@@ -192,7 +197,6 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                 threadGetShot.start();
             }
         }
-        //TODO Yannick Display Enemy Turn
-        System.out.println( "Beende Multiplayer Shoot Enemy");
+        logMultiplayerControlThreadShootEnemy.log(Level.FINE, "Closing Multiplayer Control Thread Shoot Enemy");
     }
 }

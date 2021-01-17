@@ -21,59 +21,61 @@ public class LoggingThread extends Thread{
     }
     public void run() {
 
-            System.out.println("Geben sie das Logging Level ein. Standard ist ALL.");
+            System.out.println("Please type in your desired logging level. Default is ALL.");
+            System.out.println("Following keywords are allowed: \n" +
+                "\t 'ALL'     \n" +
+                "\t 'FINE'    \n" +
+                "\t 'INFO'    \n" +
+                "\t 'WARNING' \n" +
+                "\t 'SEVERE'  \n" +
+                "\t 'OFF'     \n" +
+                "\t 'CLOSE'   \n");
 
             final Socket s;
-         //   s = new Socket("localhost", 49999);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
 
             ActiveGameState.loggingReader = reader;
             String input = "";
             while (ActiveGameState.isLogging() && !input.equals("Close")) {
                 try {
-                    //TODO .readline -> Läuft bereits -> muss abgebrochen werden -> geht nicht mittels .close, da readLine bereits aufgerufen wurde
-              //      input = ActiveGameState.loggingReader.readLine();
+
                     input = interruptibleReadLine(reader);
                     System.out.println( input);
                     switch (input) {
                         case "ALL":
                             NetworkLogger.setLevel(Level.ALL);
                             break;
-                        case "CONFIG":
-                            NetworkLogger.setLevel(Level.CONFIG);
-                            break;
                         case "FINE":
-                            NetworkLogger.setLevel(Level.FINE);     //genau ausgabe
-                            break;
-                        case "FINER":
-                            NetworkLogger.setLevel(Level.FINER);
-                            break;
-                        case "FINEST":
-                            NetworkLogger.setLevel(Level.FINEST);
+                            NetworkLogger.setLevel(Level.FINE);
                             break;
                         case "INFO":
-                            NetworkLogger.setLevel(Level.INFO);     //standard ausgabe
+                            NetworkLogger.setLevel(Level.INFO);
                             break;
                         case "OFF":
                             NetworkLogger.setLevel(Level.OFF);
                             break;
                         case "SEVERE":
-                            NetworkLogger.setLevel(Level.SEVERE);   //Ausgabe von nicht behandelbaren Fehlern
+                            NetworkLogger.setLevel(Level.SEVERE);
                             break;
                         case "WARNING":
-                            NetworkLogger.setLevel(Level.WARNING);  //Ausgabe von behandelten Fehlern
+                            NetworkLogger.setLevel(Level.WARNING);
                             break;
-                        case "Close":
+                        case "CLOSE":
                             reader.close();
                             break;
                         default:
-                            System.out.println("Doesn't match keyword");
+                            System.out.println("Doesn't match keyword, following keywords are allowed: \n" +
+                                                "\t 'ALL'     \n" +
+                                                "\t 'FINE'    \n" +
+                                                "\t 'INFO'    \n" +
+                                                "\t 'WARNING' \n" +
+                                                "\t 'SEVERE'  \n" +
+                                                "\t 'OFF'     \n" +
+                                                "\t 'CLOSE'   \n");
                     }
                 } catch (IOException e) {
                     ActiveGameState.setLogging(false);
-                    System.out.println( "Reader Closed");
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -83,7 +85,13 @@ public class LoggingThread extends Thread{
 
     }
 
-    //https://stackoverflow.com/questions/3595926/how-to-interrupt-bufferedreaders-readline?noredirect=1&lq=1
+
+    /**
+     * Implementation of an "interruptible" Reader, reads only if chars are available on the console
+     * https://stackoverflow.com/questions/3595926/how-to-interrupt-bufferedreaders-readline?noredirect=1&lq=1
+     * @param reader Buffered reader, which reads the next line
+     * @return The string read from the inputStream from the reader
+     */
     private String interruptibleReadLine(BufferedReader reader)
             throws InterruptedException, IOException {
         Pattern line = Pattern.compile("^(.*)\\R");

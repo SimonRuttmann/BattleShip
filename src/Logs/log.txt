@@ -338,3 +338,162 @@ Settings:
 	 Enemy AI Difficulty: normal
 Sun Jan 17 02:22:33 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
 Sun Jan 17 02:43:12 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 13:22:28 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 13:22:50 CET 2021 [ INFO ] [ Network.Client ] [ <init> ] Client connected to Server.
+Sun Jan 17 13:22:50 CET 2021 [ INFO ] [ Controller.Handler.MultiplayerControlThreadConfigCommunication ] [ run ] Multiplayer Control Thread Config Communication
+Sun Jan 17 13:22:54 CET 2021 [ INFO ] [ Network.Communication ] [ getCMD ] Socket receives: size 10
+Sun Jan 17 13:22:54 CET 2021 [ INFO ] [ Network.Communication ] [ sendCMD ] Send CMD next
+
+Sun Jan 17 13:22:54 CET 2021 [ INFO ] [ Network.Communication ] [ getCMD ] Socket receives: ships 2 2 2 2 3 3 3 4 4 5 
+Sun Jan 17 13:22:54 CET 2021 [ INFO ] [ Network.Communication ] [ sendCMD ] Send CMD done
+
+Sun Jan 17 13:22:54 CET 2021 [ INFO ] [ Network.Communication ] [ getCMD ] Socket receives: ready
+Sun Jan 17 13:22:54 CET 2021 [ INFO ] [ Network.Communication ] [ sendCMD ] Send CMD ready
+
+Sun Jan 17 13:22:54 CET 2021 [ INFO ] [ Controller.Handler.MultiplayerControlThreadConfigCommunication ] [ run ] Game Configurations successfully transmitted to Server.
+Sun Jan 17 13:22:54 CET 2021 [ INFO ] [ Controller.Handler.MultiplayerControlThreadConfigCommunication ] [ run ] 
+Settings: 
+	 Multiplayer Player vs Remote
+	 Playgroundsize: 10
+	 Amount of Ships 2: 4
+	 Amount of Ships 3: 3
+	 Amount of Ships 4: 2
+	 Amount of Ships 5: 1
+Sun Jan 17 13:22:54 CET 2021 [ INFO ] [ Controller.Handler.MultiplayerControlThreadConfigCommunication ] [ lambda$run$0 ] Switching Scene to Place Ships
+Sun Jan 17 13:23:42 CET 2021 [ INFO ] [ Network.Communication ] [ getCMD ] Socket receives: null
+Sun Jan 17 13:23:42 CET 2021 [ WARNING ] [ Network.Communication ] [ getCMD ] Remote sent null, planned timeout occurred
+Sun Jan 17 13:23:42 CET 2021 [ INFO ] [ Network.Client ] [ closeConnection ] Client connection closed!
+Sun Jan 17 13:23:45 CET 2021 [ INFO ] [ Network.Client ] [ closeConnection ] Client connection closed!
+Sun Jan 17 13:23:47 CET 2021 [ INFO ] [ Network.Client ] [ closeConnection ] Client connection closed!
+Sun Jan 17 14:28:26 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 14:29:02 CET 2021 [ INFO ] [ Controller.GameSettingsController ] [ startShipPlacement ] 
+Settings: 
+	 Singleplayer Player vs AI
+	 Playgroundsize: 10
+	 Amount of Ships 2: 4
+	 Amount of Ships 3: 3
+	 Amount of Ships 4: 2
+	 Amount of Ships 5: 1
+	 Enemy AI Difficulty: normal
+Sun Jan 17 14:30:54 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 14:30:57 CET 2021 [ INFO ] [ Controller.GameOptionsController ] [ initialize ] Game Options Scene
+Sun Jan 17 15:09:24 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 15:28:20 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 15:28:39 CET 2021 [ INFO ] [ Controller.GameSettingsController ] [ startShipPlacement ] 
+Settings: 
+	 Singleplayer Player vs AI
+	 Playgroundsize: 10
+	 Amount of Ships 2: 4
+	 Amount of Ships 3: 3
+	 Amount of Ships 4: 2
+	 Amount of Ships 5: 1
+	 Enemy AI Difficulty: normal
+Sun Jan 17 15:28:44 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:28:44 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Enemy AI shoots at: (6|5)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:28:44 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Starting .SingleplayerControlPerformEnemyAction
+Sun Jan 17 15:28:44 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:28:44 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:28:45 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (2|6)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:28:46 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:28:46 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Enemy AI shoots at: (4|5)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:28:46 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Starting .SingleplayerControlPerformEnemyAction
+Sun Jan 17 15:28:46 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:28:46 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:28:47 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (0|7)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:28:47 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:28:47 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Enemy AI shoots at: (4|2)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 15:28:49 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:28:49 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Enemy AI shoots at: (5|8)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 15:28:49 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:28:49 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Enemy AI shoots at: (4|8)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:28:49 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Starting .SingleplayerControlPerformEnemyAction
+Sun Jan 17 15:28:49 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:28:49 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:28:50 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (6|1)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:28:51 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:28:51 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Enemy AI shoots at: (6|8)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:28:51 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Starting .SingleplayerControlPerformEnemyAction
+Sun Jan 17 15:28:51 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:28:51 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:28:52 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (8|6)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:28:52 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:28:52 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Enemy AI shoots at: (5|7)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 15:30:15 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 15:30:30 CET 2021 [ INFO ] [ Controller.GameSettingsController ] [ startShipPlacement ] 
+Settings: 
+	 Singleplayer Player vs AI
+	 Playgroundsize: 10
+	 Amount of Ships 2: 4
+	 Amount of Ships 3: 3
+	 Amount of Ships 4: 2
+	 Amount of Ships 5: 1
+	 Enemy AI Difficulty: normal
+Sun Jan 17 15:30:34 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:30:34 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Player shoots at: (4|5)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:30:34 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Starting .SingleplayerControlPerformEnemyAction
+Sun Jan 17 15:30:34 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:30:34 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:30:35 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (8|4)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:30:57 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:30:57 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Player shoots at: (1|5)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 15:31:03 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:31:03 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Player shoots at: (1|4)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 15:31:05 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:31:05 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Player shoots at: (1|3)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:31:05 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Starting .SingleplayerControlPerformEnemyAction
+Sun Jan 17 15:31:05 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:31:05 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:31:06 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (2|1)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 15:31:06 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:31:06 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:31:07 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (3|1)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 15:31:07 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:31:07 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:31:08 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (4|1)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:31:10 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:31:10 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Player shoots at: (4|2)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:31:10 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Starting .SingleplayerControlPerformEnemyAction
+Sun Jan 17 15:31:10 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:31:10 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:31:11 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (1|1)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 15:31:11 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:31:11 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:31:12 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (0|1)
+	 Hit: true 	 Destroyed: true
+Sun Jan 17 15:31:12 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:31:12 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:31:13 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (6|8)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 15:31:13 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:31:13 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:31:14 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (7|8)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:31:16 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Starting Singleplayer Control Thread Shoot Enemy
+Sun Jan 17 15:31:16 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadShootEnemy ] [ run ] Player shoots at: (2|9)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 15:31:16 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Starting .SingleplayerControlPerformEnemyAction
+Sun Jan 17 15:31:16 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy Ai`s turn
+Sun Jan 17 15:31:16 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
+Sun Jan 17 15:31:17 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (5|8)
+	 Hit: false 	 Destroyed: false

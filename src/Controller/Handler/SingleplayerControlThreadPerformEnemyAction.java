@@ -6,6 +6,9 @@ import Gui_View.HelpMethods;
 import Model.Util.UtilDataType.ShotResponse;
 import Player.ActiveGameState;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * This thread will:
  *
@@ -18,28 +21,29 @@ import Player.ActiveGameState;
  *  5. If it is the Player's turn again, set the water fields on the enemy playground clickable
  */
 public class SingleplayerControlThreadPerformEnemyAction extends Thread{
+    public static final Logger logSingleplayerControlThreadPerformEnemyAction = Logger.getLogger("parent.SingleplayerControlThreadPerformEnemyAction");
 
     @Override
     public void run(){
-
+        logSingleplayerControlThreadPerformEnemyAction.log(Level.FINE, "Starting .SingleplayerControlPerformEnemyAction");
         while ( !ActiveGameState.isYourTurn()){
-            //Get the position, where the enemy wants to shoot
-            //Point posToShoot = null;
-            System.out.println( "Enemy Turn");
+
+            logSingleplayerControlThreadPerformEnemyAction.log(Level.FINE, "Enemy Ai`s turn");
+
+            //Waiting for the next KI shot
             try {
+                logSingleplayerControlThreadPerformEnemyAction.log(Level.FINE, "Waiting" +ActiveGameState.getAiVelocity() + "seconds till next shot");
                 sleep(ActiveGameState.getAiVelocity()*1000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logSingleplayerControlThreadPerformEnemyAction.log(Level.SEVERE, "Thread interrupted by waiting");
             }
-            //ich übergebe der KI mein eigenes spielfeld, die KI beschießt damit mein eigenes Spielfeld
+
+            //Let enemy KI shoot my own playground
             ShotResponse shotResponse = ActiveGameState.getEnemyKi().getShot(ActiveGameState.getOwnPlayerIOwnPlayground());
 
-            //System.out.println( "Enemy is shooting at " + posToShoot.getX() + posToShoot.getY());
+            logSingleplayerControlThreadPerformEnemyAction.log(Level.INFO, "Enemy AI shoots at: (" + shotResponse.getShotPosition().getX() +"|" + shotResponse.getShotPosition().getY() + ")"+ "\n"+
+                    "\t Hit: " + shotResponse.isHit() + " \t Destroyed: " + shotResponse.isShipDestroyed());
 
-
-            //Shoot the Players ownPlayground
-            //Ich lasse die Ki mein eigenes spielfeld beschießen, Problem ist, das die KI schon mein eigenes Spielfeld beschießt
-            //ShotResponse shotResponse = ActiveGameState.getOwnPlayerIOwnPlayground().shoot(posToShoot);
 
             // The player lost
             if (shotResponse.isGameLost()){
@@ -48,20 +52,21 @@ public class SingleplayerControlThreadPerformEnemyAction extends Thread{
                 break;
             }
 
-            //Mark it at the EnemyPlayground of the Ki
-           //ActiveGameState.getEnemyPlayerEnemyPlayground().shoot(posToShoot, answerFromPlayer );
+            //Mark it at the EnemyPlayground of the Ki, not necessary as the enemy players playground isn`t shown in the GUI
+            //ActiveGameState.getEnemyPlayerEnemyPlayground().shoot(posToShoot, answerFromPlayer );
 
             if ( shotResponse.isHit() ) {
                 ActiveGameState.setYourTurn(false);
-                //TODO Yannick diplay Player's Turn
+                HelpMethods.displayTurn(true);
             }
             //Enemy Turn expired
             else{
                 ActiveGameState.setYourTurn(true);
-                //TODO Yannick display Enemy´s Turn
+                HelpMethods.displayTurn(false);
             }
         }
 
+        //Player is allowed to click labels/buttons, because enemy`s turn expired
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
         GamePlayground.setSaveAndCloseButtonClickable();
     }

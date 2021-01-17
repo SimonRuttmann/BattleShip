@@ -16,39 +16,44 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-//TODO S load .....
-//TODO C done
-
 /**
  * This thread will:
  *
- *  When we are Server:
+ * When we are Server:
  *      1. Send the command "size" with parameters
  *      2. Get the command "next"
  *      3. Send the command "ships" with parameters
  *      4. Get the command "done"
+ *      5. Send the command "ready"
+ *      6. Get the command "ready"
  *
- *      5. Send the command ready
- *      6. Get the command ready
+ *      When loading:
+ *      1. Send the command "load"
+ *      4. Get the command "done"
+ *      5. Send the command "ready"
+ *      6. Get the command "ready"
+ *      7. If we loaded a Game where the enemy´s
+ *         turn is active send "next"
+ *
  * When we are Client:
  *      1. Get the command "size" and parameters
  *      2. Send the command "next"
  *      3. Get the command "ships" and parameters
  *      4. Send the command "done"
+ *      5. Get the command "ready"
+ *      6. Send the command "ready"
  *
- *      5. Get the command ready
- *      6. Send the command ready
+ *      When loading:
+ *      1. Get the command "load"
+ *      4. Send the command "done"
+ *      5. Get the command "ready"
+ *      6. Send the command "ready"
  *
  * In both cases:
  * The scene is set depending on the mode selected
- * player   -> place ships scene
- * ki       -> playground scene
+ * player       -> place ships scene
+ * ki or load   -> playground scene
  *
- * Send/received parameters are either received or stored form the ActiveGameState.java
- * load  s
- * done  c
- * ready s
- * ready c
  */
 public class MultiplayerControlThreadConfigCommunication extends Thread{
     public static final Logger logConfigCommunicationThread = Logger.getLogger("parent.MultiplayerControlThreadConfigCommunication");
@@ -73,12 +78,14 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 receivedCMD = ActiveGameState.getServer().getCMD();
                 switch (receivedCMD[0]) {
                     case "next":        break;
-                    case "timeout":     HelpMethods.connectionLost();
+                    case "timeout":     logConfigCommunicationThread.log(Level.WARNING, "Timeout appeared, closing connection");
+                                        HelpMethods.connectionLost();
                                         ActiveGameState.getServer().closeConnection();
                                         ActiveGameState.setRunning(false);
                                         return;
 
-                    default:            HelpMethods.unexceptedMessage();
+                    default:            logConfigCommunicationThread.log(Level.WARNING, "UnexpectedMessage from Client, closing connection");
+                                        HelpMethods.unexceptedMessage();
                                         ActiveGameState.getServer().closeConnection();
                                         ActiveGameState.setRunning(false);
                                         return;
@@ -113,31 +120,20 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
             else{
                 logConfigCommunicationThread.log(Level.FINE, "Send loaded configuration");
                 ActiveGameState.getServer().sendCMD(CMD.load, String.valueOf(ActiveGameState.getLoadId()));
-               /* receivedCMD = ActiveGameState.getServer().getCMD();
-                switch (receivedCMD[0]) {
-                    case "done":
-                        break;
-                    case "timeout":
-                        ActiveGameState.getServer().closeConnection();
-                        ActiveGameState.setRunning(false);
-                        return;
-                    default:
-                        System.out.println("Unexpected Message from Client: " + receivedCMD[0]);
-                        return;
-                }*/
-
             }
             //Get done
             receivedCMD = ActiveGameState.getServer().getCMD();
 
             switch  (receivedCMD[0]){
-                case "done": break;
-                case "timeout":     HelpMethods.connectionLost();
+                case "done":        break;
+                case "timeout":     logConfigCommunicationThread.log(Level.WARNING, "Timeout appeared, closing connection");
+                                    HelpMethods.connectionLost();
                                     ActiveGameState.getServer().closeConnection();
                                     ActiveGameState.setRunning(false);
                                     return;
 
-                default:            HelpMethods.unexceptedMessage();
+                default:            logConfigCommunicationThread.log(Level.WARNING, "UnexpectedMessage from Client, closing connection");
+                                    HelpMethods.unexceptedMessage();
                                     ActiveGameState.getServer().closeConnection();
                                     ActiveGameState.setRunning(false);
                                     return;
@@ -152,11 +148,13 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
             switch (receivedCMD[0]){
                 case "ready": break;
-                case "timeout":     HelpMethods.connectionLost();
+                case "timeout":     logConfigCommunicationThread.log(Level.WARNING, "Timeout appeared, closing connection");
+                                    HelpMethods.connectionLost();
                                     ActiveGameState.getServer().closeConnection();
                                     ActiveGameState.setRunning(false);
                                     return;
-                default:            HelpMethods.unexceptedMessage();
+                default:            logConfigCommunicationThread.log(Level.WARNING, "UnexpectedMessage from Client, closing connection");
+                                    HelpMethods.unexceptedMessage();
                                     ActiveGameState.getServer().closeConnection();
                                     ActiveGameState.setRunning(false);
                                     return;
@@ -185,22 +183,24 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                 case "load":    ActiveGameState.setLoading(ActiveGameState.Loading.multiplayer);
                                 Savegame savegame = SaveAndLoad.load(Long.parseLong(receivedCMD[1]));
                                 if ( savegame == null) {
+                                    logConfigCommunicationThread.log(Level.WARNING, "From server requested file couldn`t be loaded");
                                     HelpMethods.noGameFile();
                                     return;
                                 }
+                                logConfigCommunicationThread.log(Level.INFO, "Loaded file, requested from server");
                                 load = true;
                                 ActiveGameState.setLoading(ActiveGameState.Loading.multiplayer);
                                 break;
 
-                case "timeout": HelpMethods.connectionLost();
+                case "timeout": logConfigCommunicationThread.log(Level.WARNING, "Timeout appeared, closing connection");
+                                HelpMethods.connectionLost();
                                 ActiveGameState.getClient().closeConnection();
                                 ActiveGameState.setRunning(false);
                                 return;
-                default:
+                default:        logConfigCommunicationThread.log(Level.WARNING, "UnexpectedMessage from Server, closing connection");
                                 HelpMethods.unexceptedMessage();
                                 ActiveGameState.getClient().closeConnection();
                                 ActiveGameState.setRunning(false);
-                                System.out.println("Unexpected Message from Server: " + receivedCMD[0]);
                                 return;
             }
 
@@ -223,7 +223,8 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                                 case 3:     size3++;    break;
                                 case 4:     size4++;    break;
                                 case 5:     size5++;    break;
-                                default:        HelpMethods.unexceptedMessage();
+                                default:        logConfigCommunicationThread.log(Level.WARNING, "UnexpectedMessage from Server at sending ships, closing connection");
+                                                HelpMethods.unexceptedMessage();
                                                 ActiveGameState.getClient().closeConnection();
                                                 ActiveGameState.setRunning(false);
                                                 return;
@@ -236,11 +237,12 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                         ActiveGameState.setAmountShipSize5(size5);
                         ActiveGameState.setAmountOfShips((size2 + size3 + size4 + size5));
                         break;
-                    case "timeout":     HelpMethods.connectionLost();
+                    case "timeout":     logConfigCommunicationThread.log(Level.WARNING, "Timeout appeared, closing connection");
+                                        HelpMethods.connectionLost();
                                         ActiveGameState.getClient().closeConnection();
                                         ActiveGameState.setRunning(false);
                                         return;
-                    default:
+                    default:            logConfigCommunicationThread.log(Level.WARNING, "UnexpectedMessage from Server, closing connection");
                                         HelpMethods.unexceptedMessage();
                                         ActiveGameState.getClient().closeConnection();
                                         ActiveGameState.setRunning(false);
@@ -256,12 +258,14 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
             switch (receivedCMD[0]){
                 case "ready": break;
-                case "timeout": HelpMethods.connectionLost();
+                case "timeout": logConfigCommunicationThread.log(Level.WARNING, "Timeout appeared, closing connection");
+                                HelpMethods.connectionLost();
                                 ActiveGameState.getClient().closeConnection();
                                 ActiveGameState.setRunning(false);
                                 return;
 
-                default:        HelpMethods.unexceptedMessage();
+                default:        logConfigCommunicationThread.log(Level.WARNING, "UnexpectedMessage from Server, closing connection");
+                                HelpMethods.unexceptedMessage();
                                 ActiveGameState.getClient().closeConnection();
                                 ActiveGameState.setRunning(false);
                                 return;
@@ -270,9 +274,6 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
             ActiveGameState.getClient().sendCMD(CMD.ready, "");
 
             logConfigCommunicationThread.log(Level.INFO, "Game Configurations successfully transmitted to Server.");
-
-
-
 
         }
 
@@ -303,7 +304,7 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                     //Switch scene, depending on ki selection
                     switch (ActiveGameState.getModes()){
                         case playerVsRemote:
-                                                //Wenn nicht laden und Spieler vs Remote-> place Ships..., wenn laden oder ki vs remote -> direkt gamePlayground
+                                                //Not loading and player vs remote -> place ships
                                                 if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ) {
                                                     logConfigCommunicationThread.log(Level.INFO, "Switching Scene to Place Ships");
                                                     Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));

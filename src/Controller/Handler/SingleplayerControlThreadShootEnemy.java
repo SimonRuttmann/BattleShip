@@ -9,6 +9,9 @@ import javafx.event.Event;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  *  This thread will:
@@ -21,27 +24,37 @@ import javafx.scene.layout.GridPane;
  */
 public class SingleplayerControlThreadShootEnemy extends Thread{
 
+    public static final Logger logSingleplayerControlThreadShootEnemy = Logger.getLogger("parent.SingleplayerControlThreadShootEnemy");
     public Event event;
     public SingleplayerControlThreadShootEnemy(Event event){
         this.event = event;
     }
 
+
     @Override
     public void run(){
         //1.
+        logSingleplayerControlThreadShootEnemy.log(Level.FINE, "Starting Singleplayer Control Thread Shoot Enemy");
+
         ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
         GamePlayground.setSaveAndCloseButtonNonClickable();
+
         //2.
         int xPos = GridPane.getColumnIndex((Label) event.getSource());
         int yPos = GridPane.getRowIndex((Label) event.getSource());
         Point shootPosition = new Point(xPos, yPos);
 
-        System.out.println( "Player is shooting at " + xPos + " " +  yPos);
-        //3. ! We are now in the Enemy´s sight of view ! Aus unserer Sicht, beschießen wir den Gegner sein eigenes Feld
+
+        //3. We are now in the Enemy´s sight of view, enemy KI shoots at our playground
         ShotResponse shotResponse = ActiveGameState.getEnemyPlayerOwnPlayground().shoot(shootPosition);
 
-        //The Ki lost the game, so the player won the game
+        logSingleplayerControlThreadShootEnemy.log(Level.INFO, "Player shoots at: (" + xPos +"|" + yPos + ")"+ "\n"+
+                "\t Hit: " + shotResponse.isHit() + " \t Destroyed: " + shotResponse.isShipDestroyed());
+
+
+        //Ki lost the game, so the player won the game
         if(shotResponse.isGameLost()){
+            logSingleplayerControlThreadShootEnemy.log(Level.INFO, "Player won against AI");
             ActiveGameState.setRunning(false);
             HelpMethods.winOrLose(true);
         }
@@ -63,15 +76,16 @@ public class SingleplayerControlThreadShootEnemy extends Thread{
         //5 a) If the player hit an ship, or sunk it, he is allowed to shoot again
         if (answerFromKi == 1 || answerFromKi == 2){
             ActiveGameState.setYourTurn(true);
-            //TODO Yannick Display Player's Turn
+            HelpMethods.displayTurn(true);
 
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
             GamePlayground.setSaveAndCloseButtonClickable();
         }
         // 5 b) Enemy turn started
         else{
-            //TODO Yannick Display Enemy´s Turn
             ActiveGameState.setYourTurn(false);
+            HelpMethods.displayTurn(false);
+
             SingleplayerControlThreadPerformEnemyAction singleplayerControlThreadPerformEnemyAction = new SingleplayerControlThreadPerformEnemyAction();
             singleplayerControlThreadPerformEnemyAction.start();
         }

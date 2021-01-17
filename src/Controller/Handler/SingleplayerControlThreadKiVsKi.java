@@ -8,13 +8,20 @@ import java.util.logging.Logger;
 
 /**
  * This thread will:
- * Labels werden nicht gesetzt
- * Solange bis das Spiel vorbei ist:
- * 1. Unsere Ki schießt
- * wenn getroffen -> nochmal
- * <p>
- * 2. Gegnerische Ki schießt
- * wenn getroffen -> nochmal
+ * While game is running
+ *      While our turn is active
+ *      1. Wait the set up time
+ *      2. Get our Ki and let it shoot the enemy´s  own playground
+ *      3. Mark our enemy playground
+ *      If our KI hit nothing our turn expired
+ *
+ *      While enemy turn is active
+ *      1. Wait the set up time
+ *      2. Get the enemy KI and let it shoot the players`s own playground
+ *      If enemy KI hit nothing the enemy turn expired
+ *
+ * If the game is lost,won or closed, the game stops running
+ * The close is managed over the Popup Cancel Game, which sets running false
  */
 public class SingleplayerControlThreadKiVsKi extends Thread {
     public static final Logger logSingleplayerControlThreadKiVsKi = Logger.getLogger("parent.SingleplayerControlThreadKiVsKi");

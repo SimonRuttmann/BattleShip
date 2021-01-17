@@ -497,3 +497,86 @@ Sun Jan 17 15:31:16 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlTh
 Sun Jan 17 15:31:16 CET 2021 [ FINE ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Waiting1seconds till next shot
 Sun Jan 17 15:31:17 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadPerformEnemyAction ] [ run ] Enemy AI shoots at: (5|8)
 	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:09:24 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 16:09:33 CET 2021 [ INFO ] [ Controller.GameSettingsController ] [ startShipPlacement ] 
+Settings: 
+	 Singleplayer AI vs AI
+	 Playgroundsize: 10
+	 Amount of Ships 2: 4
+	 Amount of Ships 3: 3
+	 Amount of Ships 4: 2
+	 Amount of Ships 5: 1
+	 Own AI Difficulty: normal
+	 Enemy AI Difficulty: normal
+Sun Jan 17 16:09:35 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (3|2)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:09:36 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Enemy AI shoots at: (6|5)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:09:37 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (7|4)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:09:38 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Enemy AI shoots at: (2|7)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:09:39 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (5|1)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:09:40 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Enemy AI shoots at: (0|5)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:10:24 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 16:10:38 CET 2021 [ INFO ] [ Controller.GameSettingsController ] [ startShipPlacement ] 
+Settings: 
+	 Singleplayer Player vs AI
+	 Playgroundsize: 10
+	 Amount of Ships 2: 4
+	 Amount of Ships 3: 3
+	 Amount of Ships 4: 2
+	 Amount of Ships 5: 1
+	 Enemy AI Difficulty: normal
+Sun Jan 17 16:10:46 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 16:11:05 CET 2021 [ INFO ] [ Controller.GameSettingsController ] [ startShipPlacement ] 
+Settings: 
+	 Singleplayer AI vs AI
+	 Playgroundsize: 10
+	 Amount of Ships 2: 4
+	 Amount of Ships 3: 3
+	 Amount of Ships 4: 2
+	 Amount of Ships 5: 1
+	 Own AI Difficulty: normal
+	 Enemy AI Difficulty: normal
+Sun Jan 17 16:11:06 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (1|0)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 16:11:07 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (1|1)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:08 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Enemy AI shoots at: (6|8)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:09 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (2|0)
+	 Hit: true 	 Destroyed: false
+Sun Jan 17 16:11:10 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (3|0)
+	 Hit: true 	 Destroyed: true
+Sun Jan 17 16:11:11 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (6|3)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:40 CET 2021 [ INFO ] [ Player.NetworkLogger ] [ <init> ] Logging started
+Sun Jan 17 16:11:48 CET 2021 [ INFO ] [ Controller.GameSettingsController ] [ startShipPlacement ] 
+Settings: 
+	 Singleplayer AI vs AI
+	 Playgroundsize: 10
+	 Amount of Ships 2: 4
+	 Amount of Ships 3: 3
+	 Amount of Ships 4: 2
+	 Amount of Ships 5: 1
+	 Own AI Difficulty: normal
+	 Enemy AI Difficulty: normal
+Sun Jan 17 16:11:50 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (3|8)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:51 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Enemy AI shoots at: (5|2)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:52 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (2|1)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:53 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Enemy AI shoots at: (7|7)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:54 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (7|0)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:55 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Enemy AI shoots at: (7|6)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:56 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Own AI shoots at: (2|0)
+	 Hit: false 	 Destroyed: false
+Sun Jan 17 16:11:57 CET 2021 [ INFO ] [ Controller.Handler.SingleplayerControlThreadKiVsKi ] [ run ] Enemy AI shoots at: (6|3)
+	 Hit: false 	 Destroyed: false

@@ -43,6 +43,7 @@ public class CancelGame {
         Label label = new Label();
         Button yes = new Button();
         yes.setOnAction(e -> {
+            ActiveGameState.setRunning(false);
             HelpMethods.closeMPSockets();
             exit.close();
             NetworkLogger.terminateLogging();

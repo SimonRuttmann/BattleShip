@@ -505,13 +505,17 @@ private int debugg = 0;
     //min ausgeschlossen, max eingeschlossen
     private static int getRandomInt(int min, int max) {
         if (min >= max) {
-            throw new IllegalArgumentException("max must be greater than min in KI");
+            throw new IllegalArgumentException("max must be greater than min in KI min:" + min + "max:" + max);
         }
         Random r = new Random();
         return r.nextInt((max - min) ) + min;
         //r.nextInt( size - 0 ) + 0
         // r.nextInt (size)
     }
+
+    //public int getRandomInt(int min, int max) {
+    //    return (int) ((Math.random() * (max - min)) + min);
+    //}
 
     //min 5
     //max 10
@@ -580,6 +584,8 @@ private int debugg = 0;
                 //previousShots.add(new Point(random_x, random_y));//der Punkt wird gespeichert
                 startDestroy = true;
 
+                shiptoDestroy.add(currentShot);
+
             }
             else{
                 this.destroyStatus = DestroyStatus.notFound;
@@ -616,13 +622,25 @@ private int debugg = 0;
             previousShots.add(currentShot);
 
 
-            System.out.println(currentShot.getX());
-            System.out.println(currentShot.getY());
+            System.out.println("currShot: "+currentShot.getX()+ ""+currentShot.getY());
+
+            //DEBUG
+            System.out.println( "PrevShotsList: ");
+            for(Point point: previousShots){
+
+                System.out.println( point.getX() +" " +  point.getY());
+            }
+            //DEBUG
+
+
 
             if(answerofShot.isHit()){
                 destroyStatus = DestroyStatus.destroying;
                 nextLocation = NextLocation.nextTop;
                 needRandomLocation = true;
+
+                shiptoDestroy.add(currentShot);
+
 
                 isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
                 firstHit = new Point(currentShot.getX(), currentShot.getY()); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert
@@ -632,7 +650,7 @@ private int debugg = 0;
             }
             else{
                 this.destroyStatus = DestroyStatus.notFound;
-                //previousShots.add(new Point(random_x, random_y)); //es ist kein Treffer und der Punkt wird gespeichert und zuückgegeben
+                previousShots.add(new Point(currentShot.getX(), currentShot.getY())); //es ist kein Treffer und der Punkt wird gespeichert und zuückgegeben
 
             }
         }
@@ -659,24 +677,31 @@ private int debugg = 0;
         int searchedShip;
         if(searchAnewShip && ShipsWithSize5 != 0){
             searchedShip = 5;
+            //DEBUG
+            System.out.println("KI sucht 5er Schiff");
+            //DEBUG
             for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
                 for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
                     if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
                         takticalDots.add(new Point(x,y));
-                        //DEBUG
-                        System.out.println( "Pos in taktical Dots");
-                        for(Point point: takticalDots){
-                            System.out.println( point.getX() +" " +  point.getY());
-                        }
-                        //DEBUG
+
                     }
                 }
             }
+            //DEBUG
+            System.out.println( "Pos in taktical Dots");
+            for(Point point: takticalDots){
+                System.out.println( point.getX() +" " +  point.getY());
+            }
+            //DEBUG
 
             searchAnewShip = false;
         }
         if(searchAnewShip && ShipsWithSize4 != 0){
             searchedShip = 4;
+            //DEBUG
+            System.out.println("KI sucht 4er Schiff");
+            //DEBUG
             for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
                 for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
                     if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
@@ -904,15 +929,27 @@ private int debugg = 0;
 
                             //Part für schwere Ki todo muss überall and diesen Stellen eingefügt werden
                             incrementDestroyedShipFromTotalShipList(shotResponseFromKI.getSizeOfSunkenShip());
+                            //DEBUG
+                            System.out.println("Schiff das zerstört wurde:" +shotResponseFromKI.getSizeOfSunkenShip());
+                            //DEBUG
                             searchAnewShip = true;
                             takticalDots.clear();
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
+
+                            shiptoDestroy.clear();
+
+
                         }
                         //Hit
                         else if (shotResponseFromKI.isHit()) {
                             this.nextLocation = NextLocation.nextTop;
+
+
+                            shiptoDestroy.add(nextPositionToShoot);
+
+
                             this.rangeToShot++;
                         }
                         //no Hit
@@ -950,11 +987,18 @@ private int debugg = 0;
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
+
+
+                            shiptoDestroy.clear();
+
                         }
                         //Hit
                         else if (shotResponseFromKI.isHit()) {
                             this.nextLocation = NextLocation.nextBottom;
                             this.rangeToShot++;
+
+                            shiptoDestroy.add(nextPositionToShoot);
+
                         }
                         //no Hit
                         else {
@@ -992,11 +1036,19 @@ private int debugg = 0;
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
+
+
+                            shiptoDestroy.clear();
+
                         }
                         //Hit
                         else if (shotResponseFromKI.isHit()) {
                             this.nextLocation = NextLocation.nextRight;
                             this.rangeToShot++;
+
+
+                            shiptoDestroy.add(nextPositionToShoot);
+
                         }
                         //no Hit
                         else {
@@ -1032,6 +1084,10 @@ private int debugg = 0;
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
+
+
+                            shiptoDestroy.clear();
+
 
                         }
                         //Hit

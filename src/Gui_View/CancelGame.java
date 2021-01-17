@@ -158,7 +158,7 @@ public class CancelGame {
         Button endGame = new Button("Spiel beenden");
         endGame.setOnAction(e -> {
 
-            save.close();
+            //save.close();
             NetworkLogger.terminateLogging();
 
             Main.primaryStage.close();

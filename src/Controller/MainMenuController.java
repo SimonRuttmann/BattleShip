@@ -52,6 +52,7 @@ public class MainMenuController implements Initializable {
 
     public void setLanguage(){
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            title.setText("Schiffe versenken");
             rightBarMultiplayer_TextLoad.setText("Spiel laden");
             textSingleplayer.setText("Einzelspieler");
             textMultiplayer.setText("Mehrspieler");
@@ -67,6 +68,7 @@ public class MainMenuController implements Initializable {
 
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            title.setText("B a t t l e s h i p");
             rightBarMultiplayer_TextLoad.setText("Load Game");
             textSingleplayer.setText("Singleplayer");
             textMultiplayer.setText("Multiplayer");
@@ -326,7 +328,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void setTitleSettings(){
-        this.title.setText("B a t t l e s h i p");
+        //this.title.setText("B a t t l e s h i p");
         //this.title.setStyle("-fx-font: 70 sans-serif;");
         //   this.title.setTranslateX((double)Menu4.WIDTH/2);
         //    this.title.setTranslateY((double)Menu4.WIDTH/2);

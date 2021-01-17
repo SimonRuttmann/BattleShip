@@ -3,6 +3,7 @@ import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Network.CMD;
 import Player.ActiveGameState;
+import Player.GameMode;
 import Player.SaveAndLoad;
 import Player.Savegame;
 import javafx.application.Platform;
@@ -50,24 +51,24 @@ import java.util.logging.Logger;
  * ready c
  */
 public class MultiplayerControlThreadConfigCommunication extends Thread{
-    public static final Logger configCommunicationThread = Logger.getLogger("parent.MultiplayerControlThreadConfigCommunication");
+    public static final Logger logConfigCommunicationThread = Logger.getLogger("parent.MultiplayerControlThreadConfigCommunication");
     @Override
     public void run(){
 
-        configCommunicationThread.log(Level.INFO, "Multiplayer Control Thread Config Communication");
-        configCommunicationThread.log(Level.FINE, "Players turn: " + ActiveGameState.isYourTurn());
+        logConfigCommunicationThread.log(Level.INFO, "Multiplayer Control Thread Config Communication");
+        logConfigCommunicationThread.log(Level.FINE, "Players turn: " + ActiveGameState.isYourTurn());
 
         //Server
 
         if (ActiveGameState.isAmIServer()){
-            configCommunicationThread.log(Level.FINE, "Server sends configuration");
-            System.out.println(ActiveGameState.getLoading());
+            logConfigCommunicationThread.log(Level.FINE, "Server sends configuration");
+
             if ( ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ActiveGameState.setLoadWithNext(!ActiveGameState.isYourTurn());
 
             ActiveGameState.setYourTurn(true);
             String[] receivedCMD;
             if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer)) {
-                configCommunicationThread.log(Level.FINE, "Send player's set configuration");
+                logConfigCommunicationThread.log(Level.FINE, "Send player's set configuration");
                 ActiveGameState.getServer().sendCMD(CMD.size, Integer.toString(ActiveGameState.getPlaygroundSize()));
                 receivedCMD = ActiveGameState.getServer().getCMD();
                 switch (receivedCMD[0]) {
@@ -110,7 +111,7 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
             }
             //Load Game
             else{
-                configCommunicationThread.log(Level.FINE, "Send loaded configuration");
+                logConfigCommunicationThread.log(Level.FINE, "Send loaded configuration");
                 ActiveGameState.getServer().sendCMD(CMD.load, String.valueOf(ActiveGameState.getLoadId()));
                /* receivedCMD = ActiveGameState.getServer().getCMD();
                 switch (receivedCMD[0]) {
@@ -161,12 +162,12 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                                     return;
             }
 
-            configCommunicationThread.log(Level.INFO, "Game Configurations successfully transmitted to Client.");
+            logConfigCommunicationThread.log(Level.INFO, "Game Configurations successfully transmitted to Client.");
 
             //Send next, as we loaded a game where the enemy turn is active
             if (ActiveGameState.isLoadWithNext()){
                 ActiveGameState.getServer().sendCMD(CMD.next,"");
-                configCommunicationThread.log(Level.FINE, "Game is loaded and the client turn is active");
+                logConfigCommunicationThread.log(Level.FINE, "Game is loaded and the client turn is active");
             }
 
         }
@@ -268,8 +269,32 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
 
             ActiveGameState.getClient().sendCMD(CMD.ready, "");
 
-            configCommunicationThread.log(Level.INFO, "Game Configurations successfully transmitted to Server.");
+            logConfigCommunicationThread.log(Level.INFO, "Game Configurations successfully transmitted to Server.");
 
+
+
+
+        }
+
+        if (ActiveGameState.getModes() == GameMode.playerVsRemote){
+            logConfigCommunicationThread.log(Level.INFO, "\nSettings: " + "\n" +
+                    "\t Multiplayer Player vs Remote" + "\n" +
+                    "\t Playgroundsize: " + ActiveGameState.getPlaygroundSize() + "\n" +
+                    "\t Amount of Ships 2: " + ActiveGameState.getAmountShipSize2() + "\n" +
+                    "\t Amount of Ships 3: " + ActiveGameState.getAmountShipSize3() + "\n" +
+                    "\t Amount of Ships 4: " + ActiveGameState.getAmountShipSize4() + "\n" +
+                    "\t Amount of Ships 5: " + ActiveGameState.getAmountShipSize5()
+            );
+        }else if ( ActiveGameState.getModes() == GameMode.kiVsRemote){
+            logConfigCommunicationThread.log(Level.INFO, "\nSettings: " + "\n" +
+                    "\t Multiplayer AI vs Remote" + "\n" +
+                    "\t Playgroundsize: " + ActiveGameState.getPlaygroundSize() + "\n" +
+                    "\t Amount of Ships 2: " + ActiveGameState.getAmountShipSize2() + "\n" +
+                    "\t Amount of Ships 3: " + ActiveGameState.getAmountShipSize3() + "\n" +
+                    "\t Amount of Ships 4: " + ActiveGameState.getAmountShipSize4() + "\n" +
+                    "\t Amount of Ships 5: " + ActiveGameState.getAmountShipSize5() + "\n" +
+                    "\t Own AI Difficulty: " + ActiveGameState.getOwnKiDifficulty()
+            );
         }
 
         if(ActiveGameState.newView){
@@ -280,21 +305,21 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                         case playerVsRemote:
                                                 //Wenn nicht laden und Spieler vs Remote-> place Ships..., wenn laden oder ki vs remote -> direkt gamePlayground
                                                 if (!(ActiveGameState.getLoading() == ActiveGameState.Loading.multiplayer) ) {
-                                                    configCommunicationThread.log(Level.INFO, "Switching Scene to Place Ships");
+                                                    logConfigCommunicationThread.log(Level.INFO, "Switching Scene to Place Ships");
                                                     Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
                                                     Main.primaryStage.setScene(new Scene(placeShips));
                                                     Main.primaryStage.show();
                                                     break;
                                                 }
 
-                        case kiVsRemote:            configCommunicationThread.log(Level.INFO, "Switching Scene to Game Playground.");
+                        case kiVsRemote:            logConfigCommunicationThread.log(Level.INFO, "Switching Scene to Game Playground.");
                                                     Parent gamePlayground =  FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                                                     Main.primaryStage.setScene(new Scene(gamePlayground));
                                                     Main.primaryStage.show();
                                                     break;
                     }
                 }catch(IOException e){
-                    configCommunicationThread.log(Level.SEVERE, "IO Exception at loading Scene");
+                    logConfigCommunicationThread.log(Level.SEVERE, "IO Exception at loading Scene");
                 }
             });
         }

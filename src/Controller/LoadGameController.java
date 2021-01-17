@@ -37,9 +37,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class LoadGameController implements Initializable {
 
+    public static final Logger logLoadGame = Logger.getLogger("parent.LoadGame");
+
+    /** FXML Elements **/
     public AnchorPane anchorPane;
     public Text title;
     public Line lineLeftSide;
@@ -48,45 +54,65 @@ public class LoadGameController implements Initializable {
     public VBox vBoxElementsOverRectangle;
     public Button loadGameButton;
     public Button backButton;
-
-    @FXML
-    private ListView<File> gameList;
+    public ListView<File> gameList;
 
 
-
-    public void backToMainMenu(ActionEvent actionEvent) throws IOException {
+    /** External Handling **/
+    //Action Event call
+    public void backToMainMenu() throws IOException {
+        logLoadGame.log(Level.INFO, "Switching Scene to Main Menu");
         Parent mainMenu = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
         Main.primaryStage.setScene(new Scene(mainMenu));
         Main.primaryStage.show();
     }
 
-//TODO Load Singleplayer, MUltiplayer, none setzen
-    public void loadSelectedGame(ActionEvent actionEvent) throws IOException{
+    /**
+     * Action event call
+     * This method loads the selected game
+     * The selected game is represented by an ListView of Files (packed in cells)
+     */
+    public void loadSelectedGame() {
         ObservableList<File> fileObservableList = this.gameList.getSelectionModel().getSelectedItems();
         File fileToLoad  = fileObservableList.get(0); //As only one items is selected
+
+        if(fileToLoad == null){
+            logLoadGame.log(Level.WARNING, "No Savegame selected");
+            return;
+        }
+
         String pathOfFile = fileToLoad.getPath();
 
         Savegame loadedSavegame = SaveAndLoad.load(pathOfFile);
         if ( loadedSavegame == null) {
-            System.out.println( "loading failed" );
+            logLoadGame.log(Level.SEVERE, "Savegame can´t be loaded, savegame may be corrupted");
         }
         else{
-            System.out.println( "loading successfull");
+            logLoadGame.log(Level.INFO, "Loading of the Game + " + fileToLoad.getName() + "successful");
         }
 
         //Singleplayergame -> Playground
         if (ActiveGameState.getLoading() == ActiveGameState.Loading.singleplayer ){
+
+            logLoadGame.log(Level.INFO, "\nSettings: " + "\n" +
+                    "\t Singleplayer Player vs AI" + "\n" +
+                    "\t Playgroundsize: " + ActiveGameState.getPlaygroundSize() + "\n" +
+                    "\t Amount of Ships 2: " + ActiveGameState.getAmountShipSize2() + "\n" +
+                    "\t Amount of Ships 3: " + ActiveGameState.getAmountShipSize3() + "\n" +
+                    "\t Amount of Ships 4: " + ActiveGameState.getAmountShipSize4() + "\n" +
+                    "\t Amount of Ships 5: " + ActiveGameState.getAmountShipSize5() + "\n" +
+                    "\t Enemy AI Difficulty: " + ActiveGameState.getEnemyKiDifficulty()
+            );
+
         Platform.runLater( () -> {
                     Parent game;
                     try {
+                        logLoadGame.log(Level.INFO, "Switching Scene to Game Playground");
                         game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                         Main.primaryStage.setScene(new Scene(game));
                         Main.primaryStage.show();
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
-
-
                 });
         }
         //Starting Multiplayer games by hosting a game
@@ -94,6 +120,7 @@ public class LoadGameController implements Initializable {
             Platform.runLater( () -> {
                 Parent game;
                 try {
+                    logLoadGame.log(Level.INFO, "Switching Scene to Mp Server");
                     game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MpServer.fxml"));
                     Main.primaryStage.setScene(new Scene(game));
                     Main.primaryStage.show();
@@ -101,14 +128,11 @@ public class LoadGameController implements Initializable {
                     ioException.printStackTrace();
                 }
 
-
             });
         }
         else{
-            System.out.println( "Loading: Multiplayer or Singleplayer not selected at loading a game");
+            logLoadGame.log(Level.SEVERE, "Multiplayer or Singleplayer not selected at loading a game");
         }
-        //TODO
-        //ActiveGameState.setLoadId(0);
 
     }
 
@@ -116,7 +140,6 @@ public class LoadGameController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setLanguage();
         setUpListView();
-
         setBackground();
         setTextSettings();
         setTitleSettings();
@@ -173,62 +196,33 @@ public class LoadGameController implements Initializable {
                     }
                 };
 
-
                 // create context menu + function for its items
                 ContextMenu contextMenu = new ContextMenu();
 
-                // load -> changes scene to game, loads game using SaveAndLoad.load()
-                MenuItem load = new MenuItem("Spielstand laden");
-                load.setOnAction(e -> {
+                //1// Currently Disabled Feature Load
+                //By adding make sure to add the item to the context menu
 
-                    System.out.println(cell.getItem());
-
-                    String temp = cell.getItem().toString();
-                    Savegame gameObject = SaveAndLoad.load(temp);
-
-                    if (gameObject != null) {
-                        System.out.println("loading successful");
-                    }
-                    else{
-                        System.out.println("loading failed");
-                    }
-
-                    // Change scene to game Playground
-               /*     Platform.runLater( () -> {
-                        Parent game = null;
-                        try {
-                            game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
-                        } catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                        Main.primaryStage.setScene(new Scene(game));
-                        Main.primaryStage.show();
-*/
-                   // });
-
-
-                });
-
-                // delete -> deltes game file from list and also from system
-                MenuItem delete = new MenuItem("Spielstand löschen");
+                //Delete -> delete game file from list and system
+                MenuItem delete = new MenuItem();
+                delete.setText((ActiveGameState.getLanguage() == ActiveGameState.Language.german) ? "Spielstand löschen" : "Delete Game");
                 delete.setOnAction(e -> {
-                    System.out.println("Delete Item" + cell.getItem().toString());
+                    logLoadGame.log(Level.INFO, "Delete Item" + cell.getItem().toString());
 
                     //Remove linker in multiplayer savegames
                     String fileNameToDelete = cell.getItem().toString();
                     boolean linkerDeleted = true;
                     if (ActiveGameState.isMultiplayer()){
                         linkerDeleted = SavegameLinker.removeLinker(fileNameToDelete);
-                        if (!linkerDeleted) System.out.println("Exception thrown at removing linker to savegame name: " + fileNameToDelete);
+                        if (!linkerDeleted) logLoadGame.log(Level.WARNING, "Savegame "+ fileNameToDelete +" link couldn`t removed from the savegame linker");
                     }
 
 
                     File game = cell.getItem();
                     gameList.getItems().remove(game);
-                  //  gameList.getItems().remove(cell.getItem());
-                    if(!(game.delete())) System.out.println( "Couldn`t delete file");
+
+                    if(!(game.delete())) logLoadGame.log(Level.WARNING, "Savegame "+ fileNameToDelete +" couldn't be deleted from system");
                 });
-                contextMenu.getItems().addAll(load, delete);
+                contextMenu.getItems().addAll(delete);
 
                 // display context menu only for cells that contain file - not for empty cells
                 cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
@@ -243,11 +237,6 @@ public class LoadGameController implements Initializable {
             }
         });
     }
-
-
-
-
-
 
 
     public void setBackground(){
@@ -281,12 +270,12 @@ public class LoadGameController implements Initializable {
         //This one says, how far we want to scale, with one the object will have the same size as initial, with 2 the object will have the double size
         scaleLineLeft.setToY(1);
 
-        //Dadurch wird die Startposition auf -200 gesetzt
+        //Sets the starting position of the Stack Pane (containing rectangle and ListView) to -1000
         int from = -1000;
         this.sP_RectangleAndElements.setTranslateX(from);
 
 
-        //Notwendiges Rechteck, damit die Items erst angezeigt werden, wenn sie durch die Linie hindurchgehen
+        //Simple clip to hide the slided rectangle till the line is reached
         Rectangle clip = new Rectangle(1200,600);
         clip.translateXProperty().bind(sP_RectangleAndElements.translateXProperty().negate());
         this.sP_RectangleAndElements.setClip(clip);
@@ -307,20 +296,18 @@ public class LoadGameController implements Initializable {
     }
 
     public void setRectangleSettings(){
-        Effect shadow = new DropShadow(5, Color.BLACK);
-        Effect blur = new BoxBlur(1, 1, 3);
 
         this.rectangle.setStroke(Color.color(0,0,0,0.5));
         this.rectangle.setEffect(new GaussianBlur());
         this.rectangle.setFill(Color.color(0,0,0,0.5));
     }
 
+    //Placeholder for future text
     public void setTextSettings(){
-
 
         ArrayList<Text> headlines = new ArrayList<>();
         //Add any text element here
-        //headlines.add(this.selectAmountOfShipsText);
+        //headlines.add(this.newText);
 
         Color textColorHeadlines = new Color(0.8,0.8,0.8,1);
 
@@ -334,7 +321,7 @@ public class LoadGameController implements Initializable {
     }
 
     public void setTitleSettings(){
-        this.title.setText("L O A D  G A M E");
+       // this.title.setText("Load Game");
         title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
         title.setFill(Color.WHITE);
         title.setEffect(new DropShadow(30, Color.BLACK));
@@ -344,3 +331,40 @@ public class LoadGameController implements Initializable {
 
 
 }
+
+
+/*  //1//    Currently disabled Feature -> right click on the selected file to load
+  // load -> changes scene to game, loads game using SaveAndLoad.load()
+                MenuItem load = new MenuItem();
+                load.setText((ActiveGameState.getLanguage() == ActiveGameState.Language.german) ? "Spielstand laden" : "Load Game");
+                load.setOnAction(e -> {
+
+                    System.out.println(cell.getItem());
+
+                    String temp = cell.getItem().toString();
+                    Savegame gameObject = SaveAndLoad.load(temp);
+
+                    if (gameObject != null) {
+                        System.out.println("loading successful");
+                    }
+                    else{
+                        System.out.println("loading failed");
+                    }
+
+                    // Change scene to game Playground
+               //     Platform.runLater( () -> {
+               //         Parent game = null;
+               //         try {
+               //             game = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
+               //         } catch (IOException ioException) {
+               //             ioException.printStackTrace();
+               //         }
+               //         Main.primaryStage.setScene(new Scene(game));
+               //         Main.primaryStage.show();
+
+// });
+
+
+                });
+
+ */

@@ -191,7 +191,7 @@ public class MpServerController implements Initializable {
     }
 
     public void setTitleSettings(){
-        this.title.setText("H O S T  G A M E");
+      //  this.title.setText("H O S T  G A M E");
         //this.title.setStyle("-fx-font: 70 sans-serif;");
         //   this.title.setTranslateX((double)Menu4.WIDTH/2);
         //    this.title.setTranslateY((double)Menu4.WIDTH/2);

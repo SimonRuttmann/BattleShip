@@ -6,7 +6,6 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -15,9 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -29,13 +26,16 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GameOptionsController implements Initializable {
+
+    public static final Logger logGameOptions = Logger.getLogger("parent.GameOptions");
 
     /** FXML Elements**/
     public AnchorPane anchorPane;
@@ -56,30 +56,38 @@ public class GameOptionsController implements Initializable {
     public Button button_saveSettings;
 
     /** External Handling**/
-    public void backToMainMenu(ActionEvent actionEvent) throws IOException {
+    // Action Event call
+    public void backToMainMenu() throws IOException {
+        logGameOptions.log(Level.INFO, "Switching Scene to Main Menu");
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
         Main.primaryStage.show();
     }
 
-    public void saveSettings(ActionEvent actionEvent) {
+    // Action Event call
+    public void saveSettings() {
         ActiveGameState.setMusicVolume(selectMusicVolumeSlider.valueProperty().intValue());
         ActiveGameState.getMusicController().setVolume(selectMusicVolumeSlider.valueProperty().intValue());
         ActiveGameState.setAiVelocity(selectAIVelocitySlider.valueProperty().intValue());
-
-        if (rB_selectEnglish.isSelected()) ActiveGameState.setLanguage(ActiveGameState.Language.english);
-        else ActiveGameState.setLanguage(ActiveGameState.Language.german);
-
+            logGameOptions.log(Level.FINE, "Music volume is set to " + ActiveGameState.getMusicVolume() +"%");
+            logGameOptions.log(Level.FINE, "AIVelocity is set to " + ActiveGameState.getAiVelocity() + "seconds");
+        if (rB_selectEnglish.isSelected()) {
+            ActiveGameState.setLanguage(ActiveGameState.Language.english);
+            logGameOptions.log(Level.FINE, "Language set to english");
+        }
+        else {
+            ActiveGameState.setLanguage(ActiveGameState.Language.german);
+            logGameOptions.log(Level.FINE, "Language set to german");
+        }
 
         setLanguage();
-
     }
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Game Options");
+        logGameOptions.log(Level.INFO, "Game Options Scene");
         setLanguage();
         setBackground();
         setTextSettings();
@@ -169,9 +177,6 @@ public class GameOptionsController implements Initializable {
     }
 
     public void setTitleSettings(){
-        //this.title.setStyle("-fx-font: 70 sans-serif;");
-        //   this.title.setTranslateX((double)Menu4.WIDTH/2);
-        //    this.title.setTranslateY((double)Menu4.WIDTH/2);
 
         title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
         title.setFill(Color.WHITE);
@@ -185,9 +190,6 @@ public class GameOptionsController implements Initializable {
         this.lineLeftSide.setStrokeWidth(3);
 
         this.lineLeftSide.setEffect(new DropShadow(5, Color.BLACK));
-
-        // Sets the Scaling of the Bars, as we want to show them from nothing, we set the to 0
-        // If we would set this one to 1.5 the Line (which is 300 Long) would decrease from 450 to 300
         this.lineLeftSide.setScaleY(0);
 
     }
@@ -201,12 +203,12 @@ public class GameOptionsController implements Initializable {
         //This one says, how far we want to scale, with one the object will have the same size as initial, with 2 the object will have the double size
         scaleLineLeft.setToY(1);
 
-        //Dadurch wird die Startposition auf -200 gesetzt
+        //Starting position of the rectangle
         int from = -1000;
         this.sP_RectangleAndElements.setTranslateX(from);
 
 
-        //Notwendiges Rechteck, damit die Items erst angezeigt werden, wenn sie durch die Linie hindurchgehen
+        //Simple clip to hide the slided rectangle till the line is reached
         Rectangle clip = new Rectangle(1200,600);
         clip.translateXProperty().bind(sP_RectangleAndElements.translateXProperty().negate());
         this.sP_RectangleAndElements.setClip(clip);
@@ -227,9 +229,6 @@ public class GameOptionsController implements Initializable {
     }
 
     public void setRectangleSettings(){
-        Effect shadow = new DropShadow(5, Color.BLACK);
-        Effect blur = new BoxBlur(1, 1, 3);
-
         this.rectangle.setStroke(Color.color(0,0,0,0.5));
         this.rectangle.setEffect(new GaussianBlur());
         this.rectangle.setFill(Color.color(0,0,0,0.5));
@@ -252,7 +251,6 @@ public class GameOptionsController implements Initializable {
             text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
             text.setFill(textColorHeadlines);
             text.setEffect(new DropShadow(30, Color.BLACK));
-            //text.setStyle("-fx-font: 24 arial;");
 
         }
 

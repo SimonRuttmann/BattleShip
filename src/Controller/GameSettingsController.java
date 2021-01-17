@@ -1,6 +1,5 @@
 package Controller;
 
-
 import Controller.Handler.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
 import KI.Ki;
@@ -10,12 +9,10 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
@@ -31,17 +28,20 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.util.Duration;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.Effect;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 
 public class GameSettingsController implements Initializable{
 
-    /** FXML Elements**/
+    public static final Logger logGameSettings = Logger.getLogger("parent.GameSettings");
+
+    /** FXML Elements **/
     public Text title;
     public Line lineLeftSide;
     public StackPane sP_RectangleAndElements;
@@ -65,7 +65,6 @@ public class GameSettingsController implements Initializable{
     public Button button_backToMainMenu;
     public Button button_Start;
     public AnchorPane anchorPane;
-
     public Spinner<Integer> selectAmount2Ships;
     public Spinner<Integer> selectAmount3Ships;
     public Spinner<Integer> selectAmount4Ships;
@@ -78,39 +77,27 @@ public class GameSettingsController implements Initializable{
 
 
     /** External Handling**/
-    public void backToMainMenu(ActionEvent actionEvent) throws IOException {
+    //Action Event call
+    public void backToMainMenu() throws IOException {
         //Close server connection in mode player vs remote or ki vs remote, if the player decided to go move back to the menu
         if (ActiveGameState.getServer() != null) ActiveGameState.getServer().closeConnection();
 
+        logGameSettings.log(Level.INFO, "Switching Scene to Main Menu");
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
         Main.primaryStage.show();
     }
 
-/*    public void startLoadMultiplayerGame(ActionEvent actionEvent) throws IOException{
-        Parent loadGame = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/loadGame.fxml"));
-        Main.primaryStage.setScene(new Scene(loadGame));
-        Main.primaryStage.show();
-    }*/
-
-
-    public void setGameModeAndKi(){
-        if (this.host_RbSelectKInormal.isSelected() || this.host_RbSelectKIhard.isSelected()) {
-            ActiveGameState.setModes(GameMode.kiVsRemote);
-            if (this.host_RbSelectKInormal.isSelected())
-                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
-            else
-                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
-
-            ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
-        } else {
-            ActiveGameState.setModes(GameMode.playerVsRemote);
-        }
-    }
 
 
 
-    public void startShipPlacement(ActionEvent actionEvent) throws IOException{
+    /**
+     * Action Event call
+     * Sets the AmountOfShips, KI difficulty and GameMode depending on the user input
+     * @throws IOException The exception only occurs, when the
+     * scene couldn`t be loaded. In this case there is no meaningful handle possible
+     */
+    public void startShipPlacement() throws IOException{
 
 
         //Set the selected Settings to ActiveGameState
@@ -126,10 +113,11 @@ public class GameSettingsController implements Initializable{
         //GameMode and multiplayer related flags are set by the Menu Scene
         //Client and Server socket are set by the Client, Server Scenes
 
-        //Hier sind wir der Host -> Thread zeigt neue Szene
+        //In multiplayer modes only the host occurs here
         if (ActiveGameState.isMultiplayer()){
 
             setGameModeAndKi();
+
 
             MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
             multiplayerControlThreadConfigCommunication.start();
@@ -157,6 +145,17 @@ public class GameSettingsController implements Initializable{
                     ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
                     ActiveGameState.setEnemyKi(new Ki ( ActiveGameState.getEnemyKiDifficulty()));
 
+                    logGameSettings.log(Level.INFO, "\nSettings: " + "\n" +
+                            "\t Singleplayer AI vs AI" + "\n" +
+                            "\t Playgroundsize: " + ActiveGameState.getPlaygroundSize() + "\n" +
+                            "\t Amount of Ships 2: " + ActiveGameState.getAmountShipSize2() + "\n" +
+                            "\t Amount of Ships 3: " + ActiveGameState.getAmountShipSize3() + "\n" +
+                            "\t Amount of Ships 4: " + ActiveGameState.getAmountShipSize4() + "\n" +
+                            "\t Amount of Ships 5: " + ActiveGameState.getAmountShipSize5() + "\n" +
+                            "\t Own AI Difficulty: " + ActiveGameState.getOwnKiDifficulty() + "\n" +
+                            "\t Enemy AI Difficulty: " + ActiveGameState.getEnemyKiDifficulty()
+                    );
+
                     ActiveGameState.setRunning(true);
                     Parent gamePlayground = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/gamePlayground.fxml"));
                     Main.primaryStage.setScene(new Scene(gamePlayground));
@@ -166,6 +165,16 @@ public class GameSettingsController implements Initializable{
                 case playerVsKi:
 
                     ActiveGameState.setEnemyKi(new Ki(ActiveGameState.getEnemyKiDifficulty()));
+
+                    logGameSettings.log(Level.INFO, "\nSettings: " + "\n" +
+                            "\t Singleplayer Player vs AI" + "\n" +
+                            "\t Playgroundsize: " + ActiveGameState.getPlaygroundSize() + "\n" +
+                            "\t Amount of Ships 2: " + ActiveGameState.getAmountShipSize2() + "\n" +
+                            "\t Amount of Ships 3: " + ActiveGameState.getAmountShipSize3() + "\n" +
+                            "\t Amount of Ships 4: " + ActiveGameState.getAmountShipSize4() + "\n" +
+                            "\t Amount of Ships 5: " + ActiveGameState.getAmountShipSize5() + "\n" +
+                            "\t Enemy AI Difficulty: " + ActiveGameState.getEnemyKiDifficulty()
+                    );
 
                     ActiveGameState.setRunning(true);
                     Parent placeShips = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/placeShips.fxml"));
@@ -177,6 +186,23 @@ public class GameSettingsController implements Initializable{
 
     }
 
+    /**
+     * Help Method, called by startShipPlacement();
+     * Sets the GameMode and the Ki with the selected Difficulty, when multiplayer is selected
+     */
+    public void setGameModeAndKi(){
+        if (this.host_RbSelectKInormal.isSelected() || this.host_RbSelectKIhard.isSelected()) {
+            ActiveGameState.setModes(GameMode.kiVsRemote);
+            if (this.host_RbSelectKInormal.isSelected())
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
+            else
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
+
+            ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
+        } else {
+            ActiveGameState.setModes(GameMode.playerVsRemote);
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -187,37 +213,22 @@ public class GameSettingsController implements Initializable{
         setTitleSettings();
         setLineSettings();
         setRectangleSettings();
-        setShipImages();            //TODO Yannicks Bilder verursachen, das der Slider nicht mehr geht
+        setShipImages();            //TODO Yannicks Bilder verursachen, das der Slider nicht mehr geht, die alten Bilder gingen noch
         startAnimation();
         setValuesOfPlaygroundAndShip();
         setRadioButtonSettings();
 
-        //if (ActiveGameState.getModes() == GameMode.playerVsKi || ActiveGameState.getModes() == GameMode.kiVsKi) setMultiplayerLoadGameInvisible();
-
-        //System.out.println(ActiveGameState.getModes()); Modus liegt hier beim Multiplayer noch nicht fest
-        //if ( (ActiveGameState.getModes() == GameMode.playerVsKi) || ( ActiveGameState.getModes() == GameMode.playerVsRemote)) setOwnKiSelectionInvisible();
-        //Modes:    Hier ist nur der host bei multiplayer -> player vs Ki -> Own ki invisible, kivs ki nichts invisible
-        //Multiplayer -> kein Modus gesetzt
-
         setRadioSettingsForMultiplayerSelection();
-        //setMultiplayerSelectRoleInvisible();
 
+        //Switching the shown KI selections, depending on multiplayer or singleplayer mode
         if (ActiveGameState.getModes() == GameMode.playerVsKi) setOwnKiSelectionInvisible();
 
-
-
-
         if (ActiveGameState.isMultiplayer()) {
-            //setEnemyKiSelectionInvisible();
-            //setOwnKiSelectionInvisible();
-            //setMultiplayerSelectRoleVisible();
-
             disableSingleplayerKiSelection();
         }
         else{
             disableHostKiSelection();
         }
-        //Immer alles an, außer bei player vs ki
 
     }
 
@@ -250,23 +261,22 @@ public class GameSettingsController implements Initializable{
         }
     }
 
+    /**
+     * Disabling the singleplayer or host ki selection by removing all fxml children from the parent
+     */
     public void disableHostKiSelection(){
         sP_KIselections.getChildren().remove(host_selectRole);
     }
     public void disableSingleplayerKiSelection(){
         sP_KIselections.getChildren().remove(vBox_KISettings);
     }
-/*
-public VBox host_selectRole;
-    public RadioButton host_RbSelectKInormal;
-    public RadioButton host_RbSelectKIhard;
- */
+
 
     public void setRadioSettingsForMultiplayerSelection(){
         Color rB_color = new Color(0.8, 0.8, 0.8, 1);
 
         //Radio Buttons
-        //Shadows are too big -> Events will trigger to far
+        //Shadows are commented out because the effects are too big -> Events will trigger to far
 
         this.host_RbSelectKInormal.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
         this.host_RbSelectKInormal.setTextFill(rB_color);
@@ -287,7 +297,9 @@ public VBox host_selectRole;
     }
 
 
-
+    /**
+     * Currently commented out, as the RB still block each other when set invisible
+     */
     public void setMultiplayerSelectRoleVisible(){
         host_RbSelectKInormal.setVisible(true);
         host_RbSelectKIhard.setVisible(true);
@@ -311,7 +323,6 @@ public VBox host_selectRole;
 
         this.rB_difficultyEnemyNormal.setSelected(true);
     }
-
 
 
     public void setValuesOfPlaygroundAndShip(){
@@ -381,6 +392,9 @@ public VBox host_selectRole;
 
     }
 
+    /**
+     * Sets the Ki selections invisible, depending on the set mode
+     */
     public void setEnemyKiSelectionInvisible(){
         this.rB_difficultyEnemyNormal.setVisible(false);
         this.rB_difficultyEnemyHard.setVisible(false);
@@ -403,11 +417,6 @@ public VBox host_selectRole;
     }
 
     public void setTitleSettings(){
-        this.title.setText("G a m e  S e t t i n g s");
-        //this.title.setStyle("-fx-font: 70 sans-serif;");
-        //   this.title.setTranslateX((double)Menu4.WIDTH/2);
-        //    this.title.setTranslateY((double)Menu4.WIDTH/2);
-
         title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
         title.setFill(Color.WHITE);
         title.setEffect(new DropShadow(30, Color.BLACK));
@@ -421,7 +430,7 @@ public VBox host_selectRole;
 
         this.lineLeftSide.setEffect(new DropShadow(5, Color.BLACK));
 
-        // Sets the Scaling of the Bars, as we want to show them from nothing, we set the to 0
+        // Sets the Scaling of the Bars, as we want to show them from nothing, we set the Line to 0
         // If we would set this one to 1.5 the Line (which is 300 Long) would decrease from 450 to 300
         this.lineLeftSide.setScaleY(0);
 
@@ -436,12 +445,12 @@ public VBox host_selectRole;
         //This one says, how far we want to scale, with one the object will have the same size as initial, with 2 the object will have the double size
         scaleLineLeft.setToY(1);
 
-        //Dadurch wird die Startposition auf -200 gesetzt
+        //Sets the starting position of the stackPane (containing Rectangle and all selection elements) to -1000
         int from = -1000;
         this.sP_RectangleAndElements.setTranslateX(from);
 
 
-        //Notwendiges Rechteck, damit die Items erst angezeigt werden, wenn sie durch die Linie hindurchgehen
+        //Simple clip to hide the slided rectangle till the line is reached
         Rectangle clip = new Rectangle(1200,600);
         clip.translateXProperty().bind(sP_RectangleAndElements.translateXProperty().negate());
         this.sP_RectangleAndElements.setClip(clip);
@@ -454,7 +463,6 @@ public VBox host_selectRole;
             slideElements.setToX(1);
             slideElements.play();
 
-
         });
 
         scaleLineLeft.play();
@@ -462,12 +470,11 @@ public VBox host_selectRole;
     }
 
     public void setRectangleSettings(){
-        Effect shadow = new DropShadow(5, Color.BLACK);
-        Effect blur = new BoxBlur(1, 1, 3);
 
         this.rectangle.setStroke(Color.color(0,0,0,0.5));
         this.rectangle.setEffect(new GaussianBlur());
         this.rectangle.setFill(Color.color(0,0,0,0.5));
+
     }
 
     public void setTextSettings(){
@@ -496,8 +503,6 @@ public VBox host_selectRole;
         this.rB_difficultyOwnNormal.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         this.rB_difficultyOwnHard.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
 
-        //this.multiplayerLoadGame.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        //this.multiplayerLoadGame.setTextFill(textColorHeadlines);
     }
 
     public void setShipImages(){

@@ -136,7 +136,7 @@ public class MpClientController implements Initializable {
 
     public void setLanguage(){
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
-            title.setText("MIT SERVER VERBINDEN");
+            title.setText("Spiel beitreten");
             textInsertIP.setText("IP des Hosts eingeben: ");
             button_backToMainMenu.setText("Hauptmenü");
             button_Start.setText("Verbinden");
@@ -145,7 +145,7 @@ public class MpClientController implements Initializable {
             client_RbSelectKIhard.setText("schwere KI spielen lassen");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
-            title.setText("C O N N E C T I O N");
+            title.setText("Join Game");
             textInsertIP.setText("Insert Host IP-Address:");
             this.infoLabel.setText("Connection established. Wait until the host has set the settings");
             button_backToMainMenu.setText("Back to Main Menu");
@@ -247,7 +247,7 @@ public class MpClientController implements Initializable {
     }
 
     public void setTitleSettings(){
-        this.title.setText("C O N N E C T I O N");
+     //   this.title.setText("C O N N E C T I O N");
         //this.title.setStyle("-fx-font: 70 sans-serif;");
         //   this.title.setTranslateX((double)Menu4.WIDTH/2);
         //    this.title.setTranslateY((double)Menu4.WIDTH/2);

@@ -35,7 +35,7 @@ public class LoggingThread extends Thread{
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-            ActiveGameState.loggingReader = reader;
+            ActiveGameState.setLoggingReader(reader);
             String input = "";
             while (ActiveGameState.isLogging() && !input.equals("Close")) {
                 try {

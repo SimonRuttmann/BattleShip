@@ -140,7 +140,6 @@ public class SaveAndLoad {
                 ActiveGameState.setSceneIsGamePlayground(e.sceneIsGamePlayground);
                 ActiveGameState.setEnemyKiDifficulty(e.enemyDifficulty);
                 ActiveGameState.setOwnKiDifficulty(e.ownDifficulty);
-                ActiveGameState.setSelfOrKi(e.selfOrKi);
                 ActiveGameState.setYourTurn(e.yourTurn);
     }
 
@@ -167,7 +166,6 @@ public class SaveAndLoad {
                 ActiveGameState.isSceneIsGamePlayground(),
                 ActiveGameState.getEnemyKiDifficulty(),
                 ActiveGameState.getOwnKiDifficulty(),
-                ActiveGameState.isSelfOrKi(),
                 ActiveGameState.isYourTurn()
         );
     }

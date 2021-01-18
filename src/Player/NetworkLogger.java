@@ -16,7 +16,7 @@ public class NetworkLogger {
      */
     public NetworkLogger() throws IOException{
         LoggingThread loggingThread = new LoggingThread("loggingThread");
-        ActiveGameState.loggingThread = loggingThread;
+        ActiveGameState.setLoggingThread(loggingThread);
         loggingThread.start();
 
         Logger logger = Logger.getLogger("parent");
@@ -64,7 +64,7 @@ public class NetworkLogger {
         }
 
         try {
-            ActiveGameState.loggingReader.close();
+            ActiveGameState.getLoggingReader().close();
         } catch (IOException e) {
             e.printStackTrace();
         }

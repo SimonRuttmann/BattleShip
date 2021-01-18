@@ -43,7 +43,6 @@ public class Savegame{
     public boolean           sceneIsGamePlayground;
     public Ki.Difficulty     enemyDifficulty;
     public Ki.Difficulty     ownDifficulty;
-    public boolean           selfOrKi;
     public boolean           yourTurn;
 
 
@@ -69,7 +68,6 @@ public class Savegame{
             boolean sceneIsGamePlayground,
             Ki.Difficulty enemyDifficulty,
             Ki.Difficulty ownDifficulty,
-            boolean selfOrKi,
             boolean yourTurn
             )
     {
@@ -94,7 +92,6 @@ public class Savegame{
         this.sceneIsGamePlayground = sceneIsGamePlayground;
         this.enemyDifficulty = enemyDifficulty;
         this.ownDifficulty = ownDifficulty;
-        this.selfOrKi = selfOrKi;
         this.yourTurn = yourTurn;
     }
 

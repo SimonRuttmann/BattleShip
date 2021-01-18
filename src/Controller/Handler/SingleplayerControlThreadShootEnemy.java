@@ -8,7 +8,6 @@ import Player.ActiveGameState;
 import javafx.event.Event;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

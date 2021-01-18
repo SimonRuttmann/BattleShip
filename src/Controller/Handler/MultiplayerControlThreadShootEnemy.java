@@ -14,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;

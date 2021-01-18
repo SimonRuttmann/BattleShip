@@ -213,7 +213,7 @@ public class GameSettingsController implements Initializable{
         setTitleSettings();
         setLineSettings();
         setRectangleSettings();
-        setShipImages();            //TODO Yannicks Bilder verursachen, das der Slider nicht mehr geht, die alten Bilder gingen noch
+        setShipImages();
         startAnimation();
         setValuesOfPlaygroundAndShip();
         setRadioButtonSettings();
@@ -394,6 +394,7 @@ public class GameSettingsController implements Initializable{
 
     /**
      * Sets the Ki selections invisible, depending on the set mode
+     * setEnemyKiSelectionInvisible is currently not in use
      */
     public void setEnemyKiSelectionInvisible(){
         this.rB_difficultyEnemyNormal.setVisible(false);

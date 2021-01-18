@@ -56,6 +56,7 @@ public class GameOptionsController implements Initializable {
     public Button button_saveSettings;
 
     /** External Handling**/
+
     // Action Event call
     public void backToMainMenu() throws IOException {
         logGameOptions.log(Level.INFO, "Switching Scene to Main Menu");
@@ -64,7 +65,7 @@ public class GameOptionsController implements Initializable {
         Main.primaryStage.show();
     }
 
-    // Action Event call
+    // Action Event call, sets the values to ActiveGameState
     public void saveSettings() {
         ActiveGameState.setMusicVolume(selectMusicVolumeSlider.valueProperty().intValue());
         ActiveGameState.getMusicController().setVolume(selectMusicVolumeSlider.valueProperty().intValue());

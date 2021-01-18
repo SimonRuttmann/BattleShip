@@ -9,16 +9,12 @@ import Player.ActiveGameState;
 import Player.GameMode;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -30,17 +26,24 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class MpClientController implements Initializable {
+    public static final Logger logMpClientController = Logger.getLogger("parent.MpClientController");
+
+    /** FXML Elements **/
     public AnchorPane anchorPane;
     public Text title;
+
     public Line lineLeftSide;
     public StackPane sP_RectangleAndElements;
     public Rectangle rectangle;
+
     public Text textInsertIP;
     public TextField textfieldIP;
     public Button button_backToMainMenu;
@@ -54,47 +57,38 @@ public class MpClientController implements Initializable {
     public RadioButton client_RbSelectKIhard;
 
 
-    public void backToMainMenu(ActionEvent actionEvent) throws IOException {
+    //User actionEvent call
+    public void backToMainMenu() throws IOException {
+        logMpClientController.log(Level.INFO, "Switching Scene to Main Menu");
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
         Main.primaryStage.show();
     }
 
 
-    public void setGameModeAndKi(){
-        if (this.client_RbSelectKInormal.isSelected() || this.client_RbSelectKIhard.isSelected()) {
-            ActiveGameState.setModes(GameMode.kiVsRemote);
-            if (this.client_RbSelectKInormal.isSelected()){
-                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
-                ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
-            }
-            else {
-                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
-                ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
-            }
-        } else {
-            ActiveGameState.setModes(GameMode.playerVsRemote);
-        }
-    }
-
-
-    public void connect(ActionEvent actionEvent) {
+    /**
+     * User actionEvent call
+     * Displays a loading indicator and sets the start button invisible
+     * Creates the client and tries to connect to the remote server socket
+     * If the client got successfully created, the MultiplayerControlThreadConfigCommunication Thread gets started
+     * While the Thread is running an info text is shown
+     * The Thread switches the Scene, after all configurations got successfully transmitted
+     */
+    public void connect() {
 
         setGameModeAndKi();
 
         ActiveGameState.setAmIServer(false);
         loadingIndicator.setVisible(true);
         button_Start.setVisible(false);
-        System.out.println("connectButton pressed");
-
 
         Thread searchHost = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Searching for Host");
+
+                logMpClientController.log(Level.INFO, "Searching for Host");
 
                 ActiveGameState.setClient(new Client(textfieldIP.getText()));
-               // ActiveGameState.setRunning(true);
 
                 if (ActiveGameState.isRunning()) {
 
@@ -103,9 +97,9 @@ public class MpClientController implements Initializable {
                         MultiplayerControlThreadConfigCommunication multiplayerControlThreadConfigCommunication = new MultiplayerControlThreadConfigCommunication();
                         multiplayerControlThreadConfigCommunication.start();
 
-
                 } else {
-                    System.out.println("Connection could not be established");
+
+                    logMpClientController.log(Level.WARNING, "Connection could not be established");
 
                     HelpMethods.connectionFailed();
                 }
@@ -117,6 +111,23 @@ public class MpClientController implements Initializable {
     }
 
 
+    /**
+     * Help method for the connect() method, sets the gameMode and the ki with the selected difficulty
+     */
+    public void setGameModeAndKi(){
+        if (this.client_RbSelectKInormal.isSelected() || this.client_RbSelectKIhard.isSelected()) {
+            ActiveGameState.setModes(GameMode.kiVsRemote);
+            if (this.client_RbSelectKInormal.isSelected()){
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.normal);
+            }
+            else {
+                ActiveGameState.setOwnKiDifficulty(Ki.Difficulty.hard);
+            }
+            ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
+        } else {
+            ActiveGameState.setModes(GameMode.playerVsRemote);
+        }
+    }
 
 
     @Override
@@ -131,7 +142,6 @@ public class MpClientController implements Initializable {
         setInfoLabelInvisible(true);
         setRadioButtonSettings();
         startAnimation();
-
     }
 
     public void setLanguage(){
@@ -154,7 +164,6 @@ public class MpClientController implements Initializable {
             client_RbSelectKIhard.setText("let hard KI play");
         }
     }
-
 
 
     public void setRadioButtonSettings(){
@@ -199,12 +208,12 @@ public class MpClientController implements Initializable {
         //This one says, how far we want to scale, with one the object will have the same size as initial, with 2 the object will have the double size
         scaleLineLeft.setToY(1);
 
-        //Dadurch wird die Startposition auf -200 gesetzt
+        //Sets the starting positions of the StackPanes to -500
         int from = -1000;
         this.sP_RectangleAndElements.setTranslateX(from);
 
 
-        //Notwendiges Rechteck, damit die Items erst angezeigt werden, wenn sie durch die Linie hindurchgehen
+        //Simple clip, to show the slided elements only when they reached the line
         Rectangle clip = new Rectangle(1200,600);
         clip.translateXProperty().bind(sP_RectangleAndElements.translateXProperty().negate());
         this.sP_RectangleAndElements.setClip(clip);
@@ -225,8 +234,6 @@ public class MpClientController implements Initializable {
     }
 
     public void setRectangleSettings(){
-        Effect shadow = new DropShadow(5, Color.BLACK);
-        Effect blur = new BoxBlur(1, 1, 3);
 
         this.rectangle.setStroke(Color.color(0,0,0,0.5));
         this.rectangle.setEffect(new GaussianBlur());
@@ -234,6 +241,7 @@ public class MpClientController implements Initializable {
     }
 
     public void setLineSettings(){
+
         Color lineColor = new Color(1,1,1, 0.75);
         this.lineLeftSide.setStroke(lineColor);
         this.lineLeftSide.setStrokeWidth(3);
@@ -247,10 +255,6 @@ public class MpClientController implements Initializable {
     }
 
     public void setTitleSettings(){
-     //   this.title.setText("C O N N E C T I O N");
-        //this.title.setStyle("-fx-font: 70 sans-serif;");
-        //   this.title.setTranslateX((double)Menu4.WIDTH/2);
-        //    this.title.setTranslateY((double)Menu4.WIDTH/2);
 
         title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
         title.setFill(Color.WHITE);

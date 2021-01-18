@@ -1,11 +1,5 @@
-// todo: important -> use -ea to enable assertions when testing project code - assertions where used
-
-// todo set min Height: so, dass Festerrahmen egal welches BS berücksichtigt wird??
-
 package Gui_View;
 
-import Gui_View.PopUpWindows.CancelGame;
-import Gui_View.PopUpWindows.WinLose;
 import Player.ActiveGameState;
 import Player.NetworkLogger;
 import javafx.application.Application;
@@ -13,17 +7,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-
 import java.io.IOException;
 
 public class Main extends Application {
-/*
-ZU GIT:
-Guppe 14 Yannick$ git rm --cached -r .savedGames
-git rm --cached -r .savedGames
---> Cache löschen, wenn ausversehen Dateien hinzugefügt worden sind (z.b. der out-Ordner)
---> Danach normal Comitten
- */
 
     public static Stage primaryStage;
     public static final int WIDTH = 1280;
@@ -31,6 +17,7 @@ git rm --cached -r .savedGames
 
 
     public static void main(String[] args) {
+        //Necessary to start Logging, constructor call defines configurations
         try {
             NetworkLogger networklogger = new NetworkLogger();
 
@@ -45,24 +32,14 @@ git rm --cached -r .savedGames
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;
 
-
-
-        //TODO new Scene
         Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/MainMenu.fxml"));
         ActiveGameState.newView = true;
 
-
-        //TODO old Scene
-        //Parent root = FXMLLoader.load(getClass().getResource("/OldView/MainMenu2.fxml"));
-
-
-        // root.getStylesheets().add(getClass().getResource("Stylesheets/Radio.css").toExternalForm());
-        primaryStage.setTitle("Schiffe versenken");
+        primaryStage.setTitle("Battleship");
 
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);
-        //primaryStage.setMinWidth(width);
-        //primaryStage.setMinHeight(height);
+
         primaryStage.show();
 
     }

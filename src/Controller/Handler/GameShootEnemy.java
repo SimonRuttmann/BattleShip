@@ -20,23 +20,13 @@ public class GameShootEnemy implements EventHandler<MouseEvent> {
             if ( !ActiveGameState.isYourTurn()) ActiveGameState.getOwnPlayerIEnemyPlayground().setAllLabelsNonClickable();
 
             //Multiplayer Mode
-
-
-            //This thread will:
-            // 1. disable all Labels on enemy playground
-            // 2. send the client/server an message containing all necessary information
-            // 3. awaiting an answer from the client/server
-            // 4. perform all necessary actions depending on the report from client/server
-            // 5. Start the MultiplayerControlThreadPerformEnemyAction Thread
-
-
             MultiplayerControlThreadShootEnemy multiplayerControlThreadShootEnemy = new MultiplayerControlThreadShootEnemy(event);
             multiplayerControlThreadShootEnemy.start();
         }
 
         else{
 
-            //Singleplayer Mode, the player plays against an KI, we are already Ingame..
+            //Singleplayer Mode, the player plays against an KI
             SingleplayerControlThreadShootEnemy singleplayerControlThreadShootEnemy = new SingleplayerControlThreadShootEnemy(event);
             singleplayerControlThreadShootEnemy.start();
         }

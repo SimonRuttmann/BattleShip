@@ -7,9 +7,6 @@ import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
 import Player.ActiveGameState;
 import Player.GameMode;
-import Player.SaveAndLoad;
-import Player.Savegame;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

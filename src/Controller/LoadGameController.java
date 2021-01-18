@@ -203,7 +203,7 @@ public class LoadGameController implements Initializable {
 
                     //Remove linker in multiplayer savegames
                     String fileNameToDelete = cell.getItem().toString();
-                    boolean linkerDeleted = true;
+                    boolean linkerDeleted;
                     if (ActiveGameState.isMultiplayer()){
                         linkerDeleted = SavegameLinker.removeLinker(fileNameToDelete);
                         if (!linkerDeleted) logLoadGame.log(Level.WARNING, "Savegame "+ fileNameToDelete +" link couldn`t removed from the savegame linker");

@@ -6,20 +6,16 @@ import Gui_View.Main;
 import Network.IServer;
 import Network.Server;
 import Player.ActiveGameState;
-import Player.GameMode;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -31,12 +27,15 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MpServerController implements Initializable {
+    public static final Logger logMpServerController = Logger.getLogger("parent.MpServerController");
+
     public Text title;
     public Line lineLeftSide;
     public StackPane sP_RectangleAndElements;
@@ -49,14 +48,13 @@ public class MpServerController implements Initializable {
     public Text textWaiting;
     public AnchorPane anchorPane;
 
-    public void backToMainMenu(ActionEvent actionEvent) throws IOException {
-        //if ( ActiveGameState.isRunning()) ActiveGameState.getServer().closeConnection();
+    //User actionEvent call, closes the offered connection
+    public void backToMainMenu() throws IOException {
         ActiveGameState.getServer().closeConnection();
         Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/MainMenu.fxml"));
         Main.primaryStage.setScene(new Scene(gameSettings));
         Main.primaryStage.show();
     }
-
 
 
     @Override
@@ -71,34 +69,28 @@ public class MpServerController implements Initializable {
         offerConnection();
     }
 
-    public void setLanguage(){
-        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
-            title.setText("Spiel Hosten");
-            textShowIP.setText("Deine IP Adresse:");
-            textWaiting.setText("Warten auf den Client");
-            button_backToMainMenu.setText("Zurück zum Hauptmenü");
-        }
-        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
-            title.setText("Hosting Game");
-            textShowIP.setText("Your IP Adress:");
-            textWaiting.setText("Waiting for Client");
-            button_backToMainMenu.setText("Back to Main Menu");
-        }
-    }
 
-    //TODO Scenenwechsel -> Game Settings -> Game Settings Beendet -> Start MultiplayerControlThreadConfigCommunication
+    /**
+     * This method is started at the initialize method
+     * Starts the offerConnection Thread, which calls server.startServerConnection();
+     * When a connection could be established, running is set on true and the MultiplayerControlThreadConfigCommunication Thread is started
+     * This thread will switch the scene to GamePlayground, when a game gets loaded
+     * Otherwise the scene switches directly to GameSettings
+     */
     public void offerConnection(){
         IServer server = new Server();
         textToShowIP.setText(" " + server.getIPAddress());
         ActiveGameState.setServer(server);
+
         // new Thread for Connecting
         Thread offerConnection = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Connection offered - waiting for paring");
+
+                logMpServerController.log(Level.INFO, "Connection offered, waiting for paring");
+
                 Server.ConnectionStatus connectionStatus = server.startSeverConnection();
                 if (connectionStatus== Server.ConnectionStatus.Connected) {
-                 //   ActiveGameState.setServer(server);
                     ActiveGameState.setRunning(true);
                     Platform.runLater(new Runnable() {
                         @Override
@@ -110,12 +102,15 @@ public class MpServerController implements Initializable {
                                     multiplayerControlThreadConfigCommunication.start();
                                 }
                                 else{
+
+                                    logMpServerController.log(Level.INFO, "Switching Scene to Game Settings");
+
                                     Parent gameSettings = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameSettings.fxml"));
                                     Main.primaryStage.setScene(new Scene(gameSettings));
                                     Main.primaryStage.show();
                                 }
                             }catch (IOException e){
-                                System.out.println( "Game settings Scene couldn't be loaded");
+                                logMpServerController.log( Level.SEVERE,"Game Settings Scene couldn't be loaded");
                             }
                         }
                     });
@@ -134,6 +129,22 @@ public class MpServerController implements Initializable {
         offerConnection.start();
     }
 
+    public void setLanguage(){
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
+            title.setText("Spiel Hosten");
+            textShowIP.setText("Deine IP Adresse:");
+            textWaiting.setText("Warten auf den Client");
+            button_backToMainMenu.setText("Zurück zum Hauptmenü");
+        }
+        if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
+            title.setText("Hosting Game");
+            textShowIP.setText("Your IP Adress:");
+            textWaiting.setText("Waiting for Client");
+            button_backToMainMenu.setText("Back to Main Menu");
+        }
+    }
+
+
     public void startAnimation() {
 
         int lineScaleDuration = 1;
@@ -143,12 +154,12 @@ public class MpServerController implements Initializable {
         //This one says, how far we want to scale, with one the object will have the same size as initial, with 2 the object will have the double size
         scaleLineLeft.setToY(1);
 
-        //Dadurch wird die Startposition auf -200 gesetzt
+        //Sets the starting positions of the StackPanes to -500
         int from = -1000;
         this.sP_RectangleAndElements.setTranslateX(from);
 
 
-        //Notwendiges Rechteck, damit die Items erst angezeigt werden, wenn sie durch die Linie hindurchgehen
+        //Simple clip, to show the slided elements only when they reached the line
         Rectangle clip = new Rectangle(1200,600);
         clip.translateXProperty().bind(sP_RectangleAndElements.translateXProperty().negate());
         this.sP_RectangleAndElements.setClip(clip);
@@ -169,8 +180,6 @@ public class MpServerController implements Initializable {
     }
 
     public void setRectangleSettings(){
-        Effect shadow = new DropShadow(5, Color.BLACK);
-        Effect blur = new BoxBlur(1, 1, 3);
 
         this.rectangle.setStroke(Color.color(0,0,0,0.5));
         this.rectangle.setEffect(new GaussianBlur());
@@ -191,10 +200,6 @@ public class MpServerController implements Initializable {
     }
 
     public void setTitleSettings(){
-      //  this.title.setText("H O S T  G A M E");
-        //this.title.setStyle("-fx-font: 70 sans-serif;");
-        //   this.title.setTranslateX((double)Menu4.WIDTH/2);
-        //    this.title.setTranslateY((double)Menu4.WIDTH/2);
 
         title.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
         title.setFill(Color.WHITE);

@@ -45,7 +45,6 @@ public class ActiveGameState {
         public static void setLoggingReader(BufferedReader loggingReader) { ActiveGameState.loggingReader = loggingReader; }
 
 
-
     //General Options
     private static MusicController musicController;
         public static MusicController getMusicController() { return musicController; }
@@ -180,7 +179,6 @@ public class ActiveGameState {
         public static void setClient(Client client) { ActiveGameState.client = client; }
 
 
-
     /**
      * The size must be between 5 and 30
      * setting the size will automatically set the scale for the view
@@ -200,8 +198,6 @@ public class ActiveGameState {
             ActiveGameState.playgroundScale = 15;
         }
     }
-
-
 
 
 }

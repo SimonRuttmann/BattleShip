@@ -6,15 +6,22 @@ import Model.Ship.IShip;
 import Model.Util.IDrawable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SaveAndLoad {
+    public static final Logger logSaveAndLoad = Logger.getLogger("parent.SaveAndLoad");
 
-
+    /**
+     * Call this method in multiplayer mode, the Name and ID are referenced to each other
+     * @param nameOfSavegame The name of the Savegame, which has to be saved
+     * @param id The id, send to the remote. This id is written down in the SavegameLinker-File.
+     * @return true, if the save worked, false otherwise
+     */
     public static boolean save(String nameOfSavegame, long id){
         if ( SavegameLinker.writeLinker(nameOfSavegame, id) ) {
             return save(nameOfSavegame);
@@ -22,9 +29,12 @@ public class SaveAndLoad {
         return false;
     }
 
-
+    /**
+     * Saves a game with a name given by the User
+     * @param nameOfSavegame The name of the Savegame, which has to be saved
+     * @return true, if the save worked, false otherwise
+     */
     public static boolean save(String nameOfSavegame){
-        ///new Savegame(ActiveGameState.)
 
             Savegame o = constructSaveGame();
 
@@ -34,8 +44,7 @@ public class SaveAndLoad {
             builder.registerTypeAdapter(IDrawable.class, new InterfaceAdapterForPlayground());
             builder.registerTypeAdapter(IShip.class, new InterfaceAdapterForPlayground());
             Gson gson = builder.create();
-          //  Gson gson = new Gson(); // create Gson instance
-            // temp = chosen name of file: e.g. temp = "test" -> output Paths.get: .savedGames/test.json
+
             Writer writer;
             if (!ActiveGameState.isMultiplayer()) {
                 writer = Files.newBufferedWriter(Paths.get(".singleplayerGames/" + nameOfSavegame + ".json")); //create writer
@@ -43,59 +52,67 @@ public class SaveAndLoad {
             else{
                 writer = Files.newBufferedWriter(Paths.get(".multiplayerGames/" + nameOfSavegame + ".json")); //create writer
             }
-//getClass.getRessourceAsStream("/.savedGame")
+
             gson.toJson(o, writer);
 
             writer.close();
+
+            logSaveAndLoad.log(Level.INFO, "Game successfully saved");
+
             return true;
         } catch (Exception ex){
-            ex.printStackTrace();
-            System.out.println("Saving failed");
+
+            logSaveAndLoad.log(Level.SEVERE, "Couldn`t save game");
+
             return false;
         }
     }
 
 
+    /**
+     * Use this method in multiplayer mode, when we have to load a game with a specified id
+     * @param id The id, given by the remote
+     * @return The Savegame-Object if load worked, in any other case null
+     */
     public static Savegame load (long id){
         String nameOfSavegame = SavegameLinker.readLinker(id);
-        System.out.println("Found the name of the savegame: "+ nameOfSavegame+ "ReferredID: " + id);
+
+        logSaveAndLoad.log(Level.INFO, "Found the name of the savegame: "+ nameOfSavegame+ "ReferredID: " + id );
+
         return load(nameOfSavegame);
     }
 
 
-
+    /**
+     * Use this method, when the player loads a game
+     * @param nameOfSavegame The name of the gamefile.
+     * @return The Savegame-Object if load worked, in any other case null
+     */
     public static Savegame load (String nameOfSavegame){
 
         try {
 
-            System.out.println(nameOfSavegame);
             if ( ActiveGameState.isMultiplayer() && !(nameOfSavegame.contains(".multiplayer"))){
                 nameOfSavegame = ".multiplayerGames/" + nameOfSavegame + ".json";
             }
-           // if ( ActiveGameState.isMultiplayer() && !(nameOfSavegame.contains(".multiplayer/"))){
-           //     nameOfSavegame = ".multiplayerGames/" + nameOfSavegame + ".json";
-           // }
-            //Singleplayer wird direkt der richtige pfad übergeben
-            //else{
-            //    nameOfSavegame = ".singleplayerGames/" + nameOfSavegame + ".json";
-            //}
+
 
             GsonBuilder builder = new GsonBuilder();
             builder.registerTypeAdapter(IDrawable.class, new InterfaceAdapterForPlayground());
             builder.registerTypeAdapter(IShip.class, new InterfaceAdapterForPlayground());
             Gson gson = builder.create();
 
-           // Gson gson = new Gson(); // create Gson instance
-            // temp = the complete path to the file that is intend to be loaded: e.g. temp = ".savedGames/test.json"
-            System.out.println(nameOfSavegame);
+
             Reader reader = Files.newBufferedReader(Paths.get(nameOfSavegame)); //create a reader
             Savegame e = gson.fromJson(reader, Savegame.class); // write File content to Savegame-Object e
             reader.close();
             setSavegameToActiveGameState(e);
+
+            logSaveAndLoad.log(Level.INFO, "Loaded game: " + nameOfSavegame);
             return e;
         } catch (Exception ex){
-            ex.printStackTrace(); //Print Error, if Error occured.
-            System.out.println("Load didn't work");
+
+            logSaveAndLoad.log(Level.SEVERE, "Load didn`t work, File may be corrupted");
             return null;
         }
 

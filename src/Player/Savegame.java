@@ -2,11 +2,23 @@ package Player;
 
 import KI.Ki;
 import Model.Playground.EnemyPlayground;
-import Model.Playground.IEnemyPlayground;
-import Model.Playground.IOwnPlayground;
 import Model.Playground.OwnPlayground;
 
-
+/**
+ * This class contains all information saved as JSON-File
+ * The constructor is called by SaveAndLoad by using the save methods
+ * The load methods in SaveAndLoad creates an Savegame-Object by reading the JSON-File
+ *
+ * Warning: The order of the attributes SHOULD NOT BE CHANGED UNDER ANY CIRCUMSTANCES.
+ *          This can affect GSON-internally used constructor by creating the Savegame-Object,
+ *          which could result into null-Objects at the wrong spots.
+ *
+ *          E.g. enemyKi not instantiated -> null
+ *               ownKI not null
+ *
+ *               Save -> Load:  EnemyKI = ownKI
+ *                              ownKI = null
+ */
 public class Savegame{
     public long              id;
     public GameMode          modes;
@@ -51,7 +63,7 @@ public class Savegame{
             int amountShipSize3,
             int amountShipSize4,
             int amountShipSize5,
-            Ki enemyKi,     //TODO Wichtig, GSON speichert null elemente nicht ab und verwendet einen properties construktor, wird ein Spiel ohne ownKI gestartet, wird die enemyKi zur ownKi und die enemyKi wird null! Diese Reihenfolge beibehalten!
+            Ki enemyKi,
             Ki ownKi,
             boolean sceneIsPlaceShips,
             boolean sceneIsGamePlayground,

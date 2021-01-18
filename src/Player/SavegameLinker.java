@@ -1,15 +1,17 @@
 package Player;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This Class is used to write and read form the SavegameLinker.txt, to
- * enable the user to give the saves a meaningful name#
+ * enable the user to give the saves a meaningful name
  * Use the methods in this class only in multiplayer save/load calls
  * (In singleplayer there is no ID exchange, the name can directly be used at saving and loading)
  */
 public class SavegameLinker {
-
+    public static final Logger logSavegameLinker = Logger.getLogger("parent.SavegameLinker");
     private static final String fileName = "LinkSavegames.txt";
 
     /**
@@ -25,7 +27,7 @@ public class SavegameLinker {
             fileWriter.write(savegamename + "=" + id + "\n");
             fileWriter.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logSavegameLinker.log(Level.SEVERE, "IOException at writingLink");
             return false;
         }
         return true;
@@ -54,9 +56,10 @@ public class SavegameLinker {
             }
             fileReader.close();
         } catch (FileNotFoundException e) {
+            logSavegameLinker.log(Level.SEVERE, "FileNotFound, make sure the LinkSavegames.txt isn`t removed from System");
             return null;
         } catch (IOException e) {
-            e.printStackTrace();
+            logSavegameLinker.log(Level.SEVERE, "IO Exception at reading the LinkSavegames.txt");
             return null;
         }
         return nameLinkedWithID;
@@ -84,11 +87,13 @@ public class SavegameLinker {
             }
             fileReader.close();
         } catch (FileNotFoundException e) {
+            logSavegameLinker.log(Level.SEVERE, "FileNotFound, make sure the LinkSavegames.txt isn`t removed from System");
             return -1;
         } catch (IOException e) {
-            e.printStackTrace();
+            logSavegameLinker.log(Level.SEVERE, "IO Exception at reading the LinkSavegames.txt");
             return -1;
         } catch (Exception e){
+            logSavegameLinker.log(Level.SEVERE, "Undefined Exception at reading the LinkSavegames.txt");
             return -1;
         }
         return id;
@@ -102,7 +107,7 @@ public class SavegameLinker {
      */
     public static boolean removeLinker(String savegamename){
         long id = getIdFromSavegame(savegamename);
-        if ( id == -1 ) System.out.println("Id referenced by savegame name " + savegamename + " not found");
+        if ( id == -1 ) logSavegameLinker.log(Level.WARNING, "Id referenced by savegame name " + savegamename + " not found");
         return removeLinker(savegamename, id);
     }
 
@@ -147,7 +152,8 @@ public class SavegameLinker {
     }
 
 
-    /*public static void main(String[] args) {
+    /*  //Test program
+        public static void main(String[] args) {
         System.out.print(writeLinker("Das ist ein Spieeeelstand2", 872043100));
         //System.out.println(readLinker(872043100));
         //System.out.println(removeLinker("Das"));

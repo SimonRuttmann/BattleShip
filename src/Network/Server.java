@@ -1,7 +1,5 @@
 package Network;
 
-import Gui_View.HelpMethods;
-
 import java.net.*;
 import java.io.*;
 import java.util.Arrays;
@@ -10,7 +8,9 @@ import java.util.logging.Logger;
 
 public class Server extends Communication implements IServer{
     public enum ConnectionStatus {Connected, Timeout, ManualClose, ioException}
+
     public static final Logger logServer = Logger.getLogger("parent.server");
+
     private ServerSocket server;
     private Socket server_connected;
     /**

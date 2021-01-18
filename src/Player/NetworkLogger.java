@@ -1,10 +1,7 @@
 package Player;
 
 import Controller.Handler.LoggingThread;
-
-import java.io.Console;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.*;
 import java.io.IOException;
@@ -13,6 +10,10 @@ public class NetworkLogger {
     private static Logger logger = Logger.getLogger("parent");
     Formatter formatter;
 
+    /**
+     * NetworkLogger Constructor, needs to be called once at main
+     * Starts the loggingThread and sets up formatter
+     */
     public NetworkLogger() throws IOException{
         LoggingThread loggingThread = new LoggingThread("loggingThread");
         ActiveGameState.loggingThread = loggingThread;
@@ -52,8 +53,12 @@ public class NetworkLogger {
     public static void setLevel(Level input){
         logger.setLevel(input);
     }
+
+    /**
+     * Closes all FileHandlers and closes the terminal reader
+     */
     public static void terminateLogging(){
-        //Handler[] fileHandler = logger.getHandlers();
+
         for (java.util.logging.Handler filehandler : logger.getHandlers()){
             filehandler.close();
         }
@@ -64,16 +69,6 @@ public class NetworkLogger {
             e.printStackTrace();
         }
 
-      /*  System.out.println("Try to interrupt");
-        ActiveGameState.loggingThread.interrupt();
-        System.out.println("Interupted");
-       try {
-            ActiveGameState.loggingReader.close();
-           System.out.println("Closed Reader");
-            System.in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 }
 

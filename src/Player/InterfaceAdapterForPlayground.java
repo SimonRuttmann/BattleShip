@@ -1,10 +1,18 @@
 package Player;
 
 import com.google.gson.*;
-
 import java.lang.reflect.Type;
-//Necessary to save information of implementing interface instances in the json format
-//And adjust reading from it
+
+
+/**
+ * Creates an InterfaceAdapter for GSON to modify the created .json -Files
+ * Modifies: CLASSNAME  The instantiated classname
+ *           DATA       The data that maps the current JSON Object
+ *
+ * The InterfaceAdapter is practically used as TypeAdapter, as GSON saves IDrawables and IShips only as Interface-Type Objects
+ * Therefore the attribute IDrawable[][] and all Ships used as IShip can not deserialized by GSON.
+ * This method is based on: https://technology.finra.org/code/serialize-deserialize-interfaces-in-java.html
+ */
 public class InterfaceAdapterForPlayground implements JsonSerializer, JsonDeserializer {
 
     private static final String CLASSNAME = "CLASSNAME";

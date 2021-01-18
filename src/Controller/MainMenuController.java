@@ -651,11 +651,12 @@ public class MainMenuController implements Initializable {
      * Clicking the menu twice, the bar will be closed again
      */
 
-    //User mouseEvent call Singleplayer
+    //User mouseEvent call
     public void singleplayerSelected() {
         selection = Selection.Singleplayer;
 
         if (this.singleRightNotShown) {
+
 
             //Multiplayer is shown
             if(!this.multRightNotShown){
@@ -664,21 +665,23 @@ public class MainMenuController implements Initializable {
             }
             //Settings is shown
             if(!this.setRightNotShown){
-                this.showSetBar();
+                this.showSetBar(false);
                 this.setRightNotShown = true;
             }
             //Show singleplayer
             this.showSingBar(true);
 
+
         }
         else{
             this.showSingBar(false);
+
         }
 
         singleRightNotShown = !singleRightNotShown;
     }
 
-    //User mouseEvent call Multiplayer
+    //User mouseEvent call
     public void multiplayerSelected() {
         selection = Selection.Multiplayer;
         if(this.multRightNotShown){
@@ -690,11 +693,11 @@ public class MainMenuController implements Initializable {
             }
             //Settings is shown
             if(!this.setRightNotShown){
-                this.showSetBar();
+                this.showSetBar(false);
                 this.setRightNotShown = true;
             }
 
-            //show Multiplayer
+            //Show Multiplayer
             this.showMultBar(true);
         }
         else{
@@ -704,7 +707,7 @@ public class MainMenuController implements Initializable {
         multRightNotShown = !multRightNotShown;
     }
 
-    //User mouseEvent call settings
+    //User mouseEvent call
     public void settingsSelected() {
         selection = Selection.Settings;
         if(this.multRightNotShown){
@@ -716,21 +719,24 @@ public class MainMenuController implements Initializable {
             }
             //Multiplayer is shown
             if(!this.multRightNotShown){
-                this.showMultBar(false);
+                this.showSetBar(false);
                 this.multRightNotShown = true;
             }
 
+            //Show Settings
+            this.showSetBar(true);
         }
         else{
-            this.showSetBar();
+            this.showSetBar(false);
         }
 
         setRightNotShown = !setRightNotShown;
 
+
     }
 
     /**
-     * Help methods to display the right bars
+     * Help Methods to show the singleplayer, multiplayer and settings bar
      */
 
     public void showSingBar(boolean show){
@@ -745,7 +751,6 @@ public class MainMenuController implements Initializable {
             this.rightBarLine.setScaleY(0);
         }
     }
-
     public void showMultBar(boolean show){
         if ( show ){
 
@@ -753,18 +758,17 @@ public class MainMenuController implements Initializable {
             startAnimationRightSideMultiplayer();
         }
         else{
-
+            logMainMenuController.log(Level.INFO, "Switching Scene to GameOptionsController");
             setRightBarMultiplayerInvisible(true);
             this.rightBarLineMult.setScaleY(0);
         }
     }
 
-    //Shows the Scene GameOptions
-    public void showSetBar() {
-        logMainMenuController.log(Level.INFO, "Switching Scene to Game Options");
+    //Boolean show currently not in use, the settings lead to GameOptions, as "GameSettings" is the game configuration scene
+    public void showSetBar(boolean show) {
         try{Parent gameOptions = FXMLLoader.load(getClass().getResource("/Gui_View/fxmlFiles/GameOptions.fxml"));
-        Main.primaryStage.setScene(new Scene(gameOptions));
-        Main.primaryStage.show();}
+            Main.primaryStage.setScene(new Scene(gameOptions));
+            Main.primaryStage.show();}
         catch(IOException e){
             e.printStackTrace();
         }

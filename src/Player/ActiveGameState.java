@@ -4,9 +4,7 @@ import Controller.MusicController;
 import KI.Ki;
 import Model.Playground.*;
 import Network.*;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -16,10 +14,97 @@ import java.util.logging.Logger;
 
 public class ActiveGameState {
 
+    public static boolean newView = false;
+
+    //Loading related
+    public enum Loading {singleplayer, multiplayer, noLoad}
+    private static Loading loading = Loading.noLoad;
+    private static boolean loadWithNext = false;
+    private static long loadId;
+
+
+    //Logging related
+    public static final Logger logActiveGamesState = Logger.getLogger(Logger.class.getName());
+    private static volatile boolean logging = true;
     public static Thread loggingThread;
     public static BufferedReader loggingReader;
 
-    public static final Logger logActiveGamesState = Logger.getLogger(Logger.class.getName());
+
+    //General Options
+    private static MusicController musicController;
+    private static int musicVolume = 50;
+
+    public enum Language {english, german}
+    private static Language language = Language.english;
+    private static int aiVelocity = 1;
+    private static String ownPlayerName; //currently not in use
+
+
+    //Game Modes
+    private static GameMode modes;
+    private static boolean OwnPlayerKi;
+    private static boolean multiplayer;
+    private static boolean selfOrKi; //self = true; ki = false;
+    private static boolean yourTurn;
+    private static boolean isWon;
+    private static boolean isLost;
+    private static boolean sceneIsGamePlayground = false;
+
+    //Game Variables
+    private static IOwnPlayground ownPlayerIOwnPlayground;
+    private static IEnemyPlayground ownPlayerIEnemyPlayground;
+
+        // You only use the enemy player in singleplayer, where the enemy is always a KI
+    private static IOwnPlayground enemyPlayerOwnPlayground;
+    private static IEnemyPlayground enemyPlayerEnemyPlayground;
+
+        //Playground Config
+    private static int playgroundSize;   // between 5x5 - 30x30
+    private static int playgroundScale;  // set automatically by choosing playground size, only getter
+    private static int amountOfShips;
+    private static int amountShipSize2;
+    private static int amountShipSize3;
+    private static int amountShipSize4;
+    private static int amountShipSize5;
+
+        //Ki
+    private static Ki EnemyKi = new Ki(Ki.Difficulty.undefined);
+    private static Ki OwnKi = new Ki(Ki.Difficulty.undefined);
+    private static Ki placementKi;
+    private static Ki.Difficulty ownKiDifficulty;
+    private static Ki.Difficulty enemyKiDifficulty;
+
+    //Network
+    private static boolean amIServer;
+    private static IServer server;
+    private static Client client;
+
+
+
+
+
+    /**
+     * The size must be between 5 and 30
+     * setting the size will automatically set the scale for the view
+     * @param playgroundSize the size of the playground
+     */
+    public static void setPlaygroundSize(int playgroundSize) {
+        ActiveGameState.playgroundSize = playgroundSize;
+        if (5 <= playgroundSize && playgroundSize <= 10) {
+            ActiveGameState.playgroundScale = 45;
+        } else if (11 <= playgroundSize && playgroundSize <= 15) {
+            ActiveGameState.playgroundScale = 35;
+        } else if (16 <= playgroundSize && playgroundSize <= 20) {
+            ActiveGameState.playgroundScale = 25;
+        } else if (21 <= playgroundSize && playgroundSize <= 25) {
+            ActiveGameState.playgroundScale = 20;
+        } else if (26 <= playgroundSize && playgroundSize <= 30) {
+            ActiveGameState.playgroundScale = 15;
+        }
+    }
+
+
+
 
     public static boolean isLoadWithNext() {
         return loadWithNext;
@@ -29,9 +114,8 @@ public class ActiveGameState {
         ActiveGameState.loadWithNext = loadWithNext;
     }
 
-    public enum Loading {singleplayer, multiplayer, noLoad}
 
-    private static boolean loadWithNext = false;
+
 
     public static Loading getLoading() {
         return loading;
@@ -41,8 +125,7 @@ public class ActiveGameState {
         ActiveGameState.loading = loading;
     }
 
-    private static Loading loading = Loading.noLoad;
-    private static volatile boolean logging = true;
+
 
 
     public static boolean isLogging() {
@@ -52,16 +135,8 @@ public class ActiveGameState {
     public static void setLogging(boolean logging){
         ActiveGameState.logging = logging;
     }
-  /*  public static boolean isSingLoad() {
-        return singLoad;
-    }*/
 
 
-   // public static void setSingLoad(boolean singLoad) {
-  //      ActiveGameState.singLoad = singLoad;
-   // }
-
-    private static MusicController musicController;
 
     public static MusicController getMusicController() {
         return musicController;
@@ -71,9 +146,9 @@ public class ActiveGameState {
         ActiveGameState.musicController = musicController;
     }
 
-    public enum Language {english, german};
-    public static boolean newView = false;
-    private static long loadId;
+
+
+
 
     public static long getLoadId() {
         return loadId;
@@ -83,19 +158,9 @@ public class ActiveGameState {
         ActiveGameState.loadId = loadId;
     }
 
-    private static int musicVolume = 50; //currently not in use
-    private static int aiVelocity = 1;
-    private static Language language = Language.english;
 
-    //private static boolean loadGame = false;
 
-   /* public static boolean isLoadGame() {
-        return loadGame;
-    }
-*/
-  /*  public static void setLoadGame(boolean loadGame) {
-        ActiveGameState.loadGame = loadGame;
-    }*/
+
 
     public static Language getLanguage() {
         return language;
@@ -120,37 +185,7 @@ public class ActiveGameState {
     public static void setAiVelocity(int aiVelocity) {
         ActiveGameState.aiVelocity = aiVelocity;
     }
-// Modes
-    /**
-     *
-     * Es gibt folgende Modi:
-     *
-     *
-     * playerVsRemote       Spieler      vs anderen Spieler/KI wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld             wie bisher
-     *
-     * KiVsRemote           Ki (unsere)  vs anderen Spieler/KI wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld
-     *
-     * playerVsKi           Spieler      vs eigene KI          wir haben ein eigenes Spielfeld und ein gegnerisches Spielfeld
-     *                                     -> Die KI hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
-     *
-     * KivsKi eigene KI    vs eigene KI          Die KI 1 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
-     *                                      Die KI 2 hat auch ein eigenes Spielfeld und ein gegnerisches Spielfeld
-     */
-    private static GameMode modes;
 
-    private static boolean OwnPlayerKi; //<- Das ist die KI, welche bei Modus 2 und 3 benötigt wird
-    private static IOwnPlayground ownPlayerIOwnPlayground;
-    private static IEnemyPlayground ownPlayerIEnemyPlayground;
-
-    // You only use the enemy player in singleplayer, where the enemy is always a KI
-    private static IOwnPlayground enemyPlayerOwnPlayground;
-    private static IEnemyPlayground enemyPlayerEnemyPlayground;
-
-
-    //Network
-    private static boolean amIServer;
-    private static IServer server;
-    private static Client client;
 
     public static boolean isRunning() {
         return running;
@@ -162,19 +197,7 @@ public class ActiveGameState {
 
     private static volatile boolean running;
 
-    // Game Configuration
-    private static boolean multiplayer;  // true = multiplayer, false = singleplayer
-    private static String ownPlayerName;    //todo not needed anymore
-    private static int playgroundSize;   // between 5x5 - 30x30
-    private static int playgroundScale;  // set automatically by choosing playground size, only getter
-    private static int amountOfShips;
-    private static int amountShipSize2;
-    private static int amountShipSize3;
-    private static int amountShipSize4;
-    private static int amountShipSize5;
-    private static Ki EnemyKi = new Ki(Ki.Difficulty.undefined);
-    private static Ki OwnKi = new Ki(Ki.Difficulty.undefined);
-    private static Ki placementKi;
+
 
     public static Ki getPlacementKi() {
         return placementKi;
@@ -203,21 +226,7 @@ public class ActiveGameState {
         ActiveGameState.sceneIsGamePlayground = sceneIsGamePlayground;
     }
 
-    private static boolean sceneIsGamePlayground = false;
 
-   /* public static int getDifficulty() {
-        return difficulty;
-    }
-
-    public static void setDifficulty(int difficulty) {
-        ActiveGameState.difficulty = difficulty;
-    }
-
-    private static int difficulty; //wählt die Schwierigkeit aus, 0 = normal, 1 = schwer
-    */
-    private static Ki.Difficulty ownKiDifficulty;//TODO einbinden, difficulty reicht hier bei 2 verschiedenen nicht aus
-    private static Ki.Difficulty enemyKiDifficulty;
-    //TODO evtl enum
 
     public static Ki.Difficulty getOwnKiDifficulty() {
         return ownKiDifficulty;
@@ -235,22 +244,6 @@ public class ActiveGameState {
         ActiveGameState.enemyKiDifficulty = enemyKiDifficulty;
     }
 
-    // Game Variables
-// -> Gestrichen -> neuer Zugriff über ActiveGameState.getOwnPlayer.get[Own][Enemy]Playground
-//    private static IEnemyPlayground enemyPlayground;
-//    private static IOwnPlayground ownPlayground;
-
-    private static boolean selfOrKi; //self = true; ki = false;
-
-
-    private static boolean yourTurn;
-    private static boolean isWon;
-    private static boolean isLost;
-
-
-
-    // ----------------------------------------
-    // Getter and Setter Methods
 
     // Network
     public static boolean isAmIServer() {
@@ -283,25 +276,7 @@ public class ActiveGameState {
 
     public static int getPlaygroundSize() { return playgroundSize; }
 
-    /**
-     * The size must be between 5 and 30
-     * setting the size will automatically set the scale for the view
-     * @param playgroundSize the size of the playground
-     */
-    public static void setPlaygroundSize(int playgroundSize) {
-        ActiveGameState.playgroundSize = playgroundSize;
-        if (5 <= playgroundSize && playgroundSize <= 10) {
-            ActiveGameState.playgroundScale = 45;
-        } else if (11 <= playgroundSize && playgroundSize <= 15) {
-            ActiveGameState.playgroundScale = 35;
-        } else if (16 <= playgroundSize && playgroundSize <= 20) {
-            ActiveGameState.playgroundScale = 25;
-        } else if (21 <= playgroundSize && playgroundSize <= 25) {
-            ActiveGameState.playgroundScale = 20;
-        } else if (26 <= playgroundSize && playgroundSize <= 30) {
-            ActiveGameState.playgroundScale = 15;
-        }
-    }
+
 
     public static int getPlaygroundScale() {
         return playgroundScale;

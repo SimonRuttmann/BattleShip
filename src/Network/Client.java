@@ -1,15 +1,10 @@
 package Network;
 
-import Gui_View.HelpMethods;
 import Player.ActiveGameState;
-import Player.NetworkLogger;
-
 import java.io.*;
-
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

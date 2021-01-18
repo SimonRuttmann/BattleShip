@@ -66,16 +66,20 @@ public class Server extends Communication implements IServer{
     }
 
 
-
-
-    //This method is from the Internet Source: https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+    /**
+     * Creates a DatagrammSocket, to determine the local address that would be used to connect to the specified remote host
+     * This method is based on: https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+     * @return A String of the currently preferred IP-Address (Chosen by the OS)
+     */
     @Override
     public String getIPAddress() {
         String ip;
         try (final DatagramSocket socket = new DatagramSocket()) {
             socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
             ip = socket.getLocalAddress().getHostAddress();
+
         } catch (UnknownHostException | SocketException e) {
+
             logServer.log(Level.SEVERE, "Connection over datagrammSocket impossible, no IP can be shown");
             return null;
         }
@@ -86,12 +90,15 @@ public class Server extends Communication implements IServer{
     public Server.ConnectionStatus startSeverConnection(){
 
         try {
-            System.out.println("Waiting for Client");
-            Socket server_connected  = server.accept(); //Server bietet 1ne Min lang verbindung an
+
+            logServer.log(Level.INFO, "Waiting for Client to connect");
+
+            Socket server_connected  = server.accept();
             server_connected.setSoTimeout(60000);
-          //  System.out.println("Connection from Server to Client established");
+
             logServer.log(Level.INFO, "Connection from Server to Client established");
             this.server_connected = server_connected;
+
             //Set up input and output reader reading/writing form the in-/output stream of the socket
             //Set them up as buffered reader to read and write lines instead of bytes
             this.setInputReader(new BufferedReader(new InputStreamReader(server_connected.getInputStream())));

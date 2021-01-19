@@ -1,32 +1,25 @@
 package Model.Ship;
 
 import Model.Playground.IOwnPlayground;
-import Model.Playground.OwnPlayground;
 import Model.Util.UtilDataType.Point;
-
 import java.util.ArrayList;
 
 
 public class Ship implements IShip {
+
     private int hitPoints;
-
-
-
     private final Point posStart;
     private final Point posEnd;
     private int size;
 
-    //private static final ArrayList<IShip> ShipList = new ArrayList<>();
-    //private static int amount  = 0;
-
+    //Points, which got marked as not valid for placement, due to this ship
     private ArrayList<Point> placementMarkers;
 
     public Ship ( Point posStart, Point posEnd, IOwnPlayground ownPlayground){
 
-        //Wenn positionen vertauscht wurden, dann tausche entsprechende positionen
-        //Vertikal
+        //If the position got switched accidentally, switch them
+        //Vertical
         if ( posStart.getX() == posEnd.getX()){
-            //Tauschen wenn Start Y <  Ende Y
             if ( posStart.getY() > posEnd.getY()){
                 Point temp;
                 temp = posEnd;
@@ -34,7 +27,6 @@ public class Ship implements IShip {
                 posStart = temp;
             }
         }
-
         //Horizontal
         if ( posStart.getY() == posEnd.getY()){
             if(posStart.getX() > posEnd.getX()){
@@ -50,12 +42,11 @@ public class Ship implements IShip {
         getSizeOfShip (posStart, posEnd);
         this.hitPoints = this.size;
         ownPlayground.getShipListOfThisPlayground().add(this);
-        //ShipList.add(this);
-        //amount = ShipList.size();
+
     }
 
     /**
-     *
+     * Get points which have been marked as not valid for placement, due to this ship
      * @return An Array of Points representing the Fields which got marked as not placeable
      */
     @Override
@@ -64,7 +55,7 @@ public class Ship implements IShip {
     }
 
     /**
-     *
+     * Set points which have been marked as not valid for placement, due to this ship
      * @param placementMarkers An Array of Points representing the Fields which got marked as not placeable
      */
     @Override
@@ -90,7 +81,7 @@ public class Ship implements IShip {
 
     /**
      * Calculates all points, where this ship is represented
-     * @return Point Array with all coordiantes of the ship
+     * @return Point Array with all coordinates of the ship
      */
     @Override
     public Point[] getCoordinates(){
@@ -111,9 +102,7 @@ public class Ship implements IShip {
         return coordinates;
     }
 
-    //public static int getAmount(){
-    //    return amount;
-    //}
+    //Getters
 
     @Override
     public int gethitPoints() {
@@ -130,11 +119,6 @@ public class Ship implements IShip {
         return size;
     }
 
-    //Is called by IShip
-    //public static ArrayList<IShip> getShipList() {
-    //    return ShipList;
-    //}
-
     @Override
     public Point[] getPosition(){
         return new Point[]{this.posStart, this.posEnd};
@@ -144,6 +128,7 @@ public class Ship implements IShip {
     public Point getPosStart() {
         return posStart;
     }
+
     @Override
     public Point getPosEnd() {
         return posEnd;

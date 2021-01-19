@@ -1,5 +1,4 @@
 package Model.Playground;
-import javafx.scene.control.Label;
 
 public interface IPlayground {
 

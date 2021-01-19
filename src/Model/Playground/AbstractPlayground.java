@@ -1,23 +1,22 @@
 package Model.Playground;
 
-import Model.Ship.IShip;
 import Model.Util.IDrawable;
-import Model.Util.ShipPart;
-import Model.Util.Water;
 import Player.ActiveGameState;
-import javafx.scene.control.Label;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import java.util.ArrayList;
-
-
-public abstract class AbstactPlayground implements IPlayground{
+/**
+ * The playground is implemented as a IDrawable[][] Array. IDrawable Objects can be Water, ShotWater and ShipPart
+ * Every Player got his own playground with his ships and an enemy playground
+ */
+public abstract class AbstractPlayground implements IPlayground{
+    public static final Logger logAbstractPlayground = Logger.getLogger("parent.AbstractPlayground");
     protected int playgroundsize;
     protected IDrawable[][] Field;
     protected int shipsplaced;
-    protected boolean gameWon;
     protected boolean gameLost;
 
-    public AbstactPlayground (){
+    public AbstractPlayground(){
         this.playgroundsize = ActiveGameState.getPlaygroundSize();
         Field = new IDrawable[playgroundsize][playgroundsize];
         this.shipsplaced = ActiveGameState.getAmountOfShips();
@@ -30,12 +29,12 @@ public abstract class AbstactPlayground implements IPlayground{
 
             for ( int y = 0; y < this.playgroundsize; y++)
             {
-                if ( Field[x][y] == null) System.out.println("Error at drawing!");
+                if ( Field[x][y] == null) logAbstractPlayground.log(Level.SEVERE, "Field can´t be drawn as it is not instantiated");
                 Field[x][y].draw();
 
             }
         }
-
+        //Uncomment to print out the playground on the console line
         /*for (int y = 0; y < this.playgroundsize; y++){
             System.out.println();
             for ( int x = 0; x < this.playgroundsize; x++){

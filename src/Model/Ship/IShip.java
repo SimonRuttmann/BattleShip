@@ -30,24 +30,7 @@ public interface IShip {
      * @return The size of the ship
      */
     int getSize();
-/*
-    /**
-     * Every ship constructed is saved in an Ship-List
-     * Returns the size of the Ship-List
-     * @return The amount of ships in the Ship-List
-     */
-//    static int getAmount() {
-//        return Ship.getAmount();
-//    }
 
-/*
-    /**
-     * All constructed ships, which are valid are added in the ship-List
-     * @return A ArrayList of placed ships
-     */
-//    static ArrayList<IShip> getShipList(){
-//         return Ship.getShipList();
-//     }
 
     /**
      * Calculates all points, where this ship is represented
@@ -56,27 +39,24 @@ public interface IShip {
     Point[] getCoordinates();
 
 
-
     /**
-     *
+     * Get points which have been marked as not valid for placement, due to this ship
      * @return An Array of Points representing the Fields which got marked as not placeable
      */
      ArrayList<Point> getPlacementMarkers();
 
     /**
-     *
+     * Set points which have been marked as not valid for placement, due to this ship
      * @param placementMarkers An Array of Points representing the Fields which got marked as not placeable
      */
     void setPlacementMarkers(ArrayList<Point> placementMarkers);
 
     /**
-     *
      * @return The starposition of the selected ship
      */
     Point getPosStart();
 
     /**
-     *
      * @return The endposition of the selected ship
      */
     Point getPosEnd();

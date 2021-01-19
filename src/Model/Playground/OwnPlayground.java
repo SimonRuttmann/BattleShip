@@ -11,12 +11,15 @@ import javafx.scene.control.Label;
 
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
+public class OwnPlayground extends AbstractPlayground implements IOwnPlayground {
+    public static final Logger logOwnPlayground = Logger.getLogger("parent.OwnPlayground");
+
     public OwnPlayground() {
         super();
     }
-
 
     private ArrayList<IShip> shipListOfThisPlayground = new ArrayList<>();
 
@@ -32,7 +35,6 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
 
     /**
      * Connects all Fields with an Label
-     * //Sets all Fields non clickable -> They are Clickable because of Place Ships, and as they didnt got an actionEvent in the main szene doenst make any difference at all
      * @param labelArray an array of objects containing labels
      */
     @Override
@@ -43,13 +45,12 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
             for ( int y = 0; y < this.playgroundsize; y++)
             {
                 if ( Field[x][y] == null){
-                    System.out.println("Error, Field is uninitialized");
+                    logOwnPlayground.log(Level.SEVERE,"Field can't be connected with label as it is not instantiated");
                     return;
                 }
                 else{
                     Label label = (Label)labelArray[i];
                     Field[x][y].setLabel(label);
-                   // Field[x][y].setLabelNonClickable();
                     i++;
                 }
 
@@ -71,35 +72,29 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
      */
     public ShotResponse shoot(Point pos_shot) {
         if ( pos_shot.getY() < 0 || pos_shot.getY() >= this.playgroundsize || pos_shot.getX() < 0 || pos_shot.getX() >= this.playgroundsize ){
-            System.out.println( "The Point: " + pos_shot.getX() + " " + pos_shot.getY() + " is outside the playground");
+            logOwnPlayground.log(Level.SEVERE, "The Point: " + pos_shot.getX() + " " + pos_shot.getY() + " is outside the playground");
         }
 
         //Hit
         if (Field[pos_shot.getX()][pos_shot.getY()] instanceof ShipPart){
 
-            System.out.println("Shoot Own playground methode -> Hit");;
+
 
             //Decrease Hit Points of the Ship
             ShipPart hitShipPart = (ShipPart)Field[pos_shot.getX()][pos_shot.getY()];
-            System.out.println("Erhaltenes Schiffsteil " + hitShipPart);
             IShip hitShip = hitShipPart.getOwner();
-            System.out.println("Erhaltener Owner: " + hitShipPart.getOwner());
-            System.out.println("HitPoints des Schiffs vor reduzeirung" + hitShip.gethitPoints());
             hitShip.sethitPoints( hitShip.gethitPoints() -1 );
-            System.out.println("HitPoints des Schiff nach reduzieung" + hitShip.gethitPoints());
+
 
             //Mark shipPart as destroyed
             hitShipPart.setShot(true);
-            //hitShipPart.setLabelNonClickable();
             hitShipPart.draw();
 
             //Ship sunken
             if ( hitShip.gethitPoints() <= 0){
-                                            //IShip.getShipList().remove(hitShip);
                 this.shipListOfThisPlayground.remove(hitShip);
 
                 //Game won
-                                            //if ( IShip.getShipList().size() == 0){
                 if ( this.shipListOfThisPlayground.size() == 0){
                     this.gameLost = true;
                     return new ShotResponse (true,true,true);
@@ -109,6 +104,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
                 return new ShotResponse(false, true, true);
 
             }
+
             //Ship still alive
             else{
                 return new ShotResponse( false, true,false);
@@ -129,10 +125,10 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
         }
 
         if ( Field[pos_shot.getX()][pos_shot.getY()] instanceof ShotWater) {
-            System.out.println("The Field on Position:  " + pos_shot.getX() + " " + pos_shot.getY() + " is a shotWater Field");
+            logOwnPlayground.log(Level.SEVERE,"The Field on Position:  " + pos_shot.getX() + " " + pos_shot.getY() + " is a shotWater Field");
         }
         else {
-            System.out.println("The Field on Position:  " + pos_shot.getX() + " " + pos_shot.getY() + " is not instantiated");
+            logOwnPlayground.log(Level.SEVERE,"The Field on Position:  " + pos_shot.getX() + " " + pos_shot.getY() + " is not instantiated");
         }
         return null;
     }
@@ -150,32 +146,24 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
 
 
         //For every Ship in the ShipList insert the affiliated ship parts and fill the left fields with water
-
-                                                        //for ( IShip Element : IShip.getShipList()) {
         for ( IShip Element : this.shipListOfThisPlayground){
            this.addShipToPlayground(Element);
         }
 
-            //Fills the Rest with Water
-            for ( int x = 0; x < this.playgroundsize; x++)
-            {
-                for ( int y = 0; y < this.playgroundsize; y++)
-                {
+        //Fills the rest with Water
+        for (int x = 0; x < this.playgroundsize; x++) {
+            for (int y = 0; y < this.playgroundsize; y++) {
 
-
-                    //Field is empty
-                    if (Field[x][y] == null){
-                        Field[x][y] = new Water();
-                    }
-
+                //Field is empty
+                if (Field[x][y] == null) {
+                    Field[x][y] = new Water();
                 }
-            }
 
+            }
+        }
 
     }
 
-    //TODO is von isShipPlacementValid kopiert -> Hilfsmethoden auslagern
-    // todo von Yannick: horizontal/vertical schliessen sich nicht(immer??) aus - gibt Fehler <- Was heist das?
     /**
      * This method only checks whether the ship (represented by start and endpoint) can be placed or not
      * In both cases no ship is created
@@ -215,7 +203,6 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
         return true;
     }
 
-//TODO die schiffspositionen selbst werden nicht markiert
 
     /**
      * Checks if the ship represented by these two points is valid
@@ -429,7 +416,10 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
         }
     }
 
-    //TODO wenn später Bilder eingefügt werden, und das Shippart das entsprechende Bild zeigen soll, muss das hier überarbeitet werden
+    /**
+     * Help method to add an ship to the playground, as loading exists, it is necessary to check if it is hit
+     * @param ship The ship, which contains an start and end position
+     */
     private void addShipToPlayground(IShip ship){
             //Position returns two Points, Start and End
             Point[] shipposition = ship.getPosition();
@@ -439,11 +429,6 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
             int xEnd = shipposition[1].getX();
             int yEnd = shipposition[1].getY();
 
-            //for ( Point point : ship.getCoordinates()){
-            //    Field[point.getX()][point.getY()] = new ShipPart("start vertical", ship);
-            //}
-
-        System.out.println( "Schiff hinzugefügt");
             //Insert Ship parts
             //Ship vertical
             if (xStart == xEnd) {
@@ -467,7 +452,7 @@ public class OwnPlayground extends AbstactPlayground implements IOwnPlayground {
 
             }
 
-
-
     }
+
+
 }

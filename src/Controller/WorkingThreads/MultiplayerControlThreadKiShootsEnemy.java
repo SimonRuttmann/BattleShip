@@ -1,9 +1,9 @@
-package Controller.Handler;
+package Controller.WorkingThreads;
 
 import Gui_View.HelpMethods;
 import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

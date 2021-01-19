@@ -1,9 +1,10 @@
-package Controller.Handler;
+package Controller;
 
 
-import Player.ActiveGameState;
-import Player.GameMode;
-import javafx.event.ActionEvent;
+import Controller.WorkingThreads.MultiplayerControlThreadShootEnemy;
+import Controller.WorkingThreads.SingleplayerControlThreadShootEnemy;
+import GameData.ActiveGameState;
+import GameData.GameMode;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 

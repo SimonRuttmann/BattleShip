@@ -1,6 +1,7 @@
-package Player;
+package LoggingNetwork;
 
-import Controller.Handler.LoggingThread;
+import GameData.ActiveGameState;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.*;

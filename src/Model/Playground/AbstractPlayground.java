@@ -1,7 +1,7 @@
 package Model.Playground;
 
 import Model.Util.IDrawable;
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

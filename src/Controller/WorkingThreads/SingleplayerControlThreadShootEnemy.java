@@ -1,10 +1,10 @@
-package Controller.Handler;
+package Controller.WorkingThreads;
 
 import Controller.GamePlayground;
 import Gui_View.HelpMethods;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import javafx.event.Event;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;

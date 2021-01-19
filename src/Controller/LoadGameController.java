@@ -1,7 +1,10 @@
 package Controller;
 
+import GameData.ActiveGameState;
 import Gui_View.Main;
-import Player.*;
+import Serialize.SaveAndLoad;
+import Serialize.Savegame;
+import Serialize.SavegameLinker;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;

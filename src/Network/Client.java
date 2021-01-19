@@ -1,6 +1,6 @@
 package Network;
 
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;

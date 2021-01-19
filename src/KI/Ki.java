@@ -5,8 +5,7 @@ import Model.Ship.*;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
-import Player.ActiveGameState;
-import com.sun.nio.sctp.IllegalReceiveException;
+import GameData.ActiveGameState;
 
 import java.util.ArrayList;
 import java.util.HashSet;

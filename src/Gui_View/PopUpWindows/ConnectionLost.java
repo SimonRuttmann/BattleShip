@@ -3,8 +3,8 @@ package Gui_View.PopUpWindows;
 
 import Gui_View.HelpMethods;
 import Gui_View.Main;
-import Player.ActiveGameState;
-import Player.NetworkLogger;
+import GameData.ActiveGameState;
+import LoggingNetwork.NetworkLogger;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;

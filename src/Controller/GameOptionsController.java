@@ -1,7 +1,7 @@
 package Controller;
 
 import Gui_View.Main;
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;

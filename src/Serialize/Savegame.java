@@ -1,8 +1,9 @@
-package Player;
+package Serialize;
 
 import KI.Ki;
 import Model.Playground.EnemyPlayground;
 import Model.Playground.OwnPlayground;
+import GameData.GameMode;
 
 /**
  * This class contains all information saved as JSON-File
@@ -21,7 +22,7 @@ import Model.Playground.OwnPlayground;
  */
 public class Savegame{
     public long              id;
-    public GameMode          modes;
+    public GameMode modes;
     public boolean           OwnPlayerKi;
     public OwnPlayground    ownPlayerIOwnPlayground;
     public EnemyPlayground  ownPlayerIEnemyPlayground;

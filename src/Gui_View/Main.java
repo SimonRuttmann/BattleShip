@@ -1,7 +1,7 @@
 package Gui_View;
 
-import Player.ActiveGameState;
-import Player.NetworkLogger;
+import GameData.ActiveGameState;
+import LoggingNetwork.NetworkLogger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

@@ -1,9 +1,10 @@
-package Player;
+package GameData;
 
 import Controller.MusicController;
 import KI.Ki;
 import Model.Playground.*;
 import Network.*;
+
 import java.io.BufferedReader;
 
 /**

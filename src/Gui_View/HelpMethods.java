@@ -4,7 +4,7 @@ package Gui_View;
 
 import Gui_View.PopUpWindows.SaveRequest;
 import Gui_View.PopUpWindows.*;
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;

@@ -1,11 +1,11 @@
-package Controller.Handler;
+package Controller.WorkingThreads;
 import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Network.CMD;
-import Player.ActiveGameState;
-import Player.GameMode;
-import Player.SaveAndLoad;
-import Player.Savegame;
+import GameData.ActiveGameState;
+import GameData.GameMode;
+import Serialize.SaveAndLoad;
+import Serialize.Savegame;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

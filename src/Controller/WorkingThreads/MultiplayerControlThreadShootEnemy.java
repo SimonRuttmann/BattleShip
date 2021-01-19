@@ -1,4 +1,4 @@
-package Controller.Handler;
+package Controller.WorkingThreads;
 
 import Controller.GamePlayground;
 import Gui_View.HelpMethods;
@@ -6,7 +6,7 @@ import Model.Playground.IEnemyPlayground;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.Event;

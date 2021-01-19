@@ -1,10 +1,10 @@
 package Controller;
 
-import Controller.Handler.MultiplayerControlThreadConfigCommunication;
+import Controller.WorkingThreads.MultiplayerControlThreadConfigCommunication;
 import Gui_View.Main;
 import KI.Ki;
-import Player.ActiveGameState;
-import Player.GameMode;
+import GameData.ActiveGameState;
+import GameData.GameMode;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;

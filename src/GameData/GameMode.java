@@ -1,4 +1,4 @@
-package Player;
+package GameData;
 
 /**
  * There are following modes

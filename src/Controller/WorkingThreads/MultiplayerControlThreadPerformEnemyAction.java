@@ -1,12 +1,12 @@
-package Controller.Handler;
+package Controller.WorkingThreads;
 
 import Controller.GamePlayground;
 import Gui_View.HelpMethods;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
-import Player.ActiveGameState;
-import Player.GameMode;
+import GameData.ActiveGameState;
+import GameData.GameMode;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

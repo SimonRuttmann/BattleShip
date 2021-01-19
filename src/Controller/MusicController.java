@@ -1,13 +1,11 @@
 package Controller;
 
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import javafx.application.Platform;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

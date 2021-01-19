@@ -1,11 +1,11 @@
 package Controller;
 
-import Controller.Handler.MultiplayerControlThreadConfigCommunication;
+import Controller.WorkingThreads.MultiplayerControlThreadConfigCommunication;
 import Gui_View.HelpMethods;
 import Gui_View.Main;
 import Network.IServer;
 import Network.Server;
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;

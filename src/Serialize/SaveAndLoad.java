@@ -1,9 +1,10 @@
-package Player;
+package Serialize;
 
 import Model.Playground.EnemyPlayground;
 import Model.Playground.OwnPlayground;
 import Model.Ship.IShip;
 import Model.Util.IDrawable;
+import GameData.ActiveGameState;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.Reader;

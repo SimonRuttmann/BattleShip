@@ -1,6 +1,6 @@
 package Model.Util;
 
-import Player.ActiveGameState;
+import GameData.ActiveGameState;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;

@@ -1,20 +1,36 @@
 package Model.Util.UtilDataType;
 
 import javafx.scene.control.Label;
-
 import java.util.ArrayList;
 
+/**
+ * Objects of this class contain all necessary information, when shoot`s are made
+ * The information, an ShotResponse object can have strongly depends on the use case
+ */
 public class ShotResponse {
+
+    //Information, the object can contain, when we call the shoot method of our own playground
     private boolean gameLost;
     private boolean hit;
     private boolean shipDestroyed;
 
+    //Information, the object can contain additionally, when the ki shoots our own playground
+    //Information, used by KI shoot call, when the shot can`t be handled there cause of invalid answer from remote
+    private String unhandledCMD;
+    private boolean unhandled;
+    private Point shotPosition;
+
+    //Information, the object can contain, when we call the shoot method of our enemy playground
     private boolean gameWin;
     private ArrayList<Point> impossiblePositions;
+    private Label label;
+    private boolean horizontal;
+    private int sizeOfSunkenShip;
 
-    //Used by Ki, when communicating with remote
+
+    //Constructors, used by Ki when communicating with remote
     public ShotResponse(){
-    };
+    }
 
     public ShotResponse (boolean unhandled, String unhandledCMD){
         this.unhandled = unhandled;
@@ -34,48 +50,6 @@ public class ShotResponse {
     }
 
     //Constructor, when we hit the enemy´s Playground and we sunk a ship
-
-    public String getUnhandledCMD() {
-        return unhandledCMD;
-    }
-
-    public boolean isUnhandled() {
-        return unhandled;
-    }
-
-    private String unhandledCMD;
-    private boolean unhandled;
-
-
-    private Label label;
-    private boolean horizontal;
-
-    public Label getLabel() {
-        return label;
-    }
-
-    public void setHit(boolean hit) {
-        this.hit = hit;
-    }
-
-    public void setShipDestroyed(boolean shipDestroyed) {
-        this.shipDestroyed = shipDestroyed;
-    }
-
-    public boolean getAlignment() {
-        return horizontal;
-    }
-
-    public int getSizeOfSunkenShip() {
-        return sizeOfSunkenShip;
-    }
-
-    private int sizeOfSunkenShip;
-
-    //label = shotResponse.getLabel();
-    //horizontal = shotResponse.getAlignment();
-    //size = shotResponse.getSize();
-    //Constructor, when we hit the enemy´s Playground and we sunk a ship
     public ShotResponse (boolean gameWin, ArrayList<Point> impossiblePositions, Label label, boolean horizontal, int sizeOfSunkenShip){
         this.gameWin = gameWin;
         this.impossiblePositions = impossiblePositions;
@@ -84,33 +58,21 @@ public class ShotResponse {
         this.sizeOfSunkenShip = sizeOfSunkenShip;
     }
 
-    public boolean isGameWin() {
-        return gameWin;
-    }
+    //Getter
+    public String getUnhandledCMD() { return unhandledCMD; }
+    public boolean isUnhandled() { return unhandled; }
+    public Label getLabel() { return label; }
+    public boolean getAlignment() { return horizontal; }
+    public int getSizeOfSunkenShip() { return sizeOfSunkenShip; }
+    public boolean isGameWin() { return gameWin; }
+    public ArrayList<Point> getImpossiblePositions() { return impossiblePositions; }
+    public boolean isGameLost() { return gameLost; }
+    public boolean isHit() { return hit; }
+    public boolean isShipDestroyed() { return shipDestroyed; }
+    public Point getShotPosition() { return shotPosition; }
 
-    public ArrayList<Point> getImpossiblePositions() {
-        return impossiblePositions;
-    }
-
-    public boolean isGameLost() {
-        return gameLost;
-    }
-
-    public boolean isHit() {
-        return hit;
-    }
-
-    public boolean isShipDestroyed() {
-        return shipDestroyed;
-    }
-
-    private Point shotPosition;
-
-    public Point getShotPosition() {
-        return shotPosition;
-    }
-
-    public void setShotPosition(Point shotPosition) {
-        this.shotPosition = shotPosition;
-    }
+    //Setter
+    public void setHit(boolean hit) { this.hit = hit; }
+    public void setShipDestroyed(boolean shipDestroyed) { this.shipDestroyed = shipDestroyed; }
+    public void setShotPosition(Point shotPosition) { this.shotPosition = shotPosition; }
 }

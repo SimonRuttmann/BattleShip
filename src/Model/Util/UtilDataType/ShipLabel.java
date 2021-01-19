@@ -1,5 +1,10 @@
 package Model.Util.UtilDataType;
 
+/**
+ * Objects of type ShipLabel contain information needed by the controller`s to display
+ * the images of the ships, when the game is loaded
+ * An arrayList containing all shipLabel Objects will be saved
+ */
 public class ShipLabel {
     private final Point posHead;
     private final boolean horizontal;

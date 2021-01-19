@@ -131,10 +131,10 @@ public class SavegameLinker {
 
             String removingSavegameLink = savegamename+"="+id;
             String currentLine;
-
             while ((currentLine = reader.readLine()) != null) {
-
+                System.out.println(currentLine + "   " + removingSavegameLink);
                 if (currentLine.equals(removingSavegameLink)) continue;
+                System.out.println("gleich");
                 writer.write(currentLine + System.getProperty("line.separator"));
             }
 

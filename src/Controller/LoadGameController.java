@@ -144,12 +144,12 @@ public class LoadGameController implements Initializable {
 
     public void setLanguage(){
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
-            title.setText("Spieleinstellungen");
+            title.setText("Spiel laden");
             loadGameButton.setText("Spiel laden");
             backButton.setText("Zurück zum Hauptmenü");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
-            title.setText("Game Settings");
+            title.setText("Load Game");
             loadGameButton.setText("Load Game");
             backButton.setText("Back to Main Menu");
         }
@@ -203,9 +203,11 @@ public class LoadGameController implements Initializable {
 
                     //Remove linker in multiplayer savegames
                     String fileNameToDelete = cell.getItem().toString();
+                    String onlyFileNameJson = cell.getItem().getName();
+                    String[] onlyFileName = onlyFileNameJson.split("\\.");
                     boolean linkerDeleted;
                     if (ActiveGameState.isMultiplayer()){
-                        linkerDeleted = SavegameLinker.removeLinker(fileNameToDelete);
+                        linkerDeleted = SavegameLinker.removeLinker(onlyFileName[0]);
                         if (!linkerDeleted) logLoadGame.log(Level.WARNING, "Savegame "+ fileNameToDelete +" link couldn`t removed from the savegame linker");
                     }
 

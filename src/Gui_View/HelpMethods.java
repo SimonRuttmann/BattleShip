@@ -58,10 +58,10 @@ public class HelpMethods {
     // method that closes MP SERVER/CLIENT SOCKETS - if there are existing ones
     public static void closeMPSockets() {
         if(ActiveGameState.isMultiplayer()){
-            if (ActiveGameState.isAmIServer()) {
+            if (ActiveGameState.isAmIServer() && ActiveGameState.getServer() != null) {
                 ActiveGameState.getServer().closeConnection();
             } else {
-                ActiveGameState.getClient().closeConnection();
+                if (ActiveGameState.getClient() != null) ActiveGameState.getClient().closeConnection();
             }
         }
     }

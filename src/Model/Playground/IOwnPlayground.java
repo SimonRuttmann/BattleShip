@@ -1,7 +1,6 @@
 package Model.Playground;
 
 import Model.Ship.IShip;
-import Model.Ship.Ship;
 import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 

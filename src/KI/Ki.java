@@ -15,60 +15,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-//Wäre whr sinnvoll die Ki in Klassen zu unterteilen, die Ki, bei der placeShips aufgerufen wird, ist die KI als  placementKi in ActiveGamestate gespeichert
-//Beim beschießen gibt es 2 instanzen, enemyKi und ownKi, welche im ActiveGameState auch als KI gespeichert sind, diese brauchen die getShot methode
+//There are two instances, enemyAI and ownAI, which are stored in ActiveGameState as KI, they are needed for the getShot method
 public class Ki implements IKi{
     public enum Difficulty {undefined, normal, hard}
 
     public static final Logger logKi = Logger.getLogger("parent.Ki");
 
-
-    /**
-     * Bugfixed
-     * Diese Enumerationen erstzen all deine Booleans:
-     *    Alle Variablen die für die destroyShipNotonEdge gebraucht werden
-     *
-     *
-     *
-     *     protected boolean vertFlagOben;
-     *     protected boolean horizFlagRechts;
-     *     protected boolean vertFlagUnten;
-     *     protected boolean horizFlagLinks;
-     *     protected boolean waslastShotaHit = true;
-     *     protected int countDestroyShots = -1;
-     *     protected boolean isShipcomDestroyed;
-     *
-     * Dadurch das die Booleans wegfallen, hat man in den if elseif elseif else Anweisungen nur noch 1 Argument
-     * Dass kann man dann mit einem Switch Case sehr einfach machen -> 80% des Codes fällt weg
-     *
-     * Eine kleine Änderung musste ich noch wegen dem return machen, da du die shoot-Methode bereits aufrufst, darf ich sie im Controller nicht nochmal aufrufen,
-     * weshalb nun nicht der punkt, sondern das ergebnis (ShotResponse) des Aufrufs mit playground.shoot(punkt) übergeben wird
-     *
-     * Codetechnisch/Logiktechnisch ist alles gleich geblieben, außer das zusätzlich noch geprüft wird, ob der Punkt, bei dem man schließen möchte schon als shotWater markiert wurde (dann darf man dort hin nicht schießen)
-     *
-     *
-     * Das hattest du Teilweise schon drin, jedoch wird bei einer ArrayListe arrayList.contains(new Point(x,y)) immer false kommen, da referenzen überprüft werden und
-     * intern nicht die equals-Methode (die wir btw garnicht haben :D).
-     * Dafür hab ich die Methode isNextShotInPreviousList geschrieben, diese überprüft, ob es in der Liste schon einen ANDEREN Punkt (andere Referenz) gibt mit den gleichen
-     * X und Y Koordinaten gibt
-     *
-     * Hinzugefügt:
-     * Kommunikationszeugs (2 Methoden), muss hier leider rein, damit ich die Ki auch für den Modus KI vs Remote verwenden kann
-     * Bei der PlaceShips, die RandomX, RandomY durch die Methode(RandomPointExceptSet) ersetzt. Die Methode holt sich nen Punkt aus der verbleibenden Menge an Punkten -> Führt sonst zu (nahezu) Endlosschleifen, wenn nur noch wenige Punkte vorhanden sind
-     *
-     */
-
-    enum NextLocation { nextTop, nextBottom, nextLeft, nextRight, noDestination}    //Zeigt an, wo man als nächstes hinschießt
-    enum DestroyStatus {notFound, destroying}                                       //Gibt an, ob man gerade im Modus Schiff zerstören oder Random schießen ist
+    enum NextLocation { nextTop, nextBottom, nextLeft, nextRight, noDestination}    //shows where the nect shot will/can be
+    enum DestroyStatus {notFound, destroying}                                       //mode of destroying or not destorying a ship
 
     private DestroyStatus destroyStatus = DestroyStatus.notFound;
-    private NextLocation nextLocation;                              //nächste position auf die Geschossen wird
-    int rangeToShot = 1;                                            //1. Schuss (treffer) nach oben -> rangeToShot wird auf 2 erhöht
-    //2. Schuss (treffer) nach oben -> rangeToShot wird auf 3 erhöht
-    //3. Schuss  (kein treffer) rangeToShot wird auf 1 gesetzt                  und die position ist jetzt nextBottom
-    //1. Schuss (treffer) nach unten -> rangeToShot wird auf 2 erhöht
-    //2. Schuss (kein treffer) nach unten -> rangeToShot wird auf 1 gesetzt     und die position ist jetzt nextleft
-    //...
+    private NextLocation nextLocation;                                              //next position that is going to get shot
+    int rangeToShot = 1;
+
     transient ShotResponse shotResponseFromKI;
 
 
@@ -92,48 +51,9 @@ public class Ki implements IKi{
         Playgroundsize = ActiveGameState.getPlaygroundSize();
     }
 
-    /**
-     * Checks if the values of the hand over point is contained in the arrayList
-     * @param pointSet The set
-     * @param checkPoint The point to check
-     * @return True, if the list contains a point with the same x and y coordinates
-     */
-    public boolean isPointValueInSet( Set<Point> pointSet, Point checkPoint){
-        for ( Point point : pointSet ){
-            if (point.getX() == checkPoint.getX() && point.getY() == checkPoint.getY()) return true;
-        }
-        return false;
-    }
-    private int debugg = 0;
 
-    /**
-     * Diese methode hat im schlimmsten fall quadratische Laufzeit !!!
-     * Stochastisch jetzt deterministisch, (keine Random abbrüche mehr)
-     * DEUTLICHES Optimierungspotenzial möglich -> ArrayListe wir einmalig initialisiert und elemente werden einzeln abgezogen, hier overkill, jedes mal neu initialisieren und eine Menge an Punkten (im durchschnitt ~ 70) abziehen
-     * @param usedPoints The Set, where the Points should not come from
-     * @return Point from the Playground except from the Set usedPoints
-     */
-    private Point randomPointInPlaygroundExceptSet(Set<Point> usedPoints, ArrayList<Point> randomPointPool){
+    private int counterToRestartPlaceShip = 0;
 
-
-      /*  //Remove values from the Set
-        for(Point point : usedPoints){
-            //randomPointPool.remove(point);
-            randomPointPool.removeIf(point2 -> point.getX() == point2.getX() && point.getY() == point2.getY());
-            //randomPointPool.removeIf(point1 -> point.getX() == point1.getX() && point.getY() == point1.getY());
-
-        }*/
-
-        Random random = new Random();
-        //Kein Element mehr vorhanden
-        if (randomPointPool.size() == 0) return null;
-        //Ein Element vorhanden (random.nextInt braucht eine Zahl > 0)
-        if (randomPointPool.size() == 1) return randomPointPool.get(0);
-        //Element aus der verbleibenden Menge auswählen
-        return randomPointPool.get(random.nextInt(randomPointPool.size()));
-    }
-
-    private int counter32 = 0;
     /**
      * Backtrack algorithm to place ships randomly
      *
@@ -171,21 +91,19 @@ public class Ki implements IKi{
      * @param currentShipToPlace An integer used as index for the ArrayList kiShips. The ArrayList with the index currentShipToPlace returns the ship, which needs to be placed next
      * @return An ArrayList of the new placed ships
      */
+
     public ArrayList<IShip> placeShip(ArrayList<Point> occupiedDotsList, ArrayList<IShip> kiShips, ArrayList<IShip> newShips, IOwnPlayground playground, int currentShipToPlace){
 
-        if (this.counter32 > 10000){
+        if (this.counterToRestartPlaceShip > 10000){
             return null;
         }
-//Laufzeitanalyse:
-        this.counter32++;
-        //Rekursionsauflösung alle Schiffe plaziert     //Index   0 1 2 3 4 <- Plaziert Jetzt: 5
-        if ( currentShipToPlace >= ActiveGameState.getAmountOfShips()){     //Schiffe 2 2 3 4 5
-            //System.out.println("Return nr 1");
+        this.counterToRestartPlaceShip++;
+
+        if ( currentShipToPlace >= ActiveGameState.getAmountOfShips()){
             return newShips;
         }
 
-
-        //n       //Create random point pool
+        //Create random point pool
         ArrayList<Point> randomPointPool = new ArrayList<>();
         for (int x = 0; x < ActiveGameState.getPlaygroundSize(); x++){
             for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
@@ -195,164 +113,100 @@ public class Ki implements IKi{
 
         //Remove values from the Set
         for(Point point : occupiedDotsList){
-            //randomPointPool.remove(point);
             randomPointPool.removeIf(point2 -> point.getX() == point2.getX() && point.getY() == point2.getY());
-            //randomPointPool.removeIf(point1 -> point.getX() == point1.getX() && point.getY() == point1.getY());
-
         }
-
 
         int random_x;
         int random_y;
         int placementStyle = -1;
         int counter = 0;
 
-
-        //n stark reduziert       //Plaziere Schiff an der Stelle laufvariable in der Liste
         do {
-        /*    System.out.println( "1: " +debugg++);                                       //Kritischer Bereich Anfang
-
-            System.out.println("Anfang do-While");
-            System.out.println("Counter = " + counter);
-            System.out.println("bisheriger Placementstlye = " + placementStyle);
-            System.out.println("Current Ship to place : = " + currentShipToPlace);
-            System.out.println(newShips.size());
-            System.out.println();*/
 
             IShip kiShip = kiShips.get(currentShipToPlace);
 
-            Point point;                               // 100 Punkte in einer ArrayList -> Array - Alle Punkte im Set
-
+            Point point;
 
             Random random = new Random();
 
-            //Kein Element mehr vorhanden
+            //no existing element
             if (randomPointPool.size() == 0) return null;
-            //Ein Element vorhanden (random.nextInt braucht eine Zahl > 0)
+            //element existing -> (random.nextInt needs a number > 0)
             if (randomPointPool.size() == 1) {
                 point = randomPointPool.get(0);
             }
-            //Element aus der verbleibenden Menge auswählen
+            //choose element from remaining amount
             else{
                 point = randomPointPool.get(random.nextInt(randomPointPool.size()));
             }
 
-
-
-            // 100 Ar - 85Pk = 15
             if ( point == null) return null; // Every single Point tested
             random_x = point.getX();
             random_y = point.getY();
-            //Point point = new Point ( random_x, random_y);
-
-            //System.out.println( "1.a: " + debugg++);
 
             randomPointPool.remove(point);
 
             placementStyle = getPlacementStyle(new Point(random_x, random_y), kiShip.getSize(), ActiveGameState.getPlaygroundSize(), occupiedDotsList);
             counter++;
 
-      /*      System.out.println("Nach dem getPlacementstlye");
-            System.out.println("Counter = " + counter);
-            System.out.println("Placementstlye = " + placementStyle);
-            System.out.println("Current Ship to place : = " + currentShipToPlace);
-            System.out.println(newShips.size());
-            System.out.println();*/
-
-            // Für jede gültige Platzierung, führe die Rekursion aus
+            //do recursion for every valid placement
             if ( placementStyle >= 0){
                 Point newEndPos;
 
-                //Ermittle Schiffspositionen
+                //get ship positions
                 switch(placementStyle){
-                    case 0: newEndPos = new Point ( random_x ,                        random_y-kiShip.getSize()+1); break;      //Oben
-                    case 1: newEndPos = new Point ( random_x + kiShip.getSize()-1,    random_y); break;                         //Rechts
-                    case 2: newEndPos = new Point ( random_x ,                        random_y+kiShip.getSize()-1); break;      //Unten
-                    case 3: newEndPos = new Point ( random_x - kiShip.getSize()+1,    random_y); break;                         //Links
+                    case 0: newEndPos = new Point ( random_x ,                        random_y-kiShip.getSize()+1); break;      //top
+                    case 1: newEndPos = new Point ( random_x + kiShip.getSize()-1,    random_y); break;                         //right
+                    case 2: newEndPos = new Point ( random_x ,                        random_y+kiShip.getSize()-1); break;      //bottom
+                    case 3: newEndPos = new Point ( random_x - kiShip.getSize()+1,    random_y); break;                         //left
                     default:
                         throw new IllegalStateException("Unexpected value: " + placementStyle);
                 }
 
-                //Füge Schiff mit den Positionen hinzu
+                //add ships with the positions
 
                 IShip shipToPlace = new Ship(new Point(random_x, random_y), newEndPos, playground);
                 newShips.add(shipToPlace);
 
-
-
-                //Schiffspositionen + Umgebungspositionen
+                //ship positions + surroundings
                 ArrayList<Point> shipPositions = new ArrayList<>();
                 shipPositions = markShipDots(point, kiShip.getSize(), placementStyle, shipPositions);
 
                 ArrayList<Point> shipPositionsAndSurroundings = surroundShipDots(shipPositions);
                 shipPositionsAndSurroundings.addAll(shipPositions);
 
-
-                //Bishige Schiffspositionen (aus früheren Rekursionsschritten + Schiffspostion + Umgebungsposition von aktuellem Rekursionschritt)
+                //ship positions from earlier recursive steps + ship positions + surroundings from actual recursive step
                 ArrayList<Point> newOccupiedDotsList = new ArrayList<Point>(occupiedDotsList);
                 newOccupiedDotsList.addAll(shipPositionsAndSurroundings);
-
-       /*         System.out.println("Gehe in Rekursion");
-                System.out.println("Counter = " + counter);
-                System.out.println("bisheriger Placementstlye = " + placementStyle);
-                System.out.println("Current Ship to place : = " + currentShipToPlace);
-                System.out.println(newShips.size());
-                System.out.println();*/
 
                 currentShipToPlace++;
                 ArrayList<IShip>  result = placeShip(newOccupiedDotsList, kiShips, newShips, playground, currentShipToPlace);
                 currentShipToPlace--;
 
-           /*     System.out.println("Gehe aus Rekursion");
-                System.out.println("Counter = " + counter);
-                System.out.println("bisheriger Placementstlye = " + placementStyle);
-                System.out.println("result = " + result);
-                System.out.println("Current Ship to place : = " + currentShipToPlace);
-                System.out.println(newShips.size());
-                System.out.println();*/
-
-                // Für diese Plazierung des Schiffs gibt es keine Möglichkeit die restlichen zu plazieren
+                // there is no placement for the rest of the following ships
                 if ( result == null){
                     placementStyle = -404;
-                    /*System.out.println(newShips.size());*/
                     newShips.remove(shipToPlace);
-                    /*System.out.println(newShips.size());*/
                 }
-
             }
 
-
-      /*      System.out.println("Ende do-While");
-            System.out.println("Counter = " + counter);
-            System.out.println("bisheriger Placementstlye = " + placementStyle);
-            System.out.println("Current Ship to place : = " + currentShipToPlace);
-            System.out.println(newShips.size());*/
-
         } while (placementStyle < 0 && counter < ActiveGameState.getPlaygroundSize()*ActiveGameState.getPlaygroundSize());
-        //System.out.println( "3: "+  debugg++);
-        //Rekursionsauflösung, Schiff kann nicht plaziert werden
+        //recursive resolution, wasnt able to place the ship
         if ( placementStyle < 0){
-            /*System.out.println("Return Nr 2");*/
             return null;
         }
 
-        //Es hat funktioniert
- /*       System.out.println("Counter: " + counter);
-        System.out.println("Retrun Nr 3");*/
+        //recursion succeeded
         return newShips;
     }
 
-
-
-
     public ArrayList<IShip> placeships(IOwnPlayground playground) {
-
 
         ArrayList<Point> occupiedDotsList = new ArrayList<>();
         ArrayList<IShip> kiShips = new ArrayList<>();
         ArrayList<IShip> newShips = new ArrayList<>();
 
-        //Alles Schifftypen werden in eine Arraylist gespeichert damit sie unabhängig bearbeitet werden können
+        //all the different ship types are going to get stored/saved for the following processing
         for(int u = 0; u < ActiveGameState.getAmountShipSize5(); u++){
             Ship ship = new Ship(new Point(0,0), new Point(0, 4), playground);
             kiShips.add(ship);
@@ -374,68 +228,18 @@ public class Ki implements IKi{
             System.out.println(ship.getPosStart() +  " " +ship.getPosEnd());
         }
 
-        //Idee 5er Schiffe selbst am rand plazieren, wenn zu stark befüllt
-        // if (ActiveGameState.getPlaygroundSize() / kiShips.size() > 3)
-        // {
-        this.counter32 = 0;
+        this.counterToRestartPlaceShip = 0;
         ArrayList<IShip> shipList;
         shipList = placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
         while ( shipList == null){
-            this.counter32 = 0;
+            this.counterToRestartPlaceShip = 0;
             shipList = placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
         }
-        System.out.println(counter32);
+        System.out.println(counterToRestartPlaceShip);
         return shipList;
-        //return placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
-        // }
-        // else{
-           /* Random randomPosition = new Random();
-            int position = randomPosition.nextInt( 4);
-
-            Random randomStartAxis = new Random();
-            int startAxis = randomStartAxis.nextInt(ActiveGameState.getPlaygroundSize() -6);
-
-            //random [0, playgroundsize-1 - 5]
-            //Alle 5er Schiffe plazieren
-            //X = 0 Y random
-
-            //X = Playgroundsize-1 Y random
-
-            //Y = 0 random
-
-            //Y = Playgroundsize-1 X random
-
-            switch (position){
-                case 0:
-                            break;
-                case 1:
-                            break;
-                case 2:
-                            break;
-                case 3:
-            }
-
-                       //Belegte Punkte             5er                     Anzahl platzierte 5er
-            placeShip(occupiedDotsList, kiShips, newShips, playground, 1);
-*/
-
     }
 
-    //Hilfestellung geben, da Befüllungsgrad zu hoch
-        /*Ablauf:
-        1. Zufälliger Punkt wird erstellt und ein dazu eine gültige und passende Ausrichtung des Schiffs
-        2. Die Schiffspunkte werden in eine Arrayliste gespeichert
-        3. Das Schiff wird surrounded und die Punkte ebenfalls in die Arrayliste gespeichert
-        4. Die start und endposition des Schiffs wird gespeichert und eine Liste mit den Schiffen zurückgegeben //todo bug: wenn alle Platze belegt, werden immer neue Schiffe an die Liste angehängt bis ????, mal viele mal wenige, anstatt Abbruch + Step back oder neuanfang???
-         */
-
-
-
-
-
-    // }
-
-    //Markiert alle Punkte um das Schiff herum
+    //marks the surrounding dots of the ship
     protected ArrayList<Point> surroundShipDots(ArrayList<Point> currentShipDots) {
         ArrayList<Point> surrDots = new ArrayList<>();
         for(int i = 0 ; i < currentShipDots.size() ; i++) {
@@ -480,25 +284,16 @@ public class Ki implements IKi{
         return surrDots;
     }
 
-    protected ArrayList<Point> getcurrShipDots(ArrayList<Point> ocuList, int shipsize) {
-        ArrayList<Point> currShip = null;
 
-        for(int i = ocuList.size() - shipsize ; i < ocuList.size() ; i++){
-            currShip.add(ocuList.get(i));
-        }
-        return currShip;
-    }
-
-    //prüft ob der Punkt in der übergebenen Arrayliste vorhanden ist
+    //chekcs if the point is in the list
     protected boolean checkArrayList(ArrayList<Point> list, Point p){
         for( Point point : list){
             if (point.getX() == p.getX() && point.getY() == p.getY()) return true;
         }
         return false;
-
     }
 
-    //Markiert die Punkte des aktuelle Schiffs
+    //marks the dots of the current ship
     protected ArrayList<Point> markShipDots(Point p, int size, int style, ArrayList<Point> list) {
         switch (style) {
             case 0:
@@ -529,9 +324,7 @@ public class Ki implements IKi{
         return null;
     }
 
-
-    /*Prüft für den random Punkt, ob das Ship von ihm aus ins Feld Passt und eine zufällige richtung, wird in 20 versuchen kein Ergebnis gefunden, wird in der
-    do -while-Schleife in der placeships- Methode ein neuer zufälliger Punkt erstellt  und für diesen dann diese Überprüfung erneut gemacht*/
+    //checks if there is a valid placementstyle at the current point for the current ship
     protected int getPlacementStyle(Point p, int size, int playgrounds, ArrayList<Point> list){
         int style;
         int count = 0;
@@ -586,181 +379,133 @@ public class Ki implements IKi{
         return -1;
     }
 
-    /*
-    if(style == 0){
-                for(int i = 0; i < size; i++){
-                    if(isPointValueInList(list, new Point(p.getX(), p.getY() - i))){
-                        check = true;
-                    }
-                }
-                if(p.getY() - size >= 0 && !check)
-                    return 0;
-                else
-                    check = true;
-            }else if(style == 1){
-                for(int i = 0; i < size; i++){
-                    if(isPointValueInList(list, new Point(p.getX() + i, p.getY()))){
-                        check = true;
-                    }
-                }
-                if(p.getX() + size < playgrounds && !check)
-                    return 1;
-                else
-                    check = true;
-            }else if(style == 2){
-                for(int i = 0; i < size; i++){
-                    if(isPointValueInList(list, new Point(p.getX(), p.getY() + i))){
-                        check = true;
-                    }
-                }
-                if(p.getY() + size < playgrounds && !check)
-                    return 2;
-                else
-                    check = true;
-            }else if(style == 3){
-                for(int i = 0; i < size; i++){
-                    if(isPointValueInList(list, new Point(p.getX() - i, p.getY()))){
-                        check = true;
-                    }
-                }
-                if(p.getX() - size >= 0 && !check)
-                    return 3;
-                else
-                    check = true;
-            }
+
+    /**
+     *
+     * @param min
+     * @param max
+     * @return  a random int between min (inclusive) and max (exclusive)
      */
 
-
-    //erstellt zufällig eine int zahl in einer vorgegebenen range also von bis
-    //min ausgeschlossen, max eingeschlossen
     private static int getRandomInt(int min, int max) {
         if (min >= max) {
             throw new IllegalArgumentException("max must be greater than min in KI min:" + min + "max:" + max);
         }
         Random r = new Random();
         return r.nextInt((max - min) ) + min;
-        //r.nextInt( size - 0 ) + 0
-        // r.nextInt (size)
     }
 
-    //public int getRandomInt(int min, int max) {
-    //    return (int) ((Math.random() * (max - min)) + min);
-    //}
-
-    //min 5
-    //max 10
-    // ->11
-
-    //gibt einen Punkt zurück
+    //returns the point which is going to get shot
     @Override
     public ShotResponse getShot(IOwnPlayground playground) {
         System.out.println("Schwierigkeitsgrad: " + this.difficulty);
-        //die Ki besitzt die Schwierigkeit = normal
+        //difficulty = normal
         if(this.difficulty == Difficulty.normal){
             boolean success = normaleKi(playground);
             if ( !success ) return shotResponseFromKI;
             return this.shotResponseFromKI;
         }
+        //difficulty = hard or more likley with tactic
         if(this.difficulty == Difficulty.hard){
             boolean success = schwereKi(playground);
             if ( !success ) return shotResponseFromKI;
-
-            //DEBUG
-            System.out.println( "PrevShotsList: ");
-            for(Point point: previousShots){
-
-                System.out.println( point.getX() +" " +  point.getY());
-            }
-            //DEBUG
 
             return this.shotResponseFromKI;
         }
         return null;
     }
 
-    protected boolean isHitFlag; //default Wert ist false
+    protected boolean isHitFlag; //default value is false
     protected Set<Point> previousShots = new HashSet<>();
     protected Point firstHit;
     protected boolean startDestroy;
     private boolean needRandomLocation;
 
-    protected boolean normaleKi(IOwnPlayground playground){ //TODO Christian, hängst sich bei SAVE and LOAD manchmal auf
+    /**
+     * Algorithm: normale AI
+     *  1. if the destroy status is inactive
+     *      1.1 Get a random point, that did not get shot before
+     *
+     *      1.2 if the shot at this point was a hit
+     *          1.2.1 destroy status will switch to active and the algorithm will start the destroy- mode and will destroy the found ship
+     *
+     *      1.3 if the ship is destroyed, destroy status will switch to inactive
+     *
+     * @param playground The playground, where the ships have to be placed in
+     * @return An boolean, if the call of normaleKi, to get a new point to shoot was successful
+     */
+
+    protected boolean normaleKi(IOwnPlayground playground){
         ShotResponse answerofShot;
         int random_x;
         int random_y;
 
-        //wird beim ersten Aufruf betreten, da der Default Wert von isHitFlag = false ist
+
         if(this.destroyStatus == DestroyStatus.notFound){
-            //solange der Punkt schon beschossen wurde wird ein neuer Punkt gesucht
+            //as long the random point got already shot it will search for a new one
             do {
                 random_x = getRandomInt(0, ActiveGameState.getPlaygroundSize() );
                 random_y = getRandomInt(0, ActiveGameState.getPlaygroundSize() );
             }while (isNextShotInPreviousList(random_x,random_y));
-            System.out.println("first shoot call");
 
             Point currentShot = new Point(random_x, random_y);
 
             answerofShot = shootPlayground(currentShot, playground);
             if ( shotResponseFromKI.isUnhandled() ) return false;
 
-
             this.shotResponseFromKI = answerofShot;
             shotResponseFromKI.setShotPosition(currentShot);
             previousShots.add(currentShot);
-
-
-            System.out.println(random_x);
-            System.out.println(random_y);
 
             if(answerofShot.isHit()){
                 destroyStatus = DestroyStatus.destroying;
                 nextLocation = NextLocation.nextTop;
                 needRandomLocation = true;
 
-                isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
-                firstHit = new Point(random_x,random_y); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert
-                //previousShots.add(new Point(random_x, random_y));//der Punkt wird gespeichert
+                isHitFlag = true; //a ship is found
+                firstHit = new Point(random_x,random_y); //first hit of the ship is getting stored
                 startDestroy = true;
-
                 shiptoDestroy.add(currentShot);
-
             }
             else{
                 this.destroyStatus = DestroyStatus.notFound;
-                //previousShots.add(new Point(random_x, random_y)); //es ist kein Treffer und der Punkt wird gespeichert und zuückgegeben
-
             }
         }
 
         else if(destroyStatus == DestroyStatus.destroying){
 
             return destroyShip(firstHit, playground);
-
-
         }
 
         return true;
     }
+
+    /**
+     * Algorith: Hard AI
+     *  1. Checks if the destroy status is inactive
+     *      1.1 if inactive -> currentShot method will be called to get a tactical and valid point to shoot
+     *
+     *      1.2 If the shot was a hit
+     *          1.2.1 destroy status will switch to active and the algorithm will start the destroy- mode and will destroy the found ship
+     *
+     *      1.3 if the ship is destroyed, destroy status will switch to inactive
+     *
+     * @param playground The playground, where the ships have to be placed in
+     * @return An boolean, if the call of schwereKi, to get a new point to shoot was successful
+     */
+    //hard AI
     protected boolean schwereKi(IOwnPlayground playground){
         ShotResponse answerofShot;
 
-        //wird beim ersten Aufruf betreten, da der Default Wert von isHitFlag = false ist
         if(this.destroyStatus == DestroyStatus.notFound){
-
-            System.out.println("first shoot call");
 
             Point currentShot = hardKiShot();
 
-            answerofShot = shootPlayground(currentShot, playground);    //TODO curentShot index out of bound Exception Point: -2 6
+            answerofShot = shootPlayground(currentShot, playground);
             if ( shotResponseFromKI.isUnhandled()) return false;
-
 
             this.shotResponseFromKI = answerofShot;
             shotResponseFromKI.setShotPosition(currentShot);
-            //previousShots.add(currentShot);
-
-
-            System.out.println("currShot: "+currentShot.getX()+ ""+currentShot.getY());
 
             if(answerofShot.isHit()){
                 destroyStatus = DestroyStatus.destroying;
@@ -770,111 +515,67 @@ public class Ki implements IKi{
 
                 shiptoDestroy.add(currentShot);
 
-
-                isHitFlag = true; //bei suche nach schiff wurde ein Treffer gelanded
-                firstHit = new Point(currentShot.getX(), currentShot.getY()); //der erste Punkt des Schiffs der getroffen wurde wird gespeichert
-                previousShots.add(new Point(currentShot.getX(), currentShot.getY()));//der Punkt wird gespeichert
+                isHitFlag = true; //new ship got hit
+                firstHit = new Point(currentShot.getX(), currentShot.getY()); //first hit of the ship is getting stored
+                previousShots.add(new Point(currentShot.getX(), currentShot.getY()));
                 startDestroy = true;
-
             }
             else{
                 this.destroyStatus = DestroyStatus.notFound;
-                previousShots.add(new Point(currentShot.getX(), currentShot.getY())); //es ist kein Treffer und der Punkt wird gespeichert und zuückgegeben
-
+                previousShots.add(new Point(currentShot.getX(), currentShot.getY())); //no hit and the point is getting stored
             }
-
         }
-
         else if(destroyStatus == DestroyStatus.destroying){
-
             return destroyShip(firstHit, playground);
-
-
         }
-
         return true;
     }
 
-    /*
-    Variabls for hardKIshot- Method
-     */
-    private final ArrayList<Point> takticalDots = new ArrayList<>();
 
+    //Variabls for hardKishot- method
+    private final ArrayList<Point> takticalDots = new ArrayList<>();
     private boolean searchAnewShip = true;
+
+    //return the point were the hard AI will shoot at
     private Point hardKiShot(){
 
         //fill Search-Array-List with every Dot that makes sense to shoot except the ones that are already shot
         int searchedShip;
         if(searchAnewShip && ShipsWithSize5 != 0){
             searchedShip = 5;
-            //DEBUG
-            System.out.println("KI sucht 5er Schiff");
-            //DEBUG
-            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
-                for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
-                    if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
-                        takticalDots.add(new Point(x,y));
 
-                    }
-                }
-            }
-
-
-            searchAnewShip = false;
+            fillTacticalDotsList(searchedShip);
         }
         if(searchAnewShip && ShipsWithSize4 != 0){
             searchedShip = 4;
-            //DEBUG
-            System.out.println("KI sucht 4er Schiff");
-            //DEBUG
-            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
-                for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
-                    if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
-                        takticalDots.add(new Point(x,y));
-                    }
-                }
-            }
 
-            searchAnewShip = false;
+            fillTacticalDotsList(searchedShip);
         }
         if(searchAnewShip && ShipsWithSize3 != 0){
             searchedShip = 3;
-            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
-                for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
-                    if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
-                        takticalDots.add(new Point(x,y));
-                    }
-                }
-            }
-
-            searchAnewShip = false;
+            fillTacticalDotsList(searchedShip);
         }
         if(searchAnewShip && ShipsWithSize2 != 0){
             searchedShip = 2;
-            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
-                for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
-                    if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
-                        takticalDots.add(new Point(x,y));
-                    }
-                }
-            }
+            fillTacticalDotsList(searchedShip);
+        }
 
-            searchAnewShip = false;
-        }
-        //DEBUG
-        System.out.println( "Pos in taktical Dots");
-        for(Point point: takticalDots){
-            System.out.println( point.getX() +" " +  point.getY());
-        }
-        //DEBUG
-        int randy = getRandomInt(0, takticalDots.size() ) ; //max 0 -> size war 0 -> ArrayListe leer
+        int randy = getRandomInt(0, takticalDots.size() ) ;
         Point newShot = takticalDots.get(randy);
         //remove shifts any subsequent elements to the left
         takticalDots.remove(randy);
-
-
-
         return newShot;
+    }
+
+    private void fillTacticalDotsList(int searchedShip) {
+        for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
+            for (int x = searchedShip - y - 1; x < ActiveGameState.getPlaygroundSize(); x = x + searchedShip){
+                if(!isNextShotInPreviousList(x,y) && checkIfTacticMakesSense(new Point(x, y), searchedShip)){
+                    takticalDots.add(new Point(x,y));
+                }
+            }
+        }
+        searchAnewShip = false;
     }
 
     private int ShipsWithSize5 = ActiveGameState.getAmountShipSize5();
@@ -883,9 +584,6 @@ public class Ki implements IKi{
     private int ShipsWithSize2 = ActiveGameState.getAmountShipSize2();
 
     private void incrementDestroyedShipFromTotalShipList(int shipSize){
-        //DEBUG
-        System.out.println("Schiff das decrementiert wurde: " + shipSize);
-        //DEBUG
 
         switch(shipSize){
             case 5:
@@ -901,9 +599,7 @@ public class Ki implements IKi{
                 ShipsWithSize2--;
                 break;
         }
-        System.out.println("Gesamte Schiffszahlen: 5er " + ShipsWithSize5 + " 4er "  + ShipsWithSize4 + " 3er " + ShipsWithSize3 + " 2er " + ShipsWithSize2 );
     }
-
 
     private boolean checkIfTacticMakesSense(Point p, int size){
         //Point is not in the playground
@@ -954,23 +650,9 @@ public class Ki implements IKi{
         return spaceCountHorizontal >= size - 1 || spaceCountVertical >= size - 1;
     }
 
-    //Alle Variablen die für die destroyShipNotonEdge gebraucht werden
-   /*
-
-    All diese booleans kann man durch die Enum nextLocation ersetzten, wodurch die Abfragebedingungen wegfallen, sowie die initialisierungs if´s und rücksetz if´s wegfallen
-
-    protected boolean vertFlagOben;
-    protected boolean horizFlagRechts;
-    protected boolean vertFlagUnten;
-    protected boolean horizFlagLinks;
-    protected boolean waslastShotaHit = true;
-    protected int countDestroyShots = -1;
-    protected boolean isShipcomDestroyed;
-    */
-
     protected ArrayList<Point> shiptoDestroy = new ArrayList<>();
 
-    //Kleine Erweiterung, damit die Ki nicht immer oben anfängt
+    //random searchstyle for every hit after the firstHit
     public NextLocation getRandomLocation(){
         ArrayList<NextLocation> nextLocationArrayList = new ArrayList<>();
         nextLocationArrayList.add(NextLocation.nextTop);
@@ -981,7 +663,7 @@ public class Ki implements IKi{
         Random random = new Random();
         return nextLocationArrayList.get(   random.nextInt(nextLocationArrayList.size()-1)   );
     }
-    //Normale Shoot Methode mit Communication zeugs
+    //normal shoot method and some communication stuff
     public ShotResponse shootPlayground(Point nextPositionToShoot, IOwnPlayground playground){
         if ( !ActiveGameState.isMultiplayer()) {
             shotResponseFromKI = playground.shoot(nextPositionToShoot);
@@ -996,8 +678,6 @@ public class Ki implements IKi{
 
     }
 
-    //communication zeugs
-    //Muss zusätzlich den Erhaltenen Befehl abspeichern
 
     /**
      * Send shot, and receives a command
@@ -1039,31 +719,26 @@ public class Ki implements IKi{
 
     }
 
-    private int debug= 0;
     private int shipRecon = 0;
 
-
-    //soll das gefundene Schiff zerstören
+    //will destroy the found ship
     private boolean destroyShip(Point firstHit, IOwnPlayground playground){
 
         if (this.needRandomLocation) nextLocation = getRandomLocation();
         this.needRandomLocation = false;
-        System.out.println("Next Position to shoot: " + this.nextLocation + " rangeToShot: " + rangeToShot);
 
         Point nextPositionToShoot;
 
         int counter = 0;
         while (counter <= 2) {
             counter++;
-            System.out.println( "while true durchlauf"); //TODO Endlosschleife abändern bzw. umgehen evtl. mit zähler
-            System.out.println("Next Position to shoot: " + this.nextLocation + " rangeToShot: " + rangeToShot + "Schießursprung: " + firstHit.getX() + " " + firstHit.getY());
+
             switch (this.nextLocation) {
                 case nextTop:
                     nextPositionToShoot = new Point(firstHit.getX(), firstHit.getY() - rangeToShot);
                     if ((!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()))
                             && (nextPositionToShoot.getY() >= 0)) {
 
-                        //Schiessposition erlaubt
                         previousShots.add(nextPositionToShoot);
 
                         shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
@@ -1075,14 +750,13 @@ public class Ki implements IKi{
                             this.rangeToShot = 1;
                             this.destroyStatus = DestroyStatus.notFound;
 
-                            //Part für schwere Ki
+                            //part for hard AI
                             shipRecon++;
                             incrementDestroyedShipFromTotalShipList(shipRecon);
-                            //DEBUG
-                            logKi.log(Level.INFO, "Schiff das Zerstört wurde: " + shipRecon);
-                            //DEBUG
                             searchAnewShip = true;
                             takticalDots.clear();
+
+                            logKi.log(Level.FINE, "Schiff das Zerstört wurde: " + shipRecon);
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
@@ -1090,19 +764,13 @@ public class Ki implements IKi{
                             shiptoDestroy.clear();
 
                             shipRecon = 0;
-
-
                         }
                         //Hit
                         else if (shotResponseFromKI.isHit()) {
                             this.nextLocation = NextLocation.nextTop;
 
-
                             shiptoDestroy.add(nextPositionToShoot);
-
                             shipRecon++;
-
-
                             this.rangeToShot++;
                         }
                         //no Hit
@@ -1114,14 +782,13 @@ public class Ki implements IKi{
                         //Leave the switch case, as we have already shot the enemy
                         return true;
                     }
-                    //Schiessposition nicht erlaubt, gehe in den nächsten case
+                    //shotposition is not valid, switch in to next case
                     rangeToShot = 1;
                 case nextBottom:
                     nextPositionToShoot = new Point(firstHit.getX(), firstHit.getY() + rangeToShot);
                     if ((!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()))
                             && (nextPositionToShoot.getY() < ActiveGameState.getPlaygroundSize())) {
 
-                        //Schiessposition erlaubt
                         previousShots.add(nextPositionToShoot);
                         shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
                         if ( shotResponseFromKI.isUnhandled() ) return false;
@@ -1132,16 +799,13 @@ public class Ki implements IKi{
                             this.rangeToShot = 1;
                             this.destroyStatus = DestroyStatus.notFound;
 
-                            //Part für schwere Ki
+                            //part for hard AI
                             shipRecon++;
-                            //diesen Part in eigene Methode auslagern
                             incrementDestroyedShipFromTotalShipList(shipRecon);
                             searchAnewShip = true;
                             takticalDots.clear();
-                            //DEBUG
-                            logKi.log(Level.INFO, "Schiff das Zerstört wurde: " + shipRecon);
-                            //DEBUG
 
+                            logKi.log(Level.FINE, "Schiff das Zerstört wurde: " + shipRecon);
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
@@ -1149,7 +813,6 @@ public class Ki implements IKi{
                             shiptoDestroy.clear();
 
                             shipRecon = 0;
-
                         }
                         //Hit
                         else if (shotResponseFromKI.isHit()) {
@@ -1158,11 +821,9 @@ public class Ki implements IKi{
 
                             shiptoDestroy.add(nextPositionToShoot);
                             shipRecon++;
-
                         }
                         //no Hit
                         else {
-
                             this.nextLocation = NextLocation.nextTop;
                             this.rangeToShot = 1;
                         }
@@ -1170,14 +831,13 @@ public class Ki implements IKi{
                         //Leave the switch case, as we have already shot the enemy
                         return true;
                     }
-                    //Schiessposition nicht erlaubt, gehe in den nächsten case
+                    //shotposition is not valid, switch in to next case
                     rangeToShot = 1;
                 case nextRight:
                     nextPositionToShoot = new Point(firstHit.getX() + rangeToShot, firstHit.getY());
                     if ((!isNextShotInPreviousList(nextPositionToShoot.getX(), nextPositionToShoot.getY()))
                             && (nextPositionToShoot.getX() < ActiveGameState.getPlaygroundSize())) {
 
-                        //Schiessposition erlaubt
                         previousShots.add(nextPositionToShoot);
                         shotResponseFromKI = shootPlayground(nextPositionToShoot, playground);
                         if ( shotResponseFromKI.isUnhandled() ) return false;
@@ -1188,15 +848,15 @@ public class Ki implements IKi{
                             this.rangeToShot = 1;
                             this.destroyStatus = DestroyStatus.notFound;
 
-                            //Part für schwere Ki
+                            //part for hard AI
                             shipRecon++;
                             incrementDestroyedShipFromTotalShipList(shipRecon);
                             searchAnewShip = true;
                             takticalDots.clear();
 
-                            //DEBUG
-                            logKi.log(Level.INFO, "Schiff das Zerstört wurde: " + shipRecon);
-                            //DEBUG
+
+                            logKi.log(Level.FINE, "Schiff das Zerstört wurde: " + shipRecon);
+
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
@@ -1225,7 +885,7 @@ public class Ki implements IKi{
                         //Leave the switch case, as we have already shot the enemy
                         return true;
                     }
-                    //Schiessposition nicht erlaubt, gehe in den nächsten case
+                    //shotposition is not valid, switch in to next case
                     rangeToShot = 1;
                 case nextLeft:
                     nextPositionToShoot = new Point(firstHit.getX() - rangeToShot, firstHit.getY());
@@ -1243,15 +903,13 @@ public class Ki implements IKi{
                             this.rangeToShot = 1;
                             this.destroyStatus = DestroyStatus.notFound;
 
-                            //Part für schwere Ki
+                            //part for hard AI
                             shipRecon++;
                             incrementDestroyedShipFromTotalShipList(shipRecon);
                             searchAnewShip = true;
                             takticalDots.clear();
 
-                            //DEBUG
                             logKi.log(Level.INFO, "Schiff das Zerstört wurde: " + shipRecon);
-                            //DEBUG
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
@@ -1259,8 +917,6 @@ public class Ki implements IKi{
                             shiptoDestroy.clear();
 
                             shipRecon = 0;
-
-
                         }
                         //Hit
                         else if (shotResponseFromKI.isHit()) {
@@ -1280,49 +936,10 @@ public class Ki implements IKi{
                         return true;
                     }
                     rangeToShot = 1;
-                    //Notwendig, damit von oben aus alle Punkte wieder erreicht werden können
-                    //Bsp. Start at nextLeft -> NextLeft aber nicht möglich -> NextLeft -> NextLeft -> NextLeft -> Endlos
                     this.nextLocation = NextLocation.nextTop;
             }
         }
-
-        //es wird vom firstHit aus nach oben geschossen, wenn der Rand erreicht ist und das Schiff nicht zerstört, dann wird nach unten vom firstHit aus geschossen bis es zerstört ist
-        //wird ein leeres Feld beim beschießen der Felder nach oben getroffen, wird nach unten geschossen bis das Schiffzerstört ist
         return false;
-    }
-
-    protected Point getLastShot(ArrayList<Point> prevShots){
-        return prevShots.get(prevShots.size() - 1);
-    }
-
-    //checkt ob der Letze Treffer am Rand des Spielfelds war und falls ja an welchem Rand, 0 = oben 1 = rechts 2 = unten 3 = links,
-    //4 = linksoben, 5 = rechtsoben, 6 = rechtsunten, 7 = linksunten
-    protected int checkifLastHitwasAtEdge(Point lastHit){
-        if(lastHit.getX() - 1 < 0 && lastHit.getY() + 1 > ActiveGameState.getPlaygroundSize() - 1){
-            return 7;
-        }
-        if(lastHit.getX() + 1 > ActiveGameState.getPlaygroundSize() - 1 && lastHit.getY() + 1 > ActiveGameState.getPlaygroundSize() - 1){
-            return 6;
-        }
-        if(lastHit.getX() + 1 > ActiveGameState.getPlaygroundSize() - 1 && lastHit.getY() - 1 < 0 ){
-            return 5;
-        }
-        if(lastHit.getX() - 1 < 0 && lastHit.getY() - 1 < 0){
-            return 4;
-        }
-        if(lastHit.getX() - 1 < 0){
-            return 3;
-        }
-        if(lastHit.getY() + 1 > ActiveGameState.getPlaygroundSize() - 1){
-            return 2;
-        }
-        if(lastHit.getX() + 1 > ActiveGameState.getPlaygroundSize() - 1){
-            return 1;
-        }
-        if(lastHit.getY() - 1 < 0){
-            return 0;
-        }
-        return -1;
     }
 
 }

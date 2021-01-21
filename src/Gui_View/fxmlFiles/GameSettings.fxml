@@ -26,14 +26,14 @@
                 </Pane>
                 <HBox prefHeight="563.0" prefWidth="1280.0">
                     <children>
-                        <Line fx:id="lineLeftSide" endY="400.0">
+                        <Line fx:id="lineLeftSide" endY="420.0">
                             <HBox.margin>
                                 <Insets left="100.0" />
                             </HBox.margin>
                         </Line>
                         <StackPane fx:id="sP_RectangleAndElements" prefHeight="559.0" prefWidth="1197.0">
                             <children>
-                                <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="#c9c9c9" height="400.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="982.0" StackPane.alignment="TOP_LEFT">
+                                <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="#c9c9c9" height="420.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="982.0" StackPane.alignment="TOP_LEFT">
                                     <StackPane.margin>
                                         <Insets right="180.0" />
                                     </StackPane.margin>

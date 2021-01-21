@@ -104,16 +104,16 @@
                                     <Insets top="20.0" />
                                  </VBox.margin>
                               </HBox>
-                              <HBox prefHeight="100.0" prefWidth="982.0">
+                              <HBox prefHeight="118.0" prefWidth="979.0">
                                  <children>
-                                    <Button fx:id="button_backToMainMenu" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="50.0" prefWidth="120.0" text="Back to Main Menu">
+                                    <Button fx:id="button_backToMainMenu" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="50.0" prefWidth="160.0" text="Back to Main Menu">
                                        <HBox.margin>
-                                          <Insets left="200.0" top="15.0" />
+                                          <Insets bottom="30.0" left="170.0" top="15.0" />
                                        </HBox.margin>
                                     </Button>
-                                    <Button fx:id="button_saveSettings" mnemonicParsing="false" onAction="#saveSettings" prefHeight="50.0" prefWidth="120.0" text="Save Settings">
+                                    <Button fx:id="button_saveSettings" mnemonicParsing="false" onAction="#saveSettings" prefHeight="50.0" prefWidth="160.0" text="Save Settings">
                                        <HBox.margin>
-                                          <Insets left="300.0" top="15.0" />
+                                          <Insets bottom="30.0" left="300.0" top="15.0" />
                                        </HBox.margin>
                                     </Button>
                                  </children>

@@ -105,13 +105,13 @@ public class GameOptionsController implements Initializable {
     public void setLanguage(){
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
             this.rB_selectEnglish.setText("Englisch");
-            this.title.setText("Spieleinstellungen");
+            this.title.setText("Spieloptionen");
             this.selectMusicVolumeText.setText("Musiklautstärke");
             this.selectAIVelocityText.setText("KI Geschwindigkeit");
             this.languageText.setText("Sprache");
             this.rB_selectGerman.setText("Deutsch");
             this.button_saveSettings.setText("Einstellungen sichern");
-            this.button_backToMainMenu.setText("Zurück zum Hauptmenü");
+            this.button_backToMainMenu.setText("Hauptmenü");
 
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
@@ -122,7 +122,7 @@ public class GameOptionsController implements Initializable {
             languageText.setText("Language");
             rB_selectGerman.setText("German");
             button_saveSettings.setText("Save Settings");
-            button_backToMainMenu.setText("Back to Main Menu");
+            button_backToMainMenu.setText("Main Menu");
         }
     }
 

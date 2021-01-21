@@ -236,10 +236,10 @@ public class GameSettingsController implements Initializable{
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
             title.setText("Spieleinstellungen");
             selectPlaygroundsizeText.setText("Wähle die Spielfeldgröße");
-            selectAmountOfShipsText.setText("Wählen sie die Anzahl der Schiffe aus");
-            selectDifficultyEnemyKIText.setText("Schwierigkeit der gegenerischen KI");
-            selectDifficultyOwnKIText.setText("Schwierigkeit der eigenen Ki");
-            button_backToMainMenu.setText("Zurück zum Hauptmenü");
+            selectAmountOfShipsText.setText("Anzahl der Schiffe auswählen");
+            selectDifficultyEnemyKIText.setText("Gegenerische KI");
+            selectDifficultyOwnKIText.setText("Eigene Ki");
+            button_backToMainMenu.setText("Hauptmenü");
             button_Start.setText("Start");
             rB_difficultyEnemyNormal.setText("normal");
             rB_difficultyEnemyHard.setText("schwer");
@@ -252,7 +252,7 @@ public class GameSettingsController implements Initializable{
             selectAmountOfShipsText.setText("Select the amount of ships");
             selectDifficultyEnemyKIText.setText("Difficulty of Enemy Ki");
             selectDifficultyOwnKIText.setText("Difficulty of Own Ki");
-            button_backToMainMenu.setText("Back to Main Menu");
+            button_backToMainMenu.setText("Main Menu");
             button_Start.setText("Start");
             rB_difficultyEnemyNormal.setText("normal");
             rB_difficultyEnemyHard.setText("hard");

@@ -134,13 +134,13 @@ public class MpServerController implements Initializable {
             title.setText("Spiel Hosten");
             textShowIP.setText("Deine IP Adresse:");
             textWaiting.setText("Warten auf den Client");
-            button_backToMainMenu.setText("Zurück zum Hauptmenü");
+            button_backToMainMenu.setText("Hauptmenü");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
             title.setText("Hosting Game");
             textShowIP.setText("Your IP Adress:");
             textWaiting.setText("Waiting for Client");
-            button_backToMainMenu.setText("Back to Main Menu");
+            button_backToMainMenu.setText("Main Menu");
         }
     }
 

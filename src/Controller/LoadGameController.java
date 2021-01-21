@@ -149,12 +149,12 @@ public class LoadGameController implements Initializable {
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.german){
             title.setText("Spiel laden");
             loadGameButton.setText("Spiel laden");
-            backButton.setText("Zurück zum Hauptmenü");
+            backButton.setText("Hauptmenü");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
             title.setText("Load Game");
             loadGameButton.setText("Load Game");
-            backButton.setText("Back to Main Menu");
+            backButton.setText("Main Menu");
         }
     }
 

@@ -22,7 +22,7 @@ public class NetworkLogger {
 
         Logger logger = Logger.getLogger("parent");
         logger.setUseParentHandlers(false);
-        FileHandler fileHandler = new FileHandler("src/Logs/log.txt", true);
+        FileHandler fileHandler = new FileHandler("src/Logs/log.txt", false);
         ConsoleHandler consoleHandler = new ConsoleHandler();
 
         fileHandler.setFormatter(new Formatter() {

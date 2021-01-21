@@ -15,7 +15,6 @@ import GameData.GameMode;
 import Serialize.SaveAndLoad;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -32,7 +31,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -54,7 +52,11 @@ public class GamePlayground implements Initializable {
 
     /** initialize-method:
      * -----------------------------------------------------------------------------------------------------------------
-     *  ->
+     *  -> initialize of default configuration:
+     *      initializes Savegamebar
+     *      initialize both playgrounds as GridPanes
+     *      initialize backend playgrounds
+     *      starts threads, depending on GameMode and Loading
      *----------------------------------------------------------------------------------------------------------------*/
     @Override
 
@@ -64,19 +66,16 @@ public class GamePlayground implements Initializable {
         initializeSaveGameBar();
 
 
-
-
-    //todo make ship hits displayed on grid pane, not on labels > do it also in SinglePlayer
-    //todo set labels of own playground to ships -> MultiplayercontrolThreadGetShot?
-
         ActiveGameState.setSceneIsGamePlayground(true);
         ActiveGameState.setSceneIsPlaceShips(false);
 
         if (ActiveGameState.getLoading() == ActiveGameState.Loading.noLoad) {
+
             // if ki is part of game, playgrounds are not created in placeShips -> done here
             initializeKiPlayground();
 
-        } //initialize Playgrounds after loading with build, necesarry because GSON can`t control references, so every ShipPart got a own Ship
+        }
+        //initialize Playgrounds after loading with build, necessary because GSON can`t control references, so every ShipPart got a own Ship
         else{
 
             ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
@@ -89,19 +88,18 @@ public class GamePlayground implements Initializable {
             ActiveGameState.getEnemyPlayerOwnPlayground().buildPlayground();
 
         }
-            /**
-             * After playground is initialized the thread SingleplayerControlThreadKivsKi has to be started, if the Gamemode KivsKi is selected
-             */
+
+             // After playground is initialized the thread SingleplayerControlThreadKivsKi has to be started, if the Gamemode KivsKi is selected
             if (ActiveGameState.getModes() == GameMode.kiVsKi) {
                 SingleplayerControlThreadKiVsKi singleplayerControlThreadKiVsKi = new SingleplayerControlThreadKiVsKi();
                 singleplayerControlThreadKiVsKi.start();
             }
 
-            /**
-             * Gamemode kiVsRemote -> Start Perform enemy action, if we are Client ( enemy´s Turn )
-             *                      -> Start KI Shoots Enemy, if we are Server ( our Turn)
-             */
-            //TODO !SIMON!-> Wir laden Spiel mit unserer KI -> Abfragen ob wir an der Reihe sind
+
+             // Gamemode kiVsRemote -> Start Perform enemy action, if we are Client ( enemy´s Turn )
+             //                     -> Start KI Shoots Enemy, if we are Server ( our Turn)
+             //                     ->  If the game is loaded, start threads depending on turn
+
             if (ActiveGameState.getModes() == GameMode.kiVsRemote) {
                 if (!ActiveGameState.isAmIServer()) {
                     MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
@@ -151,6 +149,7 @@ public class GamePlayground implements Initializable {
         enemyField.getColumnConstraints().clear();
         enemyField.getRowConstraints().clear();
 
+
         // own Playground
         for (int h = 0; h < gamesize; h++) {
             for (int v = 0; v < gamesize; v++) {
@@ -166,7 +165,6 @@ public class GamePlayground implements Initializable {
                 ownField.getChildren().addAll(label);
             }
         }
-
 
         // enemy Playground
         for (int h = 0; h < gamesize; h++) {
@@ -187,7 +185,7 @@ public class GamePlayground implements Initializable {
             }
         }
 
-        //  the elements of a grid-pane can be returned as an array of Objects - cast Objetct to Label, than it is possible
+        //  the elements of a grid-pane can be returned as an array of Objects - cast Object to Label, than it is possible
         //  to change the properties of the Label, e.g. the color
         //  -> important: Objects of grid pane are stored "vertically"
 
@@ -209,16 +207,6 @@ public class GamePlayground implements Initializable {
             ActiveGameState.getOwnPlayerIEnemyPlayground().setAllWaterFieldsClickable();
         }
 
-        //TODO AKTUALISIERE GENAU HIER DIE GUI FÜR DIE SHIP LABELS NICHT WEITER OBEN UND NCHT WEITER UNTEN!
-
-        //
-
-
-        //Client -> Zuerst ist der Server dran -> Setze alle Labels im gegnerischen Spielfeld nicht klickbar
-        // Starte den Perform Enemy Action Thread um auf die Eingaben des Servers zu reagieren -> Danach PingPong Prinzip
-        //TODO SIMON GAMEMODE.PLAYERVSREMOTE -> KI vs Remote wird woanders gestartet
-
-
 
         //Client starts Control Enemy Action
         if (! ActiveGameState.isAmIServer() && ActiveGameState.getModes() == GameMode.playerVsRemote){
@@ -228,9 +216,7 @@ public class GamePlayground implements Initializable {
             multiplayerControlThreadPerformEnemyAction.start();
         }
 
-        //TODO !SIMON!
-        //TODO -> player vs Remote -> Spieler kann klicken wenn er Host ist, als Client immer hier ausführen
-        //TODO NEUER Fall -> Spieler hat geladen und ist NICHT an der Reihe -> Muss SendCMD -> NExt -> Start MultiplayerControlThreadPerformEnemyAction
+
         //Server starts Control Enemy Action, when we Load with a game, where the enemy´s turn is present
         //In all other cases, no Threads have to be started, as the user is starting the shootThread by clicking the Labels
         if (ActiveGameState.isAmIServer() && ActiveGameState.isLoadWithNext() && ActiveGameState.getModes() == GameMode.playerVsRemote){
@@ -239,9 +225,6 @@ public class GamePlayground implements Initializable {
             MultiplayerControlThreadPerformEnemyAction multiplayerControlThreadPerformEnemyAction = new MultiplayerControlThreadPerformEnemyAction();
             multiplayerControlThreadPerformEnemyAction.start();
         }
-
-
-
 
 
         // saveAndCloseButton is only clickable, when save name is valid AND not our Turn
@@ -292,8 +275,11 @@ public class GamePlayground implements Initializable {
     }
 
 
-
-    /***/
+    /**
+     * Is called by initialize method
+     * Ki is enemy player -> Instantiate and build both playgrounds for the Ki
+     * Ki is own player   -> Instantiate and build both playgrounds for the Ki
+     */
     public void initializeKiPlayground() {
 
         // ki is the enemy player
@@ -307,12 +293,12 @@ public class GamePlayground implements Initializable {
 
             kiOwnPlayground.buildPlayground();
 
-            //
+
             ActiveGameState.setPlacementKi(new Ki(Ki.Difficulty.undefined));
 
 
             ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(kiOwnPlayground);
-            kiOwnPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
+            kiOwnPlayground.setShipListOfThisPlayground( new ArrayList<>());
 
             for (IShip ship : newShips) {
                 kiOwnPlayground.isShipPlacementValid(ship.getPosStart(), ship.getPosEnd());
@@ -333,7 +319,7 @@ public class GamePlayground implements Initializable {
 
             ActiveGameState.setPlacementKi(new Ki(Ki.Difficulty.undefined));
             ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(ourKiOwnPlayground);
-            ourKiOwnPlayground.setShipListOfThisPlayground( new ArrayList<IShip>()); //Interne Schiffe aus der placeShips Methode löschen
+            ourKiOwnPlayground.setShipListOfThisPlayground( new ArrayList<>());
 
             for (IShip ship : newShips) {
                 ourKiOwnPlayground.isShipPlacementValid(ship.getPosStart(), ship.getPosEnd());
@@ -355,8 +341,8 @@ public class GamePlayground implements Initializable {
     }
     //Save Handling
 
-    // button is only enabled, when name in text field is valid save name
-    public void saveAndCloseGame(ActionEvent actionEvent){
+    //User actionEvent call, button is only enabled, when name in text field is valid save name
+    public void saveAndCloseGame(){
 
         //Create an ID and save it to the ActiveGameState, necessary for loading (Savegame will contain the load id by loading)
         long id = System.currentTimeMillis();
@@ -461,28 +447,22 @@ public class GamePlayground implements Initializable {
         //This one says, how far we want to scale, with one the object will have the same size as initial, with 2 the object will have the double size
         scaleLineLeft.setToY(1);
 
-        //Dadurch wird die Startposition auf -200 gesetzt
+        //Set the starting position of the SP to -1000
         int from = -1000;
         this.sP_RectangleAndElements.setTranslateX(from);
 
 
-        //Notwendiges Rechteck, damit die Items erst angezeigt werden, wenn sie durch die Linie hindurchgehen
+        //Simple clip, used to display the rectangle only, when the line is reached
         Rectangle clip = new Rectangle(1200,600);
         clip.translateXProperty().bind(sP_RectangleAndElements.translateXProperty().negate());
         this.sP_RectangleAndElements.setClip(clip);
 
-        //-> After the left line is drawn
-      //  scaleLineLeft.setOnFinished( e -> {
+        //Slide in the StackPane, containing the Polygon and the Text
+        TranslateTransition slideElements = new TranslateTransition(Duration.seconds(0.6+0.6*slideSpeed), this.sP_RectangleAndElements);
+        slideElements.setDelay(Duration.millis(0));
+        slideElements.setToX(1);
+        slideElements.play();
 
-            //Slide in the StackPane, containing the Polygon and the Text
-
-            TranslateTransition slideElements = new TranslateTransition(Duration.seconds(0.6+0.6*slideSpeed), this.sP_RectangleAndElements);
-            slideElements.setDelay(Duration.millis(0));
-            slideElements.setToX(1);
-            slideElements.play();
-
-
-        //});
 
         scaleLineLeft.play();
 

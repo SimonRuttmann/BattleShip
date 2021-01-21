@@ -103,7 +103,7 @@ public class PlaceShips implements Initializable {
 
     /** initialize-method:
      * -----------------------------------------------------------------------------------------------------------------
-     *  -> sets all basic stuff: Start-Button disabled, start-Image of the Rotate-Button, save all necessary in ActiveGameState...
+     *  -> initialize of default configuration: Start-Button disabled, start-Image of the Rotate-Button, save all necessary in ActiveGameState...
      *
      *  -> creates labels that fill the GridPane: this labels recognize Drag&Drop -> Ships can be dropped into them
      *                                                                            -> backend-stuff executed
@@ -679,7 +679,7 @@ public class PlaceShips implements Initializable {
 
         // delete old ship labels -> GUI Playground is also empty again
         // groupID.lookupAll finds all Nodes of type Label and removes them - possible here, the only item which should
-        // not be remvoed from the group is the gridPane -> no Label, no problem
+        // not be removed from the group is the gridPane -> no Label, no problem
         groupID.getChildren().removeAll(groupID.lookupAll(".label"));
 
         ArrayList<IShip> newShips = ActiveGameState.getPlacementKi().placeships(ownPlayground);
@@ -746,7 +746,7 @@ public class PlaceShips implements Initializable {
 
         // delete old ship labels -> GUI Playground is also empty again
         // groupID.lookupAll finds all Nodes of type Label and removes them - possible here, the only item which should
-        // not be remvoed from the group is the gridPane -> no Label, no problem
+        // not be removed from the group is the gridPane -> no Label, no problem
         groupID.getChildren().removeAll(groupID.lookupAll(".label"));
 
         // set counters of placed ships to zero because all are removed

@@ -556,7 +556,7 @@ public class Ki implements IKi{
             searchedShip = 2;
             fillTacticalDotsList(searchedShip);
         }
-
+      //  System.out.println(ShipsWithSize2 + ShipsWithSize3 + ShipsWithSize4 + ShipsWithSize5);
         int randy = getRandomInt(0, takticalDots.size() ) ;
         Point newShot = takticalDots.get(randy);
         //remove shifts any subsequent elements to the left

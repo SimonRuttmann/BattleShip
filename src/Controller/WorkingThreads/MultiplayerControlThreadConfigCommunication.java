@@ -1,6 +1,7 @@
 package Controller.WorkingThreads;
 import Gui_View.HelpMethods;
 import Gui_View.Main;
+import KI.Ki;
 import Network.CMD;
 import GameData.ActiveGameState;
 import GameData.GameMode;
@@ -236,6 +237,7 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
                         ActiveGameState.setAmountShipSize4(size4);
                         ActiveGameState.setAmountShipSize5(size5);
                         ActiveGameState.setAmountOfShips((size2 + size3 + size4 + size5));
+                        if (ActiveGameState.getModes() == GameMode.kiVsRemote) ActiveGameState.setOwnKi(new Ki(ActiveGameState.getOwnKiDifficulty()));
                         break;
                     case "timeout":     logConfigCommunicationThread.log(Level.WARNING, "Timeout appeared, closing connection");
                                         HelpMethods.connectionLost();
@@ -272,6 +274,8 @@ public class MultiplayerControlThreadConfigCommunication extends Thread{
             }
 
             ActiveGameState.getClient().sendCMD(CMD.ready, "");
+
+
 
             logConfigCommunicationThread.log(Level.INFO, "Game Configurations successfully transmitted to Server.");
 

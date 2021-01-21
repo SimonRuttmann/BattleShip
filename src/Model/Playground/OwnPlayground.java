@@ -307,17 +307,17 @@ public class OwnPlayground extends AbstractPlayground implements IOwnPlayground 
      * @param shipToMove The current ship the player wants to move to another position
      * @param newStartPoint The startPosition, where the player wants to move the ship
      * @param newEndpoint The endPosition, where the player wants to move the ship
-     * @return true, if the ship movement was correct, false if the movement is not allowed
+     * @return IShip, if the ship movement was correct, null if the movement is not allowed
      */
     @Override
-    public boolean moveShip(IShip shipToMove, Point newStartPoint, Point newEndpoint) {
+    public IShip moveShip(IShip shipToMove, Point newStartPoint, Point newEndpoint) {
 
         /*
         1. Set the fields, where the ship was to water, the Water Fields got by default an valid placement-marker
         2. Get all surrounding coordinates and mark them as valid if there is no ship next to
         3. Check if the new placement is valid
-            a) False -> Revert all actions                      -> return false
-            b) True  -> The movement of the ship was correct    -> return true
+            a) null     -> Revert all actions                      -> return false
+            b) notnull  -> The movement of the ship was correct    -> return true
          */
 
 
@@ -342,8 +342,8 @@ public class OwnPlayground extends AbstractPlayground implements IOwnPlayground 
 
         //3
         IShip placedShip = isShipPlacementValid(newStartPoint,newEndpoint);
-        //new Placement is not valid
 
+        //new Placement is not valid
         if (placedShip == null){
         // a)
             //replace the shipParts
@@ -354,11 +354,12 @@ public class OwnPlayground extends AbstractPlayground implements IOwnPlayground 
             for (Point point : changedCoordinates){
                 Field[point.getX()][point.getY()].setValidShipPlacementMarker(false);
             }
-            return false;
+            return null;
         }
         else{
         // b)
-            return true;
+            this.getShipListOfThisPlayground().remove(shipToMove);
+            return placedShip;
         }
 
     }

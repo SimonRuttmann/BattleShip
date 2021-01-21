@@ -258,7 +258,7 @@ public class PlaceShips implements Initializable {
         ownFieldText.setText((ActiveGameState.getLanguage() == ActiveGameState.Language.english) ? "Own Playground" : "Eigenes Spielfeld");
         ownFieldText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         ownFieldText.setFill(Color.WHITE);
-        ownField.setEffect(new DropShadow(10, Color.BLACK));
+        ownFieldText.setEffect(new DropShadow(10, Color.BLACK));
 
 
         // the gridPane has gaps - little Lines between all the fields
@@ -610,6 +610,16 @@ public class PlaceShips implements Initializable {
             handlerSetOnDragDetected(fiveShip, 5, false);
             event.consume();
         });
+
+
+        // if we have 0 of a ship - label is disable from beginning
+        if(ActiveGameState.getAmountShipSize2() == 0) twoShip.setDisable(true);
+        if(ActiveGameState.getAmountShipSize3() == 0) threeShip.setDisable(true);
+        if(ActiveGameState.getAmountShipSize4() == 0) fourShip.setDisable(true);
+        if(ActiveGameState.getAmountShipSize5() == 0) fiveShip.setDisable(true);
+
+
+
         // end of making the labels on the right hand side of the playground draggable ---------------------------------
     }
     // end of initialize-method ----------------------------------------------------------------------------------------

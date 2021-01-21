@@ -30,7 +30,10 @@
                                  <children>
                                     <HBox alignment="CENTER">
                                        <children>
-                                          <Text fx:id="ownFieldText" strokeType="OUTSIDE" strokeWidth="0.0" text="ownFieldText" />
+                                          <Text fx:id="ownFieldText" strokeType="OUTSIDE" strokeWidth="0.0" text="ownFieldText">
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </HBox.margin></Text>
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" fillHeight="false">

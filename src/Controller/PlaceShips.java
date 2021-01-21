@@ -776,7 +776,7 @@ public class PlaceShips implements Initializable {
         int scale = ActiveGameState.getPlaygroundScale();
 
         // if ship is already existing, label will be invisible while moving - coming back visible when moving is complete (done by on drag dropped)
-        if (alreadyPlaced) shipLabel.setOpacity(0);
+        if (alreadyPlaced) shipLabel.setVisible(false);
 
 
         // the Dragboard is used to indicate which ship type is hovered -> String indicates Sh4Pip Size, 2N: size 2, new ship, 2P: size 2, already placed ship
@@ -897,7 +897,7 @@ public class PlaceShips implements Initializable {
         });
 
         // making the newly create ShipLabel visible again when drag is exited
-        newShipLabel.setOnDragDone(e -> newShipLabel.setOpacity(100));
+        newShipLabel.setOnDragDone(e -> newShipLabel.setVisible(true));
 
 
         // decide if ship has to be placed horizontal or vertical

@@ -30,7 +30,7 @@
                                  <children>
                                     <HBox alignment="CENTER">
                                        <children>
-                                          <Text fx:id="ownFieldText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                                          <Text fx:id="ownFieldText" strokeType="OUTSIDE" strokeWidth="0.0" text="ownFieldText" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" fillHeight="false">
@@ -65,46 +65,72 @@
                            <children>
                               <HBox alignment="CENTER">
                                  <children>
-                                    <VBox alignment="CENTER_RIGHT">
+                                    <VBox alignment="CENTER_RIGHT" spacing="5.0">
                                        <children>
-                                          <Label fx:id="twoShip" prefHeight="30.0" prefWidth="60.0" />
-                                          <Label fx:id="threeShip" prefHeight="30.0" prefWidth="90.0" />
-                                          <Label fx:id="fourShip" prefHeight="30.0" prefWidth="120.0" />
-                                          <Label fx:id="fiveShip" prefHeight="30.0" prefWidth="150.0" />
+                                          <HBox alignment="CENTER_RIGHT">
+                                             <children>
+                                                <Label fx:id="twoShip" prefHeight="30.0" prefWidth="60.0" />
+                                                <Text fx:id="bracket2" strokeType="OUTSIDE" strokeWidth="0.0" text="(">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Text>
+                                                <Text fx:id="twoOf" strokeType="OUTSIDE" strokeWidth="0.0" text="x" />
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="/x platziert)" fx:id="xOfx2Ships" />
+                                             </children>
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                          </HBox>
+                                          <HBox alignment="CENTER_RIGHT">
+                                             <children>
+                                                <Label fx:id="threeShip" prefHeight="30.0" prefWidth="90.0" />
+                                                <Text fx:id="bracket3" strokeType="OUTSIDE" strokeWidth="0.0" text="(">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Text>
+                                                <Text fx:id="threeOf" strokeType="OUTSIDE" strokeWidth="0.0" text="x" />
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="/x platziert)" fx:id="xOfx3Ships" />
+                                             </children>
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                          </HBox>
+                                          <HBox alignment="CENTER_RIGHT">
+                                             <children>
+                                                <Label fx:id="fourShip" prefHeight="30.0" prefWidth="120.0" />
+                                                <Text fx:id="bracket4" strokeType="OUTSIDE" strokeWidth="0.0" text="(">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Text>
+                                                <Text fx:id="fourOf" strokeType="OUTSIDE" strokeWidth="0.0" text="x" />
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="/x platziert)" fx:id="xOfx4Ships" />
+                                             </children>
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                          </HBox>
+                                          <HBox alignment="CENTER_RIGHT">
+                                             <children>
+                                                <Label fx:id="fiveShip" prefHeight="30.0" prefWidth="150.0" />
+                                                <Text fx:id="bracket5" strokeType="OUTSIDE" strokeWidth="0.0" text="(">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Text>
+                                                <Text fx:id="fiveOf" strokeType="OUTSIDE" strokeWidth="0.0" text="x" />
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="/x platziert)" fx:id="xOfx5Ships" />
+                                             </children>
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                          </HBox>
                                        </children>
-                                    </VBox>
-                                    <Pane prefWidth="5.0" />
-                                    <VBox>
-                                       <children>
-                                          <HBox>
-                                             <children>
-                                                <Label fx:id="bracket2" text="(" />
-                                                <Label fx:id="twoOf" text="x" />
-                                                <Label text="/x platziert)" fx:id="xOfx2Ships" />
-                                             </children>
-                                          </HBox>
-                                          <HBox>
-                                             <children>
-                                                <Label fx:id="bracket3" text="(" />
-                                                <Label fx:id="threeOf" text="x" />
-                                                <Label text="/x platziert)" fx:id="xOfx3Ships" />
-                                             </children>
-                                          </HBox>
-                                          <HBox>
-                                             <children>
-                                                <Label fx:id="bracket4" text="(" />
-                                                <Label fx:id="fourOf" text="x" />
-                                                <Label text="/x platziert)" fx:id="xOfx4Ships" />
-                                             </children>
-                                          </HBox>
-                                          <HBox>
-                                             <children>
-                                                <Label fx:id="bracket5" text="(" />
-                                                <Label fx:id="fiveOf" text="x" />
-                                                <Label text="/x platziert)" fx:id="xOfx5Ships" />
-                                             </children>
-                                          </HBox>
-                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </padding>
                                     </VBox>
                                  </children>
                               </HBox>

@@ -330,8 +330,11 @@ public class OwnPlayground extends AbstractPlayground implements IOwnPlayground 
         //1
         for ( Point point : coordinatesOfShip ){
             //Set the Fields to Water, the Water Fields got by default an valid placement-marker
+            System.out.println("Points of ship" + point.getX() + point.getY());
+            System.out.println(Field[point.getX()][point.getY()].getClass());
+            System.out.println("Error!");
             cache.add((ShipPart)Field[point.getX()][point.getY()]);
-
+            System.out.println("Error?");
             Label label = Field[point.getX()][point.getY()].getLabel();
             Field[point.getX()][point.getY()] = new Water();
             Field[point.getX()][point.getY()].setLabel(label);

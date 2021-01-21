@@ -381,7 +381,7 @@ public class OwnPlayground extends AbstractPlayground implements IOwnPlayground 
             ArrayList<Point> surroundingCoordinates = new ArrayList<>();
             for ( int i = x-1; i <= x+1; i++  ){
                 for ( int j = y-1; j <= y+1; j++){
-                    surroundingCoordinates.add(new Point(x, y));
+                    surroundingCoordinates.add(new Point(i, j));
                 }
             }
             checkIfNextToShip(surroundingCoordinates, changedCoordinates);
@@ -404,8 +404,8 @@ public class OwnPlayground extends AbstractPlayground implements IOwnPlayground 
             for ( int i = x-1; i <= x+1; i++  ){
                 for ( int j = y-1; j <= y+1; j++){
                     // Point is outside the playground
-                    if ( x < 0 || x >= this.playgroundsize || y < 0 || y >= this.playgroundsize) continue;
-                    if ( Field[x][y] instanceof ShipPart){
+                    if ( i < 0 || i >= this.playgroundsize || j < 0 || j >= this.playgroundsize) continue;
+                    if ( Field[i][j] instanceof ShipPart){
                         isShipNext = true;
                         break;
                     }

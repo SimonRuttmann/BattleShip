@@ -64,11 +64,11 @@ public class Ki implements IKi{
     private DestroyStatus destroyStatus = DestroyStatus.notFound;
     private NextLocation nextLocation;                              //nächste position auf die Geschossen wird
     int rangeToShot = 1;                                            //1. Schuss (treffer) nach oben -> rangeToShot wird auf 2 erhöht
-                                                                    //2. Schuss (treffer) nach oben -> rangeToShot wird auf 3 erhöht
-                                                                    //3. Schuss  (kein treffer) rangeToShot wird auf 1 gesetzt                  und die position ist jetzt nextBottom
-                                                                    //1. Schuss (treffer) nach unten -> rangeToShot wird auf 2 erhöht
-                                                                    //2. Schuss (kein treffer) nach unten -> rangeToShot wird auf 1 gesetzt     und die position ist jetzt nextleft
-                                                                    //...
+    //2. Schuss (treffer) nach oben -> rangeToShot wird auf 3 erhöht
+    //3. Schuss  (kein treffer) rangeToShot wird auf 1 gesetzt                  und die position ist jetzt nextBottom
+    //1. Schuss (treffer) nach unten -> rangeToShot wird auf 2 erhöht
+    //2. Schuss (kein treffer) nach unten -> rangeToShot wird auf 1 gesetzt     und die position ist jetzt nextleft
+    //...
     transient ShotResponse shotResponseFromKI;
 
 
@@ -104,7 +104,7 @@ public class Ki implements IKi{
         }
         return false;
     }
-private int debugg = 0;
+    private int debugg = 0;
 
     /**
      * Diese methode hat im schlimmsten fall quadratische Laufzeit !!!
@@ -113,20 +113,16 @@ private int debugg = 0;
      * @param usedPoints The Set, where the Points should not come from
      * @return Point from the Playground except from the Set usedPoints
      */
-    private Point randomPointInPlaygroundExceptSet(Set<Point> usedPoints){
+    private Point randomPointInPlaygroundExceptSet(Set<Point> usedPoints, ArrayList<Point> randomPointPool){
 
-        //Create random point pool
-        ArrayList<Point> randomPointPool = new ArrayList<>();
-        for (int x = 0; x < ActiveGameState.getPlaygroundSize(); x++){
-            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
-                randomPointPool.add(new Point(x, y));
-            }
-        }
 
-        //Remove values from the Set
+      /*  //Remove values from the Set
         for(Point point : usedPoints){
-            randomPointPool.removeIf(point1 -> point.getX() == point1.getX() && point.getY() == point1.getY());
-        }
+            //randomPointPool.remove(point);
+            randomPointPool.removeIf(point2 -> point.getX() == point2.getX() && point.getY() == point2.getY());
+            //randomPointPool.removeIf(point1 -> point.getX() == point1.getX() && point.getY() == point1.getY());
+
+        }*/
 
         Random random = new Random();
         //Kein Element mehr vorhanden
@@ -134,9 +130,10 @@ private int debugg = 0;
         //Ein Element vorhanden (random.nextInt braucht eine Zahl > 0)
         if (randomPointPool.size() == 1) return randomPointPool.get(0);
         //Element aus der verbleibenden Menge auswählen
-        return randomPointPool.get(random.nextInt(randomPointPool.size()-1));
+        return randomPointPool.get(random.nextInt(randomPointPool.size()));
     }
 
+    private int counter32 = 0;
     /**
      * Backtrack algorithm to place ships randomly
      *
@@ -176,47 +173,91 @@ private int debugg = 0;
      */
     public ArrayList<IShip> placeShip(ArrayList<Point> occupiedDotsList, ArrayList<IShip> kiShips, ArrayList<IShip> newShips, IOwnPlayground playground, int currentShipToPlace){
 
-        /*Ablauf (alt):
-        1. Zufälliger Punkt wird erstellt und ein dazu eine gültige und passende Ausrichtung des Schiffs
-        2. Die Schiffspunkte werden in eine Arrayliste gespeichert
-        3. Das Schiff wird surrounded und die Punkte ebenfalls in die Arrayliste gespeichert
-        4. Die start und endposition des Schiffs wird gespeichert und eine Liste mit den Schiffen zurückgegeben
-         */
-
-        //Rekursionsauflösung alle Schiffe plaziert
-        if ( currentShipToPlace >= kiShips.size()){
+        if (this.counter32 > 10000){
+            return null;
+        }
+//Laufzeitanalyse:
+        this.counter32++;
+        //Rekursionsauflösung alle Schiffe plaziert     //Index   0 1 2 3 4 <- Plaziert Jetzt: 5
+        if ( currentShipToPlace >= ActiveGameState.getAmountOfShips()){     //Schiffe 2 2 3 4 5
+            //System.out.println("Return nr 1");
             return newShips;
+        }
+
+
+        //n       //Create random point pool
+        ArrayList<Point> randomPointPool = new ArrayList<>();
+        for (int x = 0; x < ActiveGameState.getPlaygroundSize(); x++){
+            for (int y = 0; y < ActiveGameState.getPlaygroundSize(); y++){
+                randomPointPool.add(new Point(x, y));
+            }
+        }
+
+        //Remove values from the Set
+        for(Point point : occupiedDotsList){
+            //randomPointPool.remove(point);
+            randomPointPool.removeIf(point2 -> point.getX() == point2.getX() && point.getY() == point2.getY());
+            //randomPointPool.removeIf(point1 -> point.getX() == point1.getX() && point.getY() == point1.getY());
+
         }
 
 
         int random_x;
         int random_y;
-        int placementStyle;
+        int placementStyle = -1;
         int counter = 0;
-        Set<Point> checkedPointsSet = new HashSet<>(occupiedDotsList);
 
-        //Plaziere Schiff an der Stelle laufvariable in der Liste
+
+        //n stark reduziert       //Plaziere Schiff an der Stelle laufvariable in der Liste
         do {
-            System.out.println( "1: " +debugg++);                                       //Kritischer Bereich Anfang
+        /*    System.out.println( "1: " +debugg++);                                       //Kritischer Bereich Anfang
+
+            System.out.println("Anfang do-While");
+            System.out.println("Counter = " + counter);
+            System.out.println("bisheriger Placementstlye = " + placementStyle);
+            System.out.println("Current Ship to place : = " + currentShipToPlace);
+            System.out.println(newShips.size());
+            System.out.println();*/
 
             IShip kiShip = kiShips.get(currentShipToPlace);
-            //random_x = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
-            //random_y = getRandomInt(0, ActiveGameState.getPlaygroundSize() - 1);
-            Point point = this.randomPointInPlaygroundExceptSet(checkedPointsSet);
+
+            Point point;                               // 100 Punkte in einer ArrayList -> Array - Alle Punkte im Set
+
+
+            Random random = new Random();
+
+            //Kein Element mehr vorhanden
+            if (randomPointPool.size() == 0) return null;
+            //Ein Element vorhanden (random.nextInt braucht eine Zahl > 0)
+            if (randomPointPool.size() == 1) {
+                point = randomPointPool.get(0);
+            }
+            //Element aus der verbleibenden Menge auswählen
+            else{
+                point = randomPointPool.get(random.nextInt(randomPointPool.size()));
+            }
+
+
+
+            // 100 Ar - 85Pk = 15
             if ( point == null) return null; // Every single Point tested
             random_x = point.getX();
             random_y = point.getY();
             //Point point = new Point ( random_x, random_y);
-            placementStyle = -1;
-            System.out.println( "1.a: " + debugg++);
 
-            if (isPointValueInSet(checkedPointsSet, point)) continue;                      //Kritischer Bereich Ende
+            //System.out.println( "1.a: " + debugg++);
 
+            randomPointPool.remove(point);
 
-            System.out.println( "1.b: " + debugg++);
-            checkedPointsSet.add(point);
             placementStyle = getPlacementStyle(new Point(random_x, random_y), kiShip.getSize(), ActiveGameState.getPlaygroundSize(), occupiedDotsList);
             counter++;
+
+      /*      System.out.println("Nach dem getPlacementstlye");
+            System.out.println("Counter = " + counter);
+            System.out.println("Placementstlye = " + placementStyle);
+            System.out.println("Current Ship to place : = " + currentShipToPlace);
+            System.out.println(newShips.size());
+            System.out.println();*/
 
             // Für jede gültige Platzierung, führe die Rekursion aus
             if ( placementStyle >= 0){
@@ -233,9 +274,12 @@ private int debugg = 0;
                 }
 
                 //Füge Schiff mit den Positionen hinzu
-                newShips.add(new Ship(new Point(random_x, random_y), newEndPos, playground));
 
-                System.out.println("2 :" + debugg++);
+                IShip shipToPlace = new Ship(new Point(random_x, random_y), newEndPos, playground);
+                newShips.add(shipToPlace);
+
+
+
                 //Schiffspositionen + Umgebungspositionen
                 ArrayList<Point> shipPositions = new ArrayList<>();
                 shipPositions = markShipDots(point, kiShip.getSize(), placementStyle, shipPositions);
@@ -248,28 +292,58 @@ private int debugg = 0;
                 ArrayList<Point> newOccupiedDotsList = new ArrayList<Point>(occupiedDotsList);
                 newOccupiedDotsList.addAll(shipPositionsAndSurroundings);
 
+       /*         System.out.println("Gehe in Rekursion");
+                System.out.println("Counter = " + counter);
+                System.out.println("bisheriger Placementstlye = " + placementStyle);
+                System.out.println("Current Ship to place : = " + currentShipToPlace);
+                System.out.println(newShips.size());
+                System.out.println();*/
+
                 currentShipToPlace++;
                 ArrayList<IShip>  result = placeShip(newOccupiedDotsList, kiShips, newShips, playground, currentShipToPlace);
                 currentShipToPlace--;
 
+           /*     System.out.println("Gehe aus Rekursion");
+                System.out.println("Counter = " + counter);
+                System.out.println("bisheriger Placementstlye = " + placementStyle);
+                System.out.println("result = " + result);
+                System.out.println("Current Ship to place : = " + currentShipToPlace);
+                System.out.println(newShips.size());
+                System.out.println();*/
+
                 // Für diese Plazierung des Schiffs gibt es keine Möglichkeit die restlichen zu plazieren
                 if ( result == null){
                     placementStyle = -404;
-                    newShips.remove(kiShip);
+                    /*System.out.println(newShips.size());*/
+                    newShips.remove(shipToPlace);
+                    /*System.out.println(newShips.size());*/
                 }
+
             }
 
-            if ( currentShipToPlace == 0) System.out.println( counter);
+
+      /*      System.out.println("Ende do-While");
+            System.out.println("Counter = " + counter);
+            System.out.println("bisheriger Placementstlye = " + placementStyle);
+            System.out.println("Current Ship to place : = " + currentShipToPlace);
+            System.out.println(newShips.size());*/
+
         } while (placementStyle < 0 && counter < ActiveGameState.getPlaygroundSize()*ActiveGameState.getPlaygroundSize());
-        System.out.println( "3: "+  debugg++);
+        //System.out.println( "3: "+  debugg++);
         //Rekursionsauflösung, Schiff kann nicht plaziert werden
         if ( placementStyle < 0){
+            /*System.out.println("Return Nr 2");*/
             return null;
         }
 
         //Es hat funktioniert
+ /*       System.out.println("Counter: " + counter);
+        System.out.println("Retrun Nr 3");*/
         return newShips;
     }
+
+
+
 
     public ArrayList<IShip> placeships(IOwnPlayground playground) {
 
@@ -296,61 +370,113 @@ private int debugg = 0;
             kiShips.add(ship);
         }
 
+        for(IShip ship : kiShips){
+            System.out.println(ship.getPosStart() +  " " +ship.getPosEnd());
+        }
+
+        //Idee 5er Schiffe selbst am rand plazieren, wenn zu stark befüllt
+        // if (ActiveGameState.getPlaygroundSize() / kiShips.size() > 3)
+        // {
+        this.counter32 = 0;
+        ArrayList<IShip> shipList;
+        shipList = placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
+        while ( shipList == null){
+            this.counter32 = 0;
+            shipList = placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
+        }
+        System.out.println(counter32);
+        return shipList;
+        //return placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
+        // }
+        // else{
+           /* Random randomPosition = new Random();
+            int position = randomPosition.nextInt( 4);
+
+            Random randomStartAxis = new Random();
+            int startAxis = randomStartAxis.nextInt(ActiveGameState.getPlaygroundSize() -6);
+
+            //random [0, playgroundsize-1 - 5]
+            //Alle 5er Schiffe plazieren
+            //X = 0 Y random
+
+            //X = Playgroundsize-1 Y random
+
+            //Y = 0 random
+
+            //Y = Playgroundsize-1 X random
+
+            switch (position){
+                case 0:
+                            break;
+                case 1:
+                            break;
+                case 2:
+                            break;
+                case 3:
+            }
+
+                       //Belegte Punkte             5er                     Anzahl platzierte 5er
+            placeShip(occupiedDotsList, kiShips, newShips, playground, 1);
+*/
+
+    }
+
+    //Hilfestellung geben, da Befüllungsgrad zu hoch
         /*Ablauf:
         1. Zufälliger Punkt wird erstellt und ein dazu eine gültige und passende Ausrichtung des Schiffs
         2. Die Schiffspunkte werden in eine Arrayliste gespeichert
         3. Das Schiff wird surrounded und die Punkte ebenfalls in die Arrayliste gespeichert
-        4. Die start und endposition des Schiffs wird gespeichert und eine Liste mit den Schiffen zurückgegeben
+        4. Die start und endposition des Schiffs wird gespeichert und eine Liste mit den Schiffen zurückgegeben //todo bug: wenn alle Platze belegt, werden immer neue Schiffe an die Liste angehängt bis ????, mal viele mal wenige, anstatt Abbruch + Step back oder neuanfang???
          */
 
 
-       return placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
 
 
-    }
+
+    // }
 
     //Markiert alle Punkte um das Schiff herum
     protected ArrayList<Point> surroundShipDots(ArrayList<Point> currentShipDots) {
         ArrayList<Point> surrDots = new ArrayList<>();
-            for(int i = 0 ; i < currentShipDots.size() ; i++) {
-                Point p = new Point(currentShipDots.get(i).getX(), currentShipDots.get(i).getY());
-                for(int z = 0; z < 9 ; z ++){
-                    switch(z){
-                        case 0:
-                            if(!checkArrayList(surrDots, new Point(p.getX(), p.getY() - 1)) && !checkArrayList(currentShipDots, new Point(p.getX(), p.getY() - 1)))
-                                surrDots.add(new Point(p.getX(), p.getY() - 1));
-                            break;
-                        case 1:
-                            if(!checkArrayList(surrDots, new Point(p.getX() + 1 , p.getY() - 1)) && !checkArrayList(currentShipDots, new Point(p.getX() + 1, p.getY() - 1)))
-                                surrDots.add(new Point(p.getX() + 1, p.getY() - 1));
-                            break;
-                        case 2:
-                            if(!checkArrayList(surrDots, new Point(p.getX() + 1 , p.getY())) && !checkArrayList(currentShipDots, new Point(p.getX() + 1, p.getY())))
-                                surrDots.add(new Point(p.getX() + 1, p.getY()));
-                            break;
-                        case 3:
-                            if(!checkArrayList(surrDots, new Point(p.getX() + 1 , p.getY() + 1)) && !checkArrayList(currentShipDots, new Point(p.getX() + 1, p.getY() + 1)))
-                                surrDots.add(new Point(p.getX() + 1, p.getY() + 1));
-                            break;
-                        case 4:
-                            if(!checkArrayList(surrDots, new Point(p.getX(), p.getY() + 1)) && !checkArrayList(currentShipDots, new Point(p.getX(), p.getY() + 1)))
-                                surrDots.add(new Point(p.getX(), p.getY() + 1));
-                            break;
-                        case 5:
-                            if(!checkArrayList(surrDots, new Point(p.getX() - 1, p.getY() + 1)) && !checkArrayList(currentShipDots, new Point(p.getX() - 1, p.getY() + 1)))
-                                surrDots.add(new Point(p.getX() - 1, p.getY() + 1));
-                            break;
-                        case 6:
-                            if(!checkArrayList(surrDots, new Point(p.getX() - 1 , p.getY())) && !checkArrayList(currentShipDots, new Point(p.getX() - 1, p.getY())))
-                                surrDots.add(new Point(p.getX() - 1, p.getY()));
-                            break;
-                        case 7:
-                            if(!checkArrayList(surrDots, new Point(p.getX() - 1 , p.getY() - 1)) && !checkArrayList(currentShipDots, new Point(p.getX() - 1, p.getY() - 1)))
-                                surrDots.add(new Point(p.getX() - 1, p.getY() - 1));
-                            break;
-                    }
+        for(int i = 0 ; i < currentShipDots.size() ; i++) {
+            Point p = new Point(currentShipDots.get(i).getX(), currentShipDots.get(i).getY());
+            for(int z = 0; z < 9 ; z ++){
+                switch(z){
+                    case 0:
+                        if(!checkArrayList(surrDots, new Point(p.getX(), p.getY() - 1)) && !checkArrayList(currentShipDots, new Point(p.getX(), p.getY() - 1)))
+                            surrDots.add(new Point(p.getX(), p.getY() - 1));
+                        break;
+                    case 1:
+                        if(!checkArrayList(surrDots, new Point(p.getX() + 1 , p.getY() - 1)) && !checkArrayList(currentShipDots, new Point(p.getX() + 1, p.getY() - 1)))
+                            surrDots.add(new Point(p.getX() + 1, p.getY() - 1));
+                        break;
+                    case 2:
+                        if(!checkArrayList(surrDots, new Point(p.getX() + 1 , p.getY())) && !checkArrayList(currentShipDots, new Point(p.getX() + 1, p.getY())))
+                            surrDots.add(new Point(p.getX() + 1, p.getY()));
+                        break;
+                    case 3:
+                        if(!checkArrayList(surrDots, new Point(p.getX() + 1 , p.getY() + 1)) && !checkArrayList(currentShipDots, new Point(p.getX() + 1, p.getY() + 1)))
+                            surrDots.add(new Point(p.getX() + 1, p.getY() + 1));
+                        break;
+                    case 4:
+                        if(!checkArrayList(surrDots, new Point(p.getX(), p.getY() + 1)) && !checkArrayList(currentShipDots, new Point(p.getX(), p.getY() + 1)))
+                            surrDots.add(new Point(p.getX(), p.getY() + 1));
+                        break;
+                    case 5:
+                        if(!checkArrayList(surrDots, new Point(p.getX() - 1, p.getY() + 1)) && !checkArrayList(currentShipDots, new Point(p.getX() - 1, p.getY() + 1)))
+                            surrDots.add(new Point(p.getX() - 1, p.getY() + 1));
+                        break;
+                    case 6:
+                        if(!checkArrayList(surrDots, new Point(p.getX() - 1 , p.getY())) && !checkArrayList(currentShipDots, new Point(p.getX() - 1, p.getY())))
+                            surrDots.add(new Point(p.getX() - 1, p.getY()));
+                        break;
+                    case 7:
+                        if(!checkArrayList(surrDots, new Point(p.getX() - 1 , p.getY() - 1)) && !checkArrayList(currentShipDots, new Point(p.getX() - 1, p.getY() - 1)))
+                            surrDots.add(new Point(p.getX() - 1, p.getY() - 1));
+                        break;
                 }
             }
+        }
         return surrDots;
     }
 
@@ -364,13 +490,13 @@ private int debugg = 0;
     }
 
     //prüft ob der Punkt in der übergebenen Arrayliste vorhanden ist
-   protected boolean checkArrayList(ArrayList<Point> list, Point p){
+    protected boolean checkArrayList(ArrayList<Point> list, Point p){
         for( Point point : list){
             if (point.getX() == p.getX() && point.getY() == p.getY()) return true;
         }
         return false;
 
-   }
+    }
 
     //Markiert die Punkte des aktuelle Schiffs
     protected ArrayList<Point> markShipDots(Point p, int size, int style, ArrayList<Point> list) {
@@ -404,60 +530,60 @@ private int debugg = 0;
     }
 
 
-        /*Prüft für den random Punkt, ob das Ship von ihm aus ins Feld Passt und eine zufällige richtung, wird in 20 versuchen kein Ergebnis gefunden, wird in der
-        do -while-Schleife in der placeships- Methode ein neuer zufälliger Punkt erstellt  und für diesen dann diese Überprüfung erneut gemacht*/
+    /*Prüft für den random Punkt, ob das Ship von ihm aus ins Feld Passt und eine zufällige richtung, wird in 20 versuchen kein Ergebnis gefunden, wird in der
+    do -while-Schleife in der placeships- Methode ein neuer zufälliger Punkt erstellt  und für diesen dann diese Überprüfung erneut gemacht*/
     protected int getPlacementStyle(Point p, int size, int playgrounds, ArrayList<Point> list){
         int style;
         int count = 0;
         boolean placeable;
-        style = getRandomInt(0 , 3);
+        style = getRandomInt(0 , 4);
         do{
             placeable = true;
             switch (style){
                 case 0:     //Top
-                            for(int i = 0; i < size; i++){
-                                if(checkArrayList(list, new Point(p.getX(), p.getY() - i))){
-                                    placeable = false;
-                                }
-                            }
-                            if(p.getY() - size >= 0 && placeable) return 0;
-                            else placeable = false;
-                            break;
+                    for(int i = 0; i < size; i++){
+                        if(checkArrayList(list, new Point(p.getX(), p.getY() - i))){
+                            placeable = false;
+                        }
+                    }
+                    if(p.getY() - size >= 0 && placeable) return 0;
+                    else placeable = false;
+                    break;
 
                 case 1:     //Right
-                            for(int i = 0; i < size; i++){
-                                if(checkArrayList(list, new Point(p.getX() + i, p.getY()))){
-                                    placeable = false;
-                                }
-                            }
-                            if(p.getX() + size < playgrounds && placeable) return 1;
-                            else placeable = false;
-                            break;
+                    for(int i = 0; i < size; i++){
+                        if(checkArrayList(list, new Point(p.getX() + i, p.getY()))){
+                            placeable = false;
+                        }
+                    }
+                    if(p.getX() + size < playgrounds && placeable) return 1;
+                    else placeable = false;
+                    break;
 
                 case 2:     //Down
-                            for(int i = 0; i < size; i++){
-                                if(checkArrayList(list, new Point(p.getX(), p.getY() + i))){
-                                    placeable = false;
-                                }
-                            }
-                            if(p.getY() + size < playgrounds && placeable) return 2;
-                            else placeable = false;
-                            break;
+                    for(int i = 0; i < size; i++){
+                        if(checkArrayList(list, new Point(p.getX(), p.getY() + i))){
+                            placeable = false;
+                        }
+                    }
+                    if(p.getY() + size < playgrounds && placeable) return 2;
+                    else placeable = false;
+                    break;
 
                 case 3:    //Left
-                            for(int i = 0; i < size; i++){
-                               if(checkArrayList(list, new Point(p.getX() - i, p.getY()))){
-                                    placeable = false;
-                                }
-                            }
-                            if(p.getX() - size >= 0 && placeable) return 3;
-                            else placeable = false;
+                    for(int i = 0; i < size; i++){
+                        if(checkArrayList(list, new Point(p.getX() - i, p.getY()))){
+                            placeable = false;
+                        }
+                    }
+                    if(p.getX() - size >= 0 && placeable) return 3;
+                    else placeable = false;
             }
 
             style = (style + 1) % 4;
             count++;
         }while(!placeable && count < 4);
-       return -1;
+        return -1;
     }
 
     /*
@@ -789,41 +915,41 @@ private int debugg = 0;
 
         //check if there is space = shipLength - 1 in any direction
 
-            //right
-            for(int i = 1; i<size; i++){
-                if(!isNextShotInPreviousList(p.getX() + i , p.getY()) && (p.getX() + i) < ActiveGameState.getPlaygroundSize() ){
-                    spaceCountVertical++;
-                }else{
-                    break;
-                }
+        //right
+        for(int i = 1; i<size; i++){
+            if(!isNextShotInPreviousList(p.getX() + i , p.getY()) && (p.getX() + i) < ActiveGameState.getPlaygroundSize() ){
+                spaceCountVertical++;
+            }else{
+                break;
             }
+        }
 
-            //left
-            for(int i = 1; i<size; i++){
-                if(!isNextShotInPreviousList(p.getX() - i , p.getY() ) && (p.getX() - i) >= 0){
-                    spaceCountVertical++;
-                }else{
-                    break;
-                }
+        //left
+        for(int i = 1; i<size; i++){
+            if(!isNextShotInPreviousList(p.getX() - i , p.getY() ) && (p.getX() - i) >= 0){
+                spaceCountVertical++;
+            }else{
+                break;
             }
+        }
 
-            //bot
-            for(int i = 0; i<size; i++){
-                if(!isNextShotInPreviousList(p.getX()  , p.getY() + i ) && (p.getY() + i) < ActiveGameState.getPlaygroundSize()){
-                    spaceCountHorizontal++;
-                }else{
-                    break;
-                }
+        //bot
+        for(int i = 0; i<size; i++){
+            if(!isNextShotInPreviousList(p.getX()  , p.getY() + i ) && (p.getY() + i) < ActiveGameState.getPlaygroundSize()){
+                spaceCountHorizontal++;
+            }else{
+                break;
             }
+        }
 
-            //top
-            for(int i = 0; i<size; i++){
-                if(!isNextShotInPreviousList(p.getX() , p.getY()  - i ) && (p.getY() - i) >= 0){
-                    spaceCountHorizontal++;
-                }else{
-                    break;
-                }
+        //top
+        for(int i = 0; i<size; i++){
+            if(!isNextShotInPreviousList(p.getX() , p.getY()  - i ) && (p.getY() - i) >= 0){
+                spaceCountHorizontal++;
+            }else{
+                break;
             }
+        }
 
         return spaceCountHorizontal >= size - 1 || spaceCountVertical >= size - 1;
     }
@@ -896,16 +1022,16 @@ private int debugg = 0;
             ShotResponse shotResponse = new ShotResponse();
             switch (Integer.parseInt(cmdReceived[1])) {
                 case 0:
-                            shotResponse.setHit(false);
-                            shotResponse.setShipDestroyed(false);
-                            break;
+                    shotResponse.setHit(false);
+                    shotResponse.setShipDestroyed(false);
+                    break;
                 case 1:
-                            shotResponse.setHit(true);
-                            shotResponse.setShipDestroyed(false);
-                            break;
+                    shotResponse.setHit(true);
+                    shotResponse.setShipDestroyed(false);
+                    break;
                 case 2:
-                            shotResponse.setHit(true);
-                            shotResponse.setShipDestroyed(true);
+                    shotResponse.setHit(true);
+                    shotResponse.setShipDestroyed(true);
             }
             return shotResponse;
         }

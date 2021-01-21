@@ -56,6 +56,14 @@ public class Water implements IDrawable {
                 image.fitHeightProperty().bind(label.heightProperty());
                 this.label.setGraphic(image);
             }
+            else{
+                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/water.png")));
+
+                // making ships resizeable, so they fit to the current label size
+                image.fitWidthProperty().bind(label.widthProperty());
+                image.fitHeightProperty().bind(label.heightProperty());
+                this.label.setGraphic(image);
+            }
             //Drawing at playground
             if (ActiveGameState.isSceneIsGamePlayground()){
                 ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/water.png")));

@@ -4,7 +4,6 @@ import Gui_View.HelpMethods;
 import Gui_View.Main;
 import GameData.ActiveGameState;
 import LoggingNetwork.NetworkLogger;
-
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -15,8 +14,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+
 
 /** ConnectionFailed creates a PopUp that informs the user that it was not possible to establish a connection with the
  *  remote partner and lets him choose whether he wants to go back to the Main Menu oder Exit the Game

@@ -1,6 +1,3 @@
-// todo Styling, Aufruf case win or lose: automatisch am Spielende, boolean true false muss uebergeben werden
-// todo bei neues Spiel starten, neue Objekte etc. ???
-
 package Gui_View.PopUpWindows;
 
 import Gui_View.HelpMethods;
@@ -17,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.io.IOException;
 
 

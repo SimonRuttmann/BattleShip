@@ -118,6 +118,7 @@ public class PlaceShips implements Initializable {
 
         // basic initialization tasks ----------------------------------------------------------------------------------
         ActiveGameState.setSceneIsPlaceShips(true);
+        ActiveGameState.setSceneIsGamePlayground(false);
         setLanguage();
         setBackground();
 

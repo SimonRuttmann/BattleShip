@@ -7,14 +7,9 @@ import Model.Util.UtilDataType.Point;
 import Model.Util.UtilDataType.ShotResponse;
 import Network.CMD;
 import GameData.ActiveGameState;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.Event;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,10 +47,10 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         //Preparing command which has to be send
         //Communication Protocol: shot 1 1 = Pos 0, 0 in the Playground
         String cmdParameter = (xPos+1) + " " + (yPos+1);
-        System.out.println( cmdParameter);
+
         //Report from the remoteSocket
         String[] cmdReceived;
-        System.out.println("Sende: " + CMD.shot + " " + cmdParameter);
+
 
         //We are the server
         if ( ActiveGameState.isAmIServer()){
@@ -75,60 +70,6 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
         switch (cmdReceived[0]){
             case "answer":
                 ShotResponse shotResponse = enemyPlayground.shoot(shootPosition, Integer.parseInt(cmdReceived[1]));
-
-
-                //VIEW SHOW
-                if ( Integer.parseInt(cmdReceived[1]) == 2) {
-                  
-                    Label headShipSunken = shotResponse.getLabel(); // <- == Label, des zerstörten Schiffs oben links
-                    boolean horizontal = shotResponse.getAlignment();
-                    int size = shotResponse.getSizeOfSunkenShip();
-
-                    //für 2er, 3er, 4er, 5er
-                    Label shipLabel = new Label();
-                    shipLabel.setLayoutX(headShipSunken.getLayoutX());
-                    shipLabel.setLayoutY(headShipSunken.getLayoutY());
-
-
-                    int scale = ActiveGameState.getPlaygroundScale();
-                    ImageView image;
-                    String imageURL = "/Gui_View/images/";
-
-                    switch (size) {
-                        case (2):
-                            imageURL += "2";
-                            break;
-                        case (3):
-                            imageURL += "3";
-                            break;
-                        case (4):
-                            imageURL += "4";
-                            break;
-                        case (5):
-                            imageURL += "5";
-                            break;
-                        default:
-                            System.out.println("Debug");
-                    }
-
-                    if (horizontal) {
-                        imageURL += "erSchiff.png"; //todo add sunken images
-                        image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
-                        image.fitWidthProperty().bind(new SimpleIntegerProperty(size * scale).asObject());
-                        image.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
-                    } else {
-                        imageURL += "erSchiffVertical.png"; //todo add sunken images
-                        image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
-                        image.fitWidthProperty().bind(new SimpleIntegerProperty(scale).asObject());
-                        image.fitHeightProperty().bind(new SimpleIntegerProperty(size * scale).asObject());
-                    }
-
-                    shipLabel.setGraphic(image);
-
-                    Platform.runLater(() -> GamePlayground.getGroupEnemP().getChildren().add(shipLabel));
-                }
-
-                //END VIEW SHOW
 
 
                 if ( shotResponse.isGameWin())
@@ -163,10 +104,6 @@ public class MultiplayerControlThreadShootEnemy extends Thread{
                 return;
         }
 
-        System.out.println( "Ein durchgang Durchgang von Shoot Enemy abgeschlossen");
-
-        if ( cmdReceived.length == 2 ) System.out.println( cmdReceived[0] + " " + cmdReceived[1]);
-        else System.out.println(Arrays.toString(cmdReceived));
 
 
         if (ActiveGameState.isRunning()) {

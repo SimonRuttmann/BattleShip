@@ -224,9 +224,6 @@ public class Ki implements IKi{
             kiShips.add(ship);
         }
 
-        for(IShip ship : kiShips){
-            System.out.println(ship.getPosStart() +  " " +ship.getPosEnd());
-        }
 
         this.counterToRestartPlaceShip = 0;
         ArrayList<IShip> shipList;
@@ -235,7 +232,7 @@ public class Ki implements IKi{
             this.counterToRestartPlaceShip = 0;
             shipList = placeShip(occupiedDotsList, kiShips, newShips, playground, 0);
         }
-        System.out.println(counterToRestartPlaceShip);
+
         return shipList;
     }
 
@@ -397,7 +394,8 @@ public class Ki implements IKi{
     //returns the point which is going to get shot
     @Override
     public ShotResponse getShot(IOwnPlayground playground) {
-        System.out.println("Schwierigkeitsgrad: " + this.difficulty);
+
+        logKi.log(Level.INFO, "Difficulty: " + this.difficulty);
         //difficulty = normal
         if(this.difficulty == Difficulty.normal){
             boolean success = normaleKi(playground);

@@ -51,7 +51,6 @@ public class MultiplayerControlThreadKiShootsEnemy extends Thread{
                 }
                 else{
                     logMultiplayerControlThreadKiShootsEnemy.log(Level.WARNING, "UnexpectedMessage, closing connection");
-                    System.out.println("Unexpected Message from Remote: " + shotResponse.getUnhandledCMD());
                     HelpMethods.unexceptedMessage();
                 }
                 break;

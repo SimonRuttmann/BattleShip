@@ -90,7 +90,7 @@ public class GamePlayground implements Initializable {
 
         } //initialize Playgrounds after loading with build, necesarry because GSON can`t control references, so every ShipPart got a own Ship
         else{
-            System.out.println("Build im Laden Ausgeführt");
+
             ActiveGameState.getOwnPlayerIOwnPlayground().buildPlayground();
             ActiveGameState.getOwnPlayerIEnemyPlayground().buildPlayground();
 

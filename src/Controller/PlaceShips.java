@@ -391,7 +391,7 @@ public class PlaceShips implements Initializable {
                             twoShipLabel = new ShipLabel(new Point(finalX,finalY),horizontal,2);
 
                             // help Method placeNewShip is called -> places Ship in Gui and backend
-                            placeNewShip(twoShipLabel, label);
+                            placeNewShip(twoShipLabel);
 
 
                             // incrementing the counter for the number of ShipSize2s are placed
@@ -409,7 +409,7 @@ public class PlaceShips implements Initializable {
 
                         // moving already placed ship to a new location: move the ship label
                         else {
-                            moveShip((ShipLabel) event.getGestureSource(), label, finalX, finalY);
+                            moveShip((ShipLabel) event.getGestureSource(), finalX, finalY);
                         }
                     }
                     // End Ship Size two -------------------------------------------------------------------------------
@@ -421,7 +421,7 @@ public class PlaceShips implements Initializable {
 
                         if(event.getDragboard().getString().equals("3N")) {
                             threeShipLabel = new ShipLabel((horizontal) ? new Point(finalX-1, finalY) : new Point(finalX, finalY-1), horizontal, 3);
-                            placeNewShip(threeShipLabel, label);
+                            placeNewShip(threeShipLabel);
 
                             amountShipSize3placed++;
                             SimpleIntegerProperty three = new SimpleIntegerProperty(amountShipSize3placed);
@@ -431,7 +431,7 @@ public class PlaceShips implements Initializable {
                                 threeShip.setDisable(true);
                         }
                         else {
-                            moveShip((ShipLabel) event.getGestureSource(), label, finalX, finalY);
+                            moveShip((ShipLabel) event.getGestureSource(), finalX, finalY);
                         }
                     }
                     // End Ship Size three -----------------------------------------------------------------------------
@@ -443,7 +443,7 @@ public class PlaceShips implements Initializable {
 
                         if(event.getDragboard().getString().equals("4N")) {
                             fourShipLabel = new ShipLabel((horizontal) ? new Point(finalX-1, finalY) : new Point(finalX, finalY-1), horizontal, 4);
-                            placeNewShip(fourShipLabel, label);
+                            placeNewShip(fourShipLabel);
 
                             amountShipSize4placed++;
                             SimpleIntegerProperty four = new SimpleIntegerProperty(amountShipSize4placed);
@@ -453,7 +453,7 @@ public class PlaceShips implements Initializable {
                                 fourShip.setDisable(true);
                         }
                         else {
-                            moveShip((ShipLabel) event.getGestureSource(), label, finalX, finalY);
+                            moveShip((ShipLabel) event.getGestureSource(), finalX, finalY);
                         }
                     }
                     // End Ship Size four ------------------------------------------------------------------------------
@@ -465,7 +465,7 @@ public class PlaceShips implements Initializable {
 
                         if(event.getDragboard().getString().equals("5N")) {
                             fiveShipLabel = new ShipLabel((horizontal) ? new Point(finalX-2, finalY) : new Point(finalX, finalY-2), horizontal, 5);
-                            placeNewShip(fiveShipLabel, label);
+                            placeNewShip(fiveShipLabel);
 
                             amountShipSize5placed++;
                             SimpleIntegerProperty five = new SimpleIntegerProperty(amountShipSize5placed);
@@ -475,7 +475,7 @@ public class PlaceShips implements Initializable {
                                 fiveShip.setDisable(true);
                         }
                         else {
-                            moveShip((ShipLabel) event.getGestureSource(), label, finalX, finalY);
+                            moveShip((ShipLabel) event.getGestureSource(), finalX, finalY);
                         }
                     }
                     // End Ship Size five ------------------------------------------------------------------------------
@@ -619,27 +619,11 @@ public class PlaceShips implements Initializable {
         ownPlayground.setShipListOfThisPlayground( new ArrayList<>()); //Interne Schiffe aus der placeShips Methode löschen
 
         for (IShip ship : newShips) {
-            System.out.println(ship.getPosStart().getX());
+
             boolean horiz = ship.getPosStart().getX() != ship.getPosEnd().getX();
 
-            int sizeFactor = 0;
-            switch (ship.getSize()) {
-                case 2: sizeFactor = 0; break;
-                case 3:
-                case 4: sizeFactor = 1; break;
-                case 5: sizeFactor = 2; break;
-            }
-
-            Label startLabel;
-            if(horiz)
-                startLabel = (Label)ownFieldArray[(ship.getPosStart().getX()+sizeFactor)*10 + ship.getPosStart().getY()];
-            else
-                startLabel = (Label)ownFieldArray[ship.getPosStart().getX()*10 + ship.getPosStart().getY()+sizeFactor];
-
-
             ShipLabel shiplabel = new ShipLabel(new Point(ship.getPosStart().getX(), ship.getPosStart().getY()), horiz, ship.getSize());
-            //ownPlayground.isShipPlacementValid(ship.getPosStart(), ship.getPosEnd());
-            placeNewShip(shiplabel, startLabel);
+            placeNewShip(shiplabel);
         }
 
         ownPlayground.setLabels(ownFieldArray);
@@ -782,6 +766,10 @@ public class PlaceShips implements Initializable {
      *          -> this label will still be displayed
      *      -   existing ship means the dragged label is label in the playground
      *          -> this label has to disappear once it is moved
+     *
+     * @param shipLabel: the Label (!! not a ShipLabel) that has to be made draggable
+     * @param shipSize: the size of the ship, needed here because shipLabel is a Label
+     * @param alreadyPlaced: boolean that indicates whether ship is a new one or an existing one that has to be moved
      *----------------------------------------------------------------------------------------------------------------*/
     public void handlerSetOnDragDetected(Label shipLabel, int shipSize, boolean alreadyPlaced) {
 
@@ -822,6 +810,72 @@ public class PlaceShips implements Initializable {
     }
 
 
+
+    /** setShipLabelPlace - help method:
+     *------------------------------------------------------------------------------------------------------------------
+     * -> when ship is placed or moved, shipLabel of Group indicating its position has to be placed at the right spot
+     * -> this spot is computed and set here for the label
+     *
+     * @param shipLabel: ShipLabel of the to be placed ship
+     *----------------------------------------------------------------------------------------------------------------*/
+    public void setShipLabelPlace(ShipLabel shipLabel) {
+
+        int sizeFactor = 0;
+        switch (shipLabel.getSize()) {
+            case 2: sizeFactor = 0;break;
+            case 3:
+            case 4: sizeFactor = 1;break;
+            case 5: sizeFactor = 2;break;
+        }
+
+        double shipBaseLabelX;
+        double shipBaseLabelY;
+        if (shipLabel.isHorizontal()) {
+            shipBaseLabelX = (shipLabel.getPosHead().getX() + sizeFactor) * (ActiveGameState.getPlaygroundScale() + 1);
+            shipBaseLabelY = shipLabel.getPosHead().getY() * (ActiveGameState.getPlaygroundScale() + 1);
+        } else {
+            shipBaseLabelX = shipLabel.getPosHead().getX() * (ActiveGameState.getPlaygroundScale() + 1);
+            shipBaseLabelY = (shipLabel.getPosHead().getY() + sizeFactor) * (ActiveGameState.getPlaygroundScale() + 1);
+        }
+
+
+        if (shipLabel.isHorizontal()) {
+            switch (shipLabel.getSize()) {
+                case 2:
+                    shipLabel.setLayoutX(shipBaseLabelX);
+                    shipLabel.setLayoutY(shipBaseLabelY);
+                    break;
+                case 3:
+                case 4:
+                    shipLabel.setLayoutX(shipBaseLabelX - ActiveGameState.getPlaygroundScale());
+                    shipLabel.setLayoutY(shipBaseLabelY);
+                    break;
+                case 5:
+                    shipLabel.setLayoutX(shipBaseLabelX - 2 * ActiveGameState.getPlaygroundScale());
+                    shipLabel.setLayoutY(shipBaseLabelY);
+                    break;
+            }
+        } else {
+            switch (shipLabel.getSize()) {
+                case 2:
+                    shipLabel.setLayoutX(shipBaseLabelX);
+                    shipLabel.setLayoutY(shipBaseLabelY);
+                    break;
+                case 3:
+                case 4:
+                    shipLabel.setLayoutX(shipBaseLabelX);
+                    shipLabel.setLayoutY(shipBaseLabelY - ActiveGameState.getPlaygroundScale());
+                    break;
+                case 5:
+                    shipLabel.setLayoutX(shipBaseLabelX);
+                    shipLabel.setLayoutY(shipBaseLabelY - 2 * ActiveGameState.getPlaygroundScale());
+                    break;
+            }
+        }
+    }
+
+
+
     /** placeNewShip - help method:
      *------------------------------------------------------------------------------------------------------------------
      * -> called when ship label is successfully dropped for the first time
@@ -830,13 +884,11 @@ public class PlaceShips implements Initializable {
      * -> at the end a new ship is created in the back end representation of the playground
      *
      * @param newShipLabel: ShipLabel of the new to be placed ship
-     * @param gridPaneLabel: Label of the grid pane indicating where the ship has to be placed
      *----------------------------------------------------------------------------------------------------------------*/
-    public void placeNewShip(ShipLabel newShipLabel, Label gridPaneLabel){
+    public void placeNewShip(ShipLabel newShipLabel){
 
         int finalX = newShipLabel.getPosHead().getX();
         int finalY = newShipLabel.getPosHead().getY();
-        int scale = ActiveGameState.getPlaygroundScale();
 
         // making the newly created ShipLabel draggable too
         newShipLabel.setOnDragDetected(e -> {
@@ -844,43 +896,12 @@ public class PlaceShips implements Initializable {
             e.consume();
         });
 
-        // making the shiplabel visible again when dropping failed
-        newShipLabel.setOnDragExited(e -> newShipLabel.setOpacity(100));
-
         // making the newly create ShipLabel visible again when drag is exited
         newShipLabel.setOnDragDone(e -> newShipLabel.setOpacity(100));
 
 
         // decide if ship has to be placed horizontal or vertical
         if (newShipLabel.isHorizontal()) {
-
-            // adding the right image to the ship label
-            // URL string depending on ship size
-            String imageURL = "/Gui_View/images/" + newShipLabel.getSize() +"erSchiff.png";
-
-            ImageView image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
-            image.fitWidthProperty().bind(new SimpleIntegerProperty(newShipLabel.getSize() * scale).asObject());
-            image.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
-            newShipLabel.setGraphic(image);
-
-            // sets the X and Y starting position of the label (top left corner) to the correct location
-            // ( = to the starting position of the label below on the Gridpane)
-            switch (newShipLabel.getSize()) {
-                case 2:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
-                case 3:
-                case 4:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
-                case 5:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - 2* scale);
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
-            }
-            groupID.getChildren().add(newShipLabel);
 
             // this will place the ship in back-end representation of playground
             switch (newShipLabel.getSize()) {
@@ -890,35 +911,7 @@ public class PlaceShips implements Initializable {
                 case 5: newShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX +4, finalY))); break;
             }
 
-
         } else {
-
-            // adding the right image to the ship label
-            String imageURL = "/Gui_View/images/" + newShipLabel.getSize() +"erSchiffVertical.png";
-
-            ImageView image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
-            image.fitWidthProperty().bind(new SimpleIntegerProperty(scale).asObject());
-            image.fitHeightProperty().bind(new SimpleIntegerProperty(newShipLabel.getSize() * scale).asObject());
-            newShipLabel.setGraphic(image);
-
-            // sets the X and Y starting position of the label (top left corner) to the correct location
-            // ( = to the starting position of the label below on the Gridpane)
-            switch (newShipLabel.getSize()) {
-                case 2:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
-                case 3:
-                case 4:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
-                    break;
-                case 5:
-                    newShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    newShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - 2* scale);
-                    break;
-            }
-            groupID.getChildren().add(newShipLabel);
 
             // this will place the ship in back-end representation of playground
             switch (newShipLabel.getSize()) {
@@ -928,96 +921,88 @@ public class PlaceShips implements Initializable {
                 case 5: newShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().isShipPlacementValid(new Point(finalX, finalY), new Point(finalX, finalY +4))); break;
             }
         }
+
+
+        // place the label at the right position on the gridPane
+        setShipLabelPlace(newShipLabel);
+
+
+        // add the new placed ship's label to the shipLabelList
+        groupID.getChildren().add(newShipLabel);
     }
-
-
 
     /** moveShip - help method:
      *------------------------------------------------------------------------------------------------------------------
      * -> called when existing ship label is successfully moved
      * -> Gui: moving already placed ship to a new location: change coordinates of the moved ship label
      * -> backend representation: moveShip is called
+     *
+     * @param existingShipLabel: the ShipLabel of the Ship that has to be moved
+     * @param finalX: the X-postion where the Ship should be moved to
+     * @param finalY: the Y-position where the Ship should be moved to
      *----------------------------------------------------------------------------------------------------------------*/
-    public void moveShip(ShipLabel existingShipLabel, Label gridPaneLabel, int finalX, int finalY) {
+    public void moveShip(ShipLabel existingShipLabel, int finalX, int finalY) {
 
-        int scale = ActiveGameState.getPlaygroundScale();
+        // horizontal is the new alignment of the ship: Image will eventually be updated
+        existingShipLabel.setHorizontal(horizontal);
+        existingShipLabel.setImage();
+
         int shipSize = existingShipLabel.getSize();
-        existingShipLabel.setPosHead(new Point(finalX, finalY));
+
+        // Point has to be initialized -> if not warning: but this initialization should never occur: -> -1 would throw
+        // error if so
+        Point shipHead = new Point(-1 , -1);
+        Point shipTail= new Point(-1, -1);
 
         // decide if ship has to be re-placed horizontal or vertical
         if(horizontal) {
 
-            // adding the right image to the ship label
-            String imageURL = "/Gui_View/images/" + shipSize +"erSchiff.png";
-
-            ImageView image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
-            image.fitWidthProperty().bind(new SimpleIntegerProperty(shipSize * scale).asObject());
-            image.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
-            existingShipLabel.setGraphic(image);
-
-
-            // take the existing label of the ship and change it's position
-            switch (shipSize) {
-                case 2:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
-                case 3:
-                case 4:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - scale);
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
-                case 5:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX() - 2* scale);
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
-            }
-
             // this will move the ship in back-end representation of playground
             switch (shipSize) {
-                case 2: existingShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().moveShip(existingShipLabel.getShip(), new Point(finalX, finalY), new Point(finalX + 1, finalY))); break;
-                case 3: existingShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().moveShip(existingShipLabel.getShip(), new Point(finalX -1, finalY), new Point(finalX +1, finalY))); break;
-                case 4: existingShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().moveShip(existingShipLabel.getShip(), new Point(finalX -1, finalY), new Point(finalX +2, finalY))); break;
-                case 5: existingShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().moveShip(existingShipLabel.getShip(), new Point(finalX -2, finalY), new Point(finalX +2, finalY))); break;
+                case 2:
+                    shipHead = new Point(finalX, finalY);
+                    shipTail =new Point(finalX + 1, finalY);
+                    break;
+                case 3:
+                    shipHead = new Point(finalX-1, finalY);
+                    shipTail = new Point(finalX +1, finalY);
+                    break;
+                case 4:
+                    shipHead = new Point(finalX-1, finalY);
+                    shipTail = new Point(finalX +2, finalY);
+                    break;
+                case 5:
+                    shipHead = new Point(finalX-2, finalY);
+                    shipTail = new Point(finalX +2, finalY);
+                    break;
             }
         }
-
         else {
 
-            // adding the right image to the ship label
-            String imageURL = "/Gui_View/images/" + shipSize +"erSchiffVertical.png";
-
-            ImageView image = new ImageView(new Image(getClass().getResourceAsStream(imageURL)));
-            image.fitWidthProperty().bind(new SimpleIntegerProperty(scale).asObject());
-            image.fitHeightProperty().bind(new SimpleIntegerProperty(shipSize * scale).asObject());
-            existingShipLabel.setGraphic(image);
-
-
-            // take the existing label of the ship and change it's position
-            existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-            switch (shipSize) {
-                case 2:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY());
-                    break;
-                case 3:
-                case 4:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - scale);
-                    break;
-                case 5:
-                    existingShipLabel.setLayoutX(gridPaneLabel.getLayoutX());
-                    existingShipLabel.setLayoutY(gridPaneLabel.getLayoutY() - 2* scale);
-                    break;
-            }
-
             // this will move the ship in back-end representation of playground
             switch (shipSize) {
-                case 2: existingShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().moveShip(existingShipLabel.getShip(), new Point(finalX, finalY), new Point(finalX, finalY +1))); break;
-                case 3: existingShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().moveShip(existingShipLabel.getShip(), new Point(finalX, finalY -1), new Point(finalX, finalY +1))); break;
-                case 4: existingShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().moveShip(existingShipLabel.getShip(), new Point(finalX, finalY -1), new Point(finalX, finalY +2))); break;
-                case 5: existingShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().moveShip(existingShipLabel.getShip(), new Point(finalX, finalY -2), new Point(finalX, finalY +2))); break;
+                case 2:
+                    shipHead = new Point(finalX, finalY);
+                    shipTail = new Point(finalX, finalY+1);
+                    break;
+                case 3:
+                    shipHead = new Point(finalX, finalY-1);
+                    shipTail = new Point(finalX, finalY+1);
+                    break;
+                case 4:
+                    shipHead = new Point(finalX, finalY-1);
+                    shipTail = new Point(finalX, finalY+2);
+                    break;
+                case 5:
+                    shipHead = new Point(finalX, finalY-2);
+                    shipTail = new Point(finalX, finalY+2);
+                    break;
             }
         }
+        existingShipLabel.setShip(ActiveGameState.getOwnPlayerIOwnPlayground().moveShip(existingShipLabel.getShip(), shipHead, shipTail));
+        existingShipLabel.setPosHead(shipHead);
+
+        // place the label at the right position on the gridPane
+        setShipLabelPlace(existingShipLabel);
     }
 }

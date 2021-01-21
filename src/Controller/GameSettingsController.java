@@ -206,7 +206,7 @@ public class GameSettingsController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Game Settings");
+
         setLanguage();
         setBackground();
         setTextSettings();

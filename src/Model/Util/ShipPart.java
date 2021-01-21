@@ -1,5 +1,6 @@
 package Model.Util;
 
+import GameData.ActiveGameState;
 import Model.Ship.IShip;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -80,7 +81,12 @@ public class ShipPart implements IDrawable{
             }
             else {
 
-                ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/ship.png")));
+                ImageView image;
+                if (ActiveGameState.isSceneIsPlaceShips())
+                    image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/water.png")));
+                else
+                    image = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/ship.png")));
+
                 this.label.setGraphic(image);
 
                 // making ships resizeable, so they fit to the current label size

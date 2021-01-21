@@ -192,11 +192,11 @@ public class ActiveGameState {
         } else if (11 <= playgroundSize && playgroundSize <= 15) {
             ActiveGameState.playgroundScale = 35;
         } else if (16 <= playgroundSize && playgroundSize <= 20) {
-            ActiveGameState.playgroundScale = 25;
+            ActiveGameState.playgroundScale = 29;
         } else if (21 <= playgroundSize && playgroundSize <= 25) {
-            ActiveGameState.playgroundScale = 20;
+            ActiveGameState.playgroundScale = 23;
         } else if (26 <= playgroundSize && playgroundSize <= 30) {
-            ActiveGameState.playgroundScale = 15;
+            ActiveGameState.playgroundScale = 19;
         }
     }
 

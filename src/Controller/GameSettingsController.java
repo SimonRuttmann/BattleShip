@@ -238,26 +238,30 @@ public class GameSettingsController implements Initializable{
             selectPlaygroundsizeText.setText("Wähle die Spielfeldgröße");
             selectAmountOfShipsText.setText("Anzahl der Schiffe auswählen");
             selectDifficultyEnemyKIText.setText("Gegenerische KI");
-            selectDifficultyOwnKIText.setText("Eigene Ki");
+            selectDifficultyOwnKIText.setText("Eigene KI");
             button_backToMainMenu.setText("Hauptmenü");
             button_Start.setText("Start");
             rB_difficultyEnemyNormal.setText("normal");
             rB_difficultyEnemyHard.setText("schwer");
             rB_difficultyOwnNormal.setText("normal");
             rB_difficultyOwnHard.setText("schwer");
+            host_RbSelectKInormal.setText("Normale KI spielt");
+            host_RbSelectKIhard.setText("Schwere KI spielt");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
             title.setText("Game Settings");
             selectPlaygroundsizeText.setText("Select Playgroundsize");
             selectAmountOfShipsText.setText("Select the amount of ships");
-            selectDifficultyEnemyKIText.setText("Difficulty of Enemy Ki");
-            selectDifficultyOwnKIText.setText("Difficulty of Own Ki");
+            selectDifficultyEnemyKIText.setText("Difficulty of Enemy AI");
+            selectDifficultyOwnKIText.setText("Difficulty of Own AI");
             button_backToMainMenu.setText("Main Menu");
             button_Start.setText("Start");
             rB_difficultyEnemyNormal.setText("normal");
             rB_difficultyEnemyHard.setText("hard");
             rB_difficultyOwnNormal.setText("normal");
             rB_difficultyOwnHard.setText("hard");
+            host_RbSelectKInormal.setText("Normal AI plays");
+            host_RbSelectKIhard.setText("Hard AI plays");
         }
     }
 

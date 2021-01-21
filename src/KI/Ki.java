@@ -381,9 +381,8 @@ public class Ki implements IKi{
 
 
     /**
-     *
-     * @param min
-     * @param max
+     * @param min min value of the random
+     * @param max max value of the random exclusive
      * @return  a random int between min (inclusive) and max (exclusive)
      */
 
@@ -756,7 +755,7 @@ public class Ki implements IKi{
                             searchAnewShip = true;
                             takticalDots.clear();
 
-                            logKi.log(Level.FINE, "Schiff das Zerstört wurde: " + shipRecon);
+                            logKi.log(Level.FINE, "Ship, which was killed: " + shipRecon);
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
@@ -805,7 +804,7 @@ public class Ki implements IKi{
                             searchAnewShip = true;
                             takticalDots.clear();
 
-                            logKi.log(Level.FINE, "Schiff das Zerstört wurde: " + shipRecon);
+                            logKi.log(Level.FINE, "Ship, which was killed: " + shipRecon);
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
@@ -855,7 +854,7 @@ public class Ki implements IKi{
                             takticalDots.clear();
 
 
-                            logKi.log(Level.FINE, "Schiff das Zerstört wurde: " + shipRecon);
+                            logKi.log(Level.FINE, "Ship, which was killed: " + shipRecon);
 
 
                             shiptoDestroy.add(nextPositionToShoot);
@@ -909,7 +908,7 @@ public class Ki implements IKi{
                             searchAnewShip = true;
                             takticalDots.clear();
 
-                            logKi.log(Level.INFO, "Schiff das Zerstört wurde: " + shipRecon);
+                            logKi.log(Level.INFO, "Ship, which was killed: " + shipRecon);
 
                             shiptoDestroy.add(nextPositionToShoot);
                             previousShots.addAll(surroundShipDots(shiptoDestroy));
@@ -927,7 +926,6 @@ public class Ki implements IKi{
                         }
                         //no Hit
                         else {
-                            System.out.println("Can't be, shoot at left and all other positions are cleared");
                             this.nextLocation = NextLocation.nextTop;
                             this.rangeToShot = 1;
                         }

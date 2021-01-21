@@ -31,7 +31,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,18 +51,18 @@ public class PlaceShips implements Initializable {
     public Label threeShip;
     public Label fourShip;
     public Label fiveShip;
-    public Label bracket2;
-    public Label bracket3;
-    public Label bracket4;
-    public Label bracket5;
-    public Label twoOf;
-    public Label threeOf;
-    public Label fourOf;
-    public Label fiveOf;
-    public Label xOfx2Ships;
-    public Label xOfx3Ships;
-    public Label xOfx4Ships;
-    public Label xOfx5Ships;
+    public Text bracket2;
+    public Text bracket3;
+    public Text bracket4;
+    public Text bracket5;
+    public Text twoOf;
+    public Text threeOf;
+    public Text fourOf;
+    public Text fiveOf;
+    public Text xOfx2Ships;
+    public Text xOfx3Ships;
+    public Text xOfx4Ships;
+    public Text xOfx5Ships;
     public Button rotate90;
     public Button randomPlacement;
     public Button resetPlacement;
@@ -119,6 +118,7 @@ public class PlaceShips implements Initializable {
 
         // basic initialization tasks ----------------------------------------------------------------------------------
         ActiveGameState.setSceneIsPlaceShips(true);
+        ActiveGameState.setSceneIsGamePlayground(false);
         setLanguage();
         setBackground();
 
@@ -180,19 +180,76 @@ public class PlaceShips implements Initializable {
         image5.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
         fiveShip.setGraphic(image5);
 
+
+        // View Ships nicely -> difference to dark Background
+        twoShip.setEffect(new DropShadow(5, Color.WHITE));
+        threeShip.setEffect(new DropShadow(5, Color.WHITE));
+        fourShip.setEffect(new DropShadow(5, Color.WHITE));
+        fiveShip.setEffect(new DropShadow(5, Color.WHITE));
+
+
         // Labels e.g. (0 out of 4 Placed) -> set Height Matching to scale -> ship labels depend on scale
-        bracket2.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        bracket3.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        bracket4.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        bracket5.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        twoOf.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        threeOf.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        fourOf.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        fiveOf.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        xOfx2Ships.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        xOfx3Ships.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        xOfx4Ships.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
-        xOfx5Ships.setPrefSize(Region.USE_COMPUTED_SIZE, scale);
+        bracket2.prefWidth(scale);
+        bracket3.prefWidth(scale);
+        bracket4.prefWidth(scale);
+        bracket5.prefWidth(scale);
+        twoOf.prefWidth(scale);
+        threeOf.prefWidth(scale);
+        fourOf.prefWidth(scale);
+        fiveOf.prefWidth(scale);
+        xOfx2Ships.prefWidth(scale);
+        xOfx3Ships.prefWidth(scale);
+        xOfx4Ships.prefWidth(scale);
+        xOfx5Ships.prefWidth(scale);
+
+
+        bracket2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        bracket2.setFill(Color.WHITE);
+        bracket2.setEffect(new DropShadow(3, Color.BLACK));
+
+        bracket3.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        bracket3.setFill(Color.WHITE);
+        bracket3.setEffect(new DropShadow(3, Color.BLACK));
+
+        bracket4.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        bracket4.setFill(Color.WHITE);
+        bracket4.setEffect(new DropShadow(3, Color.BLACK));
+
+        bracket5.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        bracket5.setFill(Color.WHITE);
+        bracket5.setEffect(new DropShadow(3, Color.BLACK));
+
+        twoOf.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        twoOf.setFill(Color.WHITE);
+        twoOf.setEffect(new DropShadow(3, Color.BLACK));
+
+        threeOf.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        threeOf.setFill(Color.WHITE);
+        threeOf.setEffect(new DropShadow(3, Color.BLACK));
+
+        fourOf.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        fourOf.setFill(Color.WHITE);
+        fourOf.setEffect(new DropShadow(3, Color.BLACK));
+
+        fiveOf.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        fiveOf.setFill(Color.WHITE);
+        fiveOf.setEffect(new DropShadow(3, Color.BLACK));
+
+        xOfx2Ships.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        xOfx2Ships.setFill(Color.WHITE);
+        xOfx2Ships.setEffect(new DropShadow(3, Color.BLACK));
+
+        xOfx3Ships.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        xOfx3Ships.setFill(Color.WHITE);
+        xOfx3Ships.setEffect(new DropShadow(3, Color.BLACK));
+
+        xOfx4Ships.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        xOfx4Ships.setFill(Color.WHITE);
+        xOfx4Ships.setEffect(new DropShadow(3, Color.BLACK));
+
+        xOfx5Ships.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        xOfx5Ships.setFill(Color.WHITE);
+        xOfx5Ships.setEffect(new DropShadow(3, Color.BLACK));
         //--------------------------------------------------------------------------------------------------------------
 
 
@@ -202,7 +259,7 @@ public class PlaceShips implements Initializable {
         ownFieldText.setText((ActiveGameState.getLanguage() == ActiveGameState.Language.english) ? "Own Playground" : "Eigenes Spielfeld");
         ownFieldText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         ownFieldText.setFill(Color.WHITE);
-        ownField.setEffect(new DropShadow(10, Color.BLACK));
+        ownFieldText.setEffect(new DropShadow(10, Color.BLACK));
 
 
         // the gridPane has gaps - little Lines between all the fields
@@ -554,6 +611,16 @@ public class PlaceShips implements Initializable {
             handlerSetOnDragDetected(fiveShip, 5, false);
             event.consume();
         });
+
+
+        // if we have 0 of a ship - label is disable from beginning
+        if(ActiveGameState.getAmountShipSize2() == 0) twoShip.setDisable(true);
+        if(ActiveGameState.getAmountShipSize3() == 0) threeShip.setDisable(true);
+        if(ActiveGameState.getAmountShipSize4() == 0) fourShip.setDisable(true);
+        if(ActiveGameState.getAmountShipSize5() == 0) fiveShip.setDisable(true);
+
+
+
         // end of making the labels on the right hand side of the playground draggable ---------------------------------
     }
     // end of initialize-method ----------------------------------------------------------------------------------------
@@ -776,7 +843,7 @@ public class PlaceShips implements Initializable {
         int scale = ActiveGameState.getPlaygroundScale();
 
         // if ship is already existing, label will be invisible while moving - coming back visible when moving is complete (done by on drag dropped)
-        if (alreadyPlaced) shipLabel.setOpacity(0);
+        if (alreadyPlaced) shipLabel.setVisible(false);
 
 
         // the Dragboard is used to indicate which ship type is hovered -> String indicates Sh4Pip Size, 2N: size 2, new ship, 2P: size 2, already placed ship
@@ -897,7 +964,7 @@ public class PlaceShips implements Initializable {
         });
 
         // making the newly create ShipLabel visible again when drag is exited
-        newShipLabel.setOnDragDone(e -> newShipLabel.setOpacity(100));
+        newShipLabel.setOnDragDone(e -> newShipLabel.setVisible(true));
 
 
         // decide if ship has to be placed horizontal or vertical

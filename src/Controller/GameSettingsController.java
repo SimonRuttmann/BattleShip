@@ -251,7 +251,7 @@ public class GameSettingsController implements Initializable{
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
             title.setText("Game Settings");
             selectPlaygroundsizeText.setText("Select Playgroundsize");
-            selectAmountOfShipsText.setText("Select the amount of ships");
+            selectAmountOfShipsText.setText("Select amount of ships");
             selectDifficultyEnemyKIText.setText("Difficulty of Enemy AI");
             selectDifficultyOwnKIText.setText("Difficulty of Own AI");
             button_backToMainMenu.setText("Main Menu");
@@ -363,6 +363,7 @@ public class GameSettingsController implements Initializable{
             maxValue4 = new SimpleIntegerProperty();
             maxValue5 = new SimpleIntegerProperty();
 
+
             maxValue2.bind(selectPlaygroundsizeSlider.valueProperty().divide(2.5));
             maxValue3.bind(selectPlaygroundsizeSlider.valueProperty().divide(3.3));
             maxValue4.bind(selectPlaygroundsizeSlider.valueProperty().divide(5));
@@ -373,6 +374,7 @@ public class GameSettingsController implements Initializable{
             SpinnerValueFactory.IntegerSpinnerValueFactory spinner3Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 3);
             SpinnerValueFactory.IntegerSpinnerValueFactory spinner4Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 2);
             SpinnerValueFactory.IntegerSpinnerValueFactory spinner5Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 1);
+
 
             max2Property = spinner2Factory.maxProperty();
             max3Property = spinner3Factory.maxProperty();
@@ -390,8 +392,6 @@ public class GameSettingsController implements Initializable{
             this.selectAmount3Ships.setValueFactory(spinner3Factory);
             this.selectAmount4Ships.setValueFactory(spinner4Factory);
             this.selectAmount5Ships.setValueFactory(spinner5Factory);
-
-
 
     }
 
@@ -511,7 +511,7 @@ public class GameSettingsController implements Initializable{
 
     public void setShipImages(){
 
-        int scale = 30;
+        int scale = 40;
 
         // Sets the prefSize depending on the size of the ship
         // Loads the Image for the Ship's
@@ -520,6 +520,7 @@ public class GameSettingsController implements Initializable{
         image2.fitWidthProperty().bind(new SimpleIntegerProperty(2 * scale).asObject());
         image2.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
         this.labelShipSize2.setGraphic(image2);
+        this.labelShipSize2.setEffect(new DropShadow(5, Color.WHITE));
 
 
         this.labelShipSize3.setPrefSize(3 * scale, scale);
@@ -527,18 +528,23 @@ public class GameSettingsController implements Initializable{
         image3.fitWidthProperty().bind(new SimpleIntegerProperty(3 * scale).asObject());
         image3.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
         this.labelShipSize3.setGraphic(image3);
+        this.labelShipSize2.setEffect(new DropShadow(5, Color.WHITE));
+
 
         this.labelShipSize4.setPrefSize(4 * scale, scale);
         ImageView image4 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/4erSchiff.png")));
         image4.fitWidthProperty().bind(new SimpleIntegerProperty(4 * scale).asObject());
         image4.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
         this.labelShipSize4.setGraphic(image4);
+        this.labelShipSize2.setEffect(new DropShadow(5, Color.WHITE));
+
 
         this.labelShipSize5.setPrefSize(5 * scale, scale);
         ImageView image5 = new ImageView(new Image(getClass().getResourceAsStream("/Gui_View/images/5erSchiff.png")));
         image5.fitWidthProperty().bind(new SimpleIntegerProperty(5 * scale).asObject());
         image5.fitHeightProperty().bind(new SimpleIntegerProperty(scale).asObject());
         this.labelShipSize5.setGraphic(image5);
+        this.labelShipSize2.setEffect(new DropShadow(5, Color.WHITE));
 
     }
 

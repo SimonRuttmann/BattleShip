@@ -29,7 +29,7 @@ public class MusicController {
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
         Platform.runLater( ()-> {
-             mediaPlayer.play();
+             //mediaPlayer.play();
                 }
         );
         mediaPlayer.setVolume((double)ActiveGameState.getMusicVolume()/100);

@@ -16,9 +16,7 @@ import Serialize.SaveAndLoad;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -29,6 +27,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -43,25 +45,11 @@ import java.util.logging.Logger;
 public class GamePlayground implements Initializable {
 
     // import from FXML
-    @FXML
-    private Button cancleGame;
-    @FXML
-    private GridPane ownField;
-    @FXML
-    private GridPane enemyField;
-    @FXML
-    private Label ownFieldLabel;
-    @FXML
-    private Label enemyFieldLabel;
-    @FXML
-    private AnchorPane anchorPane;
-    @FXML
-    private Group groupOwnP;
-    @FXML
-    private Group groupEnemP;
-
-
-    int gamesize = ActiveGameState.getPlaygroundSize();
+    public GridPane ownField;
+    public GridPane enemyField;
+    public Text ownFieldText;
+    public Text enemyFieldText;
+    public AnchorPane anchorPane;
 
 
     /** initialize-method:
@@ -131,9 +119,6 @@ public class GamePlayground implements Initializable {
                 }
             }
 
-        // initialize the static variable groupEnemyPS -> used in MultiplayerControlThreadShootEnemy
-        groupEnemyPS = groupEnemP;
-
 
         //The scale of one Field,   Ship size 2 -> Image: | 30px | 30px |
         //                          Ship size 3 -> Image: | 30px | 30px | 30px |
@@ -141,16 +126,17 @@ public class GamePlayground implements Initializable {
         int scale = ActiveGameState.getPlaygroundScale();
 
 
-        // finalscale is needed due to using scale in lambda expressions
-        final int finalscale = scale;
-
-
-
         // playground field --------------------------------------------------------------------------------------------
         // set Labels for the Playgrounds
-        ownFieldLabel.setText("Own Playground");
-        enemyFieldLabel.setText("Enemy Playground");
+        ownFieldText.setText((ActiveGameState.getLanguage() == ActiveGameState.Language.english) ? "Own Playground" : "Eigenes Spielfeld");
+        ownFieldText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        ownFieldText.setFill(Color.WHITE);
+        ownFieldText.setEffect(new DropShadow(10, Color.BLACK));
 
+        enemyFieldText.setText((ActiveGameState.getLanguage() == ActiveGameState.Language.english) ? "Enemy Playground" : "Gegnerisches Spielfeld");
+        enemyFieldText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        enemyFieldText.setFill(Color.WHITE);
+        enemyFieldText.setEffect(new DropShadow(10, Color.BLACK));
 
         // 2D fields for Labels:
         int gamesize = ActiveGameState.getPlaygroundSize();
@@ -294,10 +280,6 @@ public class GamePlayground implements Initializable {
         }
     }
 
-    // Group -> Add Label (localX, localY, Schiffslabel)
-    // -> localX und localY bekommen wir von Label.getLayoutX und Label.getLayoutY -> Von dem Label, das wir bei shoot mit Answer 2 zurückbekommen + Größe vom Schiff + Ausrichtung vom Schiff (also Vertikal oder Horizontal)
-
-
 
     // sets scene background
     public void setBackground(){
@@ -307,15 +289,6 @@ public class GamePlayground implements Initializable {
                 BackgroundSize.DEFAULT);
 
         this.anchorPane.setBackground(new Background(myBI));
-    }
-
-
-
-    // getter for EnemyP Group -> used in MultiplayerControlThreadShootEnemy
-    public static Group groupEnemyPS;
-
-    public static Group getGroupEnemP(){
-        return groupEnemyPS;
     }
 
 

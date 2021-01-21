@@ -40,7 +40,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         HelpMethods.alignStageCenter(primaryStage, WIDTH, HEIGHT);
 
+        primaryStage.setResizable(false);
         primaryStage.show();
-
     }
 }

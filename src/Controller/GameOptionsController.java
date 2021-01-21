@@ -144,7 +144,7 @@ public class GameOptionsController implements Initializable {
     }
 
     public void setValuesOfVelocitySlider(){
-        velocitySliderValueText.setText("1s");
+        velocitySliderValueText.setText("  1s");
         selectAIVelocitySlider.setMin(0);
         selectAIVelocitySlider.setMax(10);
         selectAIVelocitySlider.setValue(1);
@@ -154,7 +154,7 @@ public class GameOptionsController implements Initializable {
 
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                velocitySliderValueText.setText("" + newValue.intValue() + "s");
+                velocitySliderValueText.setText("  " + newValue.intValue() + "s");
             }
         });
     }

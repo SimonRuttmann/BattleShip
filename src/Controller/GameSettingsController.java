@@ -324,6 +324,16 @@ public class GameSettingsController implements Initializable{
         this.rB_difficultyEnemyNormal.setSelected(true);
     }
 
+    //Garbage Collector workaround
+    private static SimpleIntegerProperty maxValue2;
+    private static SimpleIntegerProperty maxValue3;
+    private static SimpleIntegerProperty maxValue4;
+    private static SimpleIntegerProperty maxValue5;
+
+    private static IntegerProperty max2Property;
+    private static IntegerProperty max3Property;
+    private static IntegerProperty max4Property;
+    private static IntegerProperty max5Property;
 
     public void setValuesOfPlaygroundAndShip(){
 
@@ -342,23 +352,12 @@ public class GameSettingsController implements Initializable{
                 }
             });
 
-        /*
-        SimpleIntegerProperty initialValue2 = new SimpleIntegerProperty();
-        SimpleIntegerProperty initialValue3 = new SimpleIntegerProperty();
-        SimpleIntegerProperty initialValue4 = new SimpleIntegerProperty();
-        SimpleIntegerProperty initialValue5 = new SimpleIntegerProperty();
-
-        initialValue2.bind(selectPlaygroundsizeSlider.valueProperty().divide(2));
-        initialValue3.bind(selectPlaygroundsizeSlider.valueProperty().divide(3));
-        initialValue4.bind(selectPlaygroundsizeSlider.valueProperty().divide(5));
-        initialValue5.bind(selectPlaygroundsizeSlider.valueProperty().divide(10));
-*/
 
             //Spinner
-            SimpleIntegerProperty maxValue2 = new SimpleIntegerProperty();
-            SimpleIntegerProperty maxValue3 = new SimpleIntegerProperty();
-            SimpleIntegerProperty maxValue4 = new SimpleIntegerProperty();
-            SimpleIntegerProperty maxValue5 = new SimpleIntegerProperty();
+            maxValue2 = new SimpleIntegerProperty();
+            maxValue3 = new SimpleIntegerProperty();
+            maxValue4 = new SimpleIntegerProperty();
+            maxValue5 = new SimpleIntegerProperty();
 
             maxValue2.bind(selectPlaygroundsizeSlider.valueProperty().divide(1.7));
             maxValue3.bind(selectPlaygroundsizeSlider.valueProperty().divide(2.3));
@@ -371,10 +370,10 @@ public class GameSettingsController implements Initializable{
             SpinnerValueFactory.IntegerSpinnerValueFactory spinner4Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 2);
             SpinnerValueFactory.IntegerSpinnerValueFactory spinner5Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
 
-            IntegerProperty max2Property = spinner2Factory.maxProperty();
-            IntegerProperty max3Property = spinner3Factory.maxProperty();
-            IntegerProperty max4Property = spinner4Factory.maxProperty();
-            IntegerProperty max5Property = spinner5Factory.maxProperty();
+            max2Property = spinner2Factory.maxProperty();
+            max3Property = spinner3Factory.maxProperty();
+            max4Property = spinner4Factory.maxProperty();
+            max5Property = spinner5Factory.maxProperty();
 
 
             max2Property.bindBidirectional(maxValue2);

@@ -159,6 +159,11 @@ public class GamePlayground implements Initializable {
         enemyField.setHgap(1);
         enemyField.setVgap(1);
 
+        // column and row constraints must be cleared before initializing ownField or EnemyField new
+        ownField.getColumnConstraints().clear();
+        ownField.getRowConstraints().clear();
+        enemyField.getColumnConstraints().clear();
+        enemyField.getRowConstraints().clear();
 
         // own Playground
         for (int h = 0; h < gamesize; h++) {

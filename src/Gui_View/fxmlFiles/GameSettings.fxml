@@ -56,7 +56,7 @@
                               </HBox>
                                         <Slider fx:id="selectPlaygroundsizeSlider" prefHeight="30.0" prefWidth="450.0">
                                             <VBox.margin>
-                                                <Insets bottom="5.0" left="300.0" top="10.0" />
+                                                <Insets bottom="5.0" left="300.0" top="13.0" />
                                             </VBox.margin>
                                         </Slider>
                                         <HBox prefHeight="100.0" prefWidth="984.0">
@@ -97,22 +97,22 @@
                                                     <children>
                                                         <Spinner fx:id="selectAmount2Ships">
                                                             <VBox.margin>
-                                                                <Insets top="20.0" />
+                                                                <Insets left="20.0" top="20.0" />
                                                             </VBox.margin>
                                                         </Spinner>
                                                         <Spinner fx:id="selectAmount3Ships">
                                                             <VBox.margin>
-                                                                <Insets top="20.0" />
+                                                                <Insets left="20.0" top="20.0" />
                                                             </VBox.margin>
                                                         </Spinner>
                                                         <Spinner fx:id="selectAmount4Ships">
                                                             <VBox.margin>
-                                                                <Insets top="20.0" />
+                                                                <Insets left="20.0" top="20.0" />
                                                             </VBox.margin>
                                                         </Spinner>
                                                         <Spinner fx:id="selectAmount5Ships">
                                                             <VBox.margin>
-                                                                <Insets top="20.0" />
+                                                                <Insets left="20.0" top="20.0" />
                                                             </VBox.margin>
                                                         </Spinner>
                                                     </children>

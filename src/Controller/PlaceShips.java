@@ -768,10 +768,10 @@ public class PlaceShips implements Initializable {
 
 
         // enable Dropping for all Labels cause all ships are unplaced
-        twoShip.setDisable(false);
-        threeShip.setDisable(false);
-        fourShip.setDisable(false);
-        fiveShip.setDisable(false);
+        twoShip.setDisable(ActiveGameState.getAmountShipSize2() == 0);
+        threeShip.setDisable(ActiveGameState.getAmountShipSize3() == 0);
+        fourShip.setDisable(ActiveGameState.getAmountShipSize4() == 0);
+        fiveShip.setDisable(ActiveGameState.getAmountShipSize5() == 0);
 
 
         // disable ready button due to no ships being placed, game can not be started now

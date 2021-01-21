@@ -210,7 +210,6 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         setLanguage();
         ActiveGameState.setPlacementKi(new Ki(Ki.Difficulty.undefined));
 

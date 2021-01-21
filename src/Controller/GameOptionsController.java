@@ -110,7 +110,7 @@ public class GameOptionsController implements Initializable {
             this.selectAIVelocityText.setText("KI Geschwindigkeit");
             this.languageText.setText("Sprache");
             this.rB_selectGerman.setText("Deutsch");
-            this.button_saveSettings.setText("Einstellungen sichern");
+            this.button_saveSettings.setText("Übernehmen");
             this.button_backToMainMenu.setText("Hauptmenü");
 
         }

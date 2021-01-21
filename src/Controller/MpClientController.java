@@ -151,8 +151,8 @@ public class MpClientController implements Initializable {
             button_backToMainMenu.setText("Hauptmenü");
             button_Start.setText("Verbinden");
             this.infoLabel.setText("Verbindung hergestellt. Bitte warten, der Host nimmt Einstellungen vor.");
-            client_RbSelectKInormal.setText("normale KI");
-            client_RbSelectKIhard.setText("schwere KI");
+            client_RbSelectKInormal.setText("normale KI spielt");
+            client_RbSelectKIhard.setText("schwere KI spielt");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
             title.setText("Join Game");
@@ -160,8 +160,8 @@ public class MpClientController implements Initializable {
             this.infoLabel.setText("Connection established. Wait until the host has set the settings");
             button_backToMainMenu.setText("Back to Main Menu");
             button_Start.setText("Connect");
-            client_RbSelectKInormal.setText("Normal AI");
-            client_RbSelectKIhard.setText("Hard AI");
+            client_RbSelectKInormal.setText("Normal AI plays");
+            client_RbSelectKIhard.setText("Hard AI plays");
         }
     }
 

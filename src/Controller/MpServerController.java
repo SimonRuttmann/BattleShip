@@ -137,7 +137,7 @@ public class MpServerController implements Initializable {
             button_backToMainMenu.setText("Hauptmenü");
         }
         if (ActiveGameState.getLanguage() == ActiveGameState.Language.english){
-            title.setText("Hosting Game");
+            title.setText("Host Game");
             textShowIP.setText("Your IP Adress:");
             textWaiting.setText("Waiting for Client");
             button_backToMainMenu.setText("Main Menu");

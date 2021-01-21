@@ -316,8 +316,8 @@ public class OwnPlayground extends AbstractPlayground implements IOwnPlayground 
         1. Set the fields, where the ship was to water, the Water Fields got by default an valid placement-marker
         2. Get all surrounding coordinates and mark them as valid if there is no ship next to
         3. Check if the new placement is valid
-            a) null     -> Revert all actions                      -> return false
-            b) notnull  -> The movement of the ship was correct    -> return true
+            a) null      -> Revert all actions                       -> return null
+            b) new ship  -> The movement of the ship was correct    -> new ship
          */
 
 
@@ -330,11 +330,10 @@ public class OwnPlayground extends AbstractPlayground implements IOwnPlayground 
         //1
         for ( Point point : coordinatesOfShip ){
             //Set the Fields to Water, the Water Fields got by default an valid placement-marker
-            System.out.println("Points of ship" + point.getX() + point.getY());
-            System.out.println(Field[point.getX()][point.getY()].getClass());
-            System.out.println("Error!");
+
+
             cache.add((ShipPart)Field[point.getX()][point.getY()]);
-            System.out.println("Error?");
+
             Label label = Field[point.getX()][point.getY()].getLabel();
             Field[point.getX()][point.getY()] = new Water();
             Field[point.getX()][point.getY()].setLabel(label);
@@ -403,6 +402,9 @@ public class OwnPlayground extends AbstractPlayground implements IOwnPlayground 
 
             int x = point.getX();
             int y = point.getY();
+
+            if ( x < 0 ||  x >= this.playgroundsize || y < 0 || y >= this.playgroundsize) continue;
+
             boolean isShipNext = false;
 
             for ( int i = x-1; i <= x+1; i++  ){

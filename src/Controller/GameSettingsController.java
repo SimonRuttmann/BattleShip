@@ -363,16 +363,16 @@ public class GameSettingsController implements Initializable{
             maxValue4 = new SimpleIntegerProperty();
             maxValue5 = new SimpleIntegerProperty();
 
-            maxValue2.bind(selectPlaygroundsizeSlider.valueProperty().divide(1.7));
-            maxValue3.bind(selectPlaygroundsizeSlider.valueProperty().divide(2.3));
-            maxValue4.bind(selectPlaygroundsizeSlider.valueProperty().divide(3));
-            maxValue5.bind(selectPlaygroundsizeSlider.valueProperty().divide(7));
+            maxValue2.bind(selectPlaygroundsizeSlider.valueProperty().divide(2.5));
+            maxValue3.bind(selectPlaygroundsizeSlider.valueProperty().divide(3.3));
+            maxValue4.bind(selectPlaygroundsizeSlider.valueProperty().divide(5));
+            maxValue5.bind(selectPlaygroundsizeSlider.valueProperty().divide(10));
 
 
             SpinnerValueFactory.IntegerSpinnerValueFactory spinner2Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 4);
-            SpinnerValueFactory.IntegerSpinnerValueFactory spinner3Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 3);
-            SpinnerValueFactory.IntegerSpinnerValueFactory spinner4Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 2);
-            SpinnerValueFactory.IntegerSpinnerValueFactory spinner5Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner3Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 3);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner4Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 2);
+            SpinnerValueFactory.IntegerSpinnerValueFactory spinner5Factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 1);
 
             max2Property = spinner2Factory.maxProperty();
             max3Property = spinner3Factory.maxProperty();

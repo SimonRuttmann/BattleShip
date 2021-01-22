@@ -22,7 +22,7 @@ public class NetworkLogger {
 
         Logger logger = Logger.getLogger("parent");
         logger.setUseParentHandlers(false);
-        FileHandler fileHandler = new FileHandler("src/Logs/log.txt", false);
+        FileHandler fileHandler = new FileHandler("Logs/log.txt", false);
         ConsoleHandler consoleHandler = new ConsoleHandler();
 
         fileHandler.setFormatter(new Formatter() {
@@ -53,6 +53,9 @@ public class NetworkLogger {
 
     public static void setLevel(Level input){
         logger.setLevel(input);
+        for (java.util.logging.Handler filehandler : logger.getHandlers()){
+            filehandler.setLevel(input);
+        }
     }
 
     /**

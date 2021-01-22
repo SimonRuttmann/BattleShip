@@ -37,29 +37,47 @@ public class LoggingThread extends Thread{
                 try {
 
                     input = interruptibleReadLine(reader);
-                    System.out.println( input);
+                    //This one isn`t interruptible
+                    //input = reader.readLine();
+
+                    if (input.contains("FINE")) input = "FINE";
+                    if (input.contains("INFO")) input = "INFO";
+                    if (input.contains("OFF")) input = "OFF";
+                    if (input.contains("SEVERE")) input = "SEVERE";
+                    if (input.contains("WARNING")) input = "WARNING";
+                    if (input.contains("CLOSE")) input = "CLOSE";
+
                     switch (input) {
                         case "ALL":
                             NetworkLogger.setLevel(Level.ALL);
+                            System.out.println("Changed to ALL");
                             break;
                         case "FINE":
                             NetworkLogger.setLevel(Level.FINE);
+                            System.out.println("Changed to FINE");
                             break;
                         case "INFO":
                             NetworkLogger.setLevel(Level.INFO);
+                            System.out.println("Changed to INFO");
                             break;
                         case "OFF":
                             NetworkLogger.setLevel(Level.OFF);
+                            System.out.println("Changed to OFF");
                             break;
                         case "SEVERE":
                             NetworkLogger.setLevel(Level.SEVERE);
+                            System.out.println("Changed to SEVERE");
                             break;
                         case "WARNING":
                             NetworkLogger.setLevel(Level.WARNING);
+                            System.out.println("Changed to WARNING");
                             break;
                         case "CLOSE":
                             reader.close();
                             break;
+                        case "\n":
+                        case " ":
+                        case "": break;
                         default:
                             System.out.println("Doesn't match keyword, following keywords are allowed: \n" +
                                                 "\t 'ALL'     \n" +

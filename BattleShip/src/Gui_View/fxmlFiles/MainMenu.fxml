@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="720.0" maxWidth="1280.0" prefHeight="720.0" prefWidth="1280.0"
+            xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.MainMenuController">
+    <VBox prefHeight="720.0" prefWidth="1280.0">
+        <Pane prefHeight="166.0" prefWidth="1280.0">
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <Text fx:id="title" layoutX="240.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="Battleships" textAlignment="CENTER" wrappingWidth="800.0"/>
+        </Pane>
+        <HBox prefHeight="530.0" prefWidth="1280.0">
+            <VBox.margin>
+                <Insets top="30.0"/>
+            </VBox.margin>
+            <HBox fx:id="hBox_leftBar" prefHeight="530.0" prefWidth="509.0">
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+                <Line fx:id="leftBarLine" endY="330.0">
+                    <HBox.margin>
+                        <Insets left="100.0"/>
+                    </HBox.margin>
+                </Line>
+                <VBox fx:id="vBox_LeftBar">
+                    <StackPane fx:id="leftBar_SingPolyText" onMouseClicked="#singleplayerSelected">
+                        <VBox.margin>
+                            <Insets top="20.0"/>
+                        </VBox.margin>
+                        <Polygon fx:id="polySingleplayer" fill="DODGERBLUE"
+                                 points="-55.0, 69.66665649414062, 229.0, -5.0, -55.0, -5.0"
+                                 stroke="BLACK" strokeType="INSIDE"/>
+                        <Text fx:id="textSingleplayer" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Singleplayer"/>
+                    </StackPane>
+                    <StackPane fx:id="leftBar_MultPolyText" onMouseClicked="#multiplayerSelected">
+                        <VBox.margin>
+                            <Insets top="20.0"/>
+                        </VBox.margin>
+                        <Polygon fx:id="polyMultiplayer" fill="DODGERBLUE"
+                                 points="-190.0, -148.0, 94.0, -224.0, -190.0, -224.0"
+                                 stroke="BLACK" strokeType="INSIDE"/>
+                        <Text fx:id="textMultiplayer" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Multiplayer"/>
+                    </StackPane>
+                    <StackPane fx:id="leftBar_SettPolyText" onMouseClicked="#settingsSelected">
+                        <VBox.margin>
+                            <Insets top="20.0"/>
+                        </VBox.margin>
+                        <Polygon fx:id="polySettings" fill="DODGERBLUE"
+                                 points="-194.33334350585938, -17.0, 89.66665649414062, -91.0, -194.33334350585938, -91.0"
+                                 stroke="BLACK" strokeType="INSIDE"/>
+                        <Text fx:id="textSettings" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Options"/>
+                    </StackPane>
+                    <StackPane fx:id="leftBar_QuitPolyText" onMouseClicked="#quitGameSelected">
+                        <VBox.margin>
+                            <Insets top="20.0"/>
+                        </VBox.margin>
+                        <Polygon fx:id="polyQuitGame" fill="DODGERBLUE"
+                                 points="-193.0, 61.0, 91.0, -5.0, -193.0, -5.0" stroke="BLACK"
+                                 strokeType="INSIDE"/>
+                        <Text fx:id="textQuitGame" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Quit Game"/>
+                    </StackPane>
+                </VBox>
+            </HBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+                <Pane prefHeight="99.0" prefWidth="397.0"/>
+                <StackPane fx:id="sP_RightBar" alignment="TOP_LEFT" prefHeight="530.0" prefWidth="605.0">
+                    <HBox fx:id="rightBarSingleplayer" prefHeight="267.0" prefWidth="150.0">
+                        <StackPane.margin>
+                            <Insets/>
+                        </StackPane.margin>
+                        <padding>
+                            <Insets left="10.0"/>
+                        </padding>
+                        <Line fx:id="rightBarLine" endY="300.0" startY="40.0">
+                            <HBox.margin>
+                                <Insets left="20.0"/>
+                            </HBox.margin>
+                        </Line>
+                        <VBox prefHeight="417.0" prefWidth="574.0">
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                            <StackPane fx:id="rightBar_Sing_PlayerVsKIPolyText"
+                                       onMouseClicked="#startPlayerVsKI">
+                                <VBox.margin>
+                                    <Insets top="20.0"/>
+                                </VBox.margin>
+                                <Polygon fx:id="rightBarSinglplayer_PolyPlayerVsKI"
+                                         fill="DODGERBLUE"
+                                         points="-276.66668701171875, -178.66665649414062, 89.33331298828125, -264.0, -276.66668701171875, -264.0"
+                                         stroke="BLACK" strokeType="INSIDE"
+                                         StackPane.alignment="TOP_LEFT"/>
+                                <Text fx:id="rightBarSinglplayer_TextPlayerVsKI"
+                                      strokeType="OUTSIDE" strokeWidth="0.0"
+                                      text="Player vs KI" wrappingWidth="196.5546875"
+                                      StackPane.alignment="CENTER_LEFT">
+                                    <StackPane.margin>
+                                        <Insets left="100.0"/>
+                                    </StackPane.margin>
+                                </Text>
+                            </StackPane>
+                            <StackPane fx:id="rightBar_Sing_KIVsKIPolyText"
+                                       onMouseClicked="#startKIvsKI">
+                                <VBox.margin>
+                                    <Insets top="20.0"/>
+                                </VBox.margin>
+                                <Polygon fx:id="rightBarSinglplayer_PolyKIVsKI"
+                                         fill="DODGERBLUE"
+                                         points="-273.3333740234375, 63.0, 91.0, -5.0, -273.3333740234375, -5.0"
+                                         stroke="BLACK" strokeType="INSIDE"
+                                         StackPane.alignment="TOP_LEFT">
+                                    <StackPane.margin>
+                                        <Insets/>
+                                    </StackPane.margin>
+                                </Polygon>
+                                <Text fx:id="rightBarSinglplayer_TextKIVsKI"
+                                      strokeType="OUTSIDE" strokeWidth="0.0" text="KI vs KI"
+                                      wrappingWidth="191.72265625"
+                                      StackPane.alignment="CENTER_LEFT">
+                                    <StackPane.margin>
+                                        <Insets left="100.0"/>
+                                    </StackPane.margin>
+                                </Text>
+                            </StackPane>
+                            <StackPane fx:id="rightBar_Sing_LoadPolyText" layoutX="10.0"
+                                       layoutY="171.0" onMouseClicked="#loadSinglGame">
+                                <VBox.margin>
+                                    <Insets top="20.0"/>
+                                </VBox.margin>
+                                <Polygon fx:id="rightBarSinglplayer_PolyLoad"
+                                         fill="DODGERBLUE"
+                                         points="-273.3333740234375, 63.0, 91.0, -5.0, -273.3333740234375, -5.0"
+                                         stroke="BLACK" strokeType="INSIDE"
+                                         StackPane.alignment="TOP_LEFT">
+                                    <StackPane.margin>
+                                        <Insets/>
+                                    </StackPane.margin>
+                                </Polygon>
+                                <Text fx:id="rightBarSinglplayer_TextLoad"
+                                      strokeType="OUTSIDE" strokeWidth="0.0"
+                                      text="Load Game" wrappingWidth="191.72265625"
+                                      StackPane.alignment="CENTER_LEFT">
+                                    <StackPane.margin>
+                                        <Insets left="100.0"/>
+                                    </StackPane.margin>
+                                </Text>
+                            </StackPane>
+                        </VBox>
+                    </HBox>
+                    <HBox fx:id="rightBarMultiplayer" layoutX="10.0" layoutY="10.0" prefHeight="267.0"
+                          prefWidth="150.0">
+                        <padding>
+                            <Insets left="10.0"/>
+                        </padding>
+                        <Line fx:id="rightBarLineMult" endY="300.0" startY="40.0">
+                            <HBox.margin>
+                                <Insets left="20.0"/>
+                            </HBox.margin>
+                        </Line>
+                        <VBox prefHeight="417.0" prefWidth="574.0">
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                            <StackPane fx:id="rightBar_Mult_HostPolyText"
+                                       onMouseClicked="#startHost">
+                                <VBox.margin>
+                                    <Insets top="20.0"/>
+                                </VBox.margin>
+                                <Polygon fx:id="rightBarMultplayer_PolyHost"
+                                         fill="DODGERBLUE"
+                                         points="-276.66668701171875, -178.66665649414062, 89.33331298828125, -264.0, -276.66668701171875, -264.0"
+                                         stroke="BLACK" strokeType="INSIDE"
+                                         StackPane.alignment="TOP_LEFT"/>
+                                <Text fx:id="rightBarMultiplayer_TextHost"
+                                      strokeType="OUTSIDE" strokeWidth="0.0" text="Host"
+                                      wrappingWidth="164.5546875"
+                                      StackPane.alignment="CENTER_LEFT">
+                                    <StackPane.margin>
+                                        <Insets left="100.0"/>
+                                    </StackPane.margin>
+                                </Text>
+                            </StackPane>
+                            <StackPane fx:id="rightBar_Mult_ClientPolyText"
+                                       onMouseClicked="#startClient">
+                                <VBox.margin>
+                                    <Insets top="20.0"/>
+                                </VBox.margin>
+                                <Polygon fx:id="rightBarMultiplayer_PolyClient"
+                                         fill="DODGERBLUE"
+                                         points="-273.3333740234375, 63.0, 91.0, -5.0, -273.3333740234375, -5.0"
+                                         stroke="BLACK" strokeType="INSIDE"
+                                         StackPane.alignment="TOP_LEFT">
+                                    <StackPane.margin>
+                                        <Insets/>
+                                    </StackPane.margin>
+                                </Polygon>
+                                <Text fx:id="rightBarMultiplayer_TextClient"
+                                      strokeType="OUTSIDE" strokeWidth="0.0" text="Client"
+                                      wrappingWidth="148.72265625"
+                                      StackPane.alignment="CENTER_LEFT">
+                                    <StackPane.margin>
+                                        <Insets left="100.0"/>
+                                    </StackPane.margin>
+                                </Text>
+                            </StackPane>
+                            <StackPane fx:id="rightBar_Mult_LoadPolyText" layoutX="10.0"
+                                       layoutY="136.0" onMouseClicked="#loadMultGame">
+                                <VBox.margin>
+                                    <Insets top="20.0"/>
+                                </VBox.margin>
+                                <Polygon fx:id="rightBarMultiplayer_PolyLoad"
+                                         fill="DODGERBLUE"
+                                         points="-273.3333740234375, 63.0, 91.0, -5.0, -273.3333740234375, -5.0"
+                                         stroke="BLACK" strokeType="INSIDE"
+                                         StackPane.alignment="TOP_LEFT">
+                                    <StackPane.margin>
+                                        <Insets/>
+                                    </StackPane.margin>
+                                </Polygon>
+                                <Text fx:id="rightBarMultiplayer_TextLoad"
+                                      strokeType="OUTSIDE" strokeWidth="0.0"
+                                      text="Load Game" wrappingWidth="148.72265625"
+                                      StackPane.alignment="CENTER_LEFT">
+                                    <StackPane.margin>
+                                        <Insets left="100.0"/>
+                                    </StackPane.margin>
+                                </Text>
+                            </StackPane>
+                        </VBox>
+                    </HBox>
+                </StackPane>
+            </VBox>
+        </HBox>
+        <Pane/>
+    </VBox>
+</AnchorPane>

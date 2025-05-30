@@ -1,5 +1,4 @@
 .idea
 *.iml
-/.savedGames/
 /out/
-/Logs/
+/Logs/log.txt

@@ -1,5 +1,5 @@
 # 🚢 It is a BattleShip!
-Welcome to our strategic two-player naval warfare game – **BattleShip**!  
+Welcome to our strategic two-player naval warfare game – **BattleShip**!
 
 ![Menu Screenshot](media/gifs/menu.gif)  
 ![Menu Screenshot](media/gifs/menu-singleplayer.gif)
@@ -15,6 +15,8 @@ Welcome to our strategic two-player naval warfare game – **BattleShip**!
 ![Menu Screenshot](media/gifs/multiplayer-player-vs-player-shooting.gif)
 ![Menu Screenshot](media/gifs/multiplayer-ai-vs-ai-shooting.gif)  
 ![Menu Screenshot](media/gifs/multiplayer-connection.gif)  
+
+![Menu Screenshot](media/gifs/ai-vs-ai-challenge.gif)
 
 
 Plan. Place. Fire. Sink!  

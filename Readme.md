@@ -1,6 +1,22 @@
 # 🚢 It is a BattleShip!
 Welcome to our strategic two-player naval warfare game – **BattleShip**!  
-![Menu Screenshot](media/img/battleship_menu.png)  
+
+![Menu Screenshot](media/gifs/menu.gif)  
+![Menu Screenshot](media/gifs/menu-singleplayer.gif)
+
+![Menu Screenshot](media/gifs/singleplayer-gamesettings.gif)  
+![Menu Screenshot](media/gifs/singleplayer-loading.gif)
+![Menu Screenshot](media/gifs/singleplayer-ship-placement.gif)
+![Menu Screenshot](media/gifs/singleplayer-player-vs-ai.gif)
+
+![Menu Screenshot](media/gifs/singleplayer-huge-map-shooting.gif)
+
+
+![Menu Screenshot](media/gifs/multiplayer-player-vs-player-shooting.gif)
+![Menu Screenshot](media/gifs/multiplayer-ai-vs-ai-shooting.gif)  
+![Menu Screenshot](media/gifs/multiplayer-connection.gif)  
+
+
 Plan. Place. Fire. Sink!  
 This project was developed as part of our studies at **Aalen University** and explores core concepts of UI, AI, and networked multiplayer gameplay.
 

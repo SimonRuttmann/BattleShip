@@ -103,7 +103,7 @@ Play solo, multiplayer, or watch AI vs AI battles.
 
 ## 🌍 Multiplayer
 
-Play locally or over via LAN.
+Play locally or via LAN.
 
 You can use [Hamachi](https://vpn.net/) for remote connections.
 We used it during the development with other battleship teams to play against each other and it worked just fine!
@@ -111,8 +111,9 @@ We used it during the development with other battleship teams to play against ea
 
 ### Hosting a Game
 
-- Choose map and ship settings
 - Share your IP with your opponent
+- Choose map and ship settings
+- Choose to play as a human or let an AI play for you
 
 ### Joining a Game
 

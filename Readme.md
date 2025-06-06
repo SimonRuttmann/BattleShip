@@ -1,23 +1,27 @@
 # 🚢 BattleShip – Let the battle begin!
 
-
 Welcome to our first fully realized game project: **BattleShip**!  
 A turn-based tactics game for two players – either against a friend or a custom-built AI.
 
 ![Menu Screenshot](media/gifs/menu-singleplayer.gif)
 
-Creating this game was our introduction to our very first "real" project.
+This project marked our first dive into developing a complete software product.
 
 ---
 
 ## 🎓 Project & Context
 
-This project was developed as part of our studies at **Aalen University** during the **“Programmierpraktikum”** (Programming Lab) course.  
-Beyond building a working game, we also learned what it's like to collaborate in a real software development team:  
-**project planning, team roles, communication, code integration**, and ultimately: delivering a playable product.
+This game was developed as part of our studies at **Aalen University** during the **"Programmierpraktikum"** (Programming Lab) course.  
+It wasn't just about building a working game – we also gained first-hand experience in:
 
-One unique aspect of the course was a shared **network protocol**. All teams agreed on a **common socket-based interface**, implemented it individually, and were then able to play against each other across the different implementations.
-This repository presents our version of the game.
+- **Project planning**
+- **Team collaboration & roles**
+- **Communication & code integration**
+- And ultimately: **shipping** a playable game!
+
+A unique aspect of the course was a shared **socket-based network protocol**.  
+All teams implemented it individually, allowing us to compete across different codebases.  
+This repository represents *our* take on the game.
 
 ---
 
@@ -35,41 +39,51 @@ This repository presents our version of the game.
 
 ## 🕹️ Gameplay Overview
 
-### 1. Game Menu
+### 1. Main Menu
 
-Start the game via the main menu and choose your mode:
+Choose your game mode:
 
-- **Singleplayer** 
-  - Play against the AI
-  - Let two AI`s play against each other!
+- **Singleplayer**
+    - Play against the AI
+    - Or let two AIs battle each other!
+
 - **Multiplayer**
-  - Play as client or host
-  - You can also let an Ai play for you!
-- **Options**
-  - Adjust the AI shooting speed, the volume of the music and the language
-  ![Menu Screenshot](media/gifs/menu.gif)
+    - Join as host or client
+    - Let an AI take control of your side
 
+- **Options**
+    - Adjust AI shooting speed, music volume, and language
+
+![Menu Screenshot](media/gifs/menu.gif)
+
+---
 
 ### 2. Game Setup
-- **Grid size of the game**
-- **The amount of ships of each type**
-- **The AI difficulty**  
-![Ingame Settings](media/gifs/singleplayer-gamesettings.gif)
+
+- Define grid size
+- Choose ship types and quantities
+- Set AI difficulty level
+
+![Settings](media/gifs/singleplayer-gamesettings.gif)
+
+---
 
 ### 3. Ship Placement
 
 - Drag & drop ships onto your grid
-- Optionaly you can also automatically place your ships
-- Supports varying numbers and sizes of ships
-![Menu Screenshot](media/gifs/singleplayer-ship-placement.gif)
+- Or place them automatically
+- Supports different ship counts and sizes
 
+![Placement](media/gifs/singleplayer-ship-placement.gif)
 
-### 3. Battle!
-Play solo, multiplayer, or watch AI battles.
+---
 
-![Gameplay](media/gifs/singleplayer-player-vs-ai.gif)
-![Menu Screenshot](media/gifs/singleplayer-huge-map-shooting.gif)
+### 4. Battle!
 
+Play solo, multiplayer, or watch AI vs AI battles.
+
+![Gameplay](media/gifs/singleplayer-player-vs-ai.gif)  
+![Gameplay](media/gifs/singleplayer-huge-map-shooting.gif)
 
 ---
 
@@ -81,9 +95,9 @@ Play solo, multiplayer, or watch AI battles.
 - Drag & drop
 
 | ![](media/img/menu.png)            | ![](media/img/load-save.png)             | ![](media/img/options.png) |
-|------------------------------------|------------------------------------------|----------------------------|
-| ![](media/img/ingame-settings.png) | ![](media/img/ingame-ship-placement.png) | ![](media/img/ingame-shooting.png) | 
-| ![](media/img/ingame-saving.png)   | ![](media/img/multiplayer-client.png) | ![](media/img/multiplayer-server.png) | 
+|------------------------------------|------------------------------------------|-----------------------------|
+| ![](media/img/ingame-settings.png) | ![](media/img/ingame-ship-placement.png) | ![](media/img/ingame-shooting.png) |
+| ![](media/img/ingame-saving.png)   | ![](media/img/multiplayer-client.png)    | ![](media/img/multiplayer-server.png) |
 
 ---
 
@@ -94,22 +108,25 @@ Play locally or over via LAN.
 You can use [Hamachi](https://vpn.net/) for remote connections.
 We used it during the development with other battleship teams to play against each other and it worked just fine!
 
-### Host
-- Share your IP with the client
-- Select map and ship settings
 
-### Client
-- Enter IP from the server
-- Choose between player or AI control
+### Hosting a Game
 
-Multiplayer also supports **saving and loading**!
+- Choose map and ship settings
+- Share your IP with your opponent
 
-![Connection Setup](media/gifs/multiplayer-connection.gif)  
+### Joining a Game
+
+- Enter the host’s IP
+- Choose to play as a human or let an AI play for you
+
+Multiplayer also supports **saving and loading** games!
+
+![Multiplayer Setup](media/gifs/multiplayer-connection.gif)  
 Player vs Player
-![Multiplayer Shooting](media/gifs/multiplayer-player-vs-player-shooting.gif)
-
+![Multiplayer PvP](media/gifs/multiplayer-player-vs-player-shooting.gif)  
 AI vs AI
-![Multiplayer Shooting](media/gifs/multiplayer-ai-vs-ai-shooting.gif)
+![Multiplayer AI vs AI](media/gifs/multiplayer-ai-vs-ai-shooting.gif)
+
 > Thanks to a strict socket protocol, cheating is **not possible**.  
 > Our hard AI has dominated **every** inter-team competition so far. ⚔️
 
@@ -117,15 +134,14 @@ AI vs AI
 
 ## 🤖 AI System
 
-The AIs can be used in both Singleplayer and Multiplayer modes.
+The AI can be used in both Singleplayer and Multiplayer modes.
 
-> In Singleplayer you can select two AIs and let them play against each other.
-So sit back and let the machines battle it out. This is a perfect way
-to test and compare the different AI behaviors. You may find the patterns of the AI out yourself!
+> You can even pit two AIs against each other and just watch!  
+Perfect for comparing difficulty levels or discovering behavior patterns.
 
-### Difficulties
+### Difficulty Levels
 - **Normal** – Uses common sense at destroying ships but also shots random at times
-- **Hard** – The hard one is as the name suggests tough 
+- **Hard** – The hard one is as the name suggests tough
 
 > We have implemented a **self-conceived backtracking algorithm** to identify and kill your ships - so watch out!
 
@@ -134,24 +150,24 @@ to test and compare the different AI behaviors. You may find the patterns of the
 
 ## 💾 Save & Load
 
-- Save anytime in singleplayer or multiplayer
-- Specify a filename
-- Resume exactly where you left off
-- Saved in `.json` format
+- Save at any time in both Singleplayer and Multiplayer
+- Choose your save file name
+- Resumes exactly where you left off
+- Data is saved in `.json` format
 
-![Save/Load](media/gifs/singleplayer-loading.gif)
+![Saving](media/gifs/singleplayer-loading.gif)
 
 ---
 
 ## 💡 What We Learned
 
-Developing BattleShip helped us understand:
+Throughout this project, we gained practical experience in:
 
-- How to **structure a mid-sized codebase**
-- The importance of **version control & merge strategies**
-- Working with **JavaFX**, **event-driven UIs**, and **concurrency**
-- Using **sockets for real-time communication**
-- Creating a shared protocol and maintaining **cross-team compatibility**
+- Structuring a mid-sized codebase
+- Version control & merge strategies
+- Working with JavaFX and event-driven UIs
+- Implementing real-time communication via sockets
+- Designing and maintaining a shared cross-team protocol
 
 ---
 
@@ -168,21 +184,18 @@ Developed by:
 
 ## 📜 License
 
-This project is licensed under the [Apache 2.0 License](LICENSE).  
-Feel free to use or remix it – just give proper credit. 🤝
+This project is licensed under the [Apache 2.0 License](LICENSE). Feel free to use or remix it – just give proper credit. 🤝
 
 ---
 
 ## 📦 Downloads & Releases
 
 Want to play?  
-➡️ **[Click here to download the latest version](https://github.com/SimonRuttmann/BattleShip/releases/tag/v1.0.0)**
+➡️ **[Click here to download the latest release](https://github.com/SimonRuttmann/BattleShip/releases/tag/v1.0.0)**
 
-Note: 
-- The game requires Java version > 1.8 with Java FX included
-- Last tested with
-  [Java 24.30.13 JDK FX from Zulu](https://www.azul.com/downloads/?os=windows&architecture=x86-64-bit&package=jdk-fx#zulu)
-
+> **Requirements:**
+> - Java > 1.8 with JavaFX
+> - Last tested with [Zulu JDK FX 24.30.13](https://www.azul.com/downloads/?os=windows&architecture=x86-64-bit&package=jdk-fx#zulu)
 
 ---
 

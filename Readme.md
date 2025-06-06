@@ -54,7 +54,7 @@ Start the game via the main menu and choose your mode:
 - **Grid size of the game**
 - **The amount of ships of each type**
 - **The AI difficulty**  
-![Ingame Settings](media/img/ingame-settings.png)
+![Ingame Settings](media/gifs/singleplayer-gamesettings.gif)
 
 ### 3. Ship Placement
 
@@ -105,8 +105,11 @@ We used it during the development with other battleship teams to play against ea
 Multiplayer also supports **saving and loading**!
 
 ![Connection Setup](media/gifs/multiplayer-connection.gif)  
+Player vs Player
 ![Multiplayer Shooting](media/gifs/multiplayer-player-vs-player-shooting.gif)
 
+AI vs AI
+![Multiplayer Shooting](media/gifs/multiplayer-ai-vs-ai-shooting.gif)
 > Thanks to a strict socket protocol, cheating is **not possible**.  
 > Our hard AI has dominated **every** inter-team competition so far. ⚔️
 
@@ -126,12 +129,13 @@ to test and compare the different AI behaviors. You may find the patterns of the
 
 > We have implemented a **self-conceived backtracking algorithm** to identify and kill your ships - so watch out!
 
-
+![AI vs AI](media/gifs/ai-vs-ai-challenge.gif)
 ---
 
 ## 💾 Save & Load
 
 - Save anytime in singleplayer or multiplayer
+- Specify a filename
 - Resume exactly where you left off
 - Saved in `.json` format
 
@@ -164,35 +168,35 @@ Developed by:
 
 ## 📜 License
 
-This project is licensed under the [MIT License](LICENSE).  
-Feel free to use, remix, or build upon it – just give credit. ⚓
+This project is licensed under the [Apache 2.0 License](LICENSE).  
+Feel free to use or remix it – just give proper credit. 🤝
 
 ---
 
 ## 📦 Downloads & Releases
 
 Want to play?  
-➡️ **[Click here to download the latest version](https://github.com/SimonRuttmann/Battleship/releases/tag/v1.0.0)**
+➡️ **[Click here to download the latest version](https://github.com/SimonRuttmann/BattleShip/releases/tag/v1.0.0)**
 
-Includes:
+Note: 
+- The game requires Java version > 1.8 with Java FX included
+- Last tested with
+  [Java 24.30.13 JDK FX from Zulu](https://www.azul.com/downloads/?os=windows&architecture=x86-64-bit&package=jdk-fx#zulu)
 
-- ✅ Game `.jar` file
-- ✅ Source code
-- ✅ Sample save files
 
 ---
 
 ## 🖼️ Videos
 
-🎬 [Singleplayer](media/video/singleplayer.mkv)
+🎬 [Watch Singleplayer (MKV)](media/video/singleplayer.mkv)
 
-🎬 [Multiplayer](media/video/multiplayer.mkv)
+🎬 [Watch Multiplayer (MKV)](media/video/multiplayer.mkv)
 
-🎬 [Singleplayer Huge Map](media/video/ai-vs-ai-singleplayer.mkv)
+🎬 [Watch Singleplayer Huge Map (MKV)](media/video/ai-vs-ai-singleplayer.mkv)
 
-🎬 [AI vs AI Fastplay](media/video/ai-vs-ai-german-fastplay.mkv)
+🎬 [Watch AI vs AI Fastplay (MKV)](media/video/ai-vs-ai-german-fastplay.mkv)
 
-🎬 [AI vs AI Multiplayer](media/video/ai-vs-ai-multiplayer.mkv)
+🎬 [Watch AI vs AI Multiplayer (MKV)](media/video/ai-vs-ai-multiplayer.mkv)
 
-🎬 [AI vs AI Singleplayer](media/video/ai-vs-ai-singleplayer.mkv)
+🎬 [Watch AI vs AI Singleplayer (MKV)](media/video/ai-vs-ai-singleplayer.mkv)
 

@@ -1,106 +1,153 @@
-# 🚢 It is a BattleShip!
-Welcome to our strategic two-player naval warfare game – **BattleShip**!
+# 🚢 BattleShip – Let the battle begin!
 
-![Menu Screenshot](media/gifs/menu.gif)  
+
+Welcome to our first fully realized game project: **BattleShip**!  
+A turn-based tactics game for two players – either against a friend or a custom-built AI.
+
 ![Menu Screenshot](media/gifs/menu-singleplayer.gif)
 
-![Menu Screenshot](media/gifs/singleplayer-gamesettings.gif)  
-![Menu Screenshot](media/gifs/singleplayer-loading.gif)
-![Menu Screenshot](media/gifs/singleplayer-ship-placement.gif)
-![Menu Screenshot](media/gifs/singleplayer-player-vs-ai.gif)
+Creating this game was our introduction to our very first "real" project.
 
+---
+
+## 🎓 Project & Context
+
+This project was developed as part of our studies at **Aalen University** during the **“Programmierpraktikum”** (Programming Lab) course.  
+Beyond building a working game, we also learned what it's like to collaborate in a real software development team:  
+**project planning, team roles, communication, code integration**, and ultimately: delivering a playable product.
+
+One unique aspect of the course was a shared **network protocol**. All teams agreed on a **common socket-based interface**, implemented it individually, and were then able to play against each other across the different implementations.
+This repository presents our version of the game.
+
+---
+
+## 🔧 Features
+
+- 🌐 **Networked Multiplayer**
+- 🤖 **Play against AI**
+- 🎮 **Multiplayer** 
+- 🎨 **Graphical User Interface**
+- 💾 **Save & Load**
+- 📊 **Flexible board sizes and ship counts**
+- 🔄 **AI vs. AI mode**
+
+---
+
+## 🕹️ Gameplay Overview
+
+### 1. Game Menu
+
+Start the game via the main menu and choose your mode:
+
+- **Singleplayer** 
+  - Play against the AI
+  - Let two AI`s play against each other!
+- **Multiplayer**
+  - Play as client or host
+  - You can also let an Ai play for you!
+- **Options**
+  - Adjust the AI shooting speed, the volume of the music and the language
+  ![Menu Screenshot](media/gifs/menu.gif)
+
+
+### 2. Game Setup
+- **Grid size of the game**
+- **The amount of ships of each type**
+- **The AI difficulty**  
+![Ingame Settings](media/img/ingame-settings.png)
+
+### 3. Ship Placement
+
+- Drag & drop ships onto your grid
+- Optionaly you can also automatically place your ships
+- Supports varying numbers and sizes of ships
+![Menu Screenshot](media/gifs/singleplayer-ship-placement.gif)
+
+
+### 3. Battle!
+Play solo, multiplayer, or watch AI battles.
+
+![Gameplay](media/gifs/singleplayer-player-vs-ai.gif)
 ![Menu Screenshot](media/gifs/singleplayer-huge-map-shooting.gif)
 
-
-![Menu Screenshot](media/gifs/multiplayer-player-vs-player-shooting.gif)
-![Menu Screenshot](media/gifs/multiplayer-ai-vs-ai-shooting.gif)  
-![Menu Screenshot](media/gifs/multiplayer-connection.gif)  
-
-![Menu Screenshot](media/gifs/ai-vs-ai-challenge.gif)
-
-
-Plan. Place. Fire. Sink!  
-This project was developed as part of our studies at **Aalen University** and explores core concepts of UI, AI, and networked multiplayer gameplay.
-
-<div align="center">
-  <img src="media/img/battleship_ingame.png" alt="Ingame View" width="446">
-</div>
-
----
-
-## 🛠️ It is a BattleShip – A tactical journey!
-
-The goal was to recreate the classic *Schiffe versenken* (Battleship) experience with a fresh digital twist.  
-Here’s how the project came to life:
-
-### 🔧 Gameplay Features
-
-- 🧠 **Singleplayer vs. AI** (normal/hard mode)
-- 🤖 **AI vs. AI simulation**
-- 🌍 **Multiplayer via network** – act as Host or Client
-- 💾 **Game saving & loading**
-- 🎯 **Custom grid sizes** (5x5 to 30x30)
-- 🛥️ Ship sizes: 2, 3, 4, and 5
-
-🎥 Gameplay sneak peek:  
-![Gameplay GIF](media/gifs/battleship_gameplay.gif)
-
----
-
-### 🕹️ Game Modes
-
-#### 🎮 Singleplayer
-
-- Choose difficulty
-- Place ships manually via drag & drop – or go random
-- Intelligent enemy AI that adapts with difficulty
-
-#### 🧠 AI vs. AI
-
-Sit back and let the machines battle it out. A perfect way to test and compare AI behaviors.
-
-#### 🌐 Multiplayer
-
-- **Host:** configure grid and ships
-- **Client:** connect via IP
-- Play directly or let an AI fight for you
-
-📸 Match Setup Example:  
-![Multiplayer Setup](media/img/battleship_multiplayer.png)
-
----
-
-### 💾 Save & Load
-
-- Save games during your turn
-- Resume from any saved state
-- Works for both **singleplayer** and **multiplayer**
-
-| Save Menu            | Load Game View         |
-|----------------------|------------------------|
-| ![Save](media/img/battleship_save.png) | ![Load](media/img/battleship_load.png) |
 
 ---
 
 ## 🎨 User Interface
 
-A lot of love went into keeping the UI intuitive and clean.  
-Designed with keyboard/mouse control in mind, users can:
+- Built with JavaFX
+- Responsive controls and inputs
+- Extensively utilizing animations with sliders
+- Drag & drop
 
-- Navigate menus easily via mouse
-- Use sliders & buttons with drag & drop
-- Customize game settings quickly
-
-![Settings Screenshot](media/img/battleship_settings.png)
+| ![](media/img/menu.png)            | ![](media/img/load-save.png)             | ![](media/img/options.png) |
+|------------------------------------|------------------------------------------|----------------------------|
+| ![](media/img/ingame-settings.png) | ![](media/img/ingame-ship-placement.png) | ![](media/img/ingame-shooting.png) | 
+| ![](media/img/ingame-saving.png)   | ![](media/img/multiplayer-client.png) | ![](media/img/multiplayer-server.png) | 
 
 ---
 
-## 🎬 It is a BattleShip – In Action!
+## 🌍 Multiplayer
 
-Watch our ships in battle – and the final victory animation!  
-These clips show key parts of gameplay and mechanics.
+Play locally or over via LAN.
 
-🎬 [Watch BattleShip Showcase (MP4)](media/video/battleship_showcase.mp4)
+You can use [Hamachi](https://vpn.net/) for remote connections.
+We used it during the development with other battleship teams to play against each other and it worked just fine!
+
+### Host
+- Share your IP with the client
+- Select map and ship settings
+
+### Client
+- Enter IP from the server
+- Choose between player or AI control
+
+Multiplayer also supports **saving and loading**!
+
+![Connection Setup](media/gifs/multiplayer-connection.gif)  
+![Multiplayer Shooting](media/gifs/multiplayer-player-vs-player-shooting.gif)
+
+> Thanks to a strict socket protocol, cheating is **not possible**.  
+> Our hard AI has dominated **every** inter-team competition so far. ⚔️
+
+---
+
+## 🤖 AI System
+
+The AIs can be used in both Singleplayer and Multiplayer modes.
+
+> In Singleplayer you can select two AIs and let them play against each other.
+So sit back and let the machines battle it out. This is a perfect way
+to test and compare the different AI behaviors. You may find the patterns of the AI out yourself!
+
+### Difficulties
+- **Normal** – Uses common sense at destroying ships but also shots random at times
+- **Hard** – The hard one is as the name suggests tough 
+
+> We have implemented a **self-conceived backtracking algorithm** to identify and kill your ships - so watch out!
+
+
+---
+
+## 💾 Save & Load
+
+- Save anytime in singleplayer or multiplayer
+- Resume exactly where you left off
+- Saved in `.json` format
+
+![Save/Load](media/gifs/singleplayer-loading.gif)
+
+---
+
+## 💡 What We Learned
+
+Developing BattleShip helped us understand:
+
+- How to **structure a mid-sized codebase**
+- The importance of **version control & merge strategies**
+- Working with **JavaFX**, **event-driven UIs**, and **concurrency**
+- Using **sockets for real-time communication**
+- Creating a shared protocol and maintaining **cross-team compatibility**
 
 ---
 
@@ -135,14 +182,17 @@ Includes:
 
 ---
 
-## 🖼️ Gallery
+## 🖼️ Videos
 
-<div align="center" style="display: flex; flex-direction: column; gap: 20px; max-width: 500px; margin: auto;">
+🎬 [Singleplayer](media/video/singleplayer.mkv)
 
-  <img src="media/img/battleship_menu.png" alt="Main Menu" width="70%">
-  <img src="media/img/battleship_ingame.png" alt="Ingame View" width="70%">
-  <img src="media/img/battleship_save.png" alt="Save Game" width="70%">
-  <img src="media/img/battleship_multiplayer.png" alt="Multiplayer Screen" width="70%">
-  <img src="media/img/battleship_settings.png" alt="Settings" width="70%">
+🎬 [Multiplayer](media/video/multiplayer.mkv)
 
-</div>
+🎬 [Singleplayer Huge Map](media/video/ai-vs-ai-singleplayer.mkv)
+
+🎬 [AI vs AI Fastplay](media/video/ai-vs-ai-german-fastplay.mkv)
+
+🎬 [AI vs AI Multiplayer](media/video/ai-vs-ai-multiplayer.mkv)
+
+🎬 [AI vs AI Singleplayer](media/video/ai-vs-ai-singleplayer.mkv)
+
